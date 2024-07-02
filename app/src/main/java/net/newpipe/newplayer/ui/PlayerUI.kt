@@ -1,8 +1,6 @@
 package net.newpipe.newplayer.ui
 
-import android.app.Activity
 import android.content.pm.ActivityInfo
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,9 +9,12 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Fullscreen
-import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.SkipNext
+import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Slider
@@ -28,7 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
@@ -41,11 +41,14 @@ fun PlayerUI() {
             .background(Color.White)
     ) {
         Box() {
-            BottomUI(modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(start = 16.dp, end = 16.dp)
-                .defaultMinSize(minHeight = 40.dp)
-                .fillMaxWidth())
+            CenterUI(modifier = Modifier.align(Alignment.Center))
+            BottomUI(
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(start = 16.dp, end = 16.dp)
+                    .defaultMinSize(minHeight = 40.dp)
+                    .fillMaxWidth()
+            )
         }
         Text("hello gurken")
     }
@@ -53,7 +56,41 @@ fun PlayerUI() {
 
 @Composable
 private fun CenterUI(modifier: Modifier) {
-
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = modifier
+    ) {
+        IconButton(
+            onClick = { /*TODO*/ }, modifier = Modifier
+                .size(40.dp)
+                .padding(end = 10.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.SkipPrevious,
+                modifier = Modifier.fillMaxSize(),
+                contentDescription = "Previous Stream"
+            )
+        }
+        IconButton(onClick = { /*TODO*/ }, modifier = Modifier.size(60.dp)) {
+            Icon(
+                imageVector = Icons.Filled.PlayArrow,
+                modifier = Modifier.fillMaxSize(),
+                contentDescription = "Pause"
+            )
+        }
+        IconButton(
+            onClick = { /*TODO*/ }, modifier = Modifier
+                .size(40.dp)
+                .padding(start = 10.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.SkipNext,
+                modifier = Modifier.fillMaxSize(),
+                contentDescription = "Next Stream"
+            )
+        }
+    }
 }
 
 @Composable
