@@ -1,6 +1,5 @@
 package net.newpipe.newplayer
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +7,7 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import net.newpipe.newplayer.ui.PlayerUI
+import net.newpipe.newplayer.ui.VideoPlayerUI
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 class PlayerFragment : Fragment() {
@@ -25,7 +24,7 @@ class PlayerFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 VideoPlayerTheme {
-                    PlayerUI()
+                    VideoPlayerUI()
                 }
             }
         }
