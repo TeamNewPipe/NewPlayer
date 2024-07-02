@@ -5,12 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import androidx.compose.material3.Text
 import net.newpipe.newplayer.ui.PlayerUI
+import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 class PlayerFragment : Fragment() {
 
@@ -25,7 +24,9 @@ class PlayerFragment : Fragment() {
         composeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                PlayerUI(activity as Activity)
+                VideoPlayerTheme {
+                    PlayerUI()
+                }
             }
         }
         return view

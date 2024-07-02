@@ -11,6 +11,8 @@ activity = "1.9.0"
 constraintlayout = "2.1.4"
 activityCompose = "1.9.0"
 material3 = "1.2.1"
+uiTooling = "1.6.8"
+materialIconsExtendedAndroid = "1.7.0-beta04"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -23,6 +25,8 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "uiTooling" }
+androidx-material-icons-extended-android = { group = "androidx.compose.material", name = "material-icons-extended-android", version.ref = "materialIconsExtendedAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
