@@ -26,7 +26,6 @@ import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material.icons.filled.Subtitles
 import androidx.compose.material.icons.filled.Translate
-import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
@@ -48,11 +47,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import net.newpipe.newplayer.R
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.theme.video_player_onSurface
 
@@ -130,7 +131,7 @@ private fun TopUI(modifier: Modifier) {
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.MenuBook,
-                contentDescription = "Chapter Selection"
+                contentDescription = stringResource(R.string.widget_description_chapter_selection)
             )
         }
         IconButton(
@@ -138,7 +139,7 @@ private fun TopUI(modifier: Modifier) {
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.List,
-                contentDescription = "Playlist Selection"
+                contentDescription = stringResource(R.string.widget_descriptoin_playlist_item_selection)
             )
         }
         MainMenu()
@@ -156,7 +157,7 @@ private fun MainMenu() {
     }
 
     Box {
-        IconButton(onClick = {showMainMenu = true},
+        IconButton(onClick = { showMainMenu = true },
             modifier = Modifier.onPlaced {
                 offsetY = with(pixel_density) {
                     it.size.height.toDp()
@@ -165,65 +166,65 @@ private fun MainMenu() {
             }) {
             Icon(
                 imageVector = Icons.Filled.MoreVert,
-                contentDescription = "More settings"
+                contentDescription = stringResource(R.string.menu_item_more_settings)
             )
         }
         DropdownMenu(
             modifier = Modifier.align(Alignment.TopStart),
             offset = DpOffset(x = 0.dp, y = -offsetY),
             expanded = showMainMenu,
-            onDismissRequest = {showMainMenu = false}) {
+            onDismissRequest = { showMainMenu = false }) {
             DropdownMenuItem(
-                text = { Text("Open in browser") },
+                text = { Text(stringResource(R.string.menu_item_open_in_browser)) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Filled.Language,
-                        contentDescription = "Open In Browser"
-                    )
-                },
-                onClick = { /*TODO*/ showMainMenu = false})
-            DropdownMenuItem(
-                text = { Text("Share Timestamp") },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Share,
-                        contentDescription = "Share Time Stamp"
-                    )
-                },
-                onClick = { /*TODO*/ showMainMenu = false})
-            DropdownMenuItem(
-                text = { Text("Mute") },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.VolumeUp,
-                        contentDescription = "Mute"
-                    )
-                },
-                onClick = { /*TODO*/ showMainMenu = false})
-            DropdownMenuItem(
-                text = { Text("Fit Screen") },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.FitScreen,
-                        contentDescription = "Fit Screen"
-                    )
-                },
-                onClick = { /*TODO*/ showMainMenu = false})
-            DropdownMenuItem(
-                text = { Text("Sub Titles") },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Subtitles,
-                        contentDescription = "Sub Titles"
+                        contentDescription = stringResource(R.string.menu_item_open_in_browser)
                     )
                 },
                 onClick = { /*TODO*/ showMainMenu = false })
             DropdownMenuItem(
-                text = { Text("Language") },
+                text = { Text(stringResource(R.string.menu_item_share_timestamp)) },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Share,
+                        contentDescription = stringResource(R.string.menu_item_share_timestamp)
+                    )
+                },
+                onClick = { /*TODO*/ showMainMenu = false })
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.mute)) },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.VolumeUp,
+                        contentDescription = stringResource(R.string.mute)
+                    )
+                },
+                onClick = { /*TODO*/ showMainMenu = false })
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.menu_item_fit_screen)) },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.FitScreen,
+                        contentDescription = stringResource(R.string.menu_item_fit_screen)
+                    )
+                },
+                onClick = { /*TODO*/ showMainMenu = false })
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.menu_item_sub_titles)) },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Subtitles,
+                        contentDescription = stringResource(R.string.menu_item_sub_titles)
+                    )
+                },
+                onClick = { /*TODO*/ showMainMenu = false })
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.menu_item_language)) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Filled.Translate,
-                        contentDescription = "Language"
+                        contentDescription = stringResource(R.string.menu_item_language)
                     )
                 },
                 onClick = { /*TODO*/ showMainMenu = false })
@@ -247,7 +248,7 @@ private fun CenterUI(modifier: Modifier) {
             buttonModifier = Modifier.size(80.dp),
             iconModifier = Modifier.size(40.dp),
             icon = Icons.Filled.SkipPrevious,
-            contentDescriptoion = "Previous Stream",
+            contentDescriptoion = stringResource(R.string.widget_description_previous_stream),
             onClick = {}
         )
 
@@ -255,14 +256,14 @@ private fun CenterUI(modifier: Modifier) {
             buttonModifier = Modifier.size(80.dp),
             iconModifier = Modifier.size(60.dp),
             icon = Icons.Filled.PlayArrow,
-            contentDescriptoion = "Previous Stream",
+            contentDescriptoion = stringResource(R.string.widget_description_play),
             onClick = {}
         )
         CenterControllButton(
             buttonModifier = Modifier.size(80.dp),
             iconModifier = Modifier.size(40.dp),
             icon = Icons.Filled.SkipNext,
-            contentDescriptoion = "Next Stream",
+            contentDescriptoion = stringResource(R.string.widget_description_next_stream),
             onClick = {}
         )
     }
@@ -310,13 +311,13 @@ private fun BottomUI(modifier: Modifier) {
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
     ) {
-        Text("06:45")
+        Text("00:06:45")
         Slider(value = 0.4F, onValueChange = {}, modifier = Modifier.weight(1F))
-        Text("09:40")
+        Text("00:09:40")
         IconButton(onClick = { isFullscreen = !isFullscreen }) {
             Icon(
                 imageVector = Icons.Filled.Fullscreen,
-                contentDescription = "Fullscreen"
+                contentDescription = stringResource(R.string.widget_description_fullscreen)
             )
         }
     }

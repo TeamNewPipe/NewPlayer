@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">NewPlayer</string>
+    <string name="menu_item_open_in_browser">Open in browser</string>
+    <string name="menu_item_share_timestamp">Share timestamp</string>
+    <string name="menu_item_more_settings">More settings</string>
+    <string name="mute">Mute</string>
+    <string name="unmute">Unmute</string>
+    <string name="menu_item_fit_screen">Fit screen</string>
+    <string name="menu_item_sub_titles">Subtitles</string>
+    <string name="menu_item_language">Language</string>
+    <string name="widget_description_previous_stream">Previous stream</string>
+    <string name="widget_description_next_stream">Previous stream</string>
+    <string name="widget_description_play">Play</string>
+    <string name="widget_description_pause">Pause</string>
+    <string name="widget_description_fullscreen">Fullscreen</string>
+    <string name="widget_description_chapter_selection">Chapter selection</string>
+    <string name="widget_descriptoin_playlist_item_selection">Playlist item selection</string>
 </resources>
