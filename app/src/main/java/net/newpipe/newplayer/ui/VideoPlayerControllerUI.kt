@@ -58,7 +58,7 @@ import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.theme.video_player_onSurface
 
 @Composable
-fun VideoPlayerUI() {
+fun VideoPlayerControllerUI() {
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -336,7 +336,7 @@ private fun ViewInFullScreen() {
 @Composable
 fun PlayerUIPreviewEmbeded() {
     VideoPlayerTheme {
-        VideoPlayerUI()
+        VideoPlayerControllerUI()
     }
 }
 
@@ -344,7 +344,7 @@ fun PlayerUIPreviewEmbeded() {
 @Composable
 fun PlayerUIPreviewLandscape() {
     VideoPlayerTheme {
-        VideoPlayerUI()
+        VideoPlayerControllerUI()
     }
 }
 
@@ -352,6 +352,6 @@ fun PlayerUIPreviewLandscape() {
 @Composable
 fun PlayerUIPreviewPortrait() {
     VideoPlayerTheme {
-        VideoPlayerUI()
+        VideoPlayerControllerUI()
     }
 }
