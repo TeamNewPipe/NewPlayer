@@ -17,10 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-plugins {
-    alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.jetbrains.kotlin.android) apply false
-    alias(libs.plugins.kotlin.kapt) apply false
-    alias(libs.plugins.androidHilt) apply false
+
+package net.newpipe.newplayer.ui
+
+import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
+import net.newpipe.newplayer.model.VideoPlayerViewModel
+
+@Composable
+fun VideoPlayerUI() {
+    val videoPlayerViewModel: VideoPlayerViewModel = hiltViewModel()
+    VideoPlayerControllerUI()
 }

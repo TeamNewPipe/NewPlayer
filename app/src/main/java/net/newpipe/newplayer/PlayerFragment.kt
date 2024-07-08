@@ -27,9 +27,12 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
+import dagger.hilt.android.AndroidEntryPoint
 import net.newpipe.newplayer.ui.VideoPlayerControllerUI
+import net.newpipe.newplayer.ui.VideoPlayerUI
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
+@AndroidEntryPoint
 class PlayerFragment : Fragment() {
 
     override fun onCreateView(
@@ -44,7 +47,7 @@ class PlayerFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 VideoPlayerTheme {
-                    VideoPlayerControllerUI()
+                    VideoPlayerUI()
                 }
             }
         }
