@@ -23,7 +23,7 @@ import java.util.regex.Pattern.compile
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.kotlinAndroidKsp)
     alias(libs.plugins.androidHilt)
 }
 
@@ -82,8 +82,8 @@ dependencies {
     implementation(libs.androidx.media3.ui)
     implementation(libs.hilt.android)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    kapt(libs.hilt.android.compiler)
-    kapt(libs.androidx.hilt.compiler)
+    ksp(libs.hilt.android.compiler)
+    ksp(libs.androidx.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

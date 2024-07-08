@@ -36,6 +36,7 @@ hiltAndroid = "2.51.1"
 hiltCompiler = "1.2.0"
 hiltNavigationCompose = "1.2.0"
 lifecycleViewmodelCompose = "2.8.3"
+kspVersion = "1.9.10-1.0.13"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -61,6 +62,6 @@ androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "l
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 androidHilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
+kotlinAndroidKsp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }
 
