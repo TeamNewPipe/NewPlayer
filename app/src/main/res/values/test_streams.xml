@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ccc_6502_video">https://ftp.fau.de/cdn.media.ccc.de/congress/2010/mp4-h264-HQ/27c3-4159-en-reverse_engineering_mos_6502.mp4</string>
+    <string name="ccc_6502_audio">https://ftp.fau.de/cdn.media.ccc.de/congress/2010/ogg-audio-only/27c3-4159-en-reverse_engineering_mos_6502.ogg</string>
+</resources>

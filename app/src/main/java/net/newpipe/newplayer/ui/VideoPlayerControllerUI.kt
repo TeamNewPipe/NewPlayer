@@ -80,11 +80,9 @@ import net.newpipe.newplayer.ui.theme.video_player_onSurface
 @Composable
 fun VideoPlayerControllerUI() {
     Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
+        modifier = Modifier.fillMaxSize(), color = Color.Transparent
     ) {
-        Box() {
+        Box(modifier = Modifier.background(Color.Transparent)) {
             TopUI(
                 modifier = Modifier
                     .align(Alignment.TopStart)
@@ -127,23 +125,18 @@ private fun TopUI(modifier: Modifier) {
             onClick = { /*TODO*/ },
             contentPadding = PaddingValues(0.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Transparent,
-                contentColor = video_player_onSurface
+                containerColor = Color.Transparent, contentColor = video_player_onSurface
             ),
         ) {
             Text(
-                "1080p",
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(0.dp)
+                "1080p", fontWeight = FontWeight.Bold, modifier = Modifier.padding(0.dp)
             )
         }
         IconButton(
             onClick = { /*TODO*/ },
         ) {
             Text(
-                "1x",
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(0.dp)
+                "1x", fontWeight = FontWeight.Bold, modifier = Modifier.padding(0.dp)
             )
         }
         IconButton(
@@ -177,25 +170,22 @@ private fun MainMenu() {
     }
 
     Box {
-        IconButton(onClick = { showMainMenu = true },
-            modifier = Modifier.onPlaced {
-                offsetY = with(pixel_density) {
-                    it.size.height.toDp()
-                }
+        IconButton(onClick = { showMainMenu = true }, modifier = Modifier.onPlaced {
+            offsetY = with(pixel_density) {
+                it.size.height.toDp()
+            }
 
-            }) {
+        }) {
             Icon(
                 imageVector = Icons.Filled.MoreVert,
                 contentDescription = stringResource(R.string.menu_item_more_settings)
             )
         }
-        DropdownMenu(
-            modifier = Modifier.align(Alignment.TopStart),
+        DropdownMenu(modifier = Modifier.align(Alignment.TopStart),
             offset = DpOffset(x = 0.dp, y = -offsetY),
             expanded = showMainMenu,
             onDismissRequest = { showMainMenu = false }) {
-            DropdownMenuItem(
-                text = { Text(stringResource(R.string.menu_item_open_in_browser)) },
+            DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_open_in_browser)) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Filled.Language,
@@ -203,8 +193,7 @@ private fun MainMenu() {
                     )
                 },
                 onClick = { /*TODO*/ showMainMenu = false })
-            DropdownMenuItem(
-                text = { Text(stringResource(R.string.menu_item_share_timestamp)) },
+            DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_share_timestamp)) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Filled.Share,
@@ -212,17 +201,13 @@ private fun MainMenu() {
                     )
                 },
                 onClick = { /*TODO*/ showMainMenu = false })
-            DropdownMenuItem(
-                text = { Text(stringResource(R.string.mute)) },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.VolumeUp,
-                        contentDescription = stringResource(R.string.mute)
-                    )
-                },
-                onClick = { /*TODO*/ showMainMenu = false })
-            DropdownMenuItem(
-                text = { Text(stringResource(R.string.menu_item_fit_screen)) },
+            DropdownMenuItem(text = { Text(stringResource(R.string.mute)) }, leadingIcon = {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.VolumeUp,
+                    contentDescription = stringResource(R.string.mute)
+                )
+            }, onClick = { /*TODO*/ showMainMenu = false })
+            DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_fit_screen)) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Filled.FitScreen,
@@ -230,8 +215,7 @@ private fun MainMenu() {
                     )
                 },
                 onClick = { /*TODO*/ showMainMenu = false })
-            DropdownMenuItem(
-                text = { Text(stringResource(R.string.menu_item_sub_titles)) },
+            DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_sub_titles)) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Filled.Subtitles,
@@ -239,8 +223,7 @@ private fun MainMenu() {
                     )
                 },
                 onClick = { /*TODO*/ showMainMenu = false })
-            DropdownMenuItem(
-                text = { Text(stringResource(R.string.menu_item_language)) },
+            DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_language)) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Filled.Translate,
@@ -264,28 +247,22 @@ private fun CenterUI(modifier: Modifier) {
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
     ) {
-        CenterControllButton(
-            buttonModifier = Modifier.size(80.dp),
+        CenterControllButton(buttonModifier = Modifier.size(80.dp),
             iconModifier = Modifier.size(40.dp),
             icon = Icons.Filled.SkipPrevious,
             contentDescriptoion = stringResource(R.string.widget_description_previous_stream),
-            onClick = {}
-        )
+            onClick = {})
 
-        CenterControllButton(
-            buttonModifier = Modifier.size(80.dp),
+        CenterControllButton(buttonModifier = Modifier.size(80.dp),
             iconModifier = Modifier.size(60.dp),
             icon = Icons.Filled.PlayArrow,
             contentDescriptoion = stringResource(R.string.widget_description_play),
-            onClick = {}
-        )
-        CenterControllButton(
-            buttonModifier = Modifier.size(80.dp),
+            onClick = {})
+        CenterControllButton(buttonModifier = Modifier.size(80.dp),
             iconModifier = Modifier.size(40.dp),
             icon = Icons.Filled.SkipNext,
             contentDescriptoion = stringResource(R.string.widget_description_next_stream),
-            onClick = {}
-        )
+            onClick = {})
     }
 }
 
@@ -301,15 +278,12 @@ private fun CenterControllButton(
         onClick = onClick,
         contentPadding = PaddingValues(0.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Transparent,
-            contentColor = video_player_onSurface
+            containerColor = Color.Transparent, contentColor = video_player_onSurface
         ),
         modifier = buttonModifier
     ) {
         Icon(
-            imageVector = icon,
-            modifier = iconModifier,
-            contentDescription = contentDescriptoion
+            imageVector = icon, modifier = iconModifier, contentDescription = contentDescriptoion
         )
     }
 }
@@ -352,26 +326,43 @@ private fun ViewInFullScreen() {
     LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
 }
 
+@Composable
+fun PreviewBackgroundSurface(
+    content: @Composable () -> Unit
+) {
+    Surface(
+        modifier = Modifier.fillMaxSize(), color = Color.Black
+    ) {
+        content()
+    }
+}
+
 @Preview(device = "spec:width=1080px,height=700px,dpi=440,orientation=landscape")
 @Composable
-fun PlayerUIPreviewEmbeded() {
+fun VideoPlayerControllerUIPreviewEmbeded() {
     VideoPlayerTheme {
-        VideoPlayerControllerUI()
+        PreviewBackgroundSurface {
+            VideoPlayerControllerUI()
+        }
     }
 }
 
 @Preview(device = "spec:width=2340px,height=1080px,dpi=440,orientation=landscape")
 @Composable
-fun PlayerUIPreviewLandscape() {
+fun VideoPlayerControllerUIPreviewLandscape() {
     VideoPlayerTheme {
-        VideoPlayerControllerUI()
+        PreviewBackgroundSurface {
+            VideoPlayerControllerUI()
+        }
     }
 }
 
 @Preview(device = "spec:width=2340px,height=1080px,dpi=440,orientation=portrait")
 @Composable
-fun PlayerUIPreviewPortrait() {
+fun VideoPlayerControllerUIPreviewPortrait() {
     VideoPlayerTheme {
-        VideoPlayerControllerUI()
+        PreviewBackgroundSurface {
+            VideoPlayerControllerUI()
+        }
     }
 }

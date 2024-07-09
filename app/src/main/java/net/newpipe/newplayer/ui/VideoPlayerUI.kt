@@ -20,12 +20,85 @@
 
 package net.newpipe.newplayer.ui
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.media3.ui.PlayerView
 import net.newpipe.newplayer.model.VideoPlayerViewModel
+import net.newpipe.newplayer.model.VideoPlayerViewModelImpl
+import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
+
 
 @Composable
-fun VideoPlayerUI() {
-    val videoPlayerViewModel: VideoPlayerViewModel = hiltViewModel()
-    VideoPlayerControllerUI()
+fun VideoPlayerUI(
+    viewModel: VideoPlayerViewModel = hiltViewModel<VideoPlayerViewModelImpl>()
+) {
+
+    var lifecycle by remember {
+        mutableStateOf(Lifecycle.Event.ON_CREATE)
+    }
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            lifecycle = event
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = Color.Black
+    ) {
+        AndroidView(
+            modifier = Modifier.fillMaxSize(),
+            factory = { context ->
+                PlayerView(context).also {
+                    it.player = viewModel.player
+                    it.useController = false
+                }
+            }, update = {
+                when (lifecycle) {
+                    Lifecycle.Event.ON_PAUSE -> {
+
+                    }
+
+                    Lifecycle.Event.ON_RESUME -> {
+
+                    }
+
+                    Lifecycle.Event.ON_START -> {
+                        it.player?.play()
+                    }
+
+                    else -> Unit
+                }
+            })
+
+        VideoPlayerControllerUI()
+    }
+}
+
+@Preview(device = "spec:width=1080px,height=700px,dpi=440,orientation=landscape")
+@Composable
+fun PlayerUIPreviewEmbeded() {
+    VideoPlayerTheme {
+        VideoPlayerUI(viewModel = VideoPlayerViewModelImpl.dummy)
+    }
 }
