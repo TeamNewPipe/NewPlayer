@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,9 +48,12 @@ fun VideoPlayerUI(
     viewModel: VideoPlayerViewModel = hiltViewModel<VideoPlayerViewModelImpl>()
 ) {
 
+    val uiState by viewModel.uiState.collectAsState()
+
     var lifecycle by remember {
         mutableStateOf(Lifecycle.Event.ON_CREATE)
     }
+
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -76,22 +80,32 @@ fun VideoPlayerUI(
             }, update = {
                 when (lifecycle) {
                     Lifecycle.Event.ON_PAUSE -> {
-
+                        it.onPause()
+                        viewModel.pause()
                     }
 
                     Lifecycle.Event.ON_RESUME -> {
-
+                        it.onResume()
                     }
 
                     Lifecycle.Event.ON_START -> {
-                        it.player?.play()
+                        viewModel.play()
                     }
 
                     else -> Unit
                 }
             })
 
-        VideoPlayerControllerUI()
+        VideoPlayerControllerUI(
+            isPlaying = viewModel.player?.isPlaying ?: false,
+            isFullscreen = uiState.fullscreen,
+            play = viewModel::play,
+            pause = viewModel::pause,
+            prevStream = viewModel::prevStream,
+            nextStream = viewModel::nextStream,
+            switchToFullscreen = viewModel::switchToFullscreen,
+            switchToEmbeddedView = viewModel::switchToEmbeddedView
+        )
     }
 }
 

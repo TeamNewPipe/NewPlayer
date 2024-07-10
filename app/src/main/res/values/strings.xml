@@ -32,7 +32,7 @@
     <string name="widget_description_next_stream">Previous stream</string>
     <string name="widget_description_play">Play</string>
     <string name="widget_description_pause">Pause</string>
-    <string name="widget_description_fullscreen">Fullscreen</string>
+    <string name="widget_description_toggle_fullscreen">Toggle fullscreen</string>
     <string name="widget_description_chapter_selection">Chapter selection</string>
     <string name="widget_descriptoin_playlist_item_selection">Playlist item selection</string>
 </resources>
