@@ -30,7 +30,7 @@
         <androidx.compose.ui.platform.ComposeView
             android:id="@+id/player_copose_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
 
     </FrameLayout>
 

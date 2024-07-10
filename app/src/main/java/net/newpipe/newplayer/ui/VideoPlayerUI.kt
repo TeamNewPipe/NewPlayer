@@ -20,6 +20,7 @@
 
 package net.newpipe.newplayer.ui
 
+import android.view.SurfaceView
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -37,15 +38,13 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.media3.ui.PlayerView
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelImpl
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
-
 @Composable
 fun VideoPlayerUI(
-    viewModel: VideoPlayerViewModel = hiltViewModel<VideoPlayerViewModelImpl>()
+    viewModel: VideoPlayerViewModel
 ) {
 
     val uiState by viewModel.uiState.collectAsState()
@@ -73,29 +72,25 @@ fun VideoPlayerUI(
         AndroidView(
             modifier = Modifier.fillMaxSize(),
             factory = { context ->
-                PlayerView(context).also {
-                    it.player = viewModel.player
-                    it.useController = false
+                SurfaceView(context).also {
+                    viewModel.player?.setVideoSurfaceView(it)
                 }
             }, update = {
                 when (lifecycle) {
                     Lifecycle.Event.ON_PAUSE -> {
-                        it.onPause()
                         viewModel.pause()
                     }
 
                     Lifecycle.Event.ON_RESUME -> {
-                        it.onResume()
-                    }
-
-                    Lifecycle.Event.ON_START -> {
-                        viewModel.play()
+                        viewModel.uiResume()
                     }
 
                     else -> Unit
                 }
             })
 
+        val isPlaying = viewModel.player!!.isPlaying
+        println("is Player playing: $isPlaying")
         VideoPlayerControllerUI(
             isPlaying = viewModel.player?.isPlaying ?: false,
             isFullscreen = uiState.fullscreen,

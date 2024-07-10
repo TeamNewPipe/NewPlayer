@@ -27,13 +27,19 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import net.newpipe.newplayer.model.VideoPlayerViewModel
+import net.newpipe.newplayer.model.VideoPlayerViewModelImpl
 import net.newpipe.newplayer.ui.VideoPlayerControllerUI
 import net.newpipe.newplayer.ui.VideoPlayerUI
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 @AndroidEntryPoint
-class PlayerFragment : Fragment() {
+class PlayerFragment() : Fragment() {
+
+    private val viewModel: VideoPlayerViewModel by viewModels<VideoPlayerViewModelImpl>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,7 +53,7 @@ class PlayerFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 VideoPlayerTheme {
-                    VideoPlayerUI()
+                    VideoPlayerUI(viewModel)
                 }
             }
         }

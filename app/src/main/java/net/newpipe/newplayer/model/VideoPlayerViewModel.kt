@@ -34,14 +34,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 data class VideoPlayerUIState(
+    val playing: Boolean,
     var fullscreen: Boolean,
-    var playing: Boolean,
     var uiVissible: Boolean
 ){
     companion object {
         val DEFAULT = VideoPlayerUIState(
+            playing = true,
             fullscreen = false,
-            playing = false,
             uiVissible = false
         )
     }
@@ -52,6 +52,7 @@ interface VideoPlayerViewModel {
     val uiState: StateFlow<VideoPlayerUIState>
     fun play()
     fun pause()
+    fun uiResume()
     fun prevStream()
     fun nextStream()
     fun switchToFullscreen()
@@ -81,15 +82,20 @@ class VideoPlayerViewModelImpl @Inject constructor(
     override fun play() {
         player.play()
         mutableUiState.update {
-            it.copy(playing = true)
+            it.copy(playing = player.isPlaying)
         }
     }
 
     override fun pause() {
         player.pause()
+
         mutableUiState.update {
-            it.copy(playing = false)
+            it.copy(playing = player.isPlaying)
         }
+    }
+
+    override fun uiResume() {
+        play()
     }
 
     override fun prevStream() {
@@ -134,6 +140,10 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
             override fun pause() {
                 println("dummy pause")
+            }
+
+            override fun uiResume() {
+                println("dummy ui resume")
             }
 
             override fun prevStream() {
