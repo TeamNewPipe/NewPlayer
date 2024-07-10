@@ -21,7 +21,7 @@
 package net.newpipe.newplayer.model
 
 import android.app.Application
- import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
@@ -29,18 +29,19 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import net.newpipe.newplayer.R
 import javax.inject.Inject
- import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import net.newpipe.newplayer.utils.VideoSize
 
 data class VideoPlayerUIState(
     val playing: Boolean,
     var fullscreen: Boolean,
     var uiVissible: Boolean
-){
+) {
     companion object {
         val DEFAULT = VideoPlayerUIState(
-            playing = true,
+            playing = false,
             fullscreen = false,
             uiVissible = false
         )
@@ -50,14 +51,19 @@ data class VideoPlayerUIState(
 interface VideoPlayerViewModel {
     val player: Player?
     val uiState: StateFlow<VideoPlayerUIState>
+    var listener: Listener?
     fun play()
     fun pause()
-    fun uiResume()
     fun prevStream()
     fun nextStream()
     fun switchToFullscreen()
     fun switchToEmbeddedView()
+
+    interface Listener {
+        fun contentRatioChagned(ratio: Float)
+    }
 }
+
 
 @HiltViewModel
 class VideoPlayerViewModelImpl @Inject constructor(
@@ -74,28 +80,54 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     override val uiState = mutableUiState.asStateFlow()
 
+    override var listener: VideoPlayerViewModel.Listener? = null
+
+    var current_video_size = VideoSize.DEFAULT
+
     init {
         player.prepare()
+        player.addListener(object : Player.Listener {
+            override fun onIsPlayingChanged(isPlaying: Boolean) {
+                super.onIsPlayingChanged(isPlaying)
+                println("gurken playerstate: $isPlaying")
+                mutableUiState.update {
+                    it.copy(playing = isPlaying)
+                }
+            }
+
+            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                super.onMediaItemTransition(mediaItem, reason)
+                println("gurken mediaitem transition")
+
+                val videoSize = VideoSize.fromMedia3VideoSize(player.videoSize)
+                val hight = player.videoSize.height
+                val width = player.videoSize.width
+                println("gurken videoSize: $videoSize, currentSize: $width, $hight")
+                TODO("DEN DIRNENSOHN FIXEN")
+                if(current_video_size != videoSize) {
+
+
+                    if(current_video_size.getRatio() != videoSize.getRatio()) {
+                        listener?.contentRatioChagned(videoSize.getRatio())
+                    }
+                    current_video_size = videoSize
+                }
+            }
+        })
+
         player.setMediaItem(MediaItem.fromUri(app.getString(R.string.ccc_6502_video)))
+        player.playWhenReady = true
     }
 
+
     override fun play() {
+        println("gurken Play")
         player.play()
-        mutableUiState.update {
-            it.copy(playing = player.isPlaying)
-        }
     }
 
     override fun pause() {
+        println("gurken pause")
         player.pause()
-
-        mutableUiState.update {
-            it.copy(playing = player.isPlaying)
-        }
-    }
-
-    override fun uiResume() {
-        play()
     }
 
     override fun prevStream() {
@@ -126,6 +158,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
         val dummy = object : VideoPlayerViewModel {
             override val player = null
             override val uiState = MutableStateFlow(VideoPlayerUIState.DEFAULT)
+            override var listener: VideoPlayerViewModel.Listener? = null
             override fun play() {
                 println("dummy impl")
             }
@@ -140,10 +173,6 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
             override fun pause() {
                 println("dummy pause")
-            }
-
-            override fun uiResume() {
-                println("dummy ui resume")
             }
 
             override fun prevStream() {

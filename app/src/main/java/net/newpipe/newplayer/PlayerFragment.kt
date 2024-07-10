@@ -46,6 +46,12 @@ class PlayerFragment() : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        viewModel.listener = object:VideoPlayerViewModel.Listener{
+            override fun contentRatioChagned(ratio: Float) {
+                println("gurken ratio is: $ratio")
+            }
+        }
+
         val view = inflater.inflate(R.layout.player_framgent, container, false)
         val composeView = view.findViewById<ComposeView>(R.id.player_copose_view)
 

@@ -78,11 +78,8 @@ fun VideoPlayerUI(
             }, update = {
                 when (lifecycle) {
                     Lifecycle.Event.ON_PAUSE -> {
+                        println("gurken state on pause")
                         viewModel.pause()
-                    }
-
-                    Lifecycle.Event.ON_RESUME -> {
-                        viewModel.uiResume()
                     }
 
                     else -> Unit
@@ -92,7 +89,7 @@ fun VideoPlayerUI(
         val isPlaying = viewModel.player!!.isPlaying
         println("is Player playing: $isPlaying")
         VideoPlayerControllerUI(
-            isPlaying = viewModel.player?.isPlaying ?: false,
+            isPlaying = uiState.playing,
             isFullscreen = uiState.fullscreen,
             play = viewModel::play,
             pause = viewModel::pause,
