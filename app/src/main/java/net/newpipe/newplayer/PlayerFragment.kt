@@ -24,8 +24,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -46,14 +50,24 @@ class PlayerFragment() : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel.listener = object:VideoPlayerViewModel.Listener{
-            override fun contentRatioChagned(ratio: Float) {
-                println("gurken ratio is: $ratio")
-            }
-        }
-
         val view = inflater.inflate(R.layout.player_framgent, container, false)
         val composeView = view.findViewById<ComposeView>(R.id.player_copose_view)
+        val frameView = view.findViewById<FrameLayout>(R.id.frame_layout)
+
+        viewModel.listener = object : VideoPlayerViewModel.Listener {
+            override fun requestUpdateLayoutRatio(ratio: Float) {
+                frameView.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                    dimensionRatio = "$ratio:1"
+                }
+            }
+
+            override fun switchToFullscreen() {
+                frameView.updateLayoutParams<ConstraintLayout.LayoutParams> {
+
+                    println("gurken fullscreen")
+                }
+            }
+        }
 
         composeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)

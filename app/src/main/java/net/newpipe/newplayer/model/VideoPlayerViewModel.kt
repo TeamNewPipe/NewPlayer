@@ -37,13 +37,15 @@ import net.newpipe.newplayer.utils.VideoSize
 data class VideoPlayerUIState(
     val playing: Boolean,
     var fullscreen: Boolean,
-    var uiVissible: Boolean
+    var uiVissible: Boolean,
+    var contentRatio: Float
 ) {
     companion object {
         val DEFAULT = VideoPlayerUIState(
             playing = false,
             fullscreen = false,
-            uiVissible = false
+            uiVissible = false,
+            0F
         )
     }
 }
@@ -60,7 +62,8 @@ interface VideoPlayerViewModel {
     fun switchToEmbeddedView()
 
     interface Listener {
-        fun contentRatioChagned(ratio: Float)
+        fun requestUpdateLayoutRatio(ratio: Float)
+        fun switchToFullscreen()
     }
 }
 
@@ -95,20 +98,26 @@ class VideoPlayerViewModelImpl @Inject constructor(
                 }
             }
 
-            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                super.onMediaItemTransition(mediaItem, reason)
-                println("gurken mediaitem transition")
+            // We need to updated the layout of our player view if the video ratio changes
+            // However, this should be done differently depending on weather we are in
+            // embedded or fullscreen view.
+            // If we are in embedded view, we tell the mother layout (only ConstraintLayout supported!)
+            // to change the ratio of the whole player view.
+            // If we are in fullscreen we only want to change the ratio of the SurfaceView
+            override fun onVideoSizeChanged(media3VideoSize: androidx.media3.common.VideoSize) {
+                super.onVideoSizeChanged(media3VideoSize)
 
-                val videoSize = VideoSize.fromMedia3VideoSize(player.videoSize)
-                val hight = player.videoSize.height
-                val width = player.videoSize.width
-                println("gurken videoSize: $videoSize, currentSize: $width, $hight")
-                TODO("DEN DIRNENSOHN FIXEN")
+                val videoSize = VideoSize.fromMedia3VideoSize(media3VideoSize)
+
                 if(current_video_size != videoSize) {
-
-
-                    if(current_video_size.getRatio() != videoSize.getRatio()) {
-                        listener?.contentRatioChagned(videoSize.getRatio())
+                    val newRatio = videoSize.getRatio()
+                    if(current_video_size.getRatio() != newRatio) {
+                        mutableUiState.update {
+                            it.copy(contentRatio = newRatio)
+                        }
+                        if(!mutableUiState.value.fullscreen) {
+                            listener?.requestUpdateLayoutRatio(newRatio)
+                        }
                     }
                     current_video_size = videoSize
                 }
@@ -118,7 +127,6 @@ class VideoPlayerViewModelImpl @Inject constructor(
         player.setMediaItem(MediaItem.fromUri(app.getString(R.string.ccc_6502_video)))
         player.playWhenReady = true
     }
-
 
     override fun play() {
         println("gurken Play")
@@ -148,6 +156,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
         mutableUiState.update {
             it.copy(fullscreen = true)
         }
+        listener?.switchToFullscreen()
     }
 
     override fun onCleared() {
