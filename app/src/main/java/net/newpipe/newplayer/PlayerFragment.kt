@@ -29,6 +29,9 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -50,9 +53,18 @@ class PlayerFragment() : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val window = activity?.window!!
+        val insetsController = WindowCompat.getInsetsController(window, window.decorView)
+        insetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+
         val view = inflater.inflate(R.layout.player_framgent, container, false)
         val composeView = view.findViewById<ComposeView>(R.id.player_copose_view)
         val frameView = view.findViewById<FrameLayout>(R.id.frame_layout)
+
+        if (viewModel.uiState.value.fullscreen) {
+            println("gurken fragment created for fullscreen")
+            insetsController.hide(WindowInsetsCompat.Type.systemBars())
+        }
 
         viewModel.listener = object : VideoPlayerViewModel.Listener {
             override fun requestUpdateLayoutRatio(ratio: Float) {
@@ -62,10 +74,7 @@ class PlayerFragment() : Fragment() {
             }
 
             override fun switchToFullscreen() {
-                frameView.updateLayoutParams<ConstraintLayout.LayoutParams> {
-
-                    println("gurken fullscreen")
-                }
+                println("gurken fullscreen")
             }
         }
 

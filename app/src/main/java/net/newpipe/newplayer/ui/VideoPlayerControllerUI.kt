@@ -22,6 +22,7 @@
 package net.newpipe.newplayer.ui
 
 import android.content.pm.ActivityInfo
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -119,6 +120,11 @@ fun VideoPlayerControllerUI(
                 switchToFullscreen,
                 switchToEmbeddedView
             )
+        }
+    }
+    if (isFullscreen) {
+        BackHandler {
+            switchToEmbeddedView()
         }
     }
 }
@@ -350,7 +356,7 @@ private fun BottomUI(
         Text("00:06:45")
         Slider(value = 0.4F, onValueChange = {}, modifier = Modifier.weight(1F))
         Text("00:09:40")
-        IconButton(onClick = if(isFullscreen) switchToEmbeddedView else switchToFullscreen) {
+        IconButton(onClick = if (isFullscreen) switchToEmbeddedView else switchToFullscreen) {
             Icon(
                 imageVector = if (isFullscreen) Icons.Filled.FullscreenExit
                 else Icons.Filled.Fullscreen,
