@@ -29,11 +29,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.automirrored.filled.MenuBook
@@ -92,9 +95,18 @@ fun VideoPlayerControllerUI(
     switchToEmbeddedView: () -> Unit
 ) {
     Surface(
-        modifier = Modifier.fillMaxSize(), color = Color.Transparent
+        modifier = Modifier.fillMaxSize(), color = Color(0x75000000)
     ) {
-        Box(modifier = Modifier.background(Color.Transparent)) {
+        Box(
+            modifier = if (isFullscreen) {
+                Modifier
+                    .background(Color.Transparent)
+                    .windowInsetsPadding(WindowInsets.systemBars)
+            } else {
+                Modifier
+                    .background(Color.Transparent)
+            }
+        ) {
             TopUI(
                 modifier = Modifier
                     .align(Alignment.TopStart)
