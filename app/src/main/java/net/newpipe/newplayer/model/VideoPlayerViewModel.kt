@@ -21,7 +21,10 @@
 package net.newpipe.newplayer.model
 
 import android.app.Application
+import android.os.Build
+import android.os.Bundle
 import android.os.Parcelable
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -62,6 +65,7 @@ interface VideoPlayerViewModel {
     var listener: Listener?
     val events: SharedFlow<Events>?
 
+    fun initUIState(instanceState: Bundle)
     fun preparePlayer()
     fun play()
     fun pause()
@@ -98,6 +102,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     private val mutableEvent = MutableSharedFlow<VideoPlayerViewModel.Events>()
 
     override val events: SharedFlow<VideoPlayerViewModel.Events> = mutableEvent
+
 
     override val uiState = mutableUiState.asStateFlow()
 
@@ -143,6 +148,22 @@ class VideoPlayerViewModelImpl @Inject constructor(
         })
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    override fun initUIState(instanceState: Bundle) {
+
+        val uiState =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                instanceState.getParcelable(VIDEOPLAYER_UI_STATE, VideoPlayerUIState::class.java)
+            else
+                instanceState.getParcelable(VIDEOPLAYER_UI_STATE)
+
+        uiState?.let { uiState ->
+            mutableUiState.update {
+                uiState
+            }
+        }
+    }
+
     override fun preparePlayer() {
         if (player.playbackState == Player.STATE_IDLE) {
             player.prepare()
@@ -172,19 +193,12 @@ class VideoPlayerViewModelImpl @Inject constructor(
         viewModelScope.launch {
             mutableEvent.emit(VideoPlayerViewModel.Events.SwitchToEmbeddedView)
         }
-        //mutableUiState.update {
-        //    it.copy(fullscreen = false)
-        //}
     }
 
     override fun switchToFullscreen() {
         viewModelScope.launch {
             mutableEvent.emit(VideoPlayerViewModel.Events.SwitchToFullscreen)
         }
-        //mutableUiState.update {
-        //    it.copy(fullscreen = true)
-        //}
-        //listener?.switchToFullscreen()
     }
 
     companion object {
@@ -193,6 +207,10 @@ class VideoPlayerViewModelImpl @Inject constructor(
             override val uiState = MutableStateFlow(VideoPlayerUIState.DEFAULT)
             override var listener: VideoPlayerViewModel.Listener? = null
             override val events: SharedFlow<VideoPlayerViewModel.Events>? = null
+
+            override fun initUIState(instanceState: Bundle) {
+                println("dummy impl")
+            }
 
             override fun preparePlayer() {
                 println("dummy impl")

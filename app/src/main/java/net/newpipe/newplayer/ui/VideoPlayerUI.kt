@@ -20,8 +20,15 @@
 
 package net.newpipe.newplayer.ui
 
+import android.app.Activity
 import android.content.Intent
 import android.view.SurfaceView
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -40,6 +47,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.VIEW_MODEL_STORE_OWNER_KEY
 import kotlinx.coroutines.flow.collectLatest
 import net.newpipe.newplayer.VideoPlayerActivity
 import net.newpipe.newplayer.model.VIDEOPLAYER_UI_STATE
@@ -72,19 +80,27 @@ fun VideoPlayerUI(
         }
     }
 
+    BackHandler {
+        closeFullscreen(viewModel, activity!!)
+    }
+
+    val fullscreenLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            println("gurken returned for result")
+            viewModel.initUIState(result.data?.extras!!)
+        }
+
     LaunchedEffect(key1 = Unit) {
         viewModel.events?.collectLatest { event ->
             when (event) {
                 VideoPlayerViewModel.Events.SwitchToEmbeddedView -> {
-                    activity?.finish()
+                    closeFullscreen(viewModel, activity!!)
                 }
 
                 VideoPlayerViewModel.Events.SwitchToFullscreen -> {
-                    val fullscreen_activity_intent =
-                        Intent(activity!!.findActivity(), VideoPlayerActivity::class.java)
-                    fullscreen_activity_intent.putExtra(VIDEOPLAYER_UI_STATE, viewModel.uiState.value)
-                    activity.startActivity(fullscreen_activity_intent)
-
+                    openFullscreen(viewModel, activity!!, fullscreenLauncher)
                 }
             }
         }
@@ -97,14 +113,18 @@ fun VideoPlayerUI(
         AndroidView(
             modifier = Modifier.fillMaxSize(),
             factory = { context ->
-                SurfaceView(context).also {
-                    viewModel.player?.setVideoSurfaceView(it)
+                SurfaceView(context).also { view ->
+                    viewModel.player?.setVideoSurfaceView(view)
                 }
-            }, update = {
+            }, update = { view ->
                 when (lifecycle) {
                     Lifecycle.Event.ON_PAUSE -> {
                         println("gurken state on pause")
-                        viewModel.pause()
+                    }
+
+                    Lifecycle.Event.ON_RESUME -> {
+                        println("gurken resume")
+                        viewModel.player?.setVideoSurfaceView(view)
                     }
 
                     else -> Unit
@@ -112,7 +132,7 @@ fun VideoPlayerUI(
             })
 
         val isPlaying = viewModel.player!!.isPlaying
-        println("is Player playing: $isPlaying")
+
         VideoPlayerControllerUI(
             isPlaying = uiState.playing,
             fullscreen = uiState.fullscreen,
@@ -124,6 +144,28 @@ fun VideoPlayerUI(
             switchToEmbeddedView = viewModel::switchToEmbeddedView
         )
     }
+}
+
+fun closeFullscreen(viewModel: VideoPlayerViewModel, activity: Activity) {
+    val return_fullscreen_intent = Intent()
+    var uiState = viewModel.uiState.value
+    uiState.fullscreen = false
+    return_fullscreen_intent.putExtra(VIDEOPLAYER_UI_STATE, uiState)
+    activity.setResult(0, return_fullscreen_intent)
+    activity.finish()
+}
+
+fun openFullscreen(
+    viewModel: VideoPlayerViewModel,
+    activity: Activity,
+    fullscreenLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>
+) {
+    val fullscreen_activity_intent =
+        Intent(activity!!.findActivity(), VideoPlayerActivity::class.java)
+    var uiState = viewModel.uiState.value
+    uiState.fullscreen = true
+    fullscreen_activity_intent.putExtra(VIDEOPLAYER_UI_STATE, uiState)
+    fullscreenLauncher.launch(fullscreen_activity_intent)
 }
 
 @Preview(device = "spec:width=1080px,height=700px,dpi=440,orientation=landscape")

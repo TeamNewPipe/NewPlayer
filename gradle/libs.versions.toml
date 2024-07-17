@@ -19,7 +19,7 @@
 
 [versions]
 agp = "8.5.0"
-kotlin = "2.0.0"
+kotlin = "2.0.20-Beta2"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -30,16 +30,16 @@ androidx = "1.9.0"
 constraintlayout = "2.1.4"
 material3 = "1.2.1"
 uiTooling = "1.6.8"
-materialIconsExtendedAndroid = "1.7.0-beta04"
+materialIconsExtendedAndroid = "1.7.0-beta05"
 media3Ui = "1.4.0-beta01"
 hiltAndroid = "2.51.1"
 hiltCompiler = "1.2.0"
 hiltNavigationCompose = "1.2.0"
 lifecycleViewmodelCompose = "2.8.3"
-kspVersion = "1.9.0-1.0.13"
+kspVersion = "2.0.20-Beta2-1.0.23"
 fragmentKtx = "1.8.1"
 lifecycleRuntimeKtx = "2.8.3"
-composeBom = "2024.04.01"
+composeBom = "2024.06.01"
 kotlinParcelize = "2.0.20-Beta2"
 
 [libraries]
@@ -65,7 +65,7 @@ androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "l
 androidx-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "uiTooling" }
 androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragmentKtx" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
-androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version = "2024.06.00" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }

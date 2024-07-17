@@ -56,7 +56,7 @@ class VideoPlayerFragment() : Fragment() {
         insetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
         if (viewModel.uiState.value.fullscreen) {
-            println("gurken fragment created for fullscreen")
+            //println("gurken fragment created for fullscreen")
             //insetsController.hide(WindowInsetsCompat.Type.systemBars())
         }
 
@@ -72,7 +72,7 @@ class VideoPlayerFragment() : Fragment() {
             }
 
             override fun switchToFullscreen() {
-                println("gurken fullscreen")
+                //println("gurken fullscreen")
             }
         }
 
@@ -80,7 +80,7 @@ class VideoPlayerFragment() : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 VideoPlayerTheme {
-                    VideoPlayerUI(viewModel = viewModel, isFullscreen = false)
+                    VideoPlayerUI(viewModel = viewModel)
                 }
             }
         }

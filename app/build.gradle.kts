@@ -18,8 +18,6 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import java.util.regex.Pattern.compile
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)

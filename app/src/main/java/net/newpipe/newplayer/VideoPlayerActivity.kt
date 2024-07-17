@@ -19,6 +19,9 @@ class VideoPlayerActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel.initUIState(intent.extras!!)
+
         enableEdgeToEdge()
         setContent {
             VideoPlayerTheme {
