@@ -76,7 +76,6 @@ interface VideoPlayerViewModel {
 
     interface Listener {
         fun requestUpdateLayoutRatio(ratio: Float)
-        fun switchToFullscreen()
     }
 
     sealed class Events {
@@ -196,6 +195,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun switchToFullscreen() {
+
         viewModelScope.launch {
             mutableEvent.emit(VideoPlayerViewModel.Events.SwitchToFullscreen)
         }

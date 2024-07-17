@@ -70,10 +70,6 @@ class VideoPlayerFragment() : Fragment() {
                     dimensionRatio = "$ratio:1"
                 }
             }
-
-            override fun switchToFullscreen() {
-                //println("gurken fullscreen")
-            }
         }
 
         composeView.apply {
