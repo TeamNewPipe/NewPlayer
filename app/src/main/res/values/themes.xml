@@ -26,4 +26,8 @@
     </style>
 
     <style name="Theme.NewPlayer" parent="Base.Theme.NewPlayer" />
+
+    <style name="noAnimTheme" parent="Base.Theme.NewPlayer">
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
 </resources>

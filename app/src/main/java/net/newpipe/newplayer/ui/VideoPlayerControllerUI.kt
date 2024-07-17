@@ -82,11 +82,12 @@ import androidx.compose.ui.unit.sp
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.theme.video_player_onSurface
+import net.newpipe.newplayer.utils.LockScreenOrientation
 
 @Composable
 fun VideoPlayerControllerUI(
     isPlaying: Boolean,
-    isFullscreen: Boolean,
+    fullscreen: Boolean,
     play: () -> Unit,
     pause: () -> Unit,
     prevStream: () -> Unit,
@@ -98,7 +99,7 @@ fun VideoPlayerControllerUI(
         modifier = Modifier.fillMaxSize(), color = Color(0x75000000)
     ) {
         Box(
-            modifier = if (isFullscreen) {
+            modifier = if (fullscreen) {
                 Modifier
                     .background(Color.Transparent)
                     .windowInsetsPadding(WindowInsets.systemBars)
@@ -128,13 +129,13 @@ fun VideoPlayerControllerUI(
                     .padding(start = 16.dp, end = 16.dp)
                     .defaultMinSize(minHeight = 40.dp)
                     .fillMaxWidth(),
-                isFullscreen = isFullscreen,
+                isFullscreen = fullscreen,
                 switchToFullscreen,
                 switchToEmbeddedView
             )
         }
     }
-    if (isFullscreen) {
+    if (fullscreen) {
         BackHandler {
             switchToEmbeddedView()
         }
@@ -404,7 +405,7 @@ fun VideoPlayerControllerUIPreviewEmbeded() {
     VideoPlayerTheme {
         PreviewBackgroundSurface {
             VideoPlayerControllerUI(isPlaying = false,
-                isFullscreen = false,
+                fullscreen = false,
                 play = {},
                 pause = {},
                 prevStream = {},
@@ -421,7 +422,7 @@ fun VideoPlayerControllerUIPreviewLandscape() {
     VideoPlayerTheme {
         PreviewBackgroundSurface {
             VideoPlayerControllerUI(isPlaying = true,
-                isFullscreen = true,
+                fullscreen = true,
                 play = {},
                 pause = {},
                 prevStream = {},
@@ -439,7 +440,7 @@ fun VideoPlayerControllerUIPreviewPortrait() {
         PreviewBackgroundSurface {
             VideoPlayerControllerUI(
                 isPlaying = false,
-                isFullscreen = true,
+                fullscreen = true,
                 play = {},
                 pause = {},
                 prevStream = {},

@@ -35,4 +35,5 @@
     <string name="widget_description_toggle_fullscreen">Toggle fullscreen</string>
     <string name="widget_description_chapter_selection">Chapter selection</string>
     <string name="widget_descriptoin_playlist_item_selection">Playlist item selection</string>
+    <string name="title_activity_video_player">VideoPlayerActivity</string>
 </resources>

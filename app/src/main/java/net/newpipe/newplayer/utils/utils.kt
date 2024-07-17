@@ -18,7 +18,7 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.ui
+package net.newpipe.newplayer.utils
 
 import android.app.Activity
 import android.content.Context
@@ -26,7 +26,6 @@ import android.content.ContextWrapper
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.view.WindowCompat
 
 @Composable
 fun LockScreenOrientation(orientation: Int) {

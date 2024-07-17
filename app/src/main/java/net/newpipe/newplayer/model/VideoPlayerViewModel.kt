@@ -21,6 +21,7 @@
 package net.newpipe.newplayer.model
 
 import android.app.Application
+import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.media3.common.MediaItem
@@ -32,20 +33,15 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import net.newpipe.newplayer.VideoPlayerActivity
 import net.newpipe.newplayer.utils.VideoSize
 
 data class VideoPlayerUIState(
-    val playing: Boolean,
-    var fullscreen: Boolean,
-    var uiVissible: Boolean,
-    var contentRatio: Float
+    val playing: Boolean, var fullscreen: Boolean, var uiVissible: Boolean, var contentRatio: Float
 ) {
     companion object {
         val DEFAULT = VideoPlayerUIState(
-            playing = false,
-            fullscreen = false,
-            uiVissible = false,
-            0F
+            playing = false, fullscreen = false, uiVissible = false, 0F
         )
     }
 }
@@ -88,7 +84,12 @@ class VideoPlayerViewModelImpl @Inject constructor(
     var current_video_size = VideoSize.DEFAULT
 
     init {
-        player.prepare()
+
+        println("gurken $this")
+
+        if (player.playbackState == Player.STATE_IDLE) {
+            player.prepare()
+        }
         player.addListener(object : Player.Listener {
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 super.onIsPlayingChanged(isPlaying)
@@ -109,13 +110,13 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
                 val videoSize = VideoSize.fromMedia3VideoSize(media3VideoSize)
 
-                if(current_video_size != videoSize) {
+                if (current_video_size != videoSize) {
                     val newRatio = videoSize.getRatio()
-                    if(current_video_size.getRatio() != newRatio) {
+                    if (current_video_size.getRatio() != newRatio) {
                         mutableUiState.update {
                             it.copy(contentRatio = newRatio)
                         }
-                        if(!mutableUiState.value.fullscreen) {
+                        if (!mutableUiState.value.fullscreen) {
                             listener?.requestUpdateLayoutRatio(newRatio)
                         }
                     }
@@ -125,17 +126,15 @@ class VideoPlayerViewModelImpl @Inject constructor(
         })
 
         player.setMediaItem(MediaItem.fromUri(app.getString(R.string.ccc_6502_video)))
-        player.playWhenReady = true
+        //player.playWhenReady = true
     }
 
     override fun play() {
-        println("gurken Play")
-        player.play()
+        //player.play()
     }
 
     override fun pause() {
-        println("gurken pause")
-        player.pause()
+        //player.pause()
     }
 
     override fun prevStream() {
@@ -156,7 +155,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
         mutableUiState.update {
             it.copy(fullscreen = true)
         }
-        listener?.switchToFullscreen()
+        //listener?.switchToFullscreen()
     }
 
     override fun onCleared() {

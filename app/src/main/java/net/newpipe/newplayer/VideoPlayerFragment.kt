@@ -80,7 +80,7 @@ class VideoPlayerFragment() : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 VideoPlayerTheme {
-                    VideoPlayerUI(viewModel)
+                    VideoPlayerUI(viewModel = viewModel, isFullscreen = false)
                 }
             }
         }

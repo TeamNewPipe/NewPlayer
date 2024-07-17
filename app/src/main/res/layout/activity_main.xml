@@ -36,7 +36,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:name="net.newpipe.newplayer.PlayerFragment"
+        android:name="net.newpipe.newplayer.VideoPlayerFragment"
         />
 
     <TextView
