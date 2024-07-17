@@ -19,7 +19,7 @@
 
 [versions]
 agp = "8.5.0"
-kotlin = "1.9.0"
+kotlin = "2.0.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -37,10 +37,10 @@ hiltCompiler = "1.2.0"
 hiltNavigationCompose = "1.2.0"
 lifecycleViewmodelCompose = "2.8.3"
 kspVersion = "1.9.0-1.0.13"
-runtimeLivedata = "1.7.0-beta04"
 fragmentKtx = "1.8.1"
 lifecycleRuntimeKtx = "2.8.3"
 composeBom = "2024.04.01"
+kotlinParcelize = "2.0.20-Beta2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -72,9 +72,11 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 androidHilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
 kotlinAndroidKsp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }
-
+kotlinParcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlinParcelize" }

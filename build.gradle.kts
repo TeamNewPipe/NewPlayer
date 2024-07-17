@@ -23,4 +23,6 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android) apply false
     alias(libs.plugins.androidHilt) apply false
     alias(libs.plugins.kotlinAndroidKsp) apply false
+    alias(libs.plugins.kotlinParcelize) apply false
+    alias(libs.plugins.composeCompiler) apply false
 }

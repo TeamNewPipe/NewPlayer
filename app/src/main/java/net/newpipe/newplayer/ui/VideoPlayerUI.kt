@@ -42,6 +42,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import kotlinx.coroutines.flow.collectLatest
 import net.newpipe.newplayer.VideoPlayerActivity
+import net.newpipe.newplayer.model.VIDEOPLAYER_UI_STATE
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelImpl
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
@@ -81,6 +82,7 @@ fun VideoPlayerUI(
                 VideoPlayerViewModel.Events.SwitchToFullscreen -> {
                     val fullscreen_activity_intent =
                         Intent(activity!!.findActivity(), VideoPlayerActivity::class.java)
+                    fullscreen_activity_intent.putExtra(VIDEOPLAYER_UI_STATE, viewModel.uiState.value)
                     activity.startActivity(fullscreen_activity_intent)
 
                 }

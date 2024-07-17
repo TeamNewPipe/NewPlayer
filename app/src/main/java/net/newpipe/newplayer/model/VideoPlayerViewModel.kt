@@ -21,6 +21,7 @@
 package net.newpipe.newplayer.model
 
 import android.app.Application
+import android.os.Parcelable
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -37,13 +38,17 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.newpipe.newplayer.utils.VideoSize
+import kotlinx.parcelize.Parcelize
 
+val VIDEOPLAYER_UI_STATE = "video_player_ui_state"
+
+@Parcelize
 data class VideoPlayerUIState(
     val playing: Boolean,
     var fullscreen: Boolean,
     var uiVissible: Boolean,
     var contentRatio: Float
-) {
+) : Parcelable {
     companion object {
         val DEFAULT = VideoPlayerUIState(
             playing = false, fullscreen = false, uiVissible = false, 0F
@@ -180,10 +185,6 @@ class VideoPlayerViewModelImpl @Inject constructor(
         //    it.copy(fullscreen = true)
         //}
         //listener?.switchToFullscreen()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
     }
 
     companion object {
