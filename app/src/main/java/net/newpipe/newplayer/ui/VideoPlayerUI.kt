@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import kotlinx.coroutines.flow.collectLatest
 import net.newpipe.newplayer.VideoPlayerActivity
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelImpl
@@ -48,13 +50,14 @@ import net.newpipe.newplayer.utils.findActivity
 @Composable
 fun VideoPlayerUI(
     viewModel: VideoPlayerViewModel,
-    isFullscreen: Boolean
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     var lifecycle by remember {
         mutableStateOf(Lifecycle.Event.ON_CREATE)
     }
+
+    val activity = LocalContext.current.findActivity()
 
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
@@ -68,21 +71,22 @@ fun VideoPlayerUI(
         }
     }
 
-    var fullscreen_requested by remember {
-        mutableStateOf(false)
-    }
+    LaunchedEffect(key1 = Unit) {
+        viewModel.events?.collectLatest { event ->
+            when (event) {
+                VideoPlayerViewModel.Events.SwitchToEmbeddedView -> {
+                    activity?.finish()
+                }
 
-    if(isFullscreen != uiState.fullscreen && !fullscreen_requested) {
-        fullscreen_requested = true
-        val current_acitivity = LocalContext.current.findActivity()
-        if(uiState.fullscreen) {
-            val fullscreen_acitivity_intent = Intent(current_acitivity, VideoPlayerActivity::class.java)
-            current_acitivity!!.startActivity(fullscreen_acitivity_intent)
-        } else {
-            current_acitivity!!.finish()
+                VideoPlayerViewModel.Events.SwitchToFullscreen -> {
+                    val fullscreen_activity_intent =
+                        Intent(activity!!.findActivity(), VideoPlayerActivity::class.java)
+                    activity.startActivity(fullscreen_activity_intent)
+
+                }
+            }
         }
     }
-
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -92,7 +96,7 @@ fun VideoPlayerUI(
             modifier = Modifier.fillMaxSize(),
             factory = { context ->
                 SurfaceView(context).also {
-                    //viewModel.player?.setVideoSurfaceView(it)
+                    viewModel.player?.setVideoSurfaceView(it)
                 }
             }, update = {
                 when (lifecycle) {
@@ -124,6 +128,6 @@ fun VideoPlayerUI(
 @Composable
 fun PlayerUIPreviewEmbeded() {
     VideoPlayerTheme {
-        VideoPlayerUI(viewModel = VideoPlayerViewModelImpl.dummy, isFullscreen = false)
+        VideoPlayerUI(viewModel = VideoPlayerViewModelImpl.dummy)
     }
 }

@@ -84,6 +84,9 @@ class VideoPlayerFragment() : Fragment() {
                 }
             }
         }
+
+        viewModel.preparePlayer()
+
         return view
     }
 }

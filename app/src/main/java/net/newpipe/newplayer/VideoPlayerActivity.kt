@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.material3.Text
 import dagger.hilt.android.AndroidEntryPoint
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelImpl
@@ -21,7 +22,7 @@ class VideoPlayerActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             VideoPlayerTheme {
-                VideoPlayerUI(viewModel = viewModel, isFullscreen = true)
+                VideoPlayerUI(viewModel = viewModel)
             }
         }
     }

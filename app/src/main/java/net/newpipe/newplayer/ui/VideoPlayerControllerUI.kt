@@ -357,10 +357,6 @@ private fun BottomUI(
     switchToEmbeddedView: () -> Unit
 ) {
 
-    if (isFullscreen) {
-        LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
-    }
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -385,7 +381,7 @@ private fun BottomUI(
 
 @Composable
 private fun ViewInFullScreen() {
-    LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+    //LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
 }
 
 @Composable
