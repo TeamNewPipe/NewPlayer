@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- NewPlayer
+
+    @author Christian Schabesberger
+
+    Copyright (C) NewPipe e.V. 2024 <code(at)newpipe-ev.de>
+
+    NewPlayer is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    NewPlayer is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<resources>
+    <string name="ccc_6502_video">https://ftp.fau.de/cdn.media.ccc.de/congress/2010/mp4-h264-HQ/27c3-4159-en-reverse_engineering_mos_6502.mp4</string>
+    <string name="ccc_6502_audio">https://ftp.fau.de/cdn.media.ccc.de/congress/2010/ogg-audio-only/27c3-4159-en-reverse_engineering_mos_6502.ogg</string>
+    <string name="ccc_chromebooks_video">https://ftp.fau.de/cdn.media.ccc.de/congress/2023/h264-hd/37c3-11929-eng-deu-swe-Turning_Chromebooks_into_regular_laptops_hd.mp4</string>
+</resources>

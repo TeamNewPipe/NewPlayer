@@ -1,4 +1,4 @@
-package net.newpipe.newplayer
+package net.newpipe.newplayer.internal
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -6,15 +6,11 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import net.newpipe.newplayer.internal.model.VideoPlayerViewModel
-import net.newpipe.newplayer.internal.model.VideoPlayerViewModelImpl
-import net.newpipe.newplayer.internal.ui.VideoPlayerUI
-import net.newpipe.newplayer.internal.ui.theme.VideoPlayerTheme
 
 @AndroidEntryPoint
 class VideoPlayerActivity : ComponentActivity() {
 
-    private val viewModel: VideoPlayerViewModel by viewModels<VideoPlayerViewModelImpl>()
+    private val viewModel: net.newpipe.newplayer.internal.model.VideoPlayerViewModel by viewModels<net.newpipe.newplayer.internal.model.VideoPlayerViewModelImpl>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,8 +19,8 @@ class VideoPlayerActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            VideoPlayerTheme {
-                VideoPlayerUI(viewModel = viewModel)
+            net.newpipe.newplayer.internal.ui.theme.VideoPlayerTheme {
+                net.newpipe.newplayer.internal.ui.VideoPlayerUI(viewModel = viewModel)
             }
         }
     }

@@ -18,8 +18,7 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-package net.newpipe.newplayer.internal.ui
+ package net.newpipe.newplayer.internal.ui
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background

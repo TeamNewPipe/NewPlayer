@@ -47,7 +47,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import kotlinx.coroutines.flow.collectLatest
-import net.newpipe.newplayer.VideoPlayerActivity
+import net.newpipe.newplayer.internal.VideoPlayerActivity
 import net.newpipe.newplayer.internal.model.VIDEOPLAYER_UI_STATE
 import net.newpipe.newplayer.internal.model.VideoPlayerViewModel
 import net.newpipe.newplayer.internal.model.VideoPlayerViewModelImpl
