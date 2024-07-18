@@ -102,7 +102,11 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.hilt.navigation.compose)
 
-    implementation(project(":new-player"))
+    // development impl
+    //implementation(project(":new-player"))
+
+    //jitpack test
+    implementation(libs.newplayer)
 
     ksp(libs.hilt.android.compiler)
     ksp(libs.androidx.hilt.compiler)

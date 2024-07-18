@@ -41,6 +41,7 @@ fragmentKtx = "1.8.1"
 lifecycleRuntimeKtx = "2.8.3"
 composeBom = "2024.06.01"
 kotlinParcelize = "2.0.20-Beta2"
+newplayer = "master-SNAPSHOT"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -71,6 +72,7 @@ androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+newplayer = { group = "com.github.theScrabi", name = "NewPlayer", version.ref = "newplayer" }
 
 
 [plugins]
