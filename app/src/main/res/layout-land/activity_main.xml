@@ -36,7 +36,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="parent"
-        android:name="net.newpipe.newplayer.VideoPlayerFragment"
+        android:name="net.newpipe.newplayer.internal.VideoPlayerFragment"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

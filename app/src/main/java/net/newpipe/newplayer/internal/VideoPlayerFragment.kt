@@ -18,13 +18,12 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer
+package net.newpipe.newplayer.internal
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -34,6 +33,7 @@ import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import net.newpipe.newplayer.R
 import net.newpipe.newplayer.internal.model.VideoPlayerViewModel
 import net.newpipe.newplayer.internal.model.VideoPlayerViewModelImpl
 import net.newpipe.newplayer.internal.ui.VideoPlayerUI

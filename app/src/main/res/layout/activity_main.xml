@@ -27,17 +27,15 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/player_frament_view"
+    <net.newpipe.newplayer.VideoPlayerView
+        android:id="@+id/new_player_video_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:name="net.newpipe.newplayer.VideoPlayerFragment"
-        />
+        android:name="net.newpipe.newplayer.VideoPlayerFragment" />
 
     <TextView
         android:id="@+id/hw_view"
