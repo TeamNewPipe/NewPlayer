@@ -25,4 +25,5 @@ plugins {
     alias(libs.plugins.kotlinAndroidKsp) apply false
     alias(libs.plugins.kotlinParcelize) apply false
     alias(libs.plugins.composeCompiler) apply false
+    alias(libs.plugins.android.library) apply false
 }

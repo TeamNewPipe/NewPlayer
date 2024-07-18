@@ -62,11 +62,10 @@ class VideoPlayerFragment() : Fragment() {
 
         val view = inflater.inflate(R.layout.video_player_framgent, container, false)
         val composeView = view.findViewById<ComposeView>(R.id.player_copose_view)
-        val frameView = view.findViewById<FrameLayout>(R.id.frame_layout)
 
         viewModel.listener = object : VideoPlayerViewModel.Listener {
             override fun requestUpdateLayoutRatio(ratio: Float) {
-                frameView.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                composeView.updateLayoutParams<ConstraintLayout.LayoutParams> {
                     dimensionRatio = "$ratio:1"
                 }
             }

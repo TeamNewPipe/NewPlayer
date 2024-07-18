@@ -38,6 +38,10 @@ android {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
 
+    hilt {
+        enableExperimentalClasspathAggregation = true
+    }
+
     defaultConfig {
         applicationId = "net.newpipe.newplayer"
         minSdk = 21

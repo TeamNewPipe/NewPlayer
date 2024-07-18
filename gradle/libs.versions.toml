@@ -80,3 +80,4 @@ composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "k
 androidHilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
 kotlinAndroidKsp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }
 kotlinParcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlinParcelize" }
+android-library = { id = "com.android.library", version.ref = "agp" }

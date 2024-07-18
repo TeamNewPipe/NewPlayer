@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "NewPlayer"
 include(":app")
- 
+include(":NewPlayer")
