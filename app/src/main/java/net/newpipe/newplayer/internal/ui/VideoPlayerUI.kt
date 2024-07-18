@@ -18,7 +18,7 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.ui
+package net.newpipe.newplayer.internal.ui
 
 import android.app.Activity
 import android.content.Intent
@@ -27,7 +27,6 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
-import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
@@ -47,14 +46,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.VIEW_MODEL_STORE_OWNER_KEY
 import kotlinx.coroutines.flow.collectLatest
 import net.newpipe.newplayer.VideoPlayerActivity
-import net.newpipe.newplayer.model.VIDEOPLAYER_UI_STATE
-import net.newpipe.newplayer.model.VideoPlayerViewModel
-import net.newpipe.newplayer.model.VideoPlayerViewModelImpl
-import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.utils.findActivity
+import net.newpipe.newplayer.internal.model.VIDEOPLAYER_UI_STATE
+import net.newpipe.newplayer.internal.model.VideoPlayerViewModel
+import net.newpipe.newplayer.internal.model.VideoPlayerViewModelImpl
+import net.newpipe.newplayer.internal.ui.theme.VideoPlayerTheme
+import net.newpipe.newplayer.internal.utils.findActivity
 
 @Composable
 fun VideoPlayerUI(

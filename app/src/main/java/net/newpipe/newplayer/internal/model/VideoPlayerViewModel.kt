@@ -18,7 +18,7 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.model
+package net.newpipe.newplayer.internal.model
 
 import android.app.Application
 import android.os.Build
@@ -40,7 +40,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import net.newpipe.newplayer.utils.VideoSize
+import net.newpipe.newplayer.internal.utils.VideoSize
 import kotlinx.parcelize.Parcelize
 
 val VIDEOPLAYER_UI_STATE = "video_player_ui_state"

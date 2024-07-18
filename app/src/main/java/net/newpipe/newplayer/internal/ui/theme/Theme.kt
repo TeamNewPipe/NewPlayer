@@ -18,13 +18,12 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.ui.theme
+package net.newpipe.newplayer.internal.ui.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 
 private val VideoPlayerColorScheme = darkColorScheme(
     primary = video_player_primary,

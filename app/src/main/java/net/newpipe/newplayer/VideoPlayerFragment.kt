@@ -34,10 +34,10 @@ import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import net.newpipe.newplayer.model.VideoPlayerViewModel
-import net.newpipe.newplayer.model.VideoPlayerViewModelImpl
-import net.newpipe.newplayer.ui.VideoPlayerUI
-import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
+import net.newpipe.newplayer.internal.model.VideoPlayerViewModel
+import net.newpipe.newplayer.internal.model.VideoPlayerViewModelImpl
+import net.newpipe.newplayer.internal.ui.VideoPlayerUI
+import net.newpipe.newplayer.internal.ui.theme.VideoPlayerTheme
 
 @AndroidEntryPoint
 class VideoPlayerFragment() : Fragment() {

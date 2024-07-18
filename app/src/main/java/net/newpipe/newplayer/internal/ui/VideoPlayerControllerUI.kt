@@ -19,9 +19,8 @@
  */
 
 
-package net.newpipe.newplayer.ui
+package net.newpipe.newplayer.internal.ui
 
-import android.content.pm.ActivityInfo
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -80,9 +79,8 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import net.newpipe.newplayer.R
-import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.ui.theme.video_player_onSurface
-import net.newpipe.newplayer.utils.LockScreenOrientation
+import net.newpipe.newplayer.internal.ui.theme.VideoPlayerTheme
+import net.newpipe.newplayer.internal.ui.theme.video_player_onSurface
 
 @Composable
 fun VideoPlayerControllerUI(

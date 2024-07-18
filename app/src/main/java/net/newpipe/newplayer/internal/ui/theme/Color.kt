@@ -18,7 +18,7 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.ui.theme
+package net.newpipe.newplayer.internal.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
