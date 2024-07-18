@@ -42,6 +42,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.newpipe.newplayer.internal.utils.VideoSize
 import kotlinx.parcelize.Parcelize
+import net.newpipe.newplayer.NewPlayer
 
 val VIDEOPLAYER_UI_STATE = "video_player_ui_state"
 
@@ -60,6 +61,7 @@ data class VideoPlayerUIState(
 }
 
 interface VideoPlayerViewModel {
+    val new_player: NewPlayer?
     val player: Player?
     val uiState: StateFlow<VideoPlayerUIState>
     var listener: Listener?
@@ -88,26 +90,22 @@ interface VideoPlayerViewModel {
 @HiltViewModel
 class VideoPlayerViewModelImpl @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    override val player: Player,
+    override val new_player: NewPlayer,
     application: Application
 ) : AndroidViewModel(application), VideoPlayerViewModel {
 
-    val app = getApplication<Application>()
-
-    private val mutableUiState = MutableStateFlow(
-        VideoPlayerUIState.DEFAULT
-    )
-
+    // private
+    private val app = getApplication<Application>()
+    private val mutableUiState = MutableStateFlow(VideoPlayerUIState.DEFAULT)
     private val mutableEvent = MutableSharedFlow<VideoPlayerViewModel.Events>()
+    private var current_video_size = VideoSize.DEFAULT
 
-    override val events: SharedFlow<VideoPlayerViewModel.Events> = mutableEvent
-
-
+    //interface
     override val uiState = mutableUiState.asStateFlow()
-
+    override val events: SharedFlow<VideoPlayerViewModel.Events> = mutableEvent
     override var listener: VideoPlayerViewModel.Listener? = null
+    override val player = new_player.player
 
-    var current_video_size = VideoSize.DEFAULT
 
     init {
 
@@ -203,6 +201,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     companion object {
         val dummy = object : VideoPlayerViewModel {
+            override val new_player = null
             override val player = null
             override val uiState = MutableStateFlow(VideoPlayerUIState.DEFAULT)
             override var listener: VideoPlayerViewModel.Listener? = null

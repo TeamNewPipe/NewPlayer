@@ -27,6 +27,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import net.newpipe.newplayer.NewPlayer
 import javax.inject.Singleton
 
 @Module
@@ -34,7 +35,7 @@ import javax.inject.Singleton
 object VideoPlayerComponent {
     @Provides
     @Singleton
-    fun provideVideoPlayer(app: Application) : Player {
-        return ExoPlayer.Builder(app).build()
+    fun provideNewPlayer(app: Application) : NewPlayer {
+        return NewPlayer.Builder(app).build()
     }
 }
