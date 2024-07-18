@@ -41,10 +41,17 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    val version = "0.1-DEVEL"
+    val group = "com.github.the-scrabi"
+    val artifact = "NewPlayer"
+
+    repositories {
+        maven(url="https://jitpack.io")
+    }
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
