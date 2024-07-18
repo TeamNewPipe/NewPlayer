@@ -53,11 +53,6 @@ class VideoPlayerFragment() : Fragment() {
         val insetsController = WindowCompat.getInsetsController(window, window.decorView)
         insetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
-        if (viewModel.uiState.value.fullscreen) {
-            //println("gurken fragment created for fullscreen")
-            //insetsController.hide(WindowInsetsCompat.Type.systemBars())
-        }
-
         val view = inflater.inflate(R.layout.video_player_framgent, container, false)
         val composeView = view.findViewById<ComposeView>(R.id.player_copose_view)
 
