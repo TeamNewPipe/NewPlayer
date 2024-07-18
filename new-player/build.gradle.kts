@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.androidHilt)
     alias(libs.plugins.kotlinParcelize)
     alias(libs.plugins.composeCompiler)
-    "maven-publish"
+    `maven-publish`
 }
 
 android {
@@ -20,7 +20,9 @@ android {
     }
 
     defaultConfig {
-        minSdk = 21
+        aarMetadata {
+            minCompileSdk = 21
+        }
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -42,10 +44,6 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-
-    val version = "0.1-DEVEL"
-    val group = "com.github.the-scrabi"
-    val artifact = "NewPlayer"
 }
 
 dependencies {
