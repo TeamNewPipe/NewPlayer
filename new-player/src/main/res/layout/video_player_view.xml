@@ -20,13 +20,8 @@
 
 <androidx.fragment.app.FragmentContainerView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/video_player_fragment"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="50dp"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    android:name="net.newpipe.newplayer.internal.VideoPlayerFragment"
-    />
+    android:name="net.newpipe.newplayer.internal.VideoPlayerFragment" />
