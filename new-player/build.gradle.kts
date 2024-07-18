@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.androidHilt)
     alias(libs.plugins.kotlinParcelize)
     alias(libs.plugins.composeCompiler)
+    "maven-publish"
 }
 
 android {
@@ -45,10 +46,6 @@ android {
     val version = "0.1-DEVEL"
     val group = "com.github.the-scrabi"
     val artifact = "NewPlayer"
-
-    repositories {
-        maven(url="https://jitpack.io")
-    }
 }
 
 dependencies {
