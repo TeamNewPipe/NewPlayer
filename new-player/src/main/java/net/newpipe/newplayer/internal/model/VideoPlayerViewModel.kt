@@ -28,13 +28,11 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import net.newpipe.newplayer.R
 import javax.inject.Inject
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -61,14 +59,13 @@ data class VideoPlayerUIState(
 }
 
 interface VideoPlayerViewModel {
-    val new_player: NewPlayer?
+    var newPlayer: NewPlayer?
     val player: Player?
     val uiState: StateFlow<VideoPlayerUIState>
     var listener: Listener?
     val events: SharedFlow<Events>?
 
     fun initUIState(instanceState: Bundle)
-    fun preparePlayer()
     fun play()
     fun pause()
     fun prevStream()
@@ -90,12 +87,10 @@ interface VideoPlayerViewModel {
 @HiltViewModel
 class VideoPlayerViewModelImpl @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    override val new_player: NewPlayer,
     application: Application
 ) : AndroidViewModel(application), VideoPlayerViewModel {
 
     // private
-    private val app = getApplication<Application>()
     private val mutableUiState = MutableStateFlow(VideoPlayerUIState.DEFAULT)
     private val mutableEvent = MutableSharedFlow<VideoPlayerViewModel.Events>()
     private var current_video_size = VideoSize.DEFAULT
@@ -104,45 +99,51 @@ class VideoPlayerViewModelImpl @Inject constructor(
     override val uiState = mutableUiState.asStateFlow()
     override val events: SharedFlow<VideoPlayerViewModel.Events> = mutableEvent
     override var listener: VideoPlayerViewModel.Listener? = null
-    override val player = new_player.player
+    override var newPlayer: NewPlayer? = null
+        set(value) {
+            field = value
+            installExoPlayer()
+        }
+    override val player:Player?
+        get() = newPlayer?.player
 
-
-    init {
-
-        player.addListener(object : Player.Listener {
-            override fun onIsPlayingChanged(isPlaying: Boolean) {
-                super.onIsPlayingChanged(isPlaying)
-                println("gurken playerstate: $isPlaying")
-                mutableUiState.update {
-                    it.copy(playing = isPlaying)
-                }
-            }
-
-            // We need to updated the layout of our player view if the video ratio changes
-            // However, this should be done differently depending on weather we are in
-            // embedded or fullscreen view.
-            // If we are in embedded view, we tell the mother layout (only ConstraintLayout supported!)
-            // to change the ratio of the whole player view.
-            // If we are in fullscreen we only want to change the ratio of the SurfaceView
-            override fun onVideoSizeChanged(media3VideoSize: androidx.media3.common.VideoSize) {
-                super.onVideoSizeChanged(media3VideoSize)
-
-                val videoSize = VideoSize.fromMedia3VideoSize(media3VideoSize)
-
-                if (current_video_size != videoSize) {
-                    val newRatio = videoSize.getRatio()
-                    if (current_video_size.getRatio() != newRatio) {
-                        mutableUiState.update {
-                            it.copy(contentRatio = newRatio)
-                        }
-                        if (!mutableUiState.value.fullscreen) {
-                            listener?.requestUpdateLayoutRatio(newRatio)
-                        }
+    private fun installExoPlayer() {
+        player?.let { player ->
+            player.addListener(object : Player.Listener {
+                override fun onIsPlayingChanged(isPlaying: Boolean) {
+                    super.onIsPlayingChanged(isPlaying)
+                    println("gurken playerstate: $isPlaying")
+                    mutableUiState.update {
+                        it.copy(playing = isPlaying)
                     }
-                    current_video_size = videoSize
                 }
-            }
-        })
+
+                // We need to updated the layout of our player view if the video ratio changes
+                // However, this should be done differently depending on weather we are in
+                // embedded or fullscreen view.
+                // If we are in embedded view, we tell the mother layout (only ConstraintLayout supported!)
+                // to change the ratio of the whole player view.
+                // If we are in fullscreen we only want to change the ratio of the SurfaceView
+                override fun onVideoSizeChanged(media3VideoSize: androidx.media3.common.VideoSize) {
+                    super.onVideoSizeChanged(media3VideoSize)
+
+                    val videoSize = VideoSize.fromMedia3VideoSize(media3VideoSize)
+
+                    if (current_video_size != videoSize) {
+                        val newRatio = videoSize.getRatio()
+                        if (current_video_size.getRatio() != newRatio) {
+                            mutableUiState.update {
+                                it.copy(contentRatio = newRatio)
+                            }
+                            if (!mutableUiState.value.fullscreen) {
+                                listener?.requestUpdateLayoutRatio(newRatio)
+                            }
+                        }
+                        current_video_size = videoSize
+                    }
+                }
+            })
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -161,21 +162,13 @@ class VideoPlayerViewModelImpl @Inject constructor(
         }
     }
 
-    override fun preparePlayer() {
-        if (player.playbackState == Player.STATE_IDLE) {
-            player.prepare()
-        }
-
-        player.setMediaItem(MediaItem.fromUri(app.getString(R.string.portrait_video_example)))
-        player.playWhenReady = true
-    }
-
     override fun play() {
-        player.play()
+        println("gurken player: $newPlayer")
+        newPlayer?.play()
     }
 
     override fun pause() {
-        player.pause()
+        newPlayer?.pause()
     }
 
     override fun prevStream() {
@@ -201,17 +194,13 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     companion object {
         val dummy = object : VideoPlayerViewModel {
-            override val new_player = null
-            override val player = null
+            override var newPlayer: NewPlayer? = null
+            override val player: Player? = null
             override val uiState = MutableStateFlow(VideoPlayerUIState.DEFAULT)
             override var listener: VideoPlayerViewModel.Listener? = null
             override val events: SharedFlow<VideoPlayerViewModel.Events>? = null
 
             override fun initUIState(instanceState: Bundle) {
-                println("dummy impl")
-            }
-
-            override fun preparePlayer() {
                 println("dummy impl")
             }
 

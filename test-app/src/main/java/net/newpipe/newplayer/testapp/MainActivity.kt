@@ -27,18 +27,25 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import dagger.hilt.android.AndroidEntryPoint
+import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.VideoPlayerView
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var newPlayer: NewPlayer
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
         val video_view = findViewById<VideoPlayerView>(R.id.new_player_video_view)
-
-        video_view.minLayoutRatio
+        video_view.newPlayer = newPlayer
+        newPlayer.playWhenReady = true
+        newPlayer.setStream(getString(R.string.ccc_chromebooks_video))
 
         //TODO: This is a dirty hack. Fix this later on
         if (getResources().configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {

@@ -112,16 +112,13 @@ fun VideoPlayerUI(
             modifier = Modifier.fillMaxSize(),
             factory = { context ->
                 SurfaceView(context).also { view ->
+                    println("gurken attach player: ${viewModel.player}")
                     viewModel.player?.setVideoSurfaceView(view)
                 }
             }, update = { view ->
                 when (lifecycle) {
-                    Lifecycle.Event.ON_PAUSE -> {
-                        println("gurken state on pause")
-                    }
-
                     Lifecycle.Event.ON_RESUME -> {
-                        println("gurken resume")
+                        println("gurken reattach player: ${viewModel.player}")
                         viewModel.player?.setVideoSurfaceView(view)
                     }
 
@@ -129,7 +126,7 @@ fun VideoPlayerUI(
                 }
             })
 
-        val isPlaying = viewModel.player!!.isPlaying
+        val isPlaying = viewModel.player?.isPlaying ?: false
 
         VideoPlayerControllerUI(
             isPlaying = uiState.playing,

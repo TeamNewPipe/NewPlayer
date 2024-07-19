@@ -18,11 +18,9 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.internal
+package net.newpipe.newplayer.testapp
 
 import android.app.Application
-import androidx.media3.common.Player
-import androidx.media3.exoplayer.ExoPlayer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,7 +30,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object VideoPlayerComponent {
+object NewPlayerComponent {
     @Provides
     @Singleton
     fun provideNewPlayer(app: Application) : NewPlayer {

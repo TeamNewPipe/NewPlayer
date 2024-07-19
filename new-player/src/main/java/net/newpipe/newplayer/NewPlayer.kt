@@ -21,12 +21,21 @@
 package net.newpipe.newplayer
 
 import android.app.Application
+import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 
 
 interface NewPlayer {
     val player: Player
+    var playWhenReady: Boolean
+
+    fun prepare()
+    fun play()
+    fun pause()
+
+    //TODO: This is only temporary
+    fun setStream(uri: String)
 
     data class Builder(val app: Application) {
         fun build(): NewPlayer {
@@ -37,4 +46,31 @@ interface NewPlayer {
 
 class NewPlayerImpl(internal_player: Player) : NewPlayer {
     override val player = internal_player
+
+    override var playWhenReady: Boolean
+        set(value) {
+            player.playWhenReady = value
+        }
+        get() = player.playWhenReady
+
+    override fun prepare() {
+        player.prepare()
+    }
+
+    override fun play() {
+        player.play()
+    }
+
+    override fun pause() {
+        player.pause()
+    }
+
+
+    override fun setStream(uri: String) {
+        if (player.playbackState == Player.STATE_IDLE) {
+            player.prepare()
+        }
+
+        player.setMediaItem(MediaItem.fromUri(uri))
+    }
 }

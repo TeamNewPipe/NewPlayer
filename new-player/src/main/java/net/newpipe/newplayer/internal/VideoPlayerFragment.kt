@@ -34,6 +34,7 @@ import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.internal.model.VideoPlayerViewModel
 import net.newpipe.newplayer.internal.model.VideoPlayerViewModelImpl
@@ -47,6 +48,16 @@ class VideoPlayerFragment() : Fragment() {
     private val viewModel: VideoPlayerViewModel by viewModels<VideoPlayerViewModelImpl>()
     private var currentVideoRatio = 0F
     private lateinit var composeView: ComposeView
+
+    var newPlayer: NewPlayer? = null
+        set(value) {
+            if(context != null) {
+                viewModel.newPlayer = value
+            } else {
+                field = value
+            }
+        }
+        get() = viewModel.newPlayer ?: field
 
     var minLayoutRatio = 4F / 3F
         set(value) {
@@ -87,6 +98,11 @@ class VideoPlayerFragment() : Fragment() {
         val view = inflater.inflate(R.layout.video_player_framgent, container, false)
         composeView = view.findViewById(R.id.player_copose_view)
 
+        // late init player in case player was set before fragment was attached to a context
+        if (viewModel.newPlayer == null) {
+            viewModel.newPlayer = newPlayer
+        }
+
         viewModel.listener = object : VideoPlayerViewModel.Listener {
             override fun requestUpdateLayoutRatio(videoRatio: Float) {
                 currentVideoRatio = videoRatio
@@ -103,15 +119,15 @@ class VideoPlayerFragment() : Fragment() {
             }
         }
 
-        viewModel.preparePlayer()
-
         return view
     }
 
     private fun updateViewRatio() {
-        composeView.updateLayoutParams<ConstraintLayout.LayoutParams> {
-            val ratio = currentVideoRatio.coerceIn(minLayoutRatio, maxLayoutRatio)
-            dimensionRatio = "$ratio:1"
+        if(this::composeView.isInitialized) {
+            composeView.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                val ratio = currentVideoRatio.coerceIn(minLayoutRatio, maxLayoutRatio)
+                dimensionRatio = "$ratio:1"
+            }
         }
     }
 }
