@@ -28,7 +28,7 @@ plugins {
 }
 
 android {
-    namespace = "net.newpipe.newplayer"
+    namespace = "net.newpipe.newplayer.testapp"
     compileSdk = 34
 
     buildFeatures {
@@ -43,7 +43,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "net.newpipe.newplayer"
+        applicationId = "net.newpipe.newplayer.testapp"
         minSdk = 21
         targetSdk = 34
         versionCode = 1
@@ -103,10 +103,10 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
 
     // development impl
-    //implementation(project(":new-player"))
+    implementation(project(":new-player"))
 
     //jitpack test
-    implementation(libs.newplayer)
+    //implementation(libs.newplayer)
 
     ksp(libs.hilt.android.compiler)
     ksp(libs.androidx.hilt.compiler)

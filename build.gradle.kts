@@ -26,4 +26,18 @@ plugins {
     alias(libs.plugins.kotlinParcelize) apply false
     alias(libs.plugins.composeCompiler) apply false
     alias(libs.plugins.android.library) apply false
+    `maven-publish`
 }
+
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                groupId = "com.github.the-scrabi"
+                artifactId = "NewPlayer"
+                version = "0.1-DEVEL"
+            }
+        }
+    }
+}
+

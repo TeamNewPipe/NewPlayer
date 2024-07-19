@@ -18,7 +18,7 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer
+package net.newpipe.newplayer.testapp
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

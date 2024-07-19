@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.androidHilt)
     alias(libs.plugins.kotlinParcelize)
     alias(libs.plugins.composeCompiler)
-    `maven-publish`
 }
 
 android {
@@ -43,20 +42,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-    }
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = "com.github.the-scrabi"
-            artifactId = "NewPlayer"
-            version = "0.1-DEVEL"
-
-            afterEvaluate {
-                from(components["release"])
-            }
-        }
     }
 }
 
