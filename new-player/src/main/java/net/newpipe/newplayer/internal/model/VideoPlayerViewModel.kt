@@ -166,7 +166,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
             player.prepare()
         }
 
-        player.setMediaItem(MediaItem.fromUri(app.getString(R.string.ccc_chromebooks_video)))
+        player.setMediaItem(MediaItem.fromUri(app.getString(R.string.portrait_video_example)))
         player.playWhenReady = true
     }
 

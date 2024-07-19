@@ -72,7 +72,7 @@ androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
-newplayer = { group = "com.github.theScrabi", name = "NewPlayer", version.ref = "newplayer" }
+newplayer = { group = "com.github.theScrabi.NewPlayer", name = "new-player", version.ref = "newplayer" }
 
 
 [plugins]

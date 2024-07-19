@@ -20,8 +20,7 @@
 
 <androidx.fragment.app.FragmentContainerView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/video_player_fragment"
+    android:id="@+id/video_player_fragment_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="50dp"
-    android:name="net.newpipe.newplayer.internal.VideoPlayerFragment" />
+    android:minHeight="50dp" />

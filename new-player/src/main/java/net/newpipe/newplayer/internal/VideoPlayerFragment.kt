@@ -21,6 +21,7 @@
 package net.newpipe.newplayer.internal
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,7 +43,36 @@ import net.newpipe.newplayer.internal.ui.theme.VideoPlayerTheme
 @AndroidEntryPoint
 class VideoPlayerFragment() : Fragment() {
 
+    private val TAG = "VideoPlayerFragment"
     private val viewModel: VideoPlayerViewModel by viewModels<VideoPlayerViewModelImpl>()
+    private var currentVideoRatio = 0F
+    private lateinit var composeView: ComposeView
+
+    var minLayoutRatio = 4F / 3F
+        set(value) {
+            if (value <= 0 && maxLayoutRatio < minLayoutRatio)
+                Log.e(
+                    TAG,
+                    "minLayoutRatio can not be 0 or smaller or bigger then maxLayoutRatio. Ignore: $value"
+                )
+            else {
+                field = value
+                updateViewRatio()
+            }
+        }
+
+    var maxLayoutRatio = 16F / 9F
+        set(value) {
+            if (value <= 0 && value < minLayoutRatio)
+                Log.e(
+                    TAG,
+                    "maxLayoutRatio can not be 0 smaller ans smaller then minLayoutRatio. Ignore: $value"
+                )
+            else {
+                field = value
+                updateViewRatio()
+            }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,16 +81,16 @@ class VideoPlayerFragment() : Fragment() {
     ): View? {
         val window = activity?.window!!
         val insetsController = WindowCompat.getInsetsController(window, window.decorView)
-        insetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        insetsController.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
         val view = inflater.inflate(R.layout.video_player_framgent, container, false)
-        val composeView = view.findViewById<ComposeView>(R.id.player_copose_view)
+        composeView = view.findViewById(R.id.player_copose_view)
 
         viewModel.listener = object : VideoPlayerViewModel.Listener {
-            override fun requestUpdateLayoutRatio(ratio: Float) {
-                composeView.updateLayoutParams<ConstraintLayout.LayoutParams> {
-                    dimensionRatio = "$ratio:1"
-                }
+            override fun requestUpdateLayoutRatio(videoRatio: Float) {
+                currentVideoRatio = videoRatio
+                updateViewRatio()
             }
         }
 
@@ -76,5 +106,12 @@ class VideoPlayerFragment() : Fragment() {
         viewModel.preparePlayer()
 
         return view
+    }
+
+    private fun updateViewRatio() {
+        composeView.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            val ratio = currentVideoRatio.coerceIn(minLayoutRatio, maxLayoutRatio)
+            dimensionRatio = "$ratio:1"
+        }
     }
 }
