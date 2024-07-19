@@ -45,9 +45,6 @@ class VideoPlayerView : FrameLayout {
         get() = videoPlayerFragment.minLayoutRatio
         set(value) {videoPlayerFragment.minLayoutRatio = value}
 
-    var newPlayer:NewPlayer?
-        set(value) {videoPlayerFragment.newPlayer = value}
-        get() = videoPlayerFragment.newPlayer
 
     @JvmOverloads
     constructor(

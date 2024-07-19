@@ -87,7 +87,8 @@ interface VideoPlayerViewModel {
 @HiltViewModel
 class VideoPlayerViewModelImpl @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    application: Application
+    application: Application,
+    override var newPlayer: NewPlayer?
 ) : AndroidViewModel(application), VideoPlayerViewModel {
 
     // private
@@ -99,20 +100,20 @@ class VideoPlayerViewModelImpl @Inject constructor(
     override val uiState = mutableUiState.asStateFlow()
     override val events: SharedFlow<VideoPlayerViewModel.Events> = mutableEvent
     override var listener: VideoPlayerViewModel.Listener? = null
-    override var newPlayer: NewPlayer? = null
-        set(value) {
-            field = value
-            installExoPlayer()
-        }
+
     override val player:Player?
         get() = newPlayer?.player
+
+    init {
+        installExoPlayer()
+    }
 
     private fun installExoPlayer() {
         player?.let { player ->
             player.addListener(object : Player.Listener {
                 override fun onIsPlayingChanged(isPlaying: Boolean) {
                     super.onIsPlayingChanged(isPlaying)
-                    println("gurken playerstate: $isPlaying")
+
                     mutableUiState.update {
                         it.copy(playing = isPlaying)
                     }
@@ -163,7 +164,6 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun play() {
-        println("gurken player: $newPlayer")
         newPlayer?.play()
     }
 

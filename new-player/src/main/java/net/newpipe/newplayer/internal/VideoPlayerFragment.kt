@@ -41,23 +41,14 @@ import net.newpipe.newplayer.internal.model.VideoPlayerViewModelImpl
 import net.newpipe.newplayer.internal.ui.VideoPlayerUI
 import net.newpipe.newplayer.internal.ui.theme.VideoPlayerTheme
 
+private const val TAG = "VideoPlayerFragment"
+
 @AndroidEntryPoint
 class VideoPlayerFragment() : Fragment() {
 
-    private val TAG = "VideoPlayerFragment"
     private val viewModel: VideoPlayerViewModel by viewModels<VideoPlayerViewModelImpl>()
     private var currentVideoRatio = 0F
     private lateinit var composeView: ComposeView
-
-    var newPlayer: NewPlayer? = null
-        set(value) {
-            if(context != null) {
-                viewModel.newPlayer = value
-            } else {
-                field = value
-            }
-        }
-        get() = viewModel.newPlayer ?: field
 
     var minLayoutRatio = 4F / 3F
         set(value) {
@@ -97,11 +88,6 @@ class VideoPlayerFragment() : Fragment() {
 
         val view = inflater.inflate(R.layout.video_player_framgent, container, false)
         composeView = view.findViewById(R.id.player_copose_view)
-
-        // late init player in case player was set before fragment was attached to a context
-        if (viewModel.newPlayer == null) {
-            viewModel.newPlayer = newPlayer
-        }
 
         viewModel.listener = object : VideoPlayerViewModel.Listener {
             override fun requestUpdateLayoutRatio(videoRatio: Float) {

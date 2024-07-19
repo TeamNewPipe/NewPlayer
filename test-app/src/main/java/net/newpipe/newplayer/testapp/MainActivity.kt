@@ -43,7 +43,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val video_view = findViewById<VideoPlayerView>(R.id.new_player_video_view)
-        video_view.newPlayer = newPlayer
         newPlayer.playWhenReady = true
         newPlayer.setStream(getString(R.string.ccc_chromebooks_video))
 
