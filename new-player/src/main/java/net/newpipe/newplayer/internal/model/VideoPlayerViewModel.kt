@@ -63,7 +63,6 @@ interface VideoPlayerViewModel {
     val player: Player?
     val uiState: StateFlow<VideoPlayerUIState>
     var listener: Listener?
-    val events: SharedFlow<Events>?
 
     fun initUIState(instanceState: Bundle)
     fun play()
@@ -93,12 +92,10 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     // private
     private val mutableUiState = MutableStateFlow(VideoPlayerUIState.DEFAULT)
-    private val mutableEvent = MutableSharedFlow<VideoPlayerViewModel.Events>()
     private var current_video_size = VideoSize.DEFAULT
 
     //interface
     override val uiState = mutableUiState.asStateFlow()
-    override val events: SharedFlow<VideoPlayerViewModel.Events> = mutableEvent
     override var listener: VideoPlayerViewModel.Listener? = null
 
     override val player:Player?
@@ -106,6 +103,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     init {
         installExoPlayer()
+        println("gurken reinit ViewModel")
     }
 
     private fun installExoPlayer() {
@@ -180,15 +178,14 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun switchToEmbeddedView() {
-        viewModelScope.launch {
-            mutableEvent.emit(VideoPlayerViewModel.Events.SwitchToEmbeddedView)
+        mutableUiState.update {
+            it.copy(fullscreen = false)
         }
     }
 
     override fun switchToFullscreen() {
-
-        viewModelScope.launch {
-            mutableEvent.emit(VideoPlayerViewModel.Events.SwitchToFullscreen)
+        mutableUiState.update {
+            it.copy(fullscreen = true)
         }
     }
 
@@ -198,7 +195,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
             override val player: Player? = null
             override val uiState = MutableStateFlow(VideoPlayerUIState.DEFAULT)
             override var listener: VideoPlayerViewModel.Listener? = null
-            override val events: SharedFlow<VideoPlayerViewModel.Events>? = null
+
 
             override fun initUIState(instanceState: Bundle) {
                 println("dummy impl")

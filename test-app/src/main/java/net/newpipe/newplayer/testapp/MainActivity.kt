@@ -43,16 +43,47 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val video_view = findViewById<VideoPlayerView>(R.id.new_player_video_view)
+
+        video_view.fullScreenToggleListener = object : VideoPlayerView.FullScreenToggleListener {
+            override fun fullscreenToggle(turnOn: Boolean) {
+                if (turnOn) {
+                    println("gurken blub")
+                    ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+                        v.setPadding(
+                            0, 0, 0, 0
+                        )
+                        insets
+                    }
+
+                } else {
+                    println("gurken blab")
+                    ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+                        val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                        v.setPadding(
+                            systemBars.left,
+                            systemBars.top,
+                            systemBars.right,
+                            systemBars.bottom
+                        )
+                        insets
+                    }
+
+                }
+            }
+        }
+
         newPlayer.playWhenReady = true
         newPlayer.setStream(getString(R.string.ccc_chromebooks_video))
 
-        //TODO: This is a dirty hack. Fix this later on
-        if (getResources().configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
-            ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-                insets
-            }
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(
+                systemBars.left,
+                systemBars.top,
+                systemBars.right,
+                systemBars.bottom
+            )
+            insets
         }
 
     }

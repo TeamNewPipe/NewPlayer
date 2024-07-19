@@ -45,6 +45,9 @@ class VideoPlayerView : FrameLayout {
         get() = videoPlayerFragment.minLayoutRatio
         set(value) {videoPlayerFragment.minLayoutRatio = value}
 
+    var fullScreenToggleListener: FullScreenToggleListener?
+        set(value) {videoPlayerFragment.fullScreenToggleListener = value}
+        get() = videoPlayerFragment.fullScreenToggleListener
 
     @JvmOverloads
     constructor(
@@ -65,5 +68,9 @@ class VideoPlayerView : FrameLayout {
                 throw Exception("The context that should host the NewPlayer Embedded VideoPlayerView is not an AppCompatActivity: $context")
             }
         }
+    }
+
+    interface FullScreenToggleListener {
+        fun fullscreenToggle(turnOn: Boolean)
     }
 }

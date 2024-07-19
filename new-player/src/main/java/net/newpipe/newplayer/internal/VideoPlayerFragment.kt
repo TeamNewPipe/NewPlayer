@@ -36,6 +36,7 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.R
+import net.newpipe.newplayer.VideoPlayerView
 import net.newpipe.newplayer.internal.model.VideoPlayerViewModel
 import net.newpipe.newplayer.internal.model.VideoPlayerViewModelImpl
 import net.newpipe.newplayer.internal.ui.VideoPlayerUI
@@ -49,6 +50,8 @@ class VideoPlayerFragment() : Fragment() {
     private val viewModel: VideoPlayerViewModel by viewModels<VideoPlayerViewModelImpl>()
     private var currentVideoRatio = 0F
     private lateinit var composeView: ComposeView
+
+    var fullScreenToggleListener: VideoPlayerView.FullScreenToggleListener? = null
 
     var minLayoutRatio = 4F / 3F
         set(value) {
@@ -100,7 +103,10 @@ class VideoPlayerFragment() : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 VideoPlayerTheme {
-                    VideoPlayerUI(viewModel = viewModel)
+                    VideoPlayerUI(viewModel = viewModel,
+                        {fullscreenOn ->
+                            fullScreenToggleListener?.fullscreenToggle(fullscreenOn)
+                        })
                 }
             }
         }

@@ -22,6 +22,7 @@ package net.newpipe.newplayer.internal.ui
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.view.SurfaceView
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.ManagedActivityResultLauncher
@@ -46,17 +47,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import kotlinx.coroutines.flow.collectLatest
-import net.newpipe.newplayer.internal.VideoPlayerActivity
-import net.newpipe.newplayer.internal.model.VIDEOPLAYER_UI_STATE
 import net.newpipe.newplayer.internal.model.VideoPlayerViewModel
 import net.newpipe.newplayer.internal.model.VideoPlayerViewModelImpl
 import net.newpipe.newplayer.internal.ui.theme.VideoPlayerTheme
+import net.newpipe.newplayer.internal.utils.LockScreenOrientation
 import net.newpipe.newplayer.internal.utils.findActivity
 
 @Composable
 fun VideoPlayerUI(
     viewModel: VideoPlayerViewModel,
+    fullscreenToggled: (Boolean) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -67,6 +67,8 @@ fun VideoPlayerUI(
     val activity = LocalContext.current.findActivity()
 
     val lifecycleOwner = LocalLifecycleOwner.current
+
+    // Prepare stuff for the SurfaceView to which the video will be rendered
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             lifecycle = event
@@ -78,8 +80,12 @@ fun VideoPlayerUI(
         }
     }
 
-    BackHandler {
-        closeFullscreen(viewModel, activity!!)
+
+    // Handle Fullscreen/Embedded view transition
+    if(uiState.fullscreen) {
+        BackHandler {
+            //closeFullscreen(viewModel, activity!!)
+        }
     }
 
     val fullscreenLauncher =
@@ -90,20 +96,20 @@ fun VideoPlayerUI(
             viewModel.initUIState(result.data?.extras!!)
         }
 
-    LaunchedEffect(key1 = Unit) {
-        viewModel.events?.collectLatest { event ->
-            when (event) {
-                VideoPlayerViewModel.Events.SwitchToEmbeddedView -> {
-                    closeFullscreen(viewModel, activity!!)
-                }
+    LaunchedEffect(key1 = uiState.fullscreen) {
+        println("gurken launch fullscreen: ${uiState.fullscreen}")
+    }
 
-                VideoPlayerViewModel.Events.SwitchToFullscreen -> {
-                    openFullscreen(viewModel, activity!!, fullscreenLauncher)
-                }
-            }
+    // Set Screen Rotation
+    if(uiState.fullscreen) {
+        if(uiState.contentRatio < 1) {
+            LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+        } else {
+            LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
         }
     }
 
+    // Set UI
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Color.Black
@@ -124,8 +130,6 @@ fun VideoPlayerUI(
                 }
             })
 
-        val isPlaying = viewModel.player?.isPlaying ?: false
-
         VideoPlayerControllerUI(
             isPlaying = uiState.playing,
             fullscreen = uiState.fullscreen,
@@ -139,32 +143,10 @@ fun VideoPlayerUI(
     }
 }
 
-fun closeFullscreen(viewModel: VideoPlayerViewModel, activity: Activity) {
-    val return_fullscreen_intent = Intent()
-    var uiState = viewModel.uiState.value
-    uiState.fullscreen = false
-    return_fullscreen_intent.putExtra(VIDEOPLAYER_UI_STATE, uiState)
-    activity.setResult(0, return_fullscreen_intent)
-    activity.finish()
-}
-
-fun openFullscreen(
-    viewModel: VideoPlayerViewModel,
-    activity: Activity,
-    fullscreenLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>
-) {
-    val fullscreen_activity_intent =
-        Intent(activity!!.findActivity(), VideoPlayerActivity::class.java)
-    var uiState = viewModel.uiState.value
-    uiState.fullscreen = true
-    fullscreen_activity_intent.putExtra(VIDEOPLAYER_UI_STATE, uiState)
-    fullscreenLauncher.launch(fullscreen_activity_intent)
-}
-
 @Preview(device = "spec:width=1080px,height=700px,dpi=440,orientation=landscape")
 @Composable
 fun PlayerUIPreviewEmbeded() {
     VideoPlayerTheme {
-        VideoPlayerUI(viewModel = VideoPlayerViewModelImpl.dummy)
+        VideoPlayerUI(viewModel = VideoPlayerViewModelImpl.dummy, {})
     }
 }
