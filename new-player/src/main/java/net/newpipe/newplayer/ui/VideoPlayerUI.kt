@@ -56,7 +56,7 @@ fun VideoPlayerUI(
 ) {
     if (viewModel == null) {
         VideoPlayerLoadingPlaceholder()
-    } else if (viewModel.player == null || viewModel.uiState.collectAsState().value.contentRatio == 0.0F) {
+    } else if (viewModel.player == null) {
         VideoPlayerLoadingPlaceholder(viewModel.uiState.collectAsState().value.uiRatio)
     } else {
         val uiState by viewModel.uiState.collectAsState()

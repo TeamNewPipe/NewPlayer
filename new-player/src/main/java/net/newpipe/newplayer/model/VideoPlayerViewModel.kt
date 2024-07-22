@@ -58,7 +58,7 @@ data class VideoPlayerUIState(
             playing = false,
             fullscreen = false,
             uiVisible = false,
-            contentRatio = 0F,
+            contentRatio = 16 / 9F,
             uiRatio = 16F / 9F,
             contentFitMode = ContentFitMode.FIT_INSIDE
         )
@@ -137,7 +137,6 @@ class VideoPlayerViewModelImpl @Inject constructor(
                 override fun onIsPlayingChanged(isPlaying: Boolean) {
                     super.onIsPlayingChanged(isPlaying)
                     Log.d(TAG, "Playing state changed. Is Playing: $isPlaying")
-                    Log.d(TAG, "Gurken: ${VideoSize.fromMedia3VideoSize(player.videoSize)}")
                     mutableUiState.update {
                         it.copy(playing = isPlaying)
                     }
@@ -145,7 +144,6 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
                 override fun onVideoSizeChanged(videoSize: androidx.media3.common.VideoSize) {
                     super.onVideoSizeChanged(videoSize)
-                    println("gurken aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
                     updateContentRatio(VideoSize.fromMedia3VideoSize(videoSize))
                 }
             })
