@@ -24,6 +24,7 @@ import android.app.Application
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
@@ -40,16 +41,25 @@ import net.newpipe.newplayer.NewPlayer
 
 val VIDEOPLAYER_UI_STATE = "video_player_ui_state"
 
+private const val TAG = "VideoPlayerViewModel"
+
 @Parcelize
 data class VideoPlayerUIState(
     val playing: Boolean,
     var fullscreen: Boolean,
     var uiVissible: Boolean,
-    var contentRatio: Float
+    var contentRatio: Float,
+    var minContentRatio: Float,
+    var maxContentRatio: Float
 ) : Parcelable {
     companion object {
         val DEFAULT = VideoPlayerUIState(
-            playing = false, fullscreen = false, uiVissible = false, 0F
+            playing = false,
+            fullscreen = false,
+            uiVissible = false,
+            contentRatio = 0F,
+            minContentRatio = 4F / 3F,
+            maxContentRatio = 16F / 9F
         )
     }
 }
@@ -59,6 +69,8 @@ interface VideoPlayerViewModel {
     val player: Player?
     val uiState: StateFlow<VideoPlayerUIState>
     var listener: Listener?
+    var minContentRatio: Float
+    var maxContentRatio: Float
 
     fun initUIState(instanceState: Bundle)
     fun play()
@@ -77,7 +89,6 @@ interface VideoPlayerViewModel {
         object SwitchToEmbeddedView : Events()
     }
 }
-
 
 @HiltViewModel
 class VideoPlayerViewModelImpl @Inject constructor(
@@ -99,11 +110,36 @@ class VideoPlayerViewModelImpl @Inject constructor(
     override val uiState = mutableUiState.asStateFlow()
     override var listener: VideoPlayerViewModel.Listener? = null
 
-    override val player:Player?
+    override val player: Player?
         get() = newPlayer?.player
+
+    override var minContentRatio: Float
+        set(value) {
+            if (value <= 0 || mutableUiState.value.maxContentRatio < value)
+                Log.e(
+                    TAG,
+                    "Ignoring maxContentRatio: It must not be 0 or less and it may not be bigger then mmaxContentRatio. It was Set to: $value"
+                )
+            else
+                mutableUiState.update { it.copy(minContentRatio = value) }
+        }
+        get() = mutableUiState.value.minContentRatio
+
+    override var maxContentRatio: Float
+        get() = mutableUiState.value.maxContentRatio
+        set(value) {
+            if (value <= 0 || value < mutableUiState.value.minContentRatio)
+                Log.e(
+                    TAG,
+                    "Ignoring maxContentRatio: It must not be 0 or less and it may not be smaller then minContentRatio. It was Set to: $value"
+                )
+            else
+                mutableUiState.update { it.copy(maxContentRatio = value) }
+        }
 
     private fun installExoPlayer() {
         player?.let { player ->
+            Log.i(TAG, "Install player")
             player.addListener(object : Player.Listener {
                 override fun onIsPlayingChanged(isPlaying: Boolean) {
                     super.onIsPlayingChanged(isPlaying)
@@ -143,17 +179,17 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        println("gurken viewmodel cleared")
+        Log.d(TAG, "viewmodel cleared")
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun initUIState(instanceState: Bundle) {
 
         val uiState =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                instanceState.getParcelable(VIDEOPLAYER_UI_STATE, VideoPlayerUIState::class.java)
-            else
-                instanceState.getParcelable(VIDEOPLAYER_UI_STATE)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) instanceState.getParcelable(
+                VIDEOPLAYER_UI_STATE, VideoPlayerUIState::class.java
+            )
+            else instanceState.getParcelable(VIDEOPLAYER_UI_STATE)
 
         uiState?.let { uiState ->
             mutableUiState.update {
@@ -171,11 +207,11 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun prevStream() {
-        println("imeplement prev stream")
+        Log.e(TAG, "imeplement prev stream")
     }
 
     override fun nextStream() {
-        println("implement next stream")
+        Log.e(TAG, "implement next stream")
     }
 
     override fun switchToEmbeddedView() {
@@ -196,7 +232,8 @@ class VideoPlayerViewModelImpl @Inject constructor(
             override val player: Player? = null
             override val uiState = MutableStateFlow(VideoPlayerUIState.DEFAULT)
             override var listener: VideoPlayerViewModel.Listener? = null
-
+            override var minContentRatio = 4F / 3F
+            override var maxContentRatio = 16F / 9F
 
             override fun initUIState(instanceState: Bundle) {
                 println("dummy impl")

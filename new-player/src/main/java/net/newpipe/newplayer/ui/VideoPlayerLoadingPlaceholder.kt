@@ -1,6 +1,7 @@
 package net.newpipe.newplayer.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
@@ -16,9 +17,9 @@ import androidx.compose.ui.unit.dp
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 @Composable
-fun VideoPlayerLoadingPlaceholder() {
+fun VideoPlayerLoadingPlaceholder(aspectRatio:Float = 3F/1F) {
     Surface(
-        modifier = Modifier.fillMaxWidth().height(200.dp),
+        modifier = Modifier.fillMaxWidth().aspectRatio(aspectRatio),
         color = Color.Black
     ) {
         Box {

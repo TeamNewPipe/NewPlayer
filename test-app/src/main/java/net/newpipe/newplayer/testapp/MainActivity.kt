@@ -51,6 +51,8 @@ class MainActivity : AppCompatActivity() {
         video_view.viewModel = videoPlayerViewModel
         videoPlayerViewModel.newPlayer = newPlayer
 
+        videoPlayerViewModel.maxContentRatio = 4F/3F
+
         /*
         video_view.fullScreenToggleListener = object : VideoPlayerView.FullScreenToggleListener {
             override fun fullscreenToggle(turnOn: Boolean) {

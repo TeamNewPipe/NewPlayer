@@ -25,7 +25,9 @@ import android.view.SurfaceView
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -53,8 +55,10 @@ import net.newpipe.newplayer.utils.findActivity
 fun VideoPlayerUI(
     viewModel: VideoPlayerViewModel?,
 ) {
-    if (viewModel?.player == null) {
+    if (viewModel == null) {
         VideoPlayerLoadingPlaceholder()
+    } else if (viewModel.player == null) {
+        VideoPlayerLoadingPlaceholder(viewModel.uiState.collectAsState().value.maxContentRatio)
     } else {
         val uiState by viewModel.uiState.collectAsState()
 
@@ -106,8 +110,13 @@ fun VideoPlayerUI(
         }
 
         // Set UI
+        val aspectRatio =
+            uiState.contentRatio.coerceIn(uiState.minContentRatio, uiState.maxContentRatio)
+
         Surface(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(aspectRatio),
             color = Color.Black
         ) {
             AndroidView(
