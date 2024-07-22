@@ -104,27 +104,47 @@ fun VideoPlayerUI(
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(uiState.uiRatio),
-            color = Color.Black
+                .aspectRatio(uiState.uiRatio), color = Color.Black
         ) {
-            Box(contentAlignment = Alignment.Center){
-                AndroidView(
-                    modifier = Modifier.also { modifier ->
-                        when (uiState.contentFitMode) {
-                            ContentFitMode.FILL -> modifier.fillMaxSize()
-                            ContentFitMode.FIT_INSIDE -> if (uiState.contentRatio < uiState.uiRatio) {
-                                modifier.fillMaxHeight().aspectRatio(uiState.contentRatio)
-                            } else if (uiState.uiRatio < uiState.contentRatio) {
-                                modifier.fillMaxWidth().aspectRatio(uiState.contentRatio)
-                            }
-                            ContentFitMode.ZOOM -> if(uiState.uiRatio < uiState.contentRatio) {
-                                modifier.fillMaxHeight().aspectRatio(uiState.contentRatio)
-                            } else if (uiState.contentRatio < uiState.uiRatio) {
-                                modifier.fillMaxWidth().aspectRatio(uiState.contentRatio)
-                            }
+            Box(contentAlignment = Alignment.Center) {
+                val viewBoxModifier = Modifier
+                when (uiState.contentFitMode) {
+                    ContentFitMode.FILL -> {
+                        println("fit mode fill")
+                        viewBoxModifier.fillMaxSize()
+                    }
+
+                    ContentFitMode.FIT_INSIDE -> {
+                        println("fit mode fit inside:")
+                        if (uiState.contentRatio < uiState.uiRatio) {
+                            println("fit mode fill max height")
+                            viewBoxModifier
+                                .fillMaxHeight()
+                                .aspectRatio(uiState.contentRatio)
+                        } else if (uiState.uiRatio < uiState.contentRatio) {
+                            println("fit mode fill max width")
+                            viewBoxModifier
+                                .fillMaxWidth()
+                                .aspectRatio(uiState.contentRatio)
                         }
-                    },
-                    factory = { context ->
+                    }
+
+                    ContentFitMode.ZOOM -> {
+                        println("fit mode zoom:")
+                        if (uiState.uiRatio < uiState.contentRatio) {
+                            viewBoxModifier
+                                .fillMaxHeight()
+                                .aspectRatio(uiState.contentRatio)
+                        } else if (uiState.contentRatio < uiState.uiRatio) {
+                            viewBoxModifier
+                                .fillMaxWidth()
+                                .aspectRatio(uiState.contentRatio)
+                        }
+                    }
+                }
+
+                Box(modifier = viewBoxModifier) {
+                    AndroidView(factory = { context ->
                         SurfaceView(context).also { view ->
                             viewModel.player?.setVideoSurfaceView(view)
                         }
@@ -137,21 +157,25 @@ fun VideoPlayerUI(
                             else -> Unit
                         }
                     })
+                    Surface(color = Color.Green, modifier = Modifier.fillMaxSize()) {
 
-                VideoPlayerControllerUI(
-                    isPlaying = uiState.playing,
-                    fullscreen = uiState.fullscreen,
-                    play = viewModel::play,
-                    pause = viewModel::pause,
-                    prevStream = viewModel::prevStream,
-                    nextStream = viewModel::nextStream,
-                    switchToFullscreen = viewModel::switchToFullscreen,
-                    switchToEmbeddedView = viewModel::switchToEmbeddedView
-                )
+                    }
+                }
             }
+            VideoPlayerControllerUI(
+                isPlaying = uiState.playing,
+                fullscreen = uiState.fullscreen,
+                play = viewModel::play,
+                pause = viewModel::pause,
+                prevStream = viewModel::prevStream,
+                nextStream = viewModel::nextStream,
+                switchToFullscreen = viewModel::switchToFullscreen,
+                switchToEmbeddedView = viewModel::switchToEmbeddedView
+            )
         }
     }
 }
+
 
 @Preview(device = "spec:width=1080px,height=700px,dpi=440,orientation=landscape")
 @Composable
