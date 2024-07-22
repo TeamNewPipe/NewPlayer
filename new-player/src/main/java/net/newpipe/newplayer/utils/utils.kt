@@ -18,19 +18,14 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.internal.utils
+package net.newpipe.newplayer.utils
 
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
-import android.content.Intent
-import androidx.activity.compose.ManagedActivityResultLauncher
-import androidx.activity.result.ActivityResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalContext
-import net.newpipe.newplayer.internal.model.VIDEOPLAYER_UI_STATE
-import net.newpipe.newplayer.internal.model.VideoPlayerViewModel
 
 @Composable
 fun LockScreenOrientation(orientation: Int) {

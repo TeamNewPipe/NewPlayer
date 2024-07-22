@@ -17,10 +17,8 @@
     You should have received a copy of the GNU General Public License
     along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
 -->
-
-<androidx.fragment.app.FragmentContainerView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/video_player_fragment_container"
+<androidx.compose.ui.platform.ComposeView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/video_player_compose_view"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:minHeight="50dp" />
+    android:layout_height="wrap_content" />

@@ -20,34 +20,21 @@
 
 package net.newpipe.newplayer
 
-import android.app.Activity
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentContainer
-import androidx.fragment.app.FragmentContainerView
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import dagger.hilt.android.AndroidEntryPoint
-import net.newpipe.newplayer.internal.VideoPlayerFragment
+import net.newpipe.newplayer.model.VideoPlayerViewModel
+import net.newpipe.newplayer.ui.VideoPlayerUI
+import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 @AndroidEntryPoint
 class VideoPlayerView : FrameLayout {
 
-    val videoPlayerFragment:VideoPlayerFragment
-
-    var maxLayoutRatio: Float
-        get() = videoPlayerFragment.maxLayoutRatio
-        set(value) {videoPlayerFragment.maxLayoutRatio=value}
-
-
-    var minLayoutRatio: Float
-        get() = videoPlayerFragment.minLayoutRatio
-        set(value) {videoPlayerFragment.minLayoutRatio = value}
-
-    var fullScreenToggleListener: FullScreenToggleListener?
-        set(value) {videoPlayerFragment.fullScreenToggleListener = value}
-        get() = videoPlayerFragment.fullScreenToggleListener
+    var viewModel: VideoPlayerViewModel? = null
 
     @JvmOverloads
     constructor(
@@ -56,21 +43,16 @@ class VideoPlayerView : FrameLayout {
         defStyleAttr: Int = 0
     ) : super(context, attrs, defStyleAttr) {
         val view = LayoutInflater.from(context).inflate(R.layout.video_player_view, this)
+        val composeView = view.findViewById<ComposeView>(R.id.video_player_compose_view)
 
-        videoPlayerFragment = VideoPlayerFragment()
-        when (context) {
-            is AppCompatActivity -> {
-                context.supportFragmentManager.beginTransaction()
-                    .add(R.id.video_player_fragment_container, videoPlayerFragment).commit()
-            }
-
-            else -> {
-                throw Exception("The context that should host the NewPlayer Embedded VideoPlayerView is not an AppCompatActivity: $context")
+        composeView.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                VideoPlayerTheme {
+                    VideoPlayerUI(viewModel = viewModel)
+                }
             }
         }
-    }
 
-    interface FullScreenToggleListener {
-        fun fullscreenToggle(turnOn: Boolean)
     }
 }

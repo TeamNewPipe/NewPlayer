@@ -18,7 +18,7 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.internal.model
+package net.newpipe.newplayer.model
 
 import android.app.Application
 import android.os.Build
@@ -27,18 +27,14 @@ import android.os.Parcelable
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
 import androidx.media3.common.Player
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import javax.inject.Inject
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import net.newpipe.newplayer.internal.utils.VideoSize
+import net.newpipe.newplayer.utils.VideoSize
 import kotlinx.parcelize.Parcelize
 import net.newpipe.newplayer.NewPlayer
 
@@ -87,7 +83,6 @@ interface VideoPlayerViewModel {
 class VideoPlayerViewModelImpl @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     application: Application,
-    override var newPlayer: NewPlayer?
 ) : AndroidViewModel(application), VideoPlayerViewModel {
 
     // private
@@ -95,16 +90,17 @@ class VideoPlayerViewModelImpl @Inject constructor(
     private var current_video_size = VideoSize.DEFAULT
 
     //interface
+    override var newPlayer: NewPlayer? = null
+        set(value) {
+            field = value
+            installExoPlayer()
+        }
+
     override val uiState = mutableUiState.asStateFlow()
     override var listener: VideoPlayerViewModel.Listener? = null
 
     override val player:Player?
         get() = newPlayer?.player
-
-    init {
-        installExoPlayer()
-        println("gurken reinit ViewModel")
-    }
 
     private fun installExoPlayer() {
         player?.let { player ->
@@ -143,6 +139,11 @@ class VideoPlayerViewModelImpl @Inject constructor(
                 }
             })
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        println("gurken viewmodel cleared")
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)

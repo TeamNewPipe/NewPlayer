@@ -18,7 +18,7 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
- package net.newpipe.newplayer.internal.ui
+ package net.newpipe.newplayer.ui
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
@@ -78,8 +78,8 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import net.newpipe.newplayer.R
-import net.newpipe.newplayer.internal.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.internal.ui.theme.video_player_onSurface
+import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
+import net.newpipe.newplayer.ui.theme.video_player_onSurface
 
 @Composable
 fun VideoPlayerControllerUI(
@@ -392,7 +392,7 @@ fun PreviewBackgroundSurface(
     }
 }
 
-@Preview(device = "spec:width=1080px,height=700px,dpi=440,orientation=landscape")
+@Preview(device = "spec:width=1080px,height=600px,dpi=440,orientation=landscape")
 @Composable
 fun VideoPlayerControllerUIPreviewEmbeded() {
     VideoPlayerTheme {

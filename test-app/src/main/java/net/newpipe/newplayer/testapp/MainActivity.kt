@@ -20,19 +20,24 @@
 
 package net.newpipe.newplayer.testapp
 
-import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.VideoPlayerView
+import net.newpipe.newplayer.model.VideoPlayerViewModel
+import net.newpipe.newplayer.model.VideoPlayerViewModelImpl
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    val videoPlayerViewModel: VideoPlayerViewModel by viewModels<VideoPlayerViewModelImpl>()
 
     @Inject
     lateinit var newPlayer: NewPlayer
@@ -43,7 +48,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val video_view = findViewById<VideoPlayerView>(R.id.new_player_video_view)
+        video_view.viewModel = videoPlayerViewModel
+        videoPlayerViewModel.newPlayer = newPlayer
 
+        /*
         video_view.fullScreenToggleListener = object : VideoPlayerView.FullScreenToggleListener {
             override fun fullscreenToggle(turnOn: Boolean) {
                 if (turnOn) {
@@ -70,7 +78,10 @@ class MainActivity : AppCompatActivity() {
 
                 }
             }
+
+
         }
+        */
 
         newPlayer.playWhenReady = true
         newPlayer.setStream(getString(R.string.ccc_chromebooks_video))
