@@ -38,6 +38,7 @@ import kotlinx.coroutines.flow.update
 import net.newpipe.newplayer.utils.VideoSize
 import kotlinx.parcelize.Parcelize
 import net.newpipe.newplayer.NewPlayer
+import net.newpipe.newplayer.ui.ContentFitMode
 
 val VIDEOPLAYER_UI_STATE = "video_player_ui_state"
 
@@ -47,19 +48,19 @@ private const val TAG = "VideoPlayerViewModel"
 data class VideoPlayerUIState(
     val playing: Boolean,
     var fullscreen: Boolean,
-    var uiVissible: Boolean,
-    var contentRatio: Float,
-    var minContentRatio: Float,
-    var maxContentRatio: Float
+    var uiVisible: Boolean,
+    val contentRatio: Float,
+    val uiRatio: Float,
+    val contentFitMode: ContentFitMode
 ) : Parcelable {
     companion object {
         val DEFAULT = VideoPlayerUIState(
             playing = false,
             fullscreen = false,
-            uiVissible = false,
+            uiVisible = false,
             contentRatio = 0F,
-            minContentRatio = 4F / 3F,
-            maxContentRatio = 16F / 9F
+            uiRatio = 16F / 9F,
+            contentFitMode = ContentFitMode.FIT_INSIDE
         )
     }
 }
@@ -68,7 +69,6 @@ interface VideoPlayerViewModel {
     var newPlayer: NewPlayer?
     val player: Player?
     val uiState: StateFlow<VideoPlayerUIState>
-    var listener: Listener?
     var minContentRatio: Float
     var maxContentRatio: Float
 
@@ -79,15 +79,6 @@ interface VideoPlayerViewModel {
     fun nextStream()
     fun switchToFullscreen()
     fun switchToEmbeddedView()
-
-    interface Listener {
-        fun requestUpdateLayoutRatio(ratio: Float)
-    }
-
-    sealed class Events {
-        object SwitchToFullscreen : Events()
-        object SwitchToEmbeddedView : Events()
-    }
 }
 
 @HiltViewModel
@@ -98,7 +89,6 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     // private
     private val mutableUiState = MutableStateFlow(VideoPlayerUIState.DEFAULT)
-    private var current_video_size = VideoSize.DEFAULT
 
     //interface
     override var newPlayer: NewPlayer? = null
@@ -108,72 +98,68 @@ class VideoPlayerViewModelImpl @Inject constructor(
         }
 
     override val uiState = mutableUiState.asStateFlow()
-    override var listener: VideoPlayerViewModel.Listener? = null
 
     override val player: Player?
         get() = newPlayer?.player
 
-    override var minContentRatio: Float
+    override var minContentRatio: Float = 4F / 3F
         set(value) {
-            if (value <= 0 || mutableUiState.value.maxContentRatio < value)
+            if (value <= 0 || maxContentRatio < value)
                 Log.e(
                     TAG,
                     "Ignoring maxContentRatio: It must not be 0 or less and it may not be bigger then mmaxContentRatio. It was Set to: $value"
                 )
-            else
-                mutableUiState.update { it.copy(minContentRatio = value) }
+            else {
+                field = value
+                mutableUiState.update { it.copy(uiRatio = getUiRatio()) }
+            }
         }
-        get() = mutableUiState.value.minContentRatio
 
-    override var maxContentRatio: Float
-        get() = mutableUiState.value.maxContentRatio
+
+    override var maxContentRatio: Float = 16F / 9F
         set(value) {
-            if (value <= 0 || value < mutableUiState.value.minContentRatio)
+            if (value <= 0 || value < minContentRatio)
                 Log.e(
                     TAG,
                     "Ignoring maxContentRatio: It must not be 0 or less and it may not be smaller then minContentRatio. It was Set to: $value"
                 )
-            else
-                mutableUiState.update { it.copy(maxContentRatio = value) }
+            else {
+                field = value
+                mutableUiState.update { it.copy(uiRatio = getUiRatio()) }
+            }
         }
 
     private fun installExoPlayer() {
         player?.let { player ->
-            Log.i(TAG, "Install player")
+            Log.d(TAG, "Install player: ${player.videoSize.width}")
+
             player.addListener(object : Player.Listener {
                 override fun onIsPlayingChanged(isPlaying: Boolean) {
                     super.onIsPlayingChanged(isPlaying)
-
+                    Log.d(TAG, "Playing state changed. Is Playing: $isPlaying")
+                    Log.d(TAG, "Gurken: ${VideoSize.fromMedia3VideoSize(player.videoSize)}")
                     mutableUiState.update {
                         it.copy(playing = isPlaying)
                     }
                 }
 
-                // We need to updated the layout of our player view if the video ratio changes
-                // However, this should be done differently depending on weather we are in
-                // embedded or fullscreen view.
-                // If we are in embedded view, we tell the mother layout (only ConstraintLayout supported!)
-                // to change the ratio of the whole player view.
-                // If we are in fullscreen we only want to change the ratio of the SurfaceView
-                override fun onVideoSizeChanged(media3VideoSize: androidx.media3.common.VideoSize) {
-                    super.onVideoSizeChanged(media3VideoSize)
-
-                    val videoSize = VideoSize.fromMedia3VideoSize(media3VideoSize)
-
-                    if (current_video_size != videoSize) {
-                        val newRatio = videoSize.getRatio()
-                        if (current_video_size.getRatio() != newRatio) {
-                            mutableUiState.update {
-                                it.copy(contentRatio = newRatio)
-                            }
-                            if (!mutableUiState.value.fullscreen) {
-                                listener?.requestUpdateLayoutRatio(newRatio)
-                            }
-                        }
-                        current_video_size = videoSize
-                    }
+                override fun onVideoSizeChanged(videoSize: androidx.media3.common.VideoSize) {
+                    super.onVideoSizeChanged(videoSize)
+                    println("gurken aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                    updateContentRatio(VideoSize.fromMedia3VideoSize(videoSize))
                 }
             })
+        }
+    }
+
+    fun updateContentRatio(videoSize: VideoSize) {
+        val newRatio = videoSize.getRatio()
+        Log.d(TAG, "Update Content ratio: $newRatio")
+        mutableUiState.update {
+            it.copy(
+                contentRatio = newRatio,
+                uiRatio = getUiRatio()
+            )
         }
     }
 
@@ -226,12 +212,21 @@ class VideoPlayerViewModelImpl @Inject constructor(
         }
     }
 
+    private fun getUiRatio() =
+        player?.let { player ->
+            val videoRatio = VideoSize.fromMedia3VideoSize(player.videoSize).getRatio()
+            return if (videoRatio.isNaN())
+                minContentRatio
+            else
+                videoRatio.coerceIn(minContentRatio, maxContentRatio)
+        } ?: minContentRatio
+
+
     companion object {
         val dummy = object : VideoPlayerViewModel {
             override var newPlayer: NewPlayer? = null
             override val player: Player? = null
             override val uiState = MutableStateFlow(VideoPlayerUIState.DEFAULT)
-            override var listener: VideoPlayerViewModel.Listener? = null
             override var minContentRatio = 4F / 3F
             override var maxContentRatio = 16F / 9F
 

@@ -18,7 +18,7 @@
 # along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
 
 [versions]
-agp = "8.5.0"
+agp = "8.5.1"
 kotlin = "2.0.20-Beta2"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -31,7 +31,7 @@ constraintlayout = "2.1.4"
 material3 = "1.2.1"
 uiTooling = "1.6.8"
 materialIconsExtendedAndroid = "1.7.0-beta05"
-media3Ui = "1.4.0-beta01"
+media3 = "1.3.1"
 hiltAndroid = "2.51.1"
 hiltCompiler = "1.2.0"
 hiltNavigationCompose = "1.2.0"
@@ -39,7 +39,6 @@ lifecycleViewmodelCompose = "2.8.3"
 kspVersion = "2.0.20-Beta2-1.0.23"
 fragmentKtx = "1.8.1"
 lifecycleRuntimeKtx = "2.8.3"
-composeBom = "2024.06.01"
 kotlinParcelize = "2.0.20-Beta2"
 newplayer = "master-SNAPSHOT"
 
@@ -56,8 +55,9 @@ androidx-activity-compose = { group = "androidx.activity", name = "activity-comp
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "uiTooling" }
 androidx-material-icons-extended-android = { group = "androidx.compose.material", name = "material-icons-extended-android", version.ref = "materialIconsExtendedAndroid" }
-androidx-media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3Ui" }
-androidx-media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "media3Ui" }
+androidx-media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3" }
+androidx-media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "media3" }
+androidx-media3-common = { group = "androidx.media3", name = "media3-common", version.ref = "media3" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hiltAndroid" }
 androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hiltCompiler" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
@@ -73,6 +73,7 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 newplayer = { group = "com.github.theScrabi.NewPlayer", name = "new-player", version.ref = "newplayer" }
+
 
 
 [plugins]

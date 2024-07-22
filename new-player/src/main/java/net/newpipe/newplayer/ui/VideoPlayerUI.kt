@@ -23,9 +23,9 @@ package net.newpipe.newplayer.ui
 import android.content.pm.ActivityInfo
 import android.view.SurfaceView
 import androidx.activity.compose.BackHandler
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Surface
@@ -37,9 +37,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
@@ -49,7 +49,6 @@ import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelImpl
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.utils.LockScreenOrientation
-import net.newpipe.newplayer.utils.findActivity
 
 @Composable
 fun VideoPlayerUI(
@@ -57,8 +56,8 @@ fun VideoPlayerUI(
 ) {
     if (viewModel == null) {
         VideoPlayerLoadingPlaceholder()
-    } else if (viewModel.player == null) {
-        VideoPlayerLoadingPlaceholder(viewModel.uiState.collectAsState().value.maxContentRatio)
+    } else if (viewModel.player == null || viewModel.uiState.collectAsState().value.contentRatio == 0.0F) {
+        VideoPlayerLoadingPlaceholder(viewModel.uiState.collectAsState().value.uiRatio)
     } else {
         val uiState by viewModel.uiState.collectAsState()
 
@@ -88,14 +87,6 @@ fun VideoPlayerUI(
             }
         }
 
-        val fullscreenLauncher =
-            rememberLauncherForActivityResult(
-                contract = ActivityResultContracts.StartActivityForResult()
-            ) { result ->
-                println("gurken returned for result")
-                viewModel.initUIState(result.data?.extras!!)
-            }
-
         LaunchedEffect(key1 = uiState.fullscreen) {
             println("gurken launch fullscreen: ${uiState.fullscreen}")
         }
@@ -110,41 +101,54 @@ fun VideoPlayerUI(
         }
 
         // Set UI
-        val aspectRatio =
-            uiState.contentRatio.coerceIn(uiState.minContentRatio, uiState.maxContentRatio)
-
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(aspectRatio),
+                .aspectRatio(uiState.uiRatio),
             color = Color.Black
         ) {
-            AndroidView(
-                modifier = Modifier.fillMaxSize(),
-                factory = { context ->
-                    SurfaceView(context).also { view ->
-                        viewModel.player?.setVideoSurfaceView(view)
-                    }
-                }, update = { view ->
-                    when (lifecycle) {
-                        Lifecycle.Event.ON_RESUME -> {
+            Box(contentAlignment = Alignment.Center){
+                AndroidView(
+                    modifier = Modifier.also { modifier ->
+                        when (uiState.contentFitMode) {
+                            ContentFitMode.FILL -> modifier.fillMaxSize()
+                            ContentFitMode.FIT_INSIDE -> if (uiState.contentRatio < uiState.uiRatio) {
+                                modifier.fillMaxHeight().aspectRatio(uiState.contentRatio)
+                            } else if (uiState.uiRatio < uiState.contentRatio) {
+                                modifier.fillMaxWidth().aspectRatio(uiState.contentRatio)
+                            }
+                            ContentFitMode.ZOOM -> if(uiState.uiRatio < uiState.contentRatio) {
+                                modifier.fillMaxHeight().aspectRatio(uiState.contentRatio)
+                            } else if (uiState.contentRatio < uiState.uiRatio) {
+                                modifier.fillMaxWidth().aspectRatio(uiState.contentRatio)
+                            }
+                        }
+                    },
+                    factory = { context ->
+                        SurfaceView(context).also { view ->
                             viewModel.player?.setVideoSurfaceView(view)
                         }
+                    }, update = { view ->
+                        when (lifecycle) {
+                            Lifecycle.Event.ON_RESUME -> {
+                                viewModel.player?.setVideoSurfaceView(view)
+                            }
 
-                        else -> Unit
-                    }
-                })
+                            else -> Unit
+                        }
+                    })
 
-            VideoPlayerControllerUI(
-                isPlaying = uiState.playing,
-                fullscreen = uiState.fullscreen,
-                play = viewModel::play,
-                pause = viewModel::pause,
-                prevStream = viewModel::prevStream,
-                nextStream = viewModel::nextStream,
-                switchToFullscreen = viewModel::switchToFullscreen,
-                switchToEmbeddedView = viewModel::switchToEmbeddedView
-            )
+                VideoPlayerControllerUI(
+                    isPlaying = uiState.playing,
+                    fullscreen = uiState.fullscreen,
+                    play = viewModel::play,
+                    pause = viewModel::pause,
+                    prevStream = viewModel::prevStream,
+                    nextStream = viewModel::nextStream,
+                    switchToFullscreen = viewModel::switchToFullscreen,
+                    switchToEmbeddedView = viewModel::switchToEmbeddedView
+                )
+            }
         }
     }
 }

@@ -20,6 +20,9 @@ data class VideoSize(
     fun getRatio() =
         (width * pixelWidthHeightRatio) / height
 
+    override fun toString() =
+        "VideoSize(width = $width, height = $height, pixelRatio = $pixelWidthHeightRatio, ratio = ${getRatio()})"
+
     companion object {
         val DEFAULT = VideoSize(0, 0, 1F)
 

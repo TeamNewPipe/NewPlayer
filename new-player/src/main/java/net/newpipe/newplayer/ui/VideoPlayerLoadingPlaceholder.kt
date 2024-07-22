@@ -17,13 +17,17 @@ import androidx.compose.ui.unit.dp
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 @Composable
-fun VideoPlayerLoadingPlaceholder(aspectRatio:Float = 3F/1F) {
+fun VideoPlayerLoadingPlaceholder(aspectRatio: Float = 3F / 1F) {
     Surface(
-        modifier = Modifier.fillMaxWidth().aspectRatio(aspectRatio),
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(aspectRatio),
         color = Color.Black
     ) {
-        Box {
-            CircularProgressIndicator(modifier = Modifier.width(64.dp).align((Alignment.Center)))
+        Box(contentAlignment = Alignment.Center) {
+            CircularProgressIndicator(modifier = Modifier
+                .width(64.dp)
+                .align((Alignment.Center)))
         }
     }
 }
