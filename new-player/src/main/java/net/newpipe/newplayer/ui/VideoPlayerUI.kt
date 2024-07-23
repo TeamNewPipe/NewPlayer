@@ -98,9 +98,12 @@ fun VideoPlayerUI(
 
         // Set UI
         Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(uiState.embeddedUiRatio), color = Color.Black
+            modifier = Modifier.then(
+                if (uiState.fullscreen) Modifier.fillMaxSize()
+                else Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(uiState.embeddedUiRatio)
+            ), color = Color.Black
         ) {
             Box(contentAlignment = Alignment.Center) {
                 PlaySurface(
@@ -162,7 +165,11 @@ fun PlaySurface(
             )
     ) {
      */
-    Box(modifier = Modifier.fillMaxHeight().aspectRatio(contentRatio)) {
+    Box(
+        modifier = Modifier
+            .fillMaxHeight()
+            .aspectRatio(contentRatio)
+    ) {
         AndroidView(factory = { context ->
             SurfaceView(context).also { view ->
                 player?.setVideoSurfaceView(view)

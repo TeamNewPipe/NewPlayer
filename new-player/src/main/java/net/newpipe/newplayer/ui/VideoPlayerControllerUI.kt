@@ -106,15 +106,18 @@ fun VideoPlayerControllerUI(
 ) {
 
     val insets = WindowInsets.systemBars
-    Box(
-        modifier = Modifier.then(
-            if (fullscreen)
-                Modifier.windowInsetsPadding(insets)
-            else
-                Modifier
+    if (!uiVissible) {
+        TouchUi(
+            modifier = Modifier.fillMaxSize(),
+            hideUi = hideUi,
+            showUi = showUi,
+            uiVissible = uiVissible,
+            fullscreen = fullscreen
         )
-    ) {
-        if (!uiVissible) {
+    } else {
+        Surface(
+            modifier = Modifier.fillMaxSize(), color = Color(0x75000000)
+        ) {
             TouchUi(
                 modifier = Modifier.fillMaxSize(),
                 hideUi = hideUi,
@@ -122,53 +125,44 @@ fun VideoPlayerControllerUI(
                 uiVissible = uiVissible,
                 fullscreen = fullscreen
             )
-        } else {
-            Surface(
-                modifier = Modifier.fillMaxSize(), color = Color(0x75000000)
-            ) {
-                TouchUi(
-                    modifier = Modifier.fillMaxSize(),
-                    hideUi = hideUi,
-                    showUi = showUi,
-                    uiVissible = uiVissible,
-                    fullscreen = fullscreen
-                )
-                Box(
-                    modifier = if (fullscreen) {
-                        Modifier
-                            .background(Color.Transparent)
-                    } else {
-                        Modifier
-                            .background(Color.Transparent)
-                    }
-                ) {
-                    TopUI(
-                        modifier = Modifier
-                            .align(Alignment.TopStart)
-                            .fillMaxWidth()
-                            .defaultMinSize(minHeight = 45.dp)
-                            .padding(top = 4.dp, start = 16.dp, end = 16.dp)
-                    )
-                    CenterUI(
-                        modifier = Modifier.align(Alignment.Center),
-                        isPlaying,
-                        play = play,
-                        pause = pause,
-                        prevStream = prevStream,
-                        nextStream = nextStream
-                    )
-                    BottomUI(
-                        modifier = Modifier
-                            .align(Alignment.BottomStart)
-                            .padding(start = 16.dp, end = 16.dp)
-                            .defaultMinSize(minHeight = 40.dp)
-                            .fillMaxWidth(),
-                        isFullscreen = fullscreen,
-                        switchToFullscreen,
-                        switchToEmbeddedView
-                    )
+
+            Box(
+                modifier = if (fullscreen) {
+                    Modifier
+                        .background(Color.Transparent)
+                        .windowInsetsPadding(insets)
+                } else {
+                    Modifier
+                        .background(Color.Transparent)
                 }
+            ) {
+                TopUI(
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .fillMaxWidth()
+                        .defaultMinSize(minHeight = 45.dp)
+                        .padding(top = 4.dp, start = 16.dp, end = 16.dp)
+                )
+                CenterUI(
+                    modifier = Modifier.align(Alignment.Center),
+                    isPlaying,
+                    play = play,
+                    pause = pause,
+                    prevStream = prevStream,
+                    nextStream = nextStream
+                )
+                BottomUI(
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(start = 16.dp, end = 16.dp)
+                        .defaultMinSize(minHeight = 40.dp)
+                        .fillMaxWidth(),
+                    isFullscreen = fullscreen,
+                    switchToFullscreen,
+                    switchToEmbeddedView
+                )
             }
+
         }
     }
     if (fullscreen) {
