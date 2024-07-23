@@ -28,17 +28,23 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.Player
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import net.newpipe.newplayer.utils.VideoSize
 import kotlinx.parcelize.Parcelize
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.ui.ContentScale
+import java.lang.Thread.sleep
 
 val VIDEOPLAYER_UI_STATE = "video_player_ui_state"
 
@@ -48,6 +54,7 @@ private const val TAG = "VideoPlayerViewModel"
 data class VideoPlayerUIState(
     val playing: Boolean,
     var fullscreen: Boolean,
+    val uiVissible: Boolean,
     var uiVisible: Boolean,
     val contentRatio: Float,
     val uiRatio: Float,
@@ -57,6 +64,7 @@ data class VideoPlayerUIState(
         val DEFAULT = VideoPlayerUIState(
             playing = false,
             fullscreen = false,
+            uiVissible = false,
             uiVisible = false,
             contentRatio = 16 / 9F,
             uiRatio = 16F / 9F,
@@ -81,6 +89,8 @@ interface VideoPlayerViewModel {
     fun nextStream()
     fun switchToFullscreen()
     fun switchToEmbeddedView()
+    fun showUi()
+    fun hideUi()
 
     interface FullscreenListener {
         fun onFullscreenToggle(isFullscreen: Boolean)
@@ -96,6 +106,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     // private
     private val mutableUiState = MutableStateFlow(VideoPlayerUIState.DEFAULT)
     private var currentContentRatio = 1F
+    private var uiVisibilityJob:Job? = null
 
     //interface
     override var fullscreenListener: VideoPlayerViewModel.FullscreenListener? = null
@@ -169,7 +180,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     fun updateContentRatio(videoSize: VideoSize) {
         val newRatio = videoSize.getRatio()
-        val ratio = if(newRatio.isNaN()) currentContentRatio else newRatio
+        val ratio = if (newRatio.isNaN()) currentContentRatio else newRatio
         currentContentRatio = ratio
         Log.d(TAG, "Update Content ratio: $ratio")
         mutableUiState.update {
@@ -215,6 +226,26 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     override fun nextStream() {
         Log.e(TAG, "implement next stream")
+    }
+
+    override fun showUi() {
+        mutableUiState.update {
+            it.copy(uiVissible = true)
+        }
+        uiVisibilityJob?.cancel()
+        uiVisibilityJob = viewModelScope.launch {
+            delay(2000)
+            mutableUiState.update {
+                it.copy(uiVissible = false)
+            }
+        }
+    }
+
+    override fun hideUi() {
+        uiVisibilityJob?.cancel()
+        mutableUiState.update {
+            it.copy(uiVissible = false)
+        }
     }
 
     override fun switchToEmbeddedView() {
@@ -264,6 +295,14 @@ class VideoPlayerViewModelImpl @Inject constructor(
             }
 
             override fun switchToFullscreen() {
+                println("dummy impl")
+            }
+
+            override fun showUi() {
+                println("dummy impl")
+            }
+
+            override fun hideUi() {
                 println("dummy impl")
             }
 

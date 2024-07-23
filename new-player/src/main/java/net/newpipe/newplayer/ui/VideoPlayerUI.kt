@@ -121,12 +121,15 @@ fun VideoPlayerUI(
             VideoPlayerControllerUI(
                 isPlaying = uiState.playing,
                 fullscreen = uiState.fullscreen,
+                uiVissible = uiState.uiVissible,
                 play = viewModel::play,
                 pause = viewModel::pause,
                 prevStream = viewModel::prevStream,
                 nextStream = viewModel::nextStream,
                 switchToFullscreen = viewModel::switchToFullscreen,
-                switchToEmbeddedView = viewModel::switchToEmbeddedView
+                switchToEmbeddedView = viewModel::switchToEmbeddedView,
+                showUi = viewModel::showUi,
+                hideUi = viewModel::hideUi
             )
         }
     }

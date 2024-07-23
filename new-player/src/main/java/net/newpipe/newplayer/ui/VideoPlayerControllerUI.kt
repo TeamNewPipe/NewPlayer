@@ -18,10 +18,11 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
- package net.newpipe.newplayer.ui
+package net.newpipe.newplayer.ui
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -85,51 +86,58 @@ import net.newpipe.newplayer.ui.theme.video_player_onSurface
 fun VideoPlayerControllerUI(
     isPlaying: Boolean,
     fullscreen: Boolean,
+    uiVissible: Boolean,
     play: () -> Unit,
     pause: () -> Unit,
     prevStream: () -> Unit,
     nextStream: () -> Unit,
     switchToFullscreen: () -> Unit,
-    switchToEmbeddedView: () -> Unit
+    switchToEmbeddedView: () -> Unit,
+    showUi: () -> Unit,
+    hideUi: () -> Unit
 ) {
-    Surface(
-        modifier = Modifier.fillMaxSize(), color = Color(0x75000000)
-    ) {
-        Box(
-            modifier = if (fullscreen) {
-                Modifier
-                    .background(Color.Transparent)
-                    .windowInsetsPadding(WindowInsets.systemBars)
-            } else {
-                Modifier
-                    .background(Color.Transparent)
+    TouchControll(modifier = Modifier, hideUi = hideUi, showUi = showUi, uiVissible = uiVissible) {
+        if (uiVissible) {
+            Surface(
+                modifier = Modifier.fillMaxSize(), color = Color(0x75000000)
+            ) {
+                Box(
+                    modifier = if (fullscreen) {
+                        Modifier
+                            .background(Color.Transparent)
+                            .windowInsetsPadding(WindowInsets.systemBars)
+                    } else {
+                        Modifier
+                            .background(Color.Transparent)
+                    }
+                ) {
+                    TopUI(
+                        modifier = Modifier
+                            .align(Alignment.TopStart)
+                            .fillMaxWidth()
+                            .defaultMinSize(minHeight = 45.dp)
+                            .padding(top = 4.dp, start = 16.dp, end = 16.dp)
+                    )
+                    CenterUI(
+                        modifier = Modifier.align(Alignment.Center),
+                        isPlaying,
+                        play = play,
+                        pause = pause,
+                        prevStream = prevStream,
+                        nextStream = nextStream
+                    )
+                    BottomUI(
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                            .padding(start = 16.dp, end = 16.dp)
+                            .defaultMinSize(minHeight = 40.dp)
+                            .fillMaxWidth(),
+                        isFullscreen = fullscreen,
+                        switchToFullscreen,
+                        switchToEmbeddedView
+                    )
+                }
             }
-        ) {
-            TopUI(
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .fillMaxWidth()
-                    .defaultMinSize(minHeight = 45.dp)
-                    .padding(top = 4.dp, start = 16.dp, end = 16.dp)
-            )
-            CenterUI(
-                modifier = Modifier.align(Alignment.Center),
-                isPlaying,
-                play = play,
-                pause = pause,
-                prevStream = prevStream,
-                nextStream = nextStream
-            )
-            BottomUI(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(start = 16.dp, end = 16.dp)
-                    .defaultMinSize(minHeight = 40.dp)
-                    .fillMaxWidth(),
-                isFullscreen = fullscreen,
-                switchToFullscreen,
-                switchToEmbeddedView
-            )
         }
     }
     if (fullscreen) {
@@ -193,6 +201,26 @@ private fun TopUI(modifier: Modifier) {
             )
         }
         MainMenu()
+    }
+}
+
+@Composable
+private fun TouchControll(
+    modifier: Modifier,
+    hideUi: () -> Unit,
+    showUi: () -> kotlin.Unit,
+    uiVissible: Boolean,
+    content: @Composable () -> Unit
+) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .clickable {
+            if (uiVissible)
+                hideUi()
+            else
+                showUi()
+        }) {
+        content()
     }
 }
 
@@ -399,12 +427,15 @@ fun VideoPlayerControllerUIPreviewEmbeded() {
         PreviewBackgroundSurface {
             VideoPlayerControllerUI(isPlaying = false,
                 fullscreen = false,
+                uiVissible = true,
                 play = {},
                 pause = {},
                 prevStream = {},
                 nextStream = {},
                 switchToFullscreen = {},
-                switchToEmbeddedView = {})
+                switchToEmbeddedView = {},
+                showUi = {},
+                hideUi = {})
         }
     }
 }
@@ -416,12 +447,15 @@ fun VideoPlayerControllerUIPreviewLandscape() {
         PreviewBackgroundSurface {
             VideoPlayerControllerUI(isPlaying = true,
                 fullscreen = true,
+                uiVissible = true,
                 play = {},
                 pause = {},
                 prevStream = {},
                 nextStream = {},
                 switchToEmbeddedView = {},
-                switchToFullscreen = {})
+                switchToFullscreen = {},
+                showUi = {},
+                hideUi = {})
         }
     }
 }
@@ -434,12 +468,15 @@ fun VideoPlayerControllerUIPreviewPortrait() {
             VideoPlayerControllerUI(
                 isPlaying = false,
                 fullscreen = true,
+                uiVissible = true,
                 play = {},
                 pause = {},
                 prevStream = {},
                 nextStream = {},
                 switchToEmbeddedView = {},
-                switchToFullscreen = {})
+                switchToFullscreen = {},
+                showUi = {},
+                hideUi = {})
         }
     }
 }
