@@ -20,6 +20,7 @@
 
 package net.newpipe.newplayer.ui
 
+import android.view.MotionEvent
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -67,9 +68,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
@@ -96,11 +99,27 @@ fun VideoPlayerControllerUI(
     showUi: () -> Unit,
     hideUi: () -> Unit
 ) {
-    TouchControll(modifier = Modifier, hideUi = hideUi, showUi = showUi, uiVissible = uiVissible) {
-        if (uiVissible) {
+
+    Box(modifier = Modifier) {
+        if (!uiVissible) {
+            TouchUi(
+                modifier = Modifier.fillMaxSize(),
+                hideUi = hideUi,
+                showUi = showUi,
+                uiVissible = uiVissible,
+                fullscreen = fullscreen
+            )
+        } else {
             Surface(
                 modifier = Modifier.fillMaxSize(), color = Color(0x75000000)
             ) {
+                TouchUi(
+                    modifier = Modifier.fillMaxSize(),
+                    hideUi = hideUi,
+                    showUi = showUi,
+                    uiVissible = uiVissible,
+                    fullscreen = fullscreen
+                )
                 Box(
                     modifier = if (fullscreen) {
                         Modifier
@@ -143,6 +162,45 @@ fun VideoPlayerControllerUI(
     if (fullscreen) {
         BackHandler {
             switchToEmbeddedView()
+        }
+    }
+}
+
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+private fun TouchUi(
+    modifier: Modifier,
+    hideUi: () -> Unit,
+    showUi: () -> Unit,
+    uiVissible: Boolean,
+    fullscreen: Boolean,
+) {
+    Box(modifier = Modifier
+        .pointerInteropFilter {
+            when (it.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    true
+                }
+
+                MotionEvent.ACTION_UP -> {
+                    if (uiVissible) {
+                        hideUi()
+                    } else {
+                        showUi()
+                    }
+                    true
+                }
+
+                MotionEvent.ACTION_MOVE -> {
+                    true
+                }
+
+                else -> false
+            }
+        }) {
+        Surface(color = Color.Transparent, modifier = Modifier.fillMaxSize()) {
+
         }
     }
 }
@@ -204,25 +262,6 @@ private fun TopUI(modifier: Modifier) {
     }
 }
 
-@Composable
-private fun TouchControll(
-    modifier: Modifier,
-    hideUi: () -> Unit,
-    showUi: () -> kotlin.Unit,
-    uiVissible: Boolean,
-    content: @Composable () -> Unit
-) {
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .clickable {
-            if (uiVissible)
-                hideUi()
-            else
-                showUi()
-        }) {
-        content()
-    }
-}
 
 @Composable
 private fun MainMenu() {

@@ -193,6 +193,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
+
         Log.d(TAG, "viewmodel cleared")
     }
 
@@ -213,18 +214,25 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun play() {
+        uiVisibilityJob?.cancel()
+        mutableUiState.update {
+            it.copy(uiVissible = false)
+        }
         newPlayer?.play()
     }
 
     override fun pause() {
+        resetHideUiDelayed()
         newPlayer?.pause()
     }
 
     override fun prevStream() {
+        resetHideUiDelayed()
         Log.e(TAG, "imeplement prev stream")
     }
 
     override fun nextStream() {
+        resetHideUiDelayed()
         Log.e(TAG, "implement next stream")
     }
 
@@ -232,6 +240,10 @@ class VideoPlayerViewModelImpl @Inject constructor(
         mutableUiState.update {
             it.copy(uiVissible = true)
         }
+        resetHideUiDelayed()
+    }
+
+    private fun resetHideUiDelayed() {
         uiVisibilityJob?.cancel()
         uiVisibilityJob = viewModelScope.launch {
             delay(2000)
@@ -250,15 +262,18 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     override fun switchToEmbeddedView() {
         fullscreenListener?.onFullscreenToggle(false)
+        uiVisibilityJob?.cancel()
         mutableUiState.update {
-            it.copy(fullscreen = false)
+            it.copy(fullscreen = false, uiVissible = false)
         }
     }
 
     override fun switchToFullscreen() {
         fullscreenListener?.onFullscreenToggle(true)
+        uiVisibilityJob?.cancel()
+
         mutableUiState.update {
-            it.copy(fullscreen = true)
+            it.copy(fullscreen = true, uiVissible = false)
         }
     }
 
