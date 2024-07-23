@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
 
         videoPlayerViewModel.newPlayer = newPlayer
 
-        videoPlayerViewModel.maxContentRatio = 4F/3F
+        //videoPlayerViewModel.maxContentRatio = 4F/3F
         videoPlayerViewModel.contentFitMode = ContentScale.FIT_INSIDE
 
 
@@ -76,16 +76,16 @@ class MainActivity : AppCompatActivity() {
 
 
         val setupFullscreen = {
-            //ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            //    v.setPadding(0, 0, 0, 0)
-            //    insets
-            //}
+            ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+                v.setPadding(0, 0, 0, 0)
+                insets
+            }
             buttons_layout.visibility = View.GONE
             embedded_player_layout.visibility = View.GONE
             fullscreen_player.visibility = View.VISIBLE
             fullscreen_player.viewModel = videoPlayerViewModel
 
-            //windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+            windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
         }
 
         val setupEmbeddedView = {
@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity() {
             video_view.viewModel = videoPlayerViewModel
 
 
-            //windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
+            windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
         }
 
         if (videoPlayerViewModel.uiState.value.fullscreen) {
@@ -127,9 +127,9 @@ class MainActivity : AppCompatActivity() {
 
             override fun onUiVissibleToggle(isVissible: Boolean) {
                 if (isVissible) {
-                   // windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
+                   windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
                 } else {
-                   // windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+                   windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
                 }
             }
         }

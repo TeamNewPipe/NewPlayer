@@ -32,13 +32,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.systemGestures
 import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.waterfall
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.windowInsetsTopHeight
@@ -105,10 +108,15 @@ fun VideoPlayerControllerUI(
     hideUi: () -> Unit
 ) {
 
-    val insets = WindowInsets.systemBars
+    val insets =
+        WindowInsets.systemBars
+            .union(WindowInsets.displayCutout)
+            .union(WindowInsets.waterfall)
     if (!uiVissible) {
         TouchUi(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(WindowInsets.systemGestures),
             hideUi = hideUi,
             showUi = showUi,
             uiVissible = uiVissible,
@@ -119,22 +127,28 @@ fun VideoPlayerControllerUI(
             modifier = Modifier.fillMaxSize(), color = Color(0x75000000)
         ) {
             TouchUi(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .windowInsetsPadding(WindowInsets.systemGestures),
                 hideUi = hideUi,
                 showUi = showUi,
                 uiVissible = uiVissible,
                 fullscreen = fullscreen
             )
 
+            Box {
+                CenterUI(
+                    modifier = Modifier.align(Alignment.Center),
+                    isPlaying = isPlaying,
+                    play = play,
+                    pause = pause,
+                    prevStream = prevStream,
+                    nextStream = nextStream
+                )
+            }
+
             Box(
-                modifier = if (fullscreen) {
-                    Modifier
-                        .background(Color.Transparent)
-                        .windowInsetsPadding(insets)
-                } else {
-                    Modifier
-                        .background(Color.Transparent)
-                }
+                modifier = if (fullscreen) Modifier.windowInsetsPadding(insets) else Modifier
             ) {
                 TopUI(
                     modifier = Modifier
@@ -143,14 +157,7 @@ fun VideoPlayerControllerUI(
                         .defaultMinSize(minHeight = 45.dp)
                         .padding(top = 4.dp, start = 16.dp, end = 16.dp)
                 )
-                CenterUI(
-                    modifier = Modifier.align(Alignment.Center),
-                    isPlaying,
-                    play = play,
-                    pause = pause,
-                    prevStream = prevStream,
-                    nextStream = nextStream
-                )
+
                 BottomUI(
                     modifier = Modifier
                         .align(Alignment.BottomStart)
