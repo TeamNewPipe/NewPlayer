@@ -28,6 +28,8 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -45,6 +47,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.media3.common.Player
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelImpl
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
@@ -107,60 +110,13 @@ fun VideoPlayerUI(
                 .aspectRatio(uiState.uiRatio), color = Color.Black
         ) {
             Box(contentAlignment = Alignment.Center) {
-                val viewBoxModifier = Modifier
-                when (uiState.contentFitMode) {
-                    ContentFitMode.FILL -> {
-                        println("fit mode fill")
-                        viewBoxModifier.fillMaxSize()
-                    }
-
-                    ContentFitMode.FIT_INSIDE -> {
-                        println("fit mode fit inside:")
-                        if (uiState.contentRatio < uiState.uiRatio) {
-                            println("fit mode fill max height")
-                            viewBoxModifier
-                                .fillMaxHeight()
-                                .aspectRatio(uiState.contentRatio)
-                        } else if (uiState.uiRatio < uiState.contentRatio) {
-                            println("fit mode fill max width")
-                            viewBoxModifier
-                                .fillMaxWidth()
-                                .aspectRatio(uiState.contentRatio)
-                        }
-                    }
-
-                    ContentFitMode.ZOOM -> {
-                        println("fit mode zoom:")
-                        if (uiState.uiRatio < uiState.contentRatio) {
-                            viewBoxModifier
-                                .fillMaxHeight()
-                                .aspectRatio(uiState.contentRatio)
-                        } else if (uiState.contentRatio < uiState.uiRatio) {
-                            viewBoxModifier
-                                .fillMaxWidth()
-                                .aspectRatio(uiState.contentRatio)
-                        }
-                    }
-                }
-
-                Box(modifier = viewBoxModifier) {
-                    AndroidView(factory = { context ->
-                        SurfaceView(context).also { view ->
-                            viewModel.player?.setVideoSurfaceView(view)
-                        }
-                    }, update = { view ->
-                        when (lifecycle) {
-                            Lifecycle.Event.ON_RESUME -> {
-                                viewModel.player?.setVideoSurfaceView(view)
-                            }
-
-                            else -> Unit
-                        }
-                    })
-                    Surface(color = Color.Green, modifier = Modifier.fillMaxSize()) {
-
-                    }
-                }
+                PlaySurface(
+                    player = viewModel.player,
+                    lifecycle = lifecycle,
+                    fitMode = uiState.contentFitMode,
+                    uiRatio = uiState.uiRatio,
+                    contentRatio = uiState.contentRatio
+                )
             }
             VideoPlayerControllerUI(
                 isPlaying = uiState.playing,
@@ -173,6 +129,50 @@ fun VideoPlayerUI(
                 switchToEmbeddedView = viewModel::switchToEmbeddedView
             )
         }
+    }
+}
+
+@Composable
+fun PlaySurface(
+    player: Player?,
+    lifecycle: Lifecycle.Event,
+    fitMode: ContentScale,
+    uiRatio: Float,
+    contentRatio: Float
+) {
+    val viewBoxModifier = Modifier
+    viewBoxModifier
+        .fillMaxWidth()
+        .aspectRatio(16F / 9F)
+
+    Box(
+        modifier = Modifier
+            .then(
+                when (fitMode) {
+                    ContentScale.FILL -> Modifier.fillMaxSize()
+                    ContentScale.FIT_INSIDE -> Modifier.aspectRatio(contentRatio)
+                    ContentScale.CROP -> Modifier
+                        .aspectRatio(contentRatio)
+                        .wrapContentWidth(unbounded = true)
+                        .fillMaxSize()
+                }
+            )
+    ) {
+
+        AndroidView(factory = { context ->
+            SurfaceView(context).also { view ->
+                player?.setVideoSurfaceView(view)
+            }
+        }, update = { view ->
+            when (lifecycle) {
+                Lifecycle.Event.ON_RESUME -> {
+                    player?.setVideoSurfaceView(view)
+                }
+
+                else -> Unit
+            }
+        })
+
     }
 }
 

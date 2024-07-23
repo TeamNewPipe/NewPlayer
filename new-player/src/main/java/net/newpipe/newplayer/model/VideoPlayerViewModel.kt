@@ -38,7 +38,7 @@ import kotlinx.coroutines.flow.update
 import net.newpipe.newplayer.utils.VideoSize
 import kotlinx.parcelize.Parcelize
 import net.newpipe.newplayer.NewPlayer
-import net.newpipe.newplayer.ui.ContentFitMode
+import net.newpipe.newplayer.ui.ContentScale
 
 val VIDEOPLAYER_UI_STATE = "video_player_ui_state"
 
@@ -51,7 +51,7 @@ data class VideoPlayerUIState(
     var uiVisible: Boolean,
     val contentRatio: Float,
     val uiRatio: Float,
-    val contentFitMode: ContentFitMode
+    val contentFitMode: ContentScale
 ) : Parcelable {
     companion object {
         val DEFAULT = VideoPlayerUIState(
@@ -60,7 +60,7 @@ data class VideoPlayerUIState(
             uiVisible = false,
             contentRatio = 16 / 9F,
             uiRatio = 16F / 9F,
-            contentFitMode = ContentFitMode.FIT_INSIDE
+            contentFitMode = ContentScale.FIT_INSIDE
         )
     }
 }
@@ -71,6 +71,7 @@ interface VideoPlayerViewModel {
     val uiState: StateFlow<VideoPlayerUIState>
     var minContentRatio: Float
     var maxContentRatio: Float
+    var contentFitMode: ContentScale
 
     fun initUIState(instanceState: Bundle)
     fun play()
@@ -126,6 +127,14 @@ class VideoPlayerViewModelImpl @Inject constructor(
             else {
                 field = value
                 mutableUiState.update { it.copy(uiRatio = getUiRatio()) }
+            }
+        }
+
+    override var contentFitMode: ContentScale
+        get() = mutableUiState.value.contentFitMode
+        set(value) {
+            mutableUiState.update {
+                it.copy(contentFitMode = value)
             }
         }
 
@@ -227,6 +236,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
             override val uiState = MutableStateFlow(VideoPlayerUIState.DEFAULT)
             override var minContentRatio = 4F / 3F
             override var maxContentRatio = 16F / 9F
+            override var contentFitMode = ContentScale.FIT_INSIDE
 
             override fun initUIState(instanceState: Bundle) {
                 println("dummy impl")

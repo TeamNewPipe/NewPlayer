@@ -26,12 +26,12 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.VideoPlayerView
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelImpl
+import net.newpipe.newplayer.ui.ContentScale
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity() {
         videoPlayerViewModel.newPlayer = newPlayer
 
         videoPlayerViewModel.maxContentRatio = 4F/3F
+        videoPlayerViewModel.contentFitMode = ContentScale.FIT_INSIDE
 
         /*
         video_view.fullScreenToggleListener = object : VideoPlayerView.FullScreenToggleListener {

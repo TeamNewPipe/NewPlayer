@@ -1,8 +1,8 @@
 package net.newpipe.newplayer.ui
 
 
-enum class ContentFitMode {
+enum class ContentScale {
     FILL,
     FIT_INSIDE,
-    ZOOM
+    CROP
 }
