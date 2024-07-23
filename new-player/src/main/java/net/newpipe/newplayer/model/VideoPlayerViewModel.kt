@@ -72,6 +72,7 @@ interface VideoPlayerViewModel {
     var minContentRatio: Float
     var maxContentRatio: Float
     var contentFitMode: ContentScale
+    var fullscreenListener: FullscreenListener?
 
     fun initUIState(instanceState: Bundle)
     fun play()
@@ -80,6 +81,10 @@ interface VideoPlayerViewModel {
     fun nextStream()
     fun switchToFullscreen()
     fun switchToEmbeddedView()
+
+    interface FullscreenListener {
+        fun onFullscreenToggle(isFullscreen: Boolean)
+    }
 }
 
 @HiltViewModel
@@ -90,8 +95,11 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     // private
     private val mutableUiState = MutableStateFlow(VideoPlayerUIState.DEFAULT)
+    private var currentContentRatio = 1F
 
     //interface
+    override var fullscreenListener: VideoPlayerViewModel.FullscreenListener? = null
+
     override var newPlayer: NewPlayer? = null
         set(value) {
             field = value
@@ -161,10 +169,12 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     fun updateContentRatio(videoSize: VideoSize) {
         val newRatio = videoSize.getRatio()
-        Log.d(TAG, "Update Content ratio: $newRatio")
+        val ratio = if(newRatio.isNaN()) currentContentRatio else newRatio
+        currentContentRatio = ratio
+        Log.d(TAG, "Update Content ratio: $ratio")
         mutableUiState.update {
             it.copy(
-                contentRatio = newRatio,
+                contentRatio = currentContentRatio,
                 uiRatio = getUiRatio()
             )
         }
@@ -208,12 +218,14 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun switchToEmbeddedView() {
+        fullscreenListener?.onFullscreenToggle(false)
         mutableUiState.update {
             it.copy(fullscreen = false)
         }
     }
 
     override fun switchToFullscreen() {
+        fullscreenListener?.onFullscreenToggle(true)
         mutableUiState.update {
             it.copy(fullscreen = true)
         }
@@ -237,6 +249,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
             override var minContentRatio = 4F / 3F
             override var maxContentRatio = 16F / 9F
             override var contentFitMode = ContentScale.FIT_INSIDE
+            override var fullscreenListener: VideoPlayerViewModel.FullscreenListener? = null
 
             override fun initUIState(instanceState: Bundle) {
                 println("dummy impl")

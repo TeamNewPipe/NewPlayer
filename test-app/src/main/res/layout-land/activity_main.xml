@@ -34,7 +34,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_constraintBaseline_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/hw_view"
+        app:layout_constraintEnd_toStartOf="@+id/buttons_layout"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -52,16 +52,27 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/hw_view"
+
+    <FrameLayout
+        android:id="@+id/buttons_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text="Start Stream"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/player_column"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
+
+        <Button
+            android:id="@+id/start_stream_button"
+            android:text="Start Stream"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </FrameLayout>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
