@@ -26,6 +26,17 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <net.newpipe.newplayer.VideoPlayerView
+        android:id="@+id/fullscreen_player"
+        android:name="net.newpipe.newplayer.VideoPlayerFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:minHeight="50dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
         android:id="@+id/player_column"
