@@ -22,18 +22,15 @@ package net.newpipe.newplayer.ui
 
 import android.content.pm.ActivityInfo
 import android.view.SurfaceView
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
@@ -60,13 +58,15 @@ fun VideoPlayerUI(
     if (viewModel == null) {
         VideoPlayerLoadingPlaceholder()
     } else if (viewModel.player == null) {
-        VideoPlayerLoadingPlaceholder(viewModel.uiState.collectAsState().value.uiRatio)
+        VideoPlayerLoadingPlaceholder(viewModel.uiState.collectAsState().value.embeddedUiRatio)
     } else {
         val uiState by viewModel.uiState.collectAsState()
 
         var lifecycle by remember {
             mutableStateOf(Lifecycle.Event.ON_CREATE)
         }
+
+        val context = LocalContext.current
 
         val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -83,17 +83,6 @@ fun VideoPlayerUI(
         }
 
 
-        // Handle Fullscreen/Embedded view transition
-        if (uiState.fullscreen) {
-            BackHandler {
-                //closeFullscreen(viewModel, activity!!)
-            }
-        }
-
-        LaunchedEffect(key1 = uiState.fullscreen) {
-            println("gurken launch fullscreen: ${uiState.fullscreen}")
-        }
-
         // Set Screen Rotation
         if (uiState.fullscreen) {
             if (uiState.contentRatio < 1) {
@@ -103,18 +92,22 @@ fun VideoPlayerUI(
             }
         }
 
+        val displayMetrics = context.resources.displayMetrics
+        val screenRatio =
+            displayMetrics.widthPixels.toFloat() / displayMetrics.heightPixels.toFloat()
+
         // Set UI
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(uiState.uiRatio), color = Color.Black
+                .aspectRatio(uiState.embeddedUiRatio), color = Color.Black
         ) {
             Box(contentAlignment = Alignment.Center) {
                 PlaySurface(
                     player = viewModel.player,
                     lifecycle = lifecycle,
                     fitMode = uiState.contentFitMode,
-                    uiRatio = uiState.uiRatio,
+                    uiRatio = if (uiState.fullscreen) screenRatio else uiState.embeddedUiRatio,
                     contentRatio = uiState.contentRatio
                 )
             }
@@ -148,12 +141,19 @@ fun PlaySurface(
         .fillMaxWidth()
         .aspectRatio(16F / 9F)
 
+    /*
     Box(
         modifier = Modifier
             .then(
                 when (fitMode) {
                     ContentScale.FILL -> Modifier.fillMaxSize()
-                    ContentScale.FIT_INSIDE -> Modifier.aspectRatio(contentRatio)
+                    ContentScale.FIT_INSIDE -> Modifier
+                        .aspectRatio(contentRatio)
+                        .then(
+                            if (contentRatio < uiRatio) Modifier
+                                .fillMaxWidth() else Modifier.fillMaxHeight()
+                        )
+
                     ContentScale.CROP -> Modifier
                         .aspectRatio(contentRatio)
                         .wrapContentWidth(unbounded = true)
@@ -161,7 +161,8 @@ fun PlaySurface(
                 }
             )
     ) {
-
+     */
+    Box(modifier = Modifier.fillMaxHeight().aspectRatio(contentRatio)) {
         AndroidView(factory = { context ->
             SurfaceView(context).also { view ->
                 player?.setVideoSurfaceView(view)

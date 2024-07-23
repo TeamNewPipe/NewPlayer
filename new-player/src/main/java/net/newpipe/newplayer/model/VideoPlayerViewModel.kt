@@ -29,7 +29,6 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.Player
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -44,7 +43,6 @@ import net.newpipe.newplayer.utils.VideoSize
 import kotlinx.parcelize.Parcelize
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.ui.ContentScale
-import java.lang.Thread.sleep
 
 val VIDEOPLAYER_UI_STATE = "video_player_ui_state"
 
@@ -57,7 +55,7 @@ data class VideoPlayerUIState(
     val uiVissible: Boolean,
     var uiVisible: Boolean,
     val contentRatio: Float,
-    val uiRatio: Float,
+    val embeddedUiRatio: Float,
     val contentFitMode: ContentScale
 ) : Parcelable {
     companion object {
@@ -67,7 +65,7 @@ data class VideoPlayerUIState(
             uiVissible = false,
             uiVisible = false,
             contentRatio = 16 / 9F,
-            uiRatio = 16F / 9F,
+            embeddedUiRatio = 16F / 9F,
             contentFitMode = ContentScale.FIT_INSIDE
         )
     }
@@ -80,7 +78,7 @@ interface VideoPlayerViewModel {
     var minContentRatio: Float
     var maxContentRatio: Float
     var contentFitMode: ContentScale
-    var fullscreenListener: FullscreenListener?
+    var callbackListener: Listener?
 
     fun initUIState(instanceState: Bundle)
     fun play()
@@ -92,8 +90,9 @@ interface VideoPlayerViewModel {
     fun showUi()
     fun hideUi()
 
-    interface FullscreenListener {
+    interface Listener {
         fun onFullscreenToggle(isFullscreen: Boolean)
+        fun onUiVissibleToggle(isVissible: Boolean)
     }
 }
 
@@ -106,10 +105,10 @@ class VideoPlayerViewModelImpl @Inject constructor(
     // private
     private val mutableUiState = MutableStateFlow(VideoPlayerUIState.DEFAULT)
     private var currentContentRatio = 1F
-    private var uiVisibilityJob:Job? = null
+    private var uiVisibilityJob: Job? = null
 
     //interface
-    override var fullscreenListener: VideoPlayerViewModel.FullscreenListener? = null
+    override var callbackListener: VideoPlayerViewModel.Listener? = null
 
     override var newPlayer: NewPlayer? = null
         set(value) {
@@ -131,7 +130,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
                 )
             else {
                 field = value
-                mutableUiState.update { it.copy(uiRatio = getUiRatio()) }
+                mutableUiState.update { it.copy(embeddedUiRatio = getEmbeddedUiRatio()) }
             }
         }
 
@@ -145,7 +144,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
                 )
             else {
                 field = value
-                mutableUiState.update { it.copy(uiRatio = getUiRatio()) }
+                mutableUiState.update { it.copy(embeddedUiRatio = getEmbeddedUiRatio()) }
             }
         }
 
@@ -186,7 +185,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
         mutableUiState.update {
             it.copy(
                 contentRatio = currentContentRatio,
-                uiRatio = getUiRatio()
+                embeddedUiRatio = getEmbeddedUiRatio()
             )
         }
     }
@@ -214,15 +213,12 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun play() {
-        uiVisibilityJob?.cancel()
-        mutableUiState.update {
-            it.copy(uiVissible = false)
-        }
+        hideUi()
         newPlayer?.play()
     }
 
     override fun pause() {
-        resetHideUiDelayed()
+        uiVisibilityJob?.cancel()
         newPlayer?.pause()
     }
 
@@ -237,6 +233,9 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun showUi() {
+        if (mutableUiState.value.fullscreen)
+            callbackListener?.onUiVissibleToggle(true)
+
         mutableUiState.update {
             it.copy(uiVissible = true)
         }
@@ -246,14 +245,15 @@ class VideoPlayerViewModelImpl @Inject constructor(
     private fun resetHideUiDelayed() {
         uiVisibilityJob?.cancel()
         uiVisibilityJob = viewModelScope.launch {
-            delay(2000)
-            mutableUiState.update {
-                it.copy(uiVissible = false)
-            }
+            delay(4000)
+            hideUi()
         }
     }
 
     override fun hideUi() {
+        if (mutableUiState.value.fullscreen)
+            callbackListener?.onUiVissibleToggle(false)
+
         uiVisibilityJob?.cancel()
         mutableUiState.update {
             it.copy(uiVissible = false)
@@ -261,7 +261,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun switchToEmbeddedView() {
-        fullscreenListener?.onFullscreenToggle(false)
+        callbackListener?.onFullscreenToggle(false)
         uiVisibilityJob?.cancel()
         mutableUiState.update {
             it.copy(fullscreen = false, uiVissible = false)
@@ -269,7 +269,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun switchToFullscreen() {
-        fullscreenListener?.onFullscreenToggle(true)
+        callbackListener?.onFullscreenToggle(true)
         uiVisibilityJob?.cancel()
 
         mutableUiState.update {
@@ -277,13 +277,15 @@ class VideoPlayerViewModelImpl @Inject constructor(
         }
     }
 
-    private fun getUiRatio() =
+    private fun getEmbeddedUiRatio() =
         player?.let { player ->
             val videoRatio = VideoSize.fromMedia3VideoSize(player.videoSize).getRatio()
-            return if (videoRatio.isNaN())
-                minContentRatio
+            return (if (videoRatio.isNaN())
+                currentContentRatio
             else
-                videoRatio.coerceIn(minContentRatio, maxContentRatio)
+                videoRatio).coerceIn(minContentRatio, maxContentRatio)
+
+
         } ?: minContentRatio
 
 
@@ -295,7 +297,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
             override var minContentRatio = 4F / 3F
             override var maxContentRatio = 16F / 9F
             override var contentFitMode = ContentScale.FIT_INSIDE
-            override var fullscreenListener: VideoPlayerViewModel.FullscreenListener? = null
+            override var callbackListener: VideoPlayerViewModel.Listener? = null
 
             override fun initUIState(instanceState: Bundle) {
                 println("dummy impl")

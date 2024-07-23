@@ -27,6 +27,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import dagger.hilt.android.AndroidEntryPoint
@@ -62,17 +63,33 @@ class MainActivity : AppCompatActivity() {
         video_view.viewModel = videoPlayerViewModel
         videoPlayerViewModel.newPlayer = newPlayer
 
-        //videoPlayerViewModel.maxContentRatio = 4F/3F
+        videoPlayerViewModel.maxContentRatio = 4F/3F
         videoPlayerViewModel.contentFitMode = ContentScale.FIT_INSIDE
 
 
+        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+        windowInsetsController.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(
+                systemBars.left,
+                systemBars.top,
+                systemBars.right,
+                systemBars.bottom
+            )
+            insets
+        }
+
         if (videoPlayerViewModel.uiState.value.fullscreen) {
-            ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                v.setPadding(0, 0, 0, 0)
-                insets
-            }
+            //ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            //    v.setPadding(0, 0, 0, 0)
+            //    insets
+            //}
             buttons_layout.visibility = View.GONE
+            //windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
         } else {
             buttons_layout.visibility = View.VISIBLE
 
@@ -86,8 +103,21 @@ class MainActivity : AppCompatActivity() {
                 )
                 insets
             }
+
+            //windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
         }
 
+        videoPlayerViewModel.callbackListener = object : VideoPlayerViewModel.Listener {
+            override fun onFullscreenToggle(isFullscreen: Boolean) {}
+
+            override fun onUiVissibleToggle(isVissible: Boolean) {
+                if (isVissible) {
+                   // windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
+                } else {
+                   // windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+                }
+            }
+        }
 
     }
 }
