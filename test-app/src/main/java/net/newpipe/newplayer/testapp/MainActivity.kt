@@ -22,7 +22,6 @@ package net.newpipe.newplayer.testapp
 
 import android.os.Bundle
 import android.view.View
-import android.webkit.RenderProcessGoneDetail
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -52,15 +51,15 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-        val video_view = findViewById<VideoPlayerView>(R.id.new_player_video_view)
-        val start_stream_button = findViewById<Button>(R.id.start_stream_button)
-        val buttons_layout = findViewById<View>(R.id.buttons_layout)
-        val embedded_player_layout = findViewById<View>(R.id.player_column)
-        val fullscreen_player = findViewById<VideoPlayerView>(R.id.fullscreen_player)
+        val embeddedPlayer = findViewById<VideoPlayerView>(R.id.new_player_video_view)
+        val startStreamButton = findViewById<Button>(R.id.start_stream_button)
+        val buttonsLayout = findViewById<View>(R.id.buttons_layout)
+        val embeddedPlayerLayout = findViewById<View>(R.id.player_column)
+        val fullscreenPlayer = findViewById<VideoPlayerView>(R.id.fullscreen_player)
 
-        start_stream_button.setOnClickListener {
+        startStreamButton.setOnClickListener {
             newPlayer.playWhenReady = true
-            newPlayer.setStream(getString(R.string.ccc_6502_video))
+            newPlayer.setStream(getString(R.string.portrait_video_example))
         }
 
 
@@ -80,16 +79,17 @@ class MainActivity : AppCompatActivity() {
                 v.setPadding(0, 0, 0, 0)
                 insets
             }
-            buttons_layout.visibility = View.GONE
-            embedded_player_layout.visibility = View.GONE
-            fullscreen_player.visibility = View.VISIBLE
-            fullscreen_player.viewModel = videoPlayerViewModel
+            buttonsLayout.visibility = View.GONE
+            embeddedPlayerLayout.visibility = View.GONE
+            fullscreenPlayer.visibility = View.VISIBLE
+            embeddedPlayer.viewModel = null
+            fullscreenPlayer.viewModel = videoPlayerViewModel
 
             windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
         }
 
         val setupEmbeddedView = {
-            buttons_layout.visibility = View.VISIBLE
+            buttonsLayout.visibility = View.VISIBLE
 
             ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
                 val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -102,11 +102,11 @@ class MainActivity : AppCompatActivity() {
                 insets
             }
 
-            buttons_layout.visibility = View.VISIBLE
-            embedded_player_layout.visibility = View.VISIBLE
-            fullscreen_player.visibility = View.GONE
-            video_view.viewModel = videoPlayerViewModel
-
+            buttonsLayout.visibility = View.VISIBLE
+            embeddedPlayerLayout.visibility = View.VISIBLE
+            fullscreenPlayer.visibility = View.GONE
+            fullscreenPlayer.viewModel = null
+            embeddedPlayer.viewModel = videoPlayerViewModel
 
             windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
         }

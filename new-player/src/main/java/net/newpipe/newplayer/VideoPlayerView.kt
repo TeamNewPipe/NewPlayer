@@ -35,6 +35,12 @@ import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 class VideoPlayerView : FrameLayout {
 
     var viewModel: VideoPlayerViewModel? = null
+        set(value) {
+            field = value
+            applyViewModel()
+        }
+
+    val composeView:ComposeView
 
     @JvmOverloads
     constructor(
@@ -43,8 +49,12 @@ class VideoPlayerView : FrameLayout {
         defStyleAttr: Int = 0
     ) : super(context, attrs, defStyleAttr) {
         val view = LayoutInflater.from(context).inflate(R.layout.video_player_view, this)
-        val composeView = view.findViewById<ComposeView>(R.id.video_player_compose_view)
+        composeView = view.findViewById<ComposeView>(R.id.video_player_compose_view)
 
+        applyViewModel()
+    }
+
+    private fun applyViewModel() {
         composeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
@@ -53,6 +63,6 @@ class VideoPlayerView : FrameLayout {
                 }
             }
         }
-
     }
+
 }
