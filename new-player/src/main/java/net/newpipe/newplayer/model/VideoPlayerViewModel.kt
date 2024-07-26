@@ -110,6 +110,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     private val mutableUiState = MutableStateFlow(VideoPlayerUIState.DEFAULT)
     private var currentContentRatio = 1F
     private var uiVisibilityJob: Job? = null
+    private var progressUpdaterJob: Job? = null
 
     //interface
     override var callbackListener: VideoPlayerViewModel.Listener? = null
@@ -227,12 +228,12 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun prevStream() {
-        resetHideUiDelayed()
+        resetHideUiDelayedJob()
         Log.e(TAG, "imeplement prev stream")
     }
 
     override fun nextStream() {
-        resetHideUiDelayed()
+        resetHideUiDelayedJob()
         Log.e(TAG, "implement next stream")
     }
 
@@ -243,10 +244,11 @@ class VideoPlayerViewModelImpl @Inject constructor(
         mutableUiState.update {
             it.copy(uiVissible = true)
         }
-        resetHideUiDelayed()
+        resetHideUiDelayedJob()
+        resetProgressUpdatePeriodicallyJob()
     }
 
-    private fun resetHideUiDelayed() {
+    private fun resetHideUiDelayedJob() {
         uiVisibilityJob?.cancel()
         uiVisibilityJob = viewModelScope.launch {
             delay(4000)
@@ -254,10 +256,32 @@ class VideoPlayerViewModelImpl @Inject constructor(
         }
     }
 
+    private fun resetProgressUpdatePeriodicallyJob() {
+        progressUpdaterJob?.cancel()
+        progressUpdaterJob = viewModelScope.launch {
+            while(true) {
+                updateProgressOnce()
+                delay(1000)
+            }
+        }
+
+    }
+
+    private fun updateProgressOnce() {
+        val progress = player?.currentPosition ?: 0
+        val duration = player?.duration ?: 1
+        val progressPercentage = progress.toFloat() / duration.toFloat()
+        mutableUiState.update {
+            it.copy(seekerPosition = progressPercentage)
+        }
+        Log.i(TAG, "Progress: $progress, Duration: $duration")
+    }
+
     override fun hideUi() {
         if (mutableUiState.value.fullscreen)
             callbackListener?.onUiVissibleToggle(false)
 
+        progressUpdaterJob?.cancel()
         uiVisibilityJob?.cancel()
         mutableUiState.update {
             it.copy(uiVissible = false)
@@ -270,7 +294,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun seekingFinished() {
-        resetHideUiDelayed()
+        resetHideUiDelayedJob()
         Log.d(TAG, "TODO: Implement seeking Finished")
     }
 

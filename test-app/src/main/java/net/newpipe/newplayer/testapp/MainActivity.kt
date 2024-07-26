@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
 
         startStreamButton.setOnClickListener {
             newPlayer.playWhenReady = true
-            newPlayer.setStream(getString(R.string.ccc_6502_video))
+            newPlayer.setStream(getString(R.string.portrait_video_example))
         }
 
         videoPlayerViewModel.newPlayer = newPlayer
