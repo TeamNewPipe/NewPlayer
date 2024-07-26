@@ -56,7 +56,8 @@ data class VideoPlayerUIState(
     var uiVisible: Boolean,
     val contentRatio: Float,
     val embeddedUiRatio: Float,
-    val contentFitMode: ContentScale
+    val contentFitMode: ContentScale,
+    val seekerPosition: Float
 ) : Parcelable {
     companion object {
         val DEFAULT = VideoPlayerUIState(
@@ -66,7 +67,8 @@ data class VideoPlayerUIState(
             uiVisible = false,
             contentRatio = 16 / 9F,
             embeddedUiRatio = 16F / 9F,
-            contentFitMode = ContentScale.FIT_INSIDE
+            contentFitMode = ContentScale.FIT_INSIDE,
+            seekerPosition = 0F
         )
     }
 }
@@ -89,6 +91,8 @@ interface VideoPlayerViewModel {
     fun switchToEmbeddedView()
     fun showUi()
     fun hideUi()
+    fun seekPositionChanged(newValue: Float)
+    fun seekingFinished()
 
     interface Listener {
         fun onFullscreenToggle(isFullscreen: Boolean)
@@ -260,6 +264,16 @@ class VideoPlayerViewModelImpl @Inject constructor(
         }
     }
 
+    override fun seekPositionChanged(newValue: Float) {
+        uiVisibilityJob?.cancel()
+        mutableUiState.update { it.copy(seekerPosition = newValue) }
+    }
+
+    override fun seekingFinished() {
+        resetHideUiDelayed()
+        Log.d(TAG, "TODO: Implement seeking Finished")
+    }
+
     override fun switchToEmbeddedView() {
         callbackListener?.onFullscreenToggle(false)
         uiVisibilityJob?.cancel()
@@ -303,6 +317,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
                 println("dummy impl")
             }
 
+
             override fun play() {
                 println("dummy impl")
             }
@@ -320,6 +335,14 @@ class VideoPlayerViewModelImpl @Inject constructor(
             }
 
             override fun hideUi() {
+                println("dummy impl")
+            }
+
+            override fun seekPositionChanged(newValue: Float) {
+                println("dummy impl")
+            }
+
+            override fun seekingFinished() {
                 println("dummy impl")
             }
 

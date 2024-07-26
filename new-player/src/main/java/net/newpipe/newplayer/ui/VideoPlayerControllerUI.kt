@@ -91,6 +91,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import net.newpipe.newplayer.R
+import net.newpipe.newplayer.ui.seeker.Seeker
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.theme.video_player_onSurface
 
@@ -99,6 +100,7 @@ fun VideoPlayerControllerUI(
     isPlaying: Boolean,
     fullscreen: Boolean,
     uiVissible: Boolean,
+    seekPosition: Float,
     play: () -> Unit,
     pause: () -> Unit,
     prevStream: () -> Unit,
@@ -106,7 +108,9 @@ fun VideoPlayerControllerUI(
     switchToFullscreen: () -> Unit,
     switchToEmbeddedView: () -> Unit,
     showUi: () -> Unit,
-    hideUi: () -> Unit
+    hideUi: () -> Unit,
+    seekPositionChanged: (Float) -> Unit,
+    seekingFinished: () -> Unit
 ) {
 
     val insets =
@@ -124,7 +128,7 @@ fun VideoPlayerControllerUI(
             fullscreen = fullscreen
         )
     }
-    AnimatedVisibility(uiVissible){
+    AnimatedVisibility(uiVissible) {
         Surface(
             modifier = Modifier.fillMaxSize(), color = Color(0x75000000)
         ) {
@@ -167,8 +171,11 @@ fun VideoPlayerControllerUI(
                         .defaultMinSize(minHeight = 40.dp)
                         .fillMaxWidth(),
                     isFullscreen = fullscreen,
+                    seekPosition,
                     switchToFullscreen,
-                    switchToEmbeddedView
+                    switchToEmbeddedView,
+                    seekPositionChanged,
+                    seekingFinished
                 )
             }
 
@@ -432,8 +439,11 @@ private fun CenterControllButton(
 private fun BottomUI(
     modifier: Modifier,
     isFullscreen: Boolean,
+    seekPosition: Float,
     switchToFullscreen: () -> Unit,
-    switchToEmbeddedView: () -> Unit
+    switchToEmbeddedView: () -> Unit,
+    seekPositionChanged: (Float) -> Unit,
+    seekingFinished: () -> Unit
 ) {
 
     Row(
@@ -442,8 +452,17 @@ private fun BottomUI(
         modifier = modifier
     ) {
         Text("00:06:45")
-        Slider(value = 0.4F, onValueChange = {}, modifier = Modifier.weight(1F))
-        Text("00:09:40")
+        Seeker(
+            modifier.weight(1F),
+            value = seekPosition,
+            onValueChange = seekPositionChanged,
+            onValueChangeFinished = seekingFinished
+        )
+
+        //Slider(value = 0.4F, onValueChange = {}, modifier = Modifier.weight(1F))
+
+        //Text("00:09:40")
+
         IconButton(onClick = if (isFullscreen) switchToEmbeddedView else switchToFullscreen) {
             Icon(
                 imageVector = if (isFullscreen) Icons.Filled.FullscreenExit
@@ -451,6 +470,7 @@ private fun BottomUI(
                 contentDescription = stringResource(R.string.widget_description_toggle_fullscreen)
             )
         }
+
     }
 }
 
@@ -482,6 +502,7 @@ fun VideoPlayerControllerUIPreviewEmbeded() {
             VideoPlayerControllerUI(isPlaying = false,
                 fullscreen = false,
                 uiVissible = true,
+                seekPosition = 0.3F,
                 play = {},
                 pause = {},
                 prevStream = {},
@@ -489,7 +510,9 @@ fun VideoPlayerControllerUIPreviewEmbeded() {
                 switchToFullscreen = {},
                 switchToEmbeddedView = {},
                 showUi = {},
-                hideUi = {})
+                hideUi = {},
+                seekPositionChanged = {},
+                seekingFinished = {})
         }
     }
 }
@@ -502,6 +525,7 @@ fun VideoPlayerControllerUIPreviewLandscape() {
             VideoPlayerControllerUI(isPlaying = true,
                 fullscreen = true,
                 uiVissible = true,
+                seekPosition = 0.3F,
                 play = {},
                 pause = {},
                 prevStream = {},
@@ -509,7 +533,9 @@ fun VideoPlayerControllerUIPreviewLandscape() {
                 switchToEmbeddedView = {},
                 switchToFullscreen = {},
                 showUi = {},
-                hideUi = {})
+                hideUi = {},
+                seekPositionChanged = {},
+                seekingFinished = {})
         }
     }
 }
@@ -523,6 +549,7 @@ fun VideoPlayerControllerUIPreviewPortrait() {
                 isPlaying = false,
                 fullscreen = true,
                 uiVissible = true,
+                seekPosition = 0.3F,
                 play = {},
                 pause = {},
                 prevStream = {},
@@ -530,7 +557,9 @@ fun VideoPlayerControllerUIPreviewPortrait() {
                 switchToEmbeddedView = {},
                 switchToFullscreen = {},
                 showUi = {},
-                hideUi = {})
+                hideUi = {},
+                seekPositionChanged = {},
+                seekingFinished = {})
         }
     }
 }

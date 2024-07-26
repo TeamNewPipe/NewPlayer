@@ -118,6 +118,7 @@ fun VideoPlayerUI(
                 isPlaying = uiState.playing,
                 fullscreen = uiState.fullscreen,
                 uiVissible = uiState.uiVissible,
+                seekPosition = uiState.seekerPosition,
                 play = viewModel::play,
                 pause = viewModel::pause,
                 prevStream = viewModel::prevStream,
@@ -125,7 +126,9 @@ fun VideoPlayerUI(
                 switchToFullscreen = viewModel::switchToFullscreen,
                 switchToEmbeddedView = viewModel::switchToEmbeddedView,
                 showUi = viewModel::showUi,
-                hideUi = viewModel::hideUi
+                hideUi = viewModel::hideUi,
+                seekPositionChanged = viewModel::seekPositionChanged,
+                seekingFinished = viewModel::seekingFinished
             )
         }
     }

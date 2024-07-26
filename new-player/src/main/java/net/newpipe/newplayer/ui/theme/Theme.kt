@@ -25,7 +25,7 @@ import androidx.compose.material3.darkColorScheme
 
 import androidx.compose.runtime.Composable
 
-private val VideoPlayerColorScheme = darkColorScheme(
+val VideoPlayerColorScheme = darkColorScheme(
     primary = video_player_primary,
     onPrimary = video_player_onPrimary,
     primaryContainer = video_player_primaryContainer,
