@@ -453,7 +453,7 @@ private fun BottomUI(
     ) {
         Text("00:06:45")
         Seeker(
-            modifier.weight(1F),
+            Modifier.weight(1F),
             value = seekPosition,
             onValueChange = seekPositionChanged,
             onValueChangeFinished = seekingFinished
@@ -461,7 +461,7 @@ private fun BottomUI(
 
         //Slider(value = 0.4F, onValueChange = {}, modifier = Modifier.weight(1F))
 
-        //Text("00:09:40")
+        Text("00:09:40")
 
         IconButton(onClick = if (isFullscreen) switchToEmbeddedView else switchToFullscreen) {
             Icon(
@@ -470,7 +470,6 @@ private fun BottomUI(
                 contentDescription = stringResource(R.string.widget_description_toggle_fullscreen)
             )
         }
-
     }
 }
 
