@@ -109,6 +109,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     // private
     private val mutableUiState = MutableStateFlow(VideoPlayerUIState.DEFAULT)
     private var currentContentRatio = 1F
+
     private var uiVisibilityJob: Job? = null
     private var progressUpdaterJob: Job? = null
 
@@ -225,6 +226,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     override fun pause() {
         uiVisibilityJob?.cancel()
         newPlayer?.pause()
+
     }
 
     override fun prevStream() {
@@ -295,7 +297,10 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     override fun seekingFinished() {
         resetHideUiDelayedJob()
-        Log.d(TAG, "TODO: Implement seeking Finished")
+        val seekerPosition = mutableUiState.value.seekerPosition
+        val seekPositionInMs = (player?.duration?.toFloat() ?: 0F) * seekerPosition
+        player?.seekTo(seekPositionInMs.toLong())
+        Log.i(TAG, "Seek to Ms: $seekPositionInMs")
     }
 
     override fun switchToEmbeddedView() {
