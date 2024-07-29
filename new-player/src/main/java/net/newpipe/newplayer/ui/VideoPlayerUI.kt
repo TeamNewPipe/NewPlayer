@@ -20,6 +20,7 @@
 
 package net.newpipe.newplayer.ui
 
+import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.view.SurfaceView
 import androidx.compose.foundation.layout.Box
@@ -27,9 +28,11 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,8 +43,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.media3.common.Player
@@ -65,9 +72,34 @@ fun VideoPlayerUI(
             mutableStateOf(Lifecycle.Event.ON_CREATE)
         }
 
-        val context = LocalContext.current
+        val activity = LocalContext.current as Activity
+        val view = LocalView.current
+
+        val window = activity.window
+        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+        windowInsetsController.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
         val lifecycleOwner = LocalLifecycleOwner.current
+
+        // Setup fullscreen
+        if (uiState.fullscreen) {
+            LaunchedEffect(key1 = true) {
+                WindowCompat.getInsetsController(window, view)
+                    .isAppearanceLightStatusBars = false
+            }
+        }
+
+        // Setup immersive mode
+        if (uiState.fullscreen && ! uiState.uiVissible) {
+            LaunchedEffect(key1 = true) {
+                windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+            }
+        } else {
+            LaunchedEffect(key1 = false) {
+                windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
+            }
+        }
 
         // Prepare stuff for the SurfaceView to which the video will be rendered
         DisposableEffect(lifecycleOwner) {
@@ -81,7 +113,6 @@ fun VideoPlayerUI(
             }
         }
 
-
         // Set Screen Rotation
         if (uiState.fullscreen) {
             if (uiState.contentRatio < 1) {
@@ -91,7 +122,7 @@ fun VideoPlayerUI(
             }
         }
 
-        val displayMetrics = context.resources.displayMetrics
+        val displayMetrics = activity.resources.displayMetrics
         val screenRatio =
             displayMetrics.widthPixels.toFloat() / displayMetrics.heightPixels.toFloat()
 

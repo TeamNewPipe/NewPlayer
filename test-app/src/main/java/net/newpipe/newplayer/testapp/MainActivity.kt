@@ -67,10 +67,9 @@ class MainActivity : AppCompatActivity() {
         //videoPlayerViewModel.maxContentRatio = 4F/3F
         videoPlayerViewModel.contentFitMode = ContentScale.FIT_INSIDE
 
-
-        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
-        windowInsetsController.systemBarsBehavior =
-            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        //val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+        //windowInsetsController.systemBarsBehavior =
+            //WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
 
         val setupFullscreen = {
@@ -84,7 +83,7 @@ class MainActivity : AppCompatActivity() {
             embeddedPlayer.viewModel = null
             fullscreenPlayer.viewModel = videoPlayerViewModel
 
-            windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+            //windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
         }
 
         val setupEmbeddedView = {
@@ -107,7 +106,7 @@ class MainActivity : AppCompatActivity() {
             fullscreenPlayer.viewModel = null
             embeddedPlayer.viewModel = videoPlayerViewModel
 
-            windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
+            //windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
         }
 
         if (videoPlayerViewModel.uiState.value.fullscreen) {
@@ -126,9 +125,9 @@ class MainActivity : AppCompatActivity() {
 
             override fun onUiVissibleToggle(isVissible: Boolean) {
                 if (isVissible) {
-                   windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
+                   //windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
                 } else {
-                   windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+                   //windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
                 }
             }
         }
