@@ -31,6 +31,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import dagger.hilt.android.AndroidEntryPoint
+import net.newpipe.newplayer.ActivityBrainSlug
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.VideoPlayerView
 import net.newpipe.newplayer.model.VideoPlayerViewModel
@@ -45,6 +46,8 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var newPlayer: NewPlayer
+
+    var activityBrainSlug: ActivityBrainSlug? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,73 +66,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         videoPlayerViewModel.newPlayer = newPlayer
-
-        //videoPlayerViewModel.maxContentRatio = 4F/3F
         videoPlayerViewModel.contentFitMode = ContentScale.FIT_INSIDE
 
-        //val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
-        //windowInsetsController.systemBarsBehavior =
-            //WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-
-
-        val setupFullscreen = {
-            ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-                v.setPadding(0, 0, 0, 0)
-                insets
-            }
-            buttonsLayout.visibility = View.GONE
-            embeddedPlayerLayout.visibility = View.GONE
-            fullscreenPlayer.visibility = View.VISIBLE
-            embeddedPlayer.viewModel = null
-            fullscreenPlayer.viewModel = videoPlayerViewModel
-
-            //windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
-        }
-
-        val setupEmbeddedView = {
-            buttonsLayout.visibility = View.VISIBLE
-
-            ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                v.setPadding(
-                    systemBars.left,
-                    systemBars.top,
-                    systemBars.right,
-                    systemBars.bottom
-                )
-                insets
-            }
-
-            buttonsLayout.visibility = View.VISIBLE
-            embeddedPlayerLayout.visibility = View.VISIBLE
-            fullscreenPlayer.visibility = View.GONE
-            fullscreenPlayer.viewModel = null
-            embeddedPlayer.viewModel = videoPlayerViewModel
-
-            //windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
-        }
-
-        if (videoPlayerViewModel.uiState.value.fullscreen) {
-            setupFullscreen()
-        } else {
-            setupEmbeddedView()
-        }
-
-        videoPlayerViewModel.callbackListener = object : VideoPlayerViewModel.Listener {
-            override fun onFullscreenToggle(isFullscreen: Boolean) {
-                if (isFullscreen)
-                    setupFullscreen()
-                else
-                    setupEmbeddedView()
-            }
-
-            override fun onUiVissibleToggle(isVissible: Boolean) {
-                if (isVissible) {
-                   //windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
-                } else {
-                   //windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
-                }
-            }
+        activityBrainSlug = ActivityBrainSlug(videoPlayerViewModel)
+        activityBrainSlug?.let {
+            it.embeddedPlayerView = embeddedPlayer
+            it.addViewToHideOnFullscreen(buttonsLayout)
+            it.addViewToHideOnFullscreen(embeddedPlayerLayout)
+            it.fullscreenPlayerView = fullscreenPlayer
+            it.rootView = findViewById(R.id.main)
         }
     }
 }

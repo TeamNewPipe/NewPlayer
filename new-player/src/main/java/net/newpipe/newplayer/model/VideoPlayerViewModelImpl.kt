@@ -59,9 +59,9 @@ class VideoPlayerViewModelImpl @Inject constructor(
     private var uiVisibilityJob: Job? = null
     private var progressUpdaterJob: Job? = null
 
-    //interface
-    override var callbackListener: VideoPlayerViewModel.Listener? = null
+    var callbackListeners: MutableList<VideoPlayerViewModel.Listener?> = ArrayList()
 
+    //interface
     override var newPlayer: NewPlayer? = null
         set(value) {
             field = value
@@ -175,6 +175,10 @@ class VideoPlayerViewModelImpl @Inject constructor(
         }
     }
 
+    override fun addCallbackListener(listener: VideoPlayerViewModel.Listener) {
+        callbackListeners.add(listener)
+    }
+
     override fun play() {
         hideUi()
         newPlayer?.play()
@@ -197,9 +201,6 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun showUi() {
-        if (mutableUiState.value.fullscreen)
-            callbackListener?.onUiVissibleToggle(true)
-
         mutableUiState.update {
             it.copy(uiVissible = true)
         }
@@ -240,9 +241,6 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun hideUi() {
-        if (mutableUiState.value.fullscreen)
-            callbackListener?.onUiVissibleToggle(false)
-
         progressUpdaterJob?.cancel()
         uiVisibilityJob?.cancel()
         mutableUiState.update {
@@ -264,7 +262,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun switchToEmbeddedView() {
-        callbackListener?.onFullscreenToggle(false)
+        callbackListeners.forEach { it?.onFullscreenToggle(false) }
         uiVisibilityJob?.cancel()
         mutableUiState.update {
             it.copy(fullscreen = false, uiVissible = false)
@@ -272,7 +270,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun switchToFullscreen() {
-        callbackListener?.onFullscreenToggle(true)
+        callbackListeners.forEach { it?.onFullscreenToggle(true) }
         uiVisibilityJob?.cancel()
 
         mutableUiState.update {
@@ -300,9 +298,12 @@ class VideoPlayerViewModelImpl @Inject constructor(
             override var minContentRatio = 4F / 3F
             override var maxContentRatio = 16F / 9F
             override var contentFitMode = ContentScale.FIT_INSIDE
-            override var callbackListener: VideoPlayerViewModel.Listener? = null
 
             override fun initUIState(instanceState: Bundle) {
+                println("dummy impl")
+            }
+
+            override fun addCallbackListener(listener: VideoPlayerViewModel.Listener) {
                 println("dummy impl")
             }
 
