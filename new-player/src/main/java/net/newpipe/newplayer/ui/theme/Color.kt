@@ -20,10 +20,20 @@
 
 package net.newpipe.newplayer.ui.theme
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import net.newpipe.newplayer.ui.PreviewBackgroundSurface
+import net.newpipe.newplayer.ui.VideoPlayerControllerUI
 
 val video_player_primary = Color(0xFFE53935)
-val video_player_onPrimary = Color(0xFF452B00)
+
+// The color of buttons, and the LoadingCircle
+val video_player_onPrimary = Color(0xFFF8F8F8)
+
 val video_player_primaryContainer = Color(0xFF633F00)
 val video_player_onPrimaryContainer = Color(0xFFFFDDB3)
 val video_player_secondary = Color(0xFFDDC2A1)
@@ -41,9 +51,14 @@ val video_player_onErrorContainer = Color(0xFFFFDAD6)
 val video_player_background = Color(0xFF1F1B16)
 val video_player_onBackground = Color(0xFFEAE1D9)
 val video_player_surface = Color(0xFF000000)
-val video_player_onSurface = Color(0xFFEAE1D9)
+
+// The color of the Text and icons
+val video_player_onSurface = Color(0xFFF8F8F8)
+
+// The color of the menu Icons
+val video_player_onSurfaceVariant = Color(0xFFF8F8F8)
+
 val video_player_surfaceVariant = Color(0xFF4F4539)
-val video_player_onSurfaceVariant = Color(0xFFD3C4B4)
 val video_player_outline = Color(0xFF9C8F80)
 val video_player_inverseOnSurface = Color(0xFF1F1B16)
 val video_player_inverseSurface = Color(0xFFEAE1D9)
@@ -52,4 +67,28 @@ val video_player_shadow = Color(0xFF000000)
 val video_player_surfaceTint = Color(0xFFFFB951)
 val video_player_outlineVariant = Color(0xFF4F4539)
 val video_player_scrim = Color(0xFF000000)
+
+@Preview(device = "spec:width=1080px,height=600px,dpi=440,orientation=landscape")
+@Composable
+fun VideoPlayerControllerUIPreviewEmbeddedColorpreview() {
+    VideoPlayerTheme {
+        PreviewBackgroundSurface {
+            VideoPlayerControllerUI(isPlaying = false,
+                fullscreen = false,
+                uiVissible = true,
+                seekPosition = 0.3F,
+                isLoading = false,
+                play = {},
+                pause = {},
+                prevStream = {},
+                nextStream = {},
+                switchToFullscreen = {},
+                switchToEmbeddedView = {},
+                showUi = {},
+                hideUi = {},
+                seekPositionChanged = {},
+                seekingFinished = {})
+        }
+    }
+}
 

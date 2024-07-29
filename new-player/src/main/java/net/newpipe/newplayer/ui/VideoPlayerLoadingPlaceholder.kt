@@ -27,6 +27,7 @@ fun VideoPlayerLoadingPlaceholder(aspectRatio: Float = 3F / 1F) {
         Box(contentAlignment = Alignment.Center) {
             CircularProgressIndicator(modifier = Modifier
                 .width(64.dp)
+                .height(64.dp)
                 .align((Alignment.Center)))
         }
     }

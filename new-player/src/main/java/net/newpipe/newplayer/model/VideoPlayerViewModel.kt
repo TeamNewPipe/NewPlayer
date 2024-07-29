@@ -57,7 +57,8 @@ data class VideoPlayerUIState(
     val contentRatio: Float,
     val embeddedUiRatio: Float,
     val contentFitMode: ContentScale,
-    val seekerPosition: Float
+    val seekerPosition: Float,
+    val isLoading: Boolean
 ) : Parcelable {
     companion object {
         val DEFAULT = VideoPlayerUIState(
@@ -68,7 +69,8 @@ data class VideoPlayerUIState(
             contentRatio = 16 / 9F,
             embeddedUiRatio = 16F / 9F,
             contentFitMode = ContentScale.FIT_INSIDE,
-            seekerPosition = 0F
+            seekerPosition = 0F,
+            isLoading = true
         )
     }
 }
@@ -179,6 +181,14 @@ class VideoPlayerViewModelImpl @Inject constructor(
                     super.onVideoSizeChanged(videoSize)
                     updateContentRatio(VideoSize.fromMedia3VideoSize(videoSize))
                 }
+
+                override fun onIsLoadingChanged(isLoading: Boolean) {
+                    super.onIsLoadingChanged(isLoading)
+                    mutableUiState.update {
+                        it.copy(isLoading = isLoading)
+                    }
+                    Log.i(TAG, if (isLoading) "Player started loading" else "Player finished loading")
+                }
             })
         }
     }
@@ -276,7 +286,6 @@ class VideoPlayerViewModelImpl @Inject constructor(
         mutableUiState.update {
             it.copy(seekerPosition = progressPercentage)
         }
-        Log.i(TAG, "Progress: $progress, Duration: $duration")
     }
 
     override fun hideUi() {

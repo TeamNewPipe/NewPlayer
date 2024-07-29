@@ -23,29 +23,25 @@ package net.newpipe.newplayer.ui
 import android.view.MotionEvent
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.systemGestures
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.waterfall
-import androidx.compose.foundation.layout.windowInsetsBottomHeight
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.automirrored.filled.MenuBook
@@ -64,10 +60,12 @@ import androidx.compose.material.icons.filled.Subtitles
 import androidx.compose.material.icons.filled.Translate
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -101,6 +99,7 @@ fun VideoPlayerControllerUI(
     fullscreen: Boolean,
     uiVissible: Boolean,
     seekPosition: Float,
+    isLoading: Boolean,
     play: () -> Unit,
     pause: () -> Unit,
     prevStream: () -> Unit,
@@ -113,10 +112,17 @@ fun VideoPlayerControllerUI(
     seekingFinished: () -> Unit
 ) {
 
+    if (fullscreen) {
+        BackHandler {
+            switchToEmbeddedView()
+        }
+    }
+
     val insets =
         WindowInsets.systemBars
             .union(WindowInsets.displayCutout)
             .union(WindowInsets.waterfall)
+
     if (!uiVissible) {
         TouchUi(
             modifier = Modifier
@@ -128,62 +134,72 @@ fun VideoPlayerControllerUI(
             fullscreen = fullscreen
         )
     }
+
     AnimatedVisibility(uiVissible) {
         Surface(
             modifier = Modifier.fillMaxSize(), color = Color(0x75000000)
-        ) {
-            TouchUi(
+        ) {}
+    }
+
+    if (isLoading) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            CircularProgressIndicator(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .windowInsetsPadding(WindowInsets.systemGestures),
-                hideUi = hideUi,
-                showUi = showUi,
-                uiVissible = uiVissible,
-                fullscreen = fullscreen
+                    .width(64.dp)
+                    .height(64.dp)
+                    .align(Alignment.Center),
+                color = MaterialTheme.colorScheme.onSurface
             )
-
-            Box {
-                CenterUI(
-                    modifier = Modifier.align(Alignment.Center),
-                    isPlaying = isPlaying,
-                    play = play,
-                    pause = pause,
-                    prevStream = prevStream,
-                    nextStream = nextStream
-                )
-            }
-
-            Box(
-                modifier = if (fullscreen) Modifier.windowInsetsPadding(insets) else Modifier
-            ) {
-                TopUI(
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .fillMaxWidth()
-                        .defaultMinSize(minHeight = 45.dp)
-                        .padding(top = 4.dp, start = 16.dp, end = 16.dp)
-                )
-
-                BottomUI(
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .padding(start = 16.dp, end = 16.dp)
-                        .defaultMinSize(minHeight = 40.dp)
-                        .fillMaxWidth(),
-                    isFullscreen = fullscreen,
-                    seekPosition,
-                    switchToFullscreen,
-                    switchToEmbeddedView,
-                    seekPositionChanged,
-                    seekingFinished
-                )
-            }
-
         }
     }
-    if (fullscreen) {
-        BackHandler {
-            switchToEmbeddedView()
+
+    AnimatedVisibility(uiVissible) {
+        TouchUi(
+            modifier = Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(WindowInsets.systemGestures),
+            hideUi = hideUi,
+            showUi = showUi,
+            uiVissible = uiVissible,
+            fullscreen = fullscreen
+        )
+
+        Box(modifier = Modifier.fillMaxSize()) {
+            CenterUI(
+                modifier = Modifier.align(Alignment.Center),
+                isPlaying = isPlaying,
+                isLoading = isLoading,
+                play = play,
+                pause = pause,
+                prevStream = prevStream,
+                nextStream = nextStream
+            )
+        }
+
+        Box(
+            modifier = if (fullscreen) Modifier.windowInsetsPadding(insets) else Modifier
+        ) {
+            TopUI(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .fillMaxWidth()
+                    .defaultMinSize(minHeight = 45.dp)
+                    .padding(top = 4.dp, start = 16.dp, end = 16.dp)
+            )
+
+            BottomUI(
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(start = 16.dp, end = 16.dp)
+                    .defaultMinSize(minHeight = 40.dp)
+                    .fillMaxWidth(),
+                isFullscreen = fullscreen,
+                seekPosition,
+                switchToFullscreen,
+                switchToEmbeddedView,
+                seekPositionChanged,
+                seekingFinished
+            )
         }
     }
 }
@@ -370,6 +386,7 @@ private fun MainMenu() {
 private fun CenterUI(
     modifier: Modifier,
     isPlaying: Boolean,
+    isLoading: Boolean,
     play: () -> Unit,
     pause: () -> Unit,
     nextStream: () -> Unit,
@@ -380,32 +397,34 @@ private fun CenterUI(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier,
     ) {
-        CenterControllButton(
-            buttonModifier = Modifier.size(80.dp),
-            iconModifier = Modifier.size(40.dp),
-            icon = Icons.Filled.SkipPrevious,
-            contentDescriptoion = stringResource(R.string.widget_description_previous_stream),
-            onClick = prevStream
-        )
+        if (!isLoading) {
+            CenterControllButton(
+                buttonModifier = Modifier.size(80.dp),
+                iconModifier = Modifier.size(40.dp),
+                icon = Icons.Filled.SkipPrevious,
+                contentDescriptoion = stringResource(R.string.widget_description_previous_stream),
+                onClick = prevStream
+            )
 
-        CenterControllButton(
-            buttonModifier = Modifier.size(80.dp),
-            iconModifier = Modifier.size(60.dp),
-            icon = if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
-            contentDescriptoion = stringResource(
-                if (isPlaying) R.string.widget_description_pause
-                else R.string.widget_description_play
-            ),
-            onClick = if (isPlaying) pause else play
-        )
+            CenterControllButton(
+                buttonModifier = Modifier.size(80.dp),
+                iconModifier = Modifier.size(60.dp),
+                icon = if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
+                contentDescriptoion = stringResource(
+                    if (isPlaying) R.string.widget_description_pause
+                    else R.string.widget_description_play
+                ),
+                onClick = if (isPlaying) pause else play
+            )
 
-        CenterControllButton(
-            buttonModifier = Modifier.size(80.dp),
-            iconModifier = Modifier.size(40.dp),
-            icon = Icons.Filled.SkipNext,
-            contentDescriptoion = stringResource(R.string.widget_description_next_stream),
-            onClick = nextStream
-        )
+            CenterControllButton(
+                buttonModifier = Modifier.size(80.dp),
+                iconModifier = Modifier.size(40.dp),
+                icon = Icons.Filled.SkipNext,
+                contentDescriptoion = stringResource(R.string.widget_description_next_stream),
+                onClick = nextStream
+            )
+        }
     }
 }
 
@@ -421,7 +440,7 @@ private fun CenterControllButton(
         onClick = onClick,
         contentPadding = PaddingValues(0.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Transparent, contentColor = video_player_onSurface
+            containerColor = Color.Transparent,
         ),
         modifier = buttonModifier
     ) {
@@ -502,6 +521,7 @@ fun VideoPlayerControllerUIPreviewEmbeded() {
                 fullscreen = false,
                 uiVissible = true,
                 seekPosition = 0.3F,
+                isLoading = false,
                 play = {},
                 pause = {},
                 prevStream = {},
@@ -525,6 +545,7 @@ fun VideoPlayerControllerUIPreviewLandscape() {
                 fullscreen = true,
                 uiVissible = true,
                 seekPosition = 0.3F,
+                isLoading = true,
                 play = {},
                 pause = {},
                 prevStream = {},
@@ -549,6 +570,7 @@ fun VideoPlayerControllerUIPreviewPortrait() {
                 fullscreen = true,
                 uiVissible = true,
                 seekPosition = 0.3F,
+                isLoading = false,
                 play = {},
                 pause = {},
                 prevStream = {},
