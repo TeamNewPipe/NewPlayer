@@ -21,6 +21,7 @@
  */
 package net.newpipe.newplayer.ui.seeker
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
@@ -49,16 +50,16 @@ object SeekerDefaults {
      */
     @Composable
     fun seekerColors(
-        progressColor: Color = VideoPlayerColorScheme.primary,
+        progressColor: Color = MaterialTheme.colorScheme.primary,
         trackColor: Color = TrackColor,
-        disabledProgressColor: Color = VideoPlayerColorScheme.onSurface.copy(alpha = DisabledProgressAlpha),
+        disabledProgressColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = DisabledProgressAlpha),
         disabledTrackColor: Color = disabledProgressColor
             .copy(alpha = DisabledTrackAlpha)
-            .compositeOver(VideoPlayerColorScheme.onSurface),
-        thumbColor: Color = VideoPlayerColorScheme.primary,
-        disabledThumbColor: Color = VideoPlayerColorScheme.onSurface
+            .compositeOver(MaterialTheme.colorScheme.onSurface),
+        thumbColor: Color = MaterialTheme.colorScheme.primary,
+        disabledThumbColor: Color = MaterialTheme.colorScheme.onSurface
             .copy(alpha = 0.0F)
-            .compositeOver(VideoPlayerColorScheme.surface),
+            .compositeOver(MaterialTheme.colorScheme.surface),
         readAheadColor: Color = ReadAheadColor
     ): SeekerColors = DefaultSeekerColor(
         progressColor = progressColor,

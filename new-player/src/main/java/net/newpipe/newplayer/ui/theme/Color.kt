@@ -58,7 +58,9 @@ val video_player_onSurface = Color(0xFFF8F8F8)
 // The color of the menu Icons
 val video_player_onSurfaceVariant = Color(0xFFF8F8F8)
 
+// The background color of the seekbar
 val video_player_surfaceVariant = Color(0xFF4F4539)
+
 val video_player_outline = Color(0xFF9C8F80)
 val video_player_inverseOnSurface = Color(0xFF1F1B16)
 val video_player_inverseSurface = Color(0xFFEAE1D9)
@@ -80,6 +82,7 @@ fun VideoPlayerControllerUIPreviewEmbeddedColorPreview() {
                 isLoading = false,
                 durationInMs = 9*60*1000,
                 playbackPositionInMs = 6*60*1000,
+                bufferedPercentage = 0.4f,
                 play = {},
                 pause = {},
                 prevStream = {},

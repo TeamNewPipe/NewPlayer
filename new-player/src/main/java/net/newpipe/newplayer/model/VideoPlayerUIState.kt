@@ -34,6 +34,7 @@ data class VideoPlayerUIState(
     val embeddedUiRatio: Float,
     val contentFitMode: ContentScale,
     val seekerPosition: Float,
+    val bufferedPercentage: Float,
     val isLoading: Boolean,
     val durationInMs: Long,
     val playbackPositionInMs: Long
@@ -44,10 +45,11 @@ data class VideoPlayerUIState(
             fullscreen = false,
             uiVissible = false,
             uiVisible = false,
-            contentRatio = 16 / 9F,
-            embeddedUiRatio = 16F / 9F,
+            contentRatio = 16 / 9f,
+            embeddedUiRatio = 16f / 9f,
             contentFitMode = ContentScale.FIT_INSIDE,
-            seekerPosition = 0F,
+            seekerPosition = 0f,
+            bufferedPercentage = 0f,
             isLoading = true,
             durationInMs = 0,
             playbackPositionInMs = 0

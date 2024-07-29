@@ -29,6 +29,7 @@ import androidx.compose.material.icons.filled.Fullscreen
 import androidx.compose.material.icons.filled.FullscreenExit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,7 +42,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.os.ConfigurationCompat
 import net.newpipe.newplayer.R
+import net.newpipe.newplayer.ui.seeker.DefaultSeekerColor
 import net.newpipe.newplayer.ui.seeker.Seeker
+import net.newpipe.newplayer.ui.seeker.SeekerColors
+import net.newpipe.newplayer.ui.seeker.SeekerDefaults
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import java.util.Locale
 import kotlin.math.min
@@ -53,6 +57,7 @@ fun BottomUI(
     seekPosition: Float,
     durationInMs: Long,
     playbackPositionInMs: Long,
+    bufferedPercentage: Float,
     switchToFullscreen: () -> Unit,
     switchToEmbeddedView: () -> Unit,
     seekPositionChanged: (Float) -> Unit,
@@ -68,7 +73,9 @@ fun BottomUI(
             Modifier.weight(1F),
             value = seekPosition,
             onValueChange = seekPositionChanged,
-            onValueChangeFinished = seekingFinished
+            onValueChangeFinished = seekingFinished,
+            readAheadValue = bufferedPercentage,
+            colors = customizedSeekerColors()
         )
 
         //Slider(value = 0.4F, onValueChange = {}, modifier = Modifier.weight(1F))
@@ -83,6 +90,20 @@ fun BottomUI(
             )
         }
     }
+}
+
+@Composable
+private fun customizedSeekerColors() : SeekerColors {
+    val colors = DefaultSeekerColor(
+        progressColor = MaterialTheme.colorScheme.primary,
+        thumbColor = MaterialTheme.colorScheme.primary,
+        trackColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f),
+        readAheadColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+        disabledProgressColor = MaterialTheme.colorScheme.primary,
+        disabledThumbColor = MaterialTheme.colorScheme.primary,
+        disabledTrackColor = MaterialTheme.colorScheme.primary
+    )
+    return colors
 }
 
 @Composable
@@ -136,6 +157,7 @@ fun VideoPlayerControllerBottomUIPreview() {
                 seekPosition = 0.4F,
                 durationInMs = 90 * 60 * 1000,
                 playbackPositionInMs = 3 * 60 * 1000,
+                bufferedPercentage = 0.4f,
                 switchToFullscreen = { },
                 switchToEmbeddedView = { },
                 seekPositionChanged = {}

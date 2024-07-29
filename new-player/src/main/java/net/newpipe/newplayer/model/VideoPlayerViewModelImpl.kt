@@ -34,7 +34,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -230,12 +229,15 @@ class VideoPlayerViewModelImpl @Inject constructor(
     private fun updateProgressOnce() {
         val progress = player?.currentPosition ?: 0
         val duration = player?.duration ?: 1
+        val bufferedPercentage = (player?.bufferedPercentage?.toFloat() ?: 0f) / 100f
         val progressPercentage = progress.toFloat() / duration.toFloat()
+
         mutableUiState.update {
             it.copy(
                 seekerPosition = progressPercentage,
                 durationInMs = duration,
-                playbackPositionInMs = progress
+                playbackPositionInMs = progress,
+                bufferedPercentage = bufferedPercentage
             )
         }
     }

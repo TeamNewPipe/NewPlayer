@@ -22,6 +22,5 @@
 <resources>
     <string name="ccc_6502_video" translatable="false">https://ftp.fau.de/cdn.media.ccc.de/congress/2010/mp4-h264-HQ/27c3-4159-en-reverse_engineering_mos_6502.mp4</string>
     <string name="ccc_6502_audio" translatable="false">https://ftp.fau.de/cdn.media.ccc.de/congress/2010/ogg-audio-only/27c3-4159-en-reverse_engineering_mos_6502.ogg</string>
-    <string name="ccc_chromebooks_video" translatable="false">https://ftp.fau.de/cdn.media.ccc.de/congress/2023/h264-hd/37c3-11929-eng-deu-swe-Turning_Chromebooks_into_regular_laptops_hd.mp4</string>
     <string name="portrait_video_example" translatable="false">https://videos.pexels.com/video-files/5512609/5512609-hd_1080_1920_25fps.mp4</string>
 </resources>
