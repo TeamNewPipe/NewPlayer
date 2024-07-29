@@ -20,6 +20,8 @@
 
 package net.newpipe.newplayer.ui.videoplayer
 
+import android.app.LocaleConfig
+import android.icu.text.DecimalFormat
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
@@ -30,32 +32,38 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.os.ConfigurationCompat
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.ui.seeker.Seeker
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
+import java.util.Locale
+import kotlin.math.min
 
 @Composable
 fun BottomUI(
     modifier: Modifier,
     isFullscreen: Boolean,
     seekPosition: Float,
+    durationInMs: Long,
+    playbackPositionInMs: Long,
     switchToFullscreen: () -> Unit,
     switchToEmbeddedView: () -> Unit,
     seekPositionChanged: (Float) -> Unit,
     seekingFinished: () -> Unit
 ) {
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
     ) {
-        Text("00:06:45")
+        Text(getTimeStringFromMs(playbackPositionInMs, getLocale() ?: Locale.US))
         Seeker(
             Modifier.weight(1F),
             value = seekPosition,
@@ -65,7 +73,7 @@ fun BottomUI(
 
         //Slider(value = 0.4F, onValueChange = {}, modifier = Modifier.weight(1F))
 
-        Text("00:09:40")
+        Text(getTimeStringFromMs(durationInMs, getLocale() ?: Locale.US))
 
         IconButton(onClick = if (isFullscreen) switchToEmbeddedView else switchToFullscreen) {
             Icon(
@@ -75,6 +83,42 @@ fun BottomUI(
             )
         }
     }
+}
+
+@Composable
+@ReadOnlyComposable
+fun getLocale(): Locale? {
+    val configuration = LocalConfiguration.current
+    return ConfigurationCompat.getLocales(configuration).get(0)
+}
+
+
+private const val HOURS_PER_DAY = 24
+private const val MINUTES_PER_HOUR = 60
+private const val SECONDS_PER_MINUTE = 60
+private const val MILLIS_PER_SECOND = 1000
+
+private const val MILLIS_PER_DAY =
+    HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE * MILLIS_PER_SECOND
+private const val MILLIS_PER_HOUR = MINUTES_PER_HOUR * SECONDS_PER_MINUTE * MILLIS_PER_SECOND
+private const val MILLIS_PER_MINUTE = SECONDS_PER_MINUTE * MILLIS_PER_SECOND
+
+private fun getTimeStringFromMs(timeSpanInMs: Long, locale: Locale) : String {
+    val days = timeSpanInMs / MILLIS_PER_DAY
+    val millisThisDay = timeSpanInMs - days * MILLIS_PER_DAY
+    val hours = millisThisDay / MILLIS_PER_HOUR
+    val millisThisHour = millisThisDay - hours * MILLIS_PER_HOUR
+    val minutes = millisThisHour / MILLIS_PER_MINUTE
+    val milliesThisMinute = millisThisHour - minutes * MILLIS_PER_MINUTE
+    val seconds = milliesThisMinute / MILLIS_PER_SECOND
+
+
+    val time_string =
+        if (0L < days) String.format(locale, "%d:%02d:%02d:%02d", days, hours, minutes, seconds)
+        else if (0L < hours) String.format(locale, "%d:%02d:%02d", hours, minutes, seconds)
+        else String.format(locale, "%d:%02d", minutes, seconds)
+
+    return time_string
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -90,8 +134,10 @@ fun VideoPlayerControllerBottomUIPreview() {
                 modifier = Modifier,
                 isFullscreen = true,
                 seekPosition = 0.4F,
-                switchToFullscreen = {  },
-                switchToEmbeddedView = {  },
+                durationInMs = 90 * 60 * 1000,
+                playbackPositionInMs = 3 * 60 * 1000,
+                switchToFullscreen = { },
+                switchToEmbeddedView = { },
                 seekPositionChanged = {}
             ) {
 

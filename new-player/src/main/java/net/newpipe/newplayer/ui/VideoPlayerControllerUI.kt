@@ -59,6 +59,8 @@ fun VideoPlayerControllerUI(
     uiVissible: Boolean,
     seekPosition: Float,
     isLoading: Boolean,
+    durationInMs: Long,
+    playbackPositionInMs: Long,
     play: () -> Unit,
     pause: () -> Unit,
     prevStream: () -> Unit,
@@ -153,11 +155,13 @@ fun VideoPlayerControllerUI(
                     .defaultMinSize(minHeight = 40.dp)
                     .fillMaxWidth(),
                 isFullscreen = fullscreen,
-                seekPosition,
-                switchToFullscreen,
-                switchToEmbeddedView,
-                seekPositionChanged,
-                seekingFinished
+                durationInMs = durationInMs,
+                playbackPositionInMs = playbackPositionInMs,
+                seekPosition = seekPosition,
+                switchToFullscreen = switchToFullscreen,
+                switchToEmbeddedView = switchToEmbeddedView,
+                seekPositionChanged = seekPositionChanged,
+                seekingFinished = seekingFinished
             )
         }
     }
@@ -197,6 +201,8 @@ fun VideoPlayerControllerUIPreviewEmbedded() {
                 uiVissible = true,
                 seekPosition = 0.3F,
                 isLoading = false,
+                durationInMs = 9*60*1000,
+                playbackPositionInMs = 6*60*1000,
                 play = {},
                 pause = {},
                 prevStream = {},
@@ -221,6 +227,8 @@ fun VideoPlayerControllerUIPreviewLandscape() {
                 uiVissible = true,
                 seekPosition = 0.3F,
                 isLoading = true,
+                durationInMs = 9*60*1000,
+                playbackPositionInMs = 6*60*1000,
                 play = {},
                 pause = {},
                 prevStream = {},
@@ -246,6 +254,8 @@ fun VideoPlayerControllerUIPreviewPortrait() {
                 uiVissible = true,
                 seekPosition = 0.3F,
                 isLoading = false,
+                durationInMs = 9*60*1000,
+                playbackPositionInMs = 6*60*1000,
                 play = {},
                 pause = {},
                 prevStream = {},

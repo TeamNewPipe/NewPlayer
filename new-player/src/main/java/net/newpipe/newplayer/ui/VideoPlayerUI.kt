@@ -119,6 +119,8 @@ fun VideoPlayerUI(
                 uiVissible = uiState.uiVissible,
                 seekPosition = uiState.seekerPosition,
                 isLoading = uiState.isLoading,
+                durationInMs = uiState.durationInMs,
+                playbackPositionInMs = uiState.playbackPositionInMs,
                 play = viewModel::play,
                 pause = viewModel::pause,
                 prevStream = viewModel::prevStream,

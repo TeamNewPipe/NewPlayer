@@ -70,7 +70,7 @@ val video_player_scrim = Color(0xFF000000)
 
 @Preview(device = "spec:width=1080px,height=600px,dpi=440,orientation=landscape")
 @Composable
-fun VideoPlayerControllerUIPreviewEmbeddedColorpreview() {
+fun VideoPlayerControllerUIPreviewEmbeddedColorPreview() {
     VideoPlayerTheme {
         PreviewBackgroundSurface {
             VideoPlayerControllerUI(isPlaying = false,
@@ -78,6 +78,8 @@ fun VideoPlayerControllerUIPreviewEmbeddedColorpreview() {
                 uiVissible = true,
                 seekPosition = 0.3F,
                 isLoading = false,
+                durationInMs = 9*60*1000,
+                playbackPositionInMs = 6*60*1000,
                 play = {},
                 pause = {},
                 prevStream = {},
