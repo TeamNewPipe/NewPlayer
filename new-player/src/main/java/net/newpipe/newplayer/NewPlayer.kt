@@ -24,53 +24,97 @@ import android.app.Application
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
+import java.lang.Exception
 
+enum class PlayMode {
+    EMBEDDED_VIDEO,
+    FULLSCREEN_VIDEO,
+    PIP,
+    BACKGROND,
+    AUDIO_FORGROUND,
+}
 
 interface NewPlayer {
-    val player: Player
+    val internal_player: Player
     var playWhenReady: Boolean
+    val duartion: Long
+    val bufferedPercentage: Int
+    val repository: MediaRepository
+    var currentPosition: Long
+    var fastSeekAmountSec: Long
+    var playBackMode: PlayMode
+    var playList: MutableList<String>
 
     fun prepare()
     fun play()
     fun pause()
+    fun fastSeekForward()
+    fun fastSeekBackward()
+    fun addToPlaylist(newItem: String)
+    fun addListener(callbackListener: Listener)
 
     //TODO: This is only temporary
     fun setStream(uri: String)
 
-    data class Builder(val app: Application) {
+    data class Builder(val app: Application, val repository: MediaRepository) {
         fun build(): NewPlayer {
-            return NewPlayerImpl(ExoPlayer.Builder(app).build())
+            return NewPlayerImpl(ExoPlayer.Builder(app).build(), repository = repository)
         }
+    }
+
+    interface Listener {
+        fun onError(exception: Exception)
     }
 }
 
-class NewPlayerImpl(internal_player: Player) : NewPlayer {
-    override val player = internal_player
+class NewPlayerImpl(override val internal_player: Player, override val repository: MediaRepository) : NewPlayer {
+    override val duartion: Long = internal_player.duration
+    override val bufferedPercentage: Int = internal_player.bufferedPercentage
+    override var currentPosition: Long = internal_player.currentPosition
+    override var fastSeekAmountSec: Long = 100
+    override var playBackMode: PlayMode = PlayMode.EMBEDDED_VIDEO
+    override var playList: MutableList<String> = ArrayList<String>()
 
     override var playWhenReady: Boolean
         set(value) {
-            player.playWhenReady = value
+            internal_player.playWhenReady = value
         }
-        get() = player.playWhenReady
+        get() = internal_player.playWhenReady
 
     override fun prepare() {
-        player.prepare()
+        internal_player.prepare()
     }
 
     override fun play() {
-        player.play()
+        internal_player.play()
     }
 
     override fun pause() {
-        player.pause()
+        internal_player.pause()
+    }
+
+    override fun fastSeekForward() {
+        TODO("Not yet implemented")
+    }
+
+    override fun fastSeekBackward() {
+        TODO("Not yet implemented")
+    }
+
+    override fun addToPlaylist(newItem: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun addListener(callbackListener: NewPlayer.Listener) {
+        TODO("Not yet implemented")
     }
 
 
     override fun setStream(uri: String) {
-        if (player.playbackState == Player.STATE_IDLE) {
-            player.prepare()
+        if (internal_player.playbackState == Player.STATE_IDLE) {
+            internal_player.prepare()
         }
 
-        player.setMediaItem(MediaItem.fromUri(uri))
+        internal_player.setMediaItem(MediaItem.fromUri(uri))
     }
 }

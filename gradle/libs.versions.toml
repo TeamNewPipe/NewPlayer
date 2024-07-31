@@ -41,6 +41,7 @@ fragmentKtx = "1.8.1"
 lifecycleRuntimeKtx = "2.8.3"
 kotlinParcelize = "2.0.20-Beta2"
 newplayer = "master-SNAPSHOT"
+okhttpAndroid = "5.0.0-alpha.14"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -73,6 +74,7 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 newplayer = { group = "com.github.theScrabi.NewPlayer", name = "new-player", version.ref = "newplayer" }
+okhttp-android = { group = "com.squareup.okhttp3", name = "okhttp-android", version.ref = "okhttpAndroid" }
 
 
 

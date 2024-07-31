@@ -70,7 +70,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     override val uiState = mutableUiState.asStateFlow()
 
     override val player: Player?
-        get() = newPlayer?.player
+        get() = newPlayer?.internal_player
 
     override var minContentRatio: Float = 4F / 3F
         set(value) {

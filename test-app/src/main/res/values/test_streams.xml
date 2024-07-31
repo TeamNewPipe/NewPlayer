@@ -22,5 +22,14 @@
 <resources>
     <string name="ccc_6502_video" translatable="false">https://ftp.fau.de/cdn.media.ccc.de/congress/2010/mp4-h264-HQ/27c3-4159-en-reverse_engineering_mos_6502.mp4</string>
     <string name="ccc_6502_audio" translatable="false">https://ftp.fau.de/cdn.media.ccc.de/congress/2010/ogg-audio-only/27c3-4159-en-reverse_engineering_mos_6502.ogg</string>
-    <string name="portrait_video_example" translatable="false">https://videos.pexels.com/video-files/5512609/5512609-hd_1080_1920_25fps.mp4</string>
+
+    <string name="portrait_video_example" translatable="false">https://va.media.tumblr.com/tumblr_sh62vjBX0j1z8ckep.mp4</string>
+
+    <string name="ccc_imu_1080_mp4" translatable="false">https://ftp.fau.de/cdn.media.ccc.de/congress/2019/h264-hd/36c3-10694-eng-deu-Intel_Management_Engine_deep_dive_hd.mp4</string>
+    <string name="ccc_imu_576_mp4" translatable="false">https://ftp.fau.de/cdn.media.ccc.de/congress/2019/h264-sd/36c3-10694-eng-deu-Intel_Management_Engine_deep_dive_sd.mp4</string>
+    <string name="ccc_imu_1080_webm" translatable="false">https://ftp.fau.de/cdn.media.ccc.de/congress/2019/webm-hd/36c3-10694-eng-deu-Intel_Management_Engine_deep_dive_webm-hd.webm</string>
+    <string name="ccc_imu_576_webm" translatable="false">https://ftp.fau.de/cdn.media.ccc.de/congress/2019/webm-sd/36c3-10694-eng-deu-Intel_Management_Engine_deep_dive_webm-sd.webm</string>
+    <string name="ccc_imu_mp3" translatable="false">https://ftp.fau.de/cdn.media.ccc.de/congress/2019/mp3/36c3-10694-eng-Intel_Management_Engine_deep_dive_mp3.mp3</string>
+    <string name="ccc_imu_opus" translatable="false">https://ftp.fau.de/cdn.media.ccc.de/congress/2019/opus/36c3-10694-eng-Intel_Management_Engine_deep_dive_opus.opus</string>
+
 </resources>

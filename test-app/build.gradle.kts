@@ -104,6 +104,7 @@ dependencies {
 
     // development impl
     implementation(project(":new-player"))
+    implementation(libs.okhttp.android)
 
     //jitpack test
     //implementation(libs.newplayer)
