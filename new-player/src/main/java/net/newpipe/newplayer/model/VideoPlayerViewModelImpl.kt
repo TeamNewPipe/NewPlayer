@@ -263,6 +263,18 @@ class VideoPlayerViewModelImpl @Inject constructor(
         Log.i(TAG, "Seek to Ms: $seekPositionInMs")
     }
 
+    override fun embeddedDraggedDown(offset: Float) {
+        callbackListeners.forEach { it?.embeddedPlayerDraggedDown(offset) }
+    }
+
+    override fun fastSeekForward() {
+        newPlayer?.fastSeekForward()
+    }
+
+    override fun fastSeekBackward() {
+        newPlayer?.fastSeekBackward()
+    }
+
     override fun switchToEmbeddedView() {
         callbackListeners.forEach { it?.onFullscreenToggle(false) }
         uiVisibilityJob?.cancel()
@@ -330,10 +342,22 @@ class VideoPlayerViewModelImpl @Inject constructor(
             }
 
             override fun seekPositionChanged(newValue: Float) {
-                println("dummy impl")
+                println("dymmy seekPositionChanged: newValue: ${newValue}")
             }
 
             override fun seekingFinished() {
+                println("dummy impl")
+            }
+
+            override fun embeddedDraggedDown(offset: Float) {
+                println("dymmy embeddedDraggedDown: offset: ${offset}")
+            }
+
+            override fun fastSeekForward() {
+                println("dummy impl")
+            }
+
+            override fun fastSeekBackward() {
                 println("dummy impl")
             }
 

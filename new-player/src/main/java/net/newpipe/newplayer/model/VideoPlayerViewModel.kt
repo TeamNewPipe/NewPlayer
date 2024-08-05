@@ -47,8 +47,13 @@ interface VideoPlayerViewModel {
     fun hideUi()
     fun seekPositionChanged(newValue: Float)
     fun seekingFinished()
+    fun embeddedDraggedDown(offset: Float)
+    fun fastSeekForward()
+    fun fastSeekBackward()
 
     interface Listener {
-        fun onFullscreenToggle(isFullscreen: Boolean)
+        fun onFullscreenToggle(isFullscreen: Boolean) {}
+
+        fun embeddedPlayerDraggedDown(offset: Float) {}
     }
 }

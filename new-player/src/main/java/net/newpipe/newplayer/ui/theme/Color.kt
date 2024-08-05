@@ -92,7 +92,8 @@ fun VideoPlayerControllerUIPreviewEmbeddedColorPreview() {
                 showUi = {},
                 hideUi = {},
                 seekPositionChanged = {},
-                seekingFinished = {})
+                seekingFinished = {},
+                embeddedDraggedDownBy = {})
         }
     }
 }

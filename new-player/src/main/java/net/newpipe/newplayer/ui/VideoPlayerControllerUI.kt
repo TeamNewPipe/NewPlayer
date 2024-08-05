@@ -71,7 +71,10 @@ fun VideoPlayerControllerUI(
     showUi: () -> Unit,
     hideUi: () -> Unit,
     seekPositionChanged: (Float) -> Unit,
-    seekingFinished: () -> Unit
+    seekingFinished: () -> Unit,
+    embeddedDraggedDownBy: (Float) -> Unit,
+    fastSeekBackward: () -> Unit,
+    fastSeekForward: () -> Unit,
 ) {
 
     if (fullscreen) {
@@ -88,12 +91,17 @@ fun VideoPlayerControllerUI(
     if (!uiVissible) {
         TouchUi(
             modifier = Modifier
-                .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.systemGestures),
+                .fillMaxSize(),
+//                .windowInsetsPadding(WindowInsets.systemGestures),
             hideUi = hideUi,
             showUi = showUi,
             uiVissible = uiVissible,
-            fullscreen = fullscreen
+            fullscreen = fullscreen,
+            switchToFullscreen = switchToFullscreen,
+            switchToEmbeddedView = switchToEmbeddedView,
+            embeddedDraggedDownBy = embeddedDraggedDownBy,
+            fastSeekForward = fastSeekForward,
+            fastSeekBackward = fastSeekBackward
         )
     }
 
@@ -123,7 +131,12 @@ fun VideoPlayerControllerUI(
             hideUi = hideUi,
             showUi = showUi,
             uiVissible = uiVissible,
-            fullscreen = fullscreen
+            fullscreen = fullscreen,
+            switchToFullscreen = switchToFullscreen,
+            switchToEmbeddedView = switchToEmbeddedView,
+            embeddedDraggedDownBy = embeddedDraggedDownBy,
+            fastSeekForward = fastSeekForward,
+            fastSeekBackward = fastSeekBackward
         )
 
         Box(modifier = Modifier.fillMaxSize()) {
@@ -215,7 +228,10 @@ fun VideoPlayerControllerUIPreviewEmbedded() {
                 showUi = {},
                 hideUi = {},
                 seekPositionChanged = {},
-                seekingFinished = {})
+                seekingFinished = {},
+                embeddedDraggedDownBy = {},
+                fastSeekBackward = {},
+                fastSeekForward = {})
         }
     }
 }
@@ -242,7 +258,10 @@ fun VideoPlayerControllerUIPreviewLandscape() {
                 showUi = {},
                 hideUi = {},
                 seekPositionChanged = {},
-                seekingFinished = {})
+                seekingFinished = {},
+                embeddedDraggedDownBy = {},
+                fastSeekBackward = {},
+                fastSeekForward = {})
         }
     }
 }
@@ -270,7 +289,10 @@ fun VideoPlayerControllerUIPreviewPortrait() {
                 showUi = {},
                 hideUi = {},
                 seekPositionChanged = {},
-                seekingFinished = {})
+                seekingFinished = {},
+                embeddedDraggedDownBy = {},
+                fastSeekForward = {},
+                fastSeekBackward = {})
         }
     }
 }
