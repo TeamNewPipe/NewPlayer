@@ -34,6 +34,6 @@ object NewPlayerComponent {
     @Provides
     @Singleton
     fun provideNewPlayer(app: Application) : NewPlayer {
-        return NewPlayer.Builder(app).build()
+        return NewPlayer.Builder(app, TestMediaRepository(app)).build()
     }
 }

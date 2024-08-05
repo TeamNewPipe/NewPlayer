@@ -21,9 +21,11 @@
 package net.newpipe.newplayer
 
 import android.app.Application
+import android.util.Log
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.MediaSource
 import java.lang.Exception
 
 enum class PlayMode {
@@ -33,6 +35,8 @@ enum class PlayMode {
     BACKGROND,
     AUDIO_FORGROUND,
 }
+
+private val TAG = "NewPlayer"
 
 interface NewPlayer {
     val internal_player: Player
@@ -54,11 +58,21 @@ interface NewPlayer {
     fun addListener(callbackListener: Listener)
 
     //TODO: This is only temporary
-    fun setStream(uri: String)
+    fun setStream(stream: MediaItem)
 
     data class Builder(val app: Application, val repository: MediaRepository) {
+        private var mediaSourceFactory : MediaSource.Factory? = null
+
+        fun setMediaSourceFactory(mediaSourceFactory: MediaSource.Factory) {
+            this.mediaSourceFactory = mediaSourceFactory
+        }
+
         fun build(): NewPlayer {
-            return NewPlayerImpl(ExoPlayer.Builder(app).build(), repository = repository)
+            val exoPlayerBuilder = ExoPlayer.Builder(app)
+            mediaSourceFactory?.let {
+                exoPlayerBuilder.setMediaSourceFactory(it)
+            }
+            return NewPlayerImpl(exoPlayerBuilder.build(), repository = repository)
         }
     }
 
@@ -86,7 +100,11 @@ class NewPlayerImpl(override val internal_player: Player, override val repositor
     }
 
     override fun play() {
-        internal_player.play()
+        if(internal_player.currentMediaItem != null) {
+            internal_player.play()
+        } else {
+            Log.i(TAG, "Tried to start playing but no media Item was cued")
+        }
     }
 
     override fun pause() {
@@ -110,11 +128,11 @@ class NewPlayerImpl(override val internal_player: Player, override val repositor
     }
 
 
-    override fun setStream(uri: String) {
+    override fun setStream(stream: MediaItem) {
         if (internal_player.playbackState == Player.STATE_IDLE) {
             internal_player.prepare()
         }
 
-        internal_player.setMediaItem(MediaItem.fromUri(uri))
+        internal_player.setMediaItem(stream)
     }
 }

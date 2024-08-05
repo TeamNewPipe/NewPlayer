@@ -30,6 +30,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.media3.common.MediaItem
 import dagger.hilt.android.AndroidEntryPoint
 import net.newpipe.newplayer.ActivityBrainSlug
 import net.newpipe.newplayer.NewPlayer
@@ -62,7 +63,7 @@ class MainActivity : AppCompatActivity() {
 
         startStreamButton.setOnClickListener {
             newPlayer.playWhenReady = true
-            newPlayer.setStream(getString(R.string.ccc_6502_video))
+            newPlayer.setStream(MediaItem.fromUri(getString(R.string.ccc_6502_video)))
         }
 
         videoPlayerViewModel.newPlayer = newPlayer

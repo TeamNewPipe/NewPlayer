@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.Image
 import android.net.Uri
+import androidx.media3.common.MediaItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.newpipe.newplayer.MediaRepository
@@ -76,16 +77,19 @@ class TestMediaRepository(val context: Context) : MediaRepository {
 
 
     override suspend fun getStream(item: String, streamSelector: String) =
-        when (item) {
-            "6502" -> context.getString(R.string.ccc_6502_video)
-            "portrait" -> context.getString(R.string.portrait_video_example)
-            "imu" -> when(streamSelector) {
-                "1080p" -> context.getString(R.string.ccc_imu_1080_mp4)
-                "576p" -> context.getString(R.string.ccc_imu_576_mp4)
-                else -> throw Exception("Unknown stream selector for $item: $streamSelector")
+        MediaItem.fromUri(
+            when (item) {
+                "6502" -> context.getString(R.string.ccc_6502_video)
+                "portrait" -> context.getString(R.string.portrait_video_example)
+                "imu" -> when (streamSelector) {
+                    "1080p" -> context.getString(R.string.ccc_imu_1080_mp4)
+                    "576p" -> context.getString(R.string.ccc_imu_576_mp4)
+                    else -> throw Exception("Unknown stream selector for $item: $streamSelector")
+                }
+
+                else -> throw Exception("Unknown stream: $item")
             }
-            else -> throw Exception("Unknown stream: $item")
-        }
+        )
 
     override suspend fun getLinkWithStreamOffset(item: String): String {
         TODO("Not yet implemented")
