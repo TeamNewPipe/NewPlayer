@@ -269,10 +269,16 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     override fun fastSeekForward() {
         newPlayer?.fastSeekForward()
+        if (mutableUiState.value.uiVisible) {
+            resetHideUiDelayedJob()
+        }
     }
 
     override fun fastSeekBackward() {
         newPlayer?.fastSeekBackward()
+        if (mutableUiState.value.uiVisible) {
+            resetHideUiDelayedJob()
+        }
     }
 
     override fun switchToEmbeddedView() {

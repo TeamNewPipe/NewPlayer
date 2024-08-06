@@ -50,7 +50,7 @@ import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.BottomUI
 import net.newpipe.newplayer.ui.videoplayer.CenterUI
 import net.newpipe.newplayer.ui.videoplayer.TopUI
-import net.newpipe.newplayer.ui.videoplayer.TouchUi
+import net.newpipe.newplayer.ui.videoplayer.GestureUI
 
 @Composable
 fun VideoPlayerControllerUI(
@@ -89,7 +89,7 @@ fun VideoPlayerControllerUI(
             .union(WindowInsets.waterfall)
 
     if (!uiVissible) {
-        TouchUi(
+        GestureUI(
             modifier = Modifier
                 .fillMaxSize(),
 //                .windowInsetsPadding(WindowInsets.systemGestures),
@@ -124,7 +124,7 @@ fun VideoPlayerControllerUI(
     }
 
     AnimatedVisibility(uiVissible) {
-        TouchUi(
+        GestureUI(
             modifier = Modifier
                 .fillMaxSize()
                 .windowInsetsPadding(WindowInsets.systemGestures),

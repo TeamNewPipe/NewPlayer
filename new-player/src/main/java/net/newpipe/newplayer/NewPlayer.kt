@@ -82,6 +82,9 @@ interface NewPlayer {
 }
 
 class NewPlayerImpl(override val internal_player: Player, override val repository: MediaRepository) : NewPlayer {
+
+    private var callbackListeners: MutableList<NewPlayer.Listener> = ArrayList()
+
     override val duartion: Long = internal_player.duration
     override val bufferedPercentage: Int = internal_player.bufferedPercentage
     override var currentPosition: Long = internal_player.currentPosition
@@ -112,21 +115,20 @@ class NewPlayerImpl(override val internal_player: Player, override val repositor
     }
 
     override fun fastSeekForward() {
-        TODO("Not yet implemented")
+        Log.d(TAG, "not implemented fast seek forward")
     }
 
     override fun fastSeekBackward() {
-        TODO("Not yet implemented")
+        Log.d(TAG, "not implemented fast seek backward")
     }
 
     override fun addToPlaylist(newItem: String) {
-        TODO("Not yet implemented")
+        Log.d(TAG, "Not implemented add to playlist")
     }
 
     override fun addListener(callbackListener: NewPlayer.Listener) {
-        TODO("Not yet implemented")
+        callbackListeners.add(callbackListener)
     }
-
 
     override fun setStream(stream: MediaItem) {
         if (internal_player.playbackState == Player.STATE_IDLE) {
