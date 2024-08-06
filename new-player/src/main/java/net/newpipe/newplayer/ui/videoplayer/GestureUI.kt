@@ -59,16 +59,17 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
+import net.newpipe.newplayer.ui.videoplayer.gesture_ui.FastSeekVisualFeedback
+import net.newpipe.newplayer.ui.videoplayer.gesture_ui.TouchSurface
+import net.newpipe.newplayer.ui.videoplayer.gesture_ui.TouchedPosition
 
 private const val TAG = "TouchUi"
 
-private data class TouchedPosition(val x: Float, val y: Float) {
-    operator fun minus(other: TouchedPosition) = TouchedPosition(this.x - other.x, this.y - other.y)
-}
+
 
 const val DELAY_UNTIL_SHOWING_UI_AFTER_TOUCH_IN_MS: Long = 200
 const val SEEK_ANIMATION_DURATION_IN_MS = 400
-const val SEEK_ANIMATION_VISSIBLE_IN_MS = 500L
+const val FAST_SEEKMODE_DURATION = 500L
 const val SEEK_ANIMATION_FADE_IN = 200
 const val SEEK_ANIMATION_FADE_OUT = 500
 
@@ -94,34 +95,39 @@ fun GestureUI(
         }
     }
 
-    var showFastSeekBack by remember {
+    var fastSeekModeBackward by remember {
         mutableStateOf(false)
     }
 
-    var showFastSeekForward by remember {
+    var fastSeekModeForward by remember {
         mutableStateOf(false)
     }
 
     val composeScope = rememberCoroutineScope()
 
     val doForwardSeek = {
-        showFastSeekForward = true
+        fastSeekModeForward = true
         composeScope.launch {
-            delay(SEEK_ANIMATION_VISSIBLE_IN_MS)
-            showFastSeekForward = false
+            delay(FAST_SEEKMODE_DURATION)
+            fastSeekModeForward = false
         }
         fastSeekForward()
     }
 
-    val doBackwardSeek = {
-        showFastSeekBack = true
-        composeScope.launch {
-            delay(SEEK_ANIMATION_VISSIBLE_IN_MS)
-            showFastSeekBack = false
+    var fastSeekModeTimeout: Job? = null
+    val resetFastSeekModeEnd = {
+        fastSeekModeTimeout?.cancel()
+        fastSeekModeTimeout = composeScope.launch {
+            delay(FAST_SEEKMODE_DURATION)
+            fastSeekModeBackward = false
         }
-        fastSeekBackward()
     }
 
+    val doBackwardSeek = {
+        fastSeekModeBackward = true
+        resetFastSeekModeEnd()
+        fastSeekBackward()
+    }
 
     if (fullscreen) {
         Row(modifier = modifier) {
@@ -131,7 +137,7 @@ fun GestureUI(
                 onRegularTap = defaultOnRegularTap,
                 onDoubleTab = doBackwardSeek
             ) {
-                FadedAnimationForSeekFeedback(visible = showFastSeekBack) {
+                FadedAnimationForSeekFeedback(visible = fastSeekModeBackward) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         FastSeekVisualFeedback(
                             seconds = fastSeekSeconds,
@@ -157,7 +163,7 @@ fun GestureUI(
                 onRegularTap = defaultOnRegularTap,
                 onDoubleTab = doForwardSeek
             ) {
-                FadedAnimationForSeekFeedback(visible = showFastSeekForward) {
+                FadedAnimationForSeekFeedback(visible = fastSeekModeForward) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         FastSeekVisualFeedback(
                             modifier = Modifier.align(Alignment.CenterStart),
@@ -186,7 +192,7 @@ fun GestureUI(
                 onRegularTap = defaultOnRegularTap,
                 onMovement = handleDownwardMovement
             ) {
-                FadedAnimationForSeekFeedback(visible = showFastSeekBack) {
+                FadedAnimationForSeekFeedback(visible = fastSeekModeBackward) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         FastSeekVisualFeedback(
                             modifier = Modifier.align(Alignment.Center),
@@ -203,7 +209,7 @@ fun GestureUI(
                 onRegularTap = defaultOnRegularTap,
                 onMovement = handleDownwardMovement
             ) {
-                FadedAnimationForSeekFeedback(visible = showFastSeekForward) {
+                FadedAnimationForSeekFeedback(visible = fastSeekModeForward) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         FastSeekVisualFeedback(
                             modifier = Modifier.align(Alignment.Center),
@@ -217,6 +223,7 @@ fun GestureUI(
     }
 }
 
+
 @Composable
 fun FadedAnimationForSeekFeedback(visible: Boolean, content: @Composable () -> Unit) {
     AnimatedVisibility(
@@ -228,181 +235,7 @@ fun FadedAnimationForSeekFeedback(visible: Boolean, content: @Composable () -> U
     }
 }
 
-@Composable
-@OptIn(ExperimentalComposeUiApi::class)
-private fun TouchSurface(
-    modifier: Modifier,
-    color: Color = Color.Transparent,
-    onDoubleTab: () -> Unit = {},
-    onRegularTap: () -> Unit = {},
-    onMovement: (TouchedPosition) -> Unit = {},
-    content: @Composable () -> Unit = {}
-) {
-    var moveOccured by remember {
-        mutableStateOf(false)
-    }
 
-    var lastTouchedPosition by remember {
-        mutableStateOf(TouchedPosition(0f, 0f))
-    }
-
-    var lastTouchTime by remember {
-        mutableStateOf(System.currentTimeMillis())
-    }
-
-    val composableScope = rememberCoroutineScope()
-    var regularTabJob: Job? by remember {
-        mutableStateOf(null)
-    }
-
-    val defaultActionDown = { event: MotionEvent ->
-        lastTouchedPosition = TouchedPosition(event.x, event.y)
-        moveOccured = false
-        true
-    }
-
-
-    val defaultActionUp = { onDoubleTap: () -> Unit, onRegularTap: () -> Unit ->
-        val currentTime = System.currentTimeMillis()
-        if (!moveOccured) {
-            val timeSinceLastTouch = currentTime - lastTouchTime
-            if (timeSinceLastTouch <= DELAY_UNTIL_SHOWING_UI_AFTER_TOUCH_IN_MS) {
-                regularTabJob?.cancel()
-                onDoubleTap()
-            } else {
-                regularTabJob = composableScope.launch {
-                    delay(DELAY_UNTIL_SHOWING_UI_AFTER_TOUCH_IN_MS)
-                    onRegularTap()
-                }
-            }
-        }
-        moveOccured = false
-        lastTouchTime = currentTime
-        true
-    }
-
-    val handleMove = { event: MotionEvent, lambda: (movement: TouchedPosition) -> Unit ->
-        val currentTouchedPosition = TouchedPosition(event.x, event.y)
-        val movement = currentTouchedPosition - lastTouchedPosition
-        lastTouchedPosition = currentTouchedPosition
-        moveOccured = true
-        lambda(movement)
-        true
-    }
-
-    Box(modifier = modifier.pointerInteropFilter {
-        when (it.action) {
-            MotionEvent.ACTION_DOWN -> defaultActionDown(it)
-            MotionEvent.ACTION_UP -> defaultActionUp(onDoubleTab, onRegularTap)
-            MotionEvent.ACTION_MOVE -> handleMove(it, onMovement)
-
-            else -> false
-        }
-    }) {
-        content()
-        Surface(color = color, modifier = Modifier.fillMaxSize()) {}
-    }
-}
-
-@Composable
-fun FastSeekVisualFeedback(modifier: Modifier = Modifier, seconds: Int, backwards: Boolean) {
-
-    val contentDescription = String.format(
-        if (backwards) {
-            "Fast seeking backward by %d seconds."
-            //stringResource(id = R.string.fast_seeking_backward)
-        } else {
-            "Fast seeking forward by %d seconds."
-            //stringResource(id = R.string.fast_seeking_forward)
-        }, seconds
-    )
-
-    val infiniteTransition = rememberInfiniteTransition()
-
-    val animatedColor1 by infiniteTransition.animateColor(
-        initialValue = Color.White,
-        targetValue = Color.Transparent,
-        animationSpec = infiniteRepeatable(
-            animation = keyframes {
-                durationMillis = SEEK_ANIMATION_DURATION_IN_MS
-                Color.White.copy(alpha = 1f) at 0 with LinearEasing
-                Color.White.copy(alpha = 0f) at SEEK_ANIMATION_DURATION_IN_MS with LinearEasing
-            },
-            repeatMode = RepeatMode.Restart
-        ), label = "Arrow1 animation"
-    )
-
-    val animatedColor2 by infiniteTransition.animateColor(
-        initialValue = Color.White,
-        targetValue = Color.Transparent,
-        animationSpec = infiniteRepeatable(
-            animation = keyframes {
-                durationMillis = SEEK_ANIMATION_DURATION_IN_MS
-                Color.White.copy(alpha = 1f / 3f) at 0 with LinearEasing
-                Color.White.copy(alpha = 0f) at SEEK_ANIMATION_DURATION_IN_MS / 3 with LinearEasing
-                Color.White.copy(alpha = 1f) at SEEK_ANIMATION_DURATION_IN_MS / 3 + 1 with LinearEasing
-                Color.White.copy(alpha = 2f / 3f) at SEEK_ANIMATION_DURATION_IN_MS with LinearEasing
-            },
-            repeatMode = RepeatMode.Restart
-        ), label = "Arrow2 animation"
-    )
-
-    val animatedColor3 by infiniteTransition.animateColor(
-        initialValue = Color.White,
-        targetValue = Color.Transparent,
-        animationSpec = infiniteRepeatable(
-            animation = keyframes {
-                durationMillis = SEEK_ANIMATION_DURATION_IN_MS
-                Color.White.copy(alpha = 2f / 3f) at 0 with LinearEasing
-                Color.White.copy(alpha = 0f) at 2 * SEEK_ANIMATION_DURATION_IN_MS / 3 with LinearEasing
-                Color.White.copy(alpha = 1f) at 2 * SEEK_ANIMATION_DURATION_IN_MS / 3 + 1 with LinearEasing
-                Color.White.copy(alpha = 2f / 3f) at SEEK_ANIMATION_DURATION_IN_MS with LinearEasing
-            },
-            repeatMode = RepeatMode.Restart
-        ), label = "Arrow3 animation"
-    )
-
-
-    //val secondsString = stringResource(id = R.string.seconds)
-    val secondsString = "Seconds"
-
-    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Row {
-            SeekerIcon(
-                backwards = backwards,
-                description = contentDescription,
-                color = if (backwards) animatedColor3 else animatedColor1
-            )
-            SeekerIcon(
-                backwards = backwards,
-                description = contentDescription,
-                color = animatedColor2
-            )
-            SeekerIcon(
-                backwards = backwards,
-                description = contentDescription,
-                color = if (backwards) animatedColor1 else animatedColor3
-            )
-        }
-        Text(text = "$seconds $secondsString")
-    }
-
-}
-
-
-@Composable
-fun SeekerIcon(backwards: Boolean, description: String, color: Color) {
-    Icon(
-        modifier = if (backwards) {
-            Modifier.scale(-1f, 1f)
-        } else {
-            Modifier
-        },
-        tint = color,
-        painter = painterResource(id = R.drawable.ic_play_seek_triangle),
-        contentDescription = description
-    )
-}
 
 @Preview(device = "spec:width=1080px,height=600px,dpi=440,orientation=landscape")
 @Composable
@@ -446,22 +279,3 @@ fun EmbeddedGestureUIPreview() {
     }
 }
 
-@Preview(device = "spec:width=1080px,height=600px,dpi=440,orientation=landscape")
-@Composable
-fun FastSeekVisualFeedbackPreviewBackwards() {
-    VideoPlayerTheme {
-        Surface(modifier = Modifier.wrapContentSize(), color = Color.Black) {
-            FastSeekVisualFeedback(seconds = 10, backwards = true)
-        }
-    }
-}
-
-@Preview(device = "spec:width=1080px,height=600px,dpi=440,orientation=landscape")
-@Composable
-fun FastSeekVisualFeedbackPreview() {
-    VideoPlayerTheme {
-        Surface(modifier = Modifier.wrapContentSize(), color = Color.Black) {
-            FastSeekVisualFeedback(seconds = 10, backwards = false)
-        }
-    }
-}

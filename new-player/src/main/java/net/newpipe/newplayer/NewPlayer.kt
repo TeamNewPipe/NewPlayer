@@ -52,8 +52,8 @@ interface NewPlayer {
     fun prepare()
     fun play()
     fun pause()
-    fun fastSeekForward()
-    fun fastSeekBackward()
+    fun fastSeekForward(ntimes: Int = 1)
+    fun fastSeekBackward(ntimes: Int = 1)
     fun seekTo(millisecond: Long)
     fun addToPlaylist(newItem: String)
     fun addListener(callbackListener: Listener)
@@ -115,14 +115,14 @@ class NewPlayerImpl(override val internal_player: Player, override val repositor
         internal_player.pause()
     }
 
-    override fun fastSeekForward() {
+    override fun fastSeekForward(ntimes: Int) {
         val currentPosition = internal_player.currentPosition
-        internal_player.seekTo(currentPosition + fastSeekAmountSec * 1000)
+        internal_player.seekTo(currentPosition + fastSeekAmountSec * 1000 * ntimes)
     }
 
-    override fun fastSeekBackward() {
+    override fun fastSeekBackward(ntimes: Int) {
         val currentPosition = internal_player.currentPosition
-        internal_player.seekTo(currentPosition - fastSeekAmountSec * 1000)
+        internal_player.seekTo(currentPosition - fastSeekAmountSec * 1000 * ntimes)
     }
 
     override fun seekTo(millisecond: Long) {
