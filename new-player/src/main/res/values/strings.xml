@@ -35,4 +35,7 @@
     <string name="widget_description_toggle_fullscreen">Toggle fullscreen</string>
     <string name="widget_description_chapter_selection">Chapter selection</string>
     <string name="widget_descriptoin_playlist_item_selection">Playlist item selection</string>
+    <string name="fast_seeking_backward">Fast seeking backward by %d seconds.</string>
+    <string name="fast_seeking_forward">Fast seeking forward by %d seconds.</string>
+    <string name="seconds">Seconds</string>
 </resources>

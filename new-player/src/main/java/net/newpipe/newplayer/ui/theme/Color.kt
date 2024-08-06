@@ -83,6 +83,7 @@ fun VideoPlayerControllerUIPreviewEmbeddedColorPreview() {
                 durationInMs = 9*60*1000,
                 playbackPositionInMs = 6*60*1000,
                 bufferedPercentage = 0.4f,
+                fastSeekSeconds = 10,
                 play = {},
                 pause = {},
                 prevStream = {},

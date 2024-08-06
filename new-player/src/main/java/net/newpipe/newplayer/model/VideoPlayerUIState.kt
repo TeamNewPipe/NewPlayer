@@ -37,7 +37,8 @@ data class VideoPlayerUIState(
     val bufferedPercentage: Float,
     val isLoading: Boolean,
     val durationInMs: Long,
-    val playbackPositionInMs: Long
+    val playbackPositionInMs: Long,
+    val fastseekSeconds: Int,
 ) : Parcelable {
     companion object {
         val DEFAULT = VideoPlayerUIState(
@@ -52,7 +53,8 @@ data class VideoPlayerUIState(
             bufferedPercentage = 0f,
             isLoading = true,
             durationInMs = 0,
-            playbackPositionInMs = 0
+            playbackPositionInMs = 0,
+            fastseekSeconds = 10
         )
     }
 }

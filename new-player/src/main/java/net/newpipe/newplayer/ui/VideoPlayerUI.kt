@@ -152,6 +152,7 @@ fun VideoPlayerUI(
                 durationInMs = uiState.durationInMs,
                 playbackPositionInMs = uiState.playbackPositionInMs,
                 bufferedPercentage = uiState.bufferedPercentage,
+                fastSeekSeconds = uiState.fastseekSeconds,
                 play = viewModel::play,
                 pause = viewModel::pause,
                 prevStream = viewModel::prevStream,

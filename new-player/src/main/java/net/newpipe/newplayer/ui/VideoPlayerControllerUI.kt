@@ -62,6 +62,7 @@ fun VideoPlayerControllerUI(
     durationInMs: Long,
     playbackPositionInMs: Long,
     bufferedPercentage: Float,
+    fastSeekSeconds: Int,
     play: () -> Unit,
     pause: () -> Unit,
     prevStream: () -> Unit,
@@ -101,7 +102,8 @@ fun VideoPlayerControllerUI(
             switchToEmbeddedView = switchToEmbeddedView,
             embeddedDraggedDownBy = embeddedDraggedDownBy,
             fastSeekForward = fastSeekForward,
-            fastSeekBackward = fastSeekBackward
+            fastSeekBackward = fastSeekBackward,
+            fastSeekSeconds = fastSeekSeconds
         )
     }
 
@@ -136,7 +138,8 @@ fun VideoPlayerControllerUI(
             switchToEmbeddedView = switchToEmbeddedView,
             embeddedDraggedDownBy = embeddedDraggedDownBy,
             fastSeekForward = fastSeekForward,
-            fastSeekBackward = fastSeekBackward
+            fastSeekBackward = fastSeekBackward,
+            fastSeekSeconds = fastSeekSeconds
         )
 
         Box(modifier = Modifier.fillMaxSize()) {
@@ -219,6 +222,7 @@ fun VideoPlayerControllerUIPreviewEmbedded() {
                 durationInMs = 9*60*1000,
                 playbackPositionInMs = 6*60*1000,
                 bufferedPercentage = 0.4f,
+                fastSeekSeconds = 10,
                 play = {},
                 pause = {},
                 prevStream = {},
@@ -249,6 +253,7 @@ fun VideoPlayerControllerUIPreviewLandscape() {
                 durationInMs = 9*60*1000,
                 playbackPositionInMs = 6*60*1000,
                 bufferedPercentage = 0.4f,
+                fastSeekSeconds = 10,
                 play = {},
                 pause = {},
                 prevStream = {},
@@ -280,6 +285,7 @@ fun VideoPlayerControllerUIPreviewPortrait() {
                 durationInMs = 9*60*1000,
                 playbackPositionInMs = 6*60*1000,
                 bufferedPercentage = 0.4f,
+                fastSeekSeconds = 10,
                 play = {},
                 pause = {},
                 prevStream = {},

@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,6 +31,7 @@ fun VideoPlayerLoadingPlaceholder(aspectRatio: Float = 3F / 1F) {
                 .height(64.dp)
                 .align((Alignment.Center)))
         }
+
     }
 }
 

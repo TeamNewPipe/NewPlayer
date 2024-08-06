@@ -65,6 +65,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
         set(value) {
             field = value
             installExoPlayer()
+            mutableUiState.update { it.copy(fastseekSeconds = field?.fastSeekAmountSec ?: 10) }
         }
 
     override val uiState = mutableUiState.asStateFlow()
@@ -259,7 +260,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
         resetHideUiDelayedJob()
         val seekerPosition = mutableUiState.value.seekerPosition
         val seekPositionInMs = (player?.duration?.toFloat() ?: 0F) * seekerPosition
-        player?.seekTo(seekPositionInMs.toLong())
+        newPlayer?.seekTo(seekPositionInMs.toLong())
         Log.i(TAG, "Seek to Ms: $seekPositionInMs")
     }
 
@@ -268,6 +269,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun fastSeekForward() {
+        mutableUiState.update { it.copy(fastseekSeconds = newPlayer?.fastSeekAmountSec ?: 10) }
         newPlayer?.fastSeekForward()
         if (mutableUiState.value.uiVisible) {
             resetHideUiDelayedJob()
@@ -275,6 +277,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun fastSeekBackward() {
+        mutableUiState.update { it.copy(fastseekSeconds = newPlayer?.fastSeekAmountSec ?: 10) }
         newPlayer?.fastSeekBackward()
         if (mutableUiState.value.uiVisible) {
             resetHideUiDelayedJob()

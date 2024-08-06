@@ -45,7 +45,7 @@ interface NewPlayer {
     val bufferedPercentage: Int
     val repository: MediaRepository
     var currentPosition: Long
-    var fastSeekAmountSec: Long
+    var fastSeekAmountSec: Int
     var playBackMode: PlayMode
     var playList: MutableList<String>
 
@@ -54,6 +54,7 @@ interface NewPlayer {
     fun pause()
     fun fastSeekForward()
     fun fastSeekBackward()
+    fun seekTo(millisecond: Long)
     fun addToPlaylist(newItem: String)
     fun addListener(callbackListener: Listener)
 
@@ -88,7 +89,7 @@ class NewPlayerImpl(override val internal_player: Player, override val repositor
     override val duartion: Long = internal_player.duration
     override val bufferedPercentage: Int = internal_player.bufferedPercentage
     override var currentPosition: Long = internal_player.currentPosition
-    override var fastSeekAmountSec: Long = 100
+    override var fastSeekAmountSec: Int = 10
     override var playBackMode: PlayMode = PlayMode.EMBEDDED_VIDEO
     override var playList: MutableList<String> = ArrayList<String>()
 
@@ -115,11 +116,17 @@ class NewPlayerImpl(override val internal_player: Player, override val repositor
     }
 
     override fun fastSeekForward() {
-        Log.d(TAG, "not implemented fast seek forward")
+        val currentPosition = internal_player.currentPosition
+        internal_player.seekTo(currentPosition + fastSeekAmountSec * 1000)
     }
 
     override fun fastSeekBackward() {
-        Log.d(TAG, "not implemented fast seek backward")
+        val currentPosition = internal_player.currentPosition
+        internal_player.seekTo(currentPosition - fastSeekAmountSec * 1000)
+    }
+
+    override fun seekTo(millisecond: Long) {
+        internal_player.seekTo(millisecond)
     }
 
     override fun addToPlaylist(newItem: String) {
