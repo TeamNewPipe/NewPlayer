@@ -21,25 +21,15 @@
 package net.newpipe.newplayer.ui.videoplayer
 
 import android.util.Log
-import android.view.MotionEvent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.keyframes
-import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,17 +37,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInteropFilter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import net.newpipe.newplayer.R
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.gesture_ui.FastSeekVisualFeedback
 import net.newpipe.newplayer.ui.videoplayer.gesture_ui.TouchSurface
@@ -95,16 +77,17 @@ fun GestureUI(
         }
     }
 
-    var fastSeekModeBackward by remember {
-        mutableStateOf(false)
+    var fastSeekBackwardBy:Int by remember {
+        mutableStateOf(0)
     }
 
-    var fastSeekModeForward by remember {
-        mutableStateOf(false)
+    var fastSeekForwardBy:Int by remember {
+        mutableStateOf(0)
     }
 
     val composeScope = rememberCoroutineScope()
 
+    /*
     val doForwardSeek = {
         fastSeekModeForward = true
         composeScope.launch {
@@ -128,16 +111,26 @@ fun GestureUI(
         resetFastSeekModeEnd()
         fastSeekBackward()
     }
+    */
+
+    val onMultitapBackward = { amount: Int ->
+        fastSeekBackwardBy = amount * fastSeekSeconds
+    }
+
+    val onMultitapForward = { amount: Int ->
+        fastSeekForwardBy = amount * fastSeekSeconds
+    }
 
     if (fullscreen) {
         Row(modifier = modifier) {
             TouchSurface(
                 modifier = Modifier
                     .weight(1f),
+                multitapDurationInMs = FAST_SEEKMODE_DURATION,
                 onRegularTap = defaultOnRegularTap,
-                onDoubleTab = doBackwardSeek
+                onMultiTap = onMultitapBackward
             ) {
-                FadedAnimationForSeekFeedback(visible = fastSeekModeBackward) {
+                FadedAnimationForSeekFeedback(visible = fastSeekForwardBy != 0) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         FastSeekVisualFeedback(
                             seconds = fastSeekSeconds,
@@ -151,6 +144,7 @@ fun GestureUI(
                 modifier = Modifier
                     .weight(1f),
                 onRegularTap = defaultOnRegularTap,
+                multitapDurationInMs = FAST_SEEKMODE_DURATION,
                 onMovement = { movement ->
                     if (0 < movement.y) {
                         switchToEmbeddedView()
@@ -161,9 +155,10 @@ fun GestureUI(
                 modifier = Modifier
                     .weight(1f),
                 onRegularTap = defaultOnRegularTap,
-                onDoubleTab = doForwardSeek
+                multitapDurationInMs = FAST_SEEKMODE_DURATION,
+                onMultiTap = onMultitapForward
             ) {
-                FadedAnimationForSeekFeedback(visible = fastSeekModeForward) {
+                FadedAnimationForSeekFeedback(visible = fastSeekBackwardBy != 0) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         FastSeekVisualFeedback(
                             modifier = Modifier.align(Alignment.CenterStart),
@@ -188,11 +183,12 @@ fun GestureUI(
             TouchSurface(
                 modifier = Modifier
                     .weight(1f),
-                onDoubleTab = doBackwardSeek,
+                multitapDurationInMs = FAST_SEEKMODE_DURATION,
                 onRegularTap = defaultOnRegularTap,
+                onMultiTap = onMultitapBackward,
                 onMovement = handleDownwardMovement
             ) {
-                FadedAnimationForSeekFeedback(visible = fastSeekModeBackward) {
+                FadedAnimationForSeekFeedback(visible = fastSeekBackwardBy != 0) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         FastSeekVisualFeedback(
                             modifier = Modifier.align(Alignment.Center),
@@ -205,11 +201,12 @@ fun GestureUI(
             TouchSurface(
                 modifier = Modifier
                     .weight(1f),
-                onDoubleTab = doForwardSeek,
+                multitapDurationInMs = FAST_SEEKMODE_DURATION,
                 onRegularTap = defaultOnRegularTap,
-                onMovement = handleDownwardMovement
+                onMovement = handleDownwardMovement,
+                onMultiTap = onMultitapForward
             ) {
-                FadedAnimationForSeekFeedback(visible = fastSeekModeForward) {
+                FadedAnimationForSeekFeedback(visible = fastSeekForwardBy != 0) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         FastSeekVisualFeedback(
                             modifier = Modifier.align(Alignment.Center),
@@ -220,6 +217,7 @@ fun GestureUI(
                 }
             }
         }
+
     }
 }
 

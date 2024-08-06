@@ -37,14 +37,15 @@ import androidx.compose.ui.input.pointer.pointerInteropFilter
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import net.newpipe.newplayer.ui.videoplayer.DELAY_UNTIL_SHOWING_UI_AFTER_TOUCH_IN_MS
 
 @Composable
 @OptIn(ExperimentalComposeUiApi::class)
 fun TouchSurface(
     modifier: Modifier,
     color: Color = Color.Transparent,
-    onDoubleTab: () -> Unit = {},
+    multitapDurationInMs: Long,
+    onMultiTap: (Int) -> Unit = {},
+    onMultiTapFinished: () -> Unit = {},
     onRegularTap: () -> Unit = {},
     onMovement: (TouchedPosition) -> Unit = {},
     content: @Composable () -> Unit = {}
@@ -72,16 +73,30 @@ fun TouchSurface(
         true
     }
 
-    val defaultActionUp = { onDoubleTap: () -> Unit, onRegularTap: () -> Unit ->
+    var multitapAmount:Int by remember {
+        mutableStateOf(0)
+    }
+
+    var cancelMultitapJob: Job? by remember {
+        mutableStateOf(null)
+    }
+
+    val defaultActionUp = { onMultiTap: (Int) -> Unit, onRegularTap: () -> Unit ->
         val currentTime = System.currentTimeMillis()
         if (!moveOccured) {
             val timeSinceLastTouch = currentTime - lastTouchTime
-            if (timeSinceLastTouch <= DELAY_UNTIL_SHOWING_UI_AFTER_TOUCH_IN_MS) {
+            if (timeSinceLastTouch <= multitapDurationInMs) {
                 regularTabJob?.cancel()
-                onDoubleTap()
+                cancelMultitapJob?.cancel()
+                multitapAmount++
+                onMultiTap(multitapAmount)
+                cancelMultitapJob = composableScope.launch {
+                    delay(multitapDurationInMs)
+                    onMultiTapFinished()
+                }
             } else {
                 regularTabJob = composableScope.launch {
-                    delay(DELAY_UNTIL_SHOWING_UI_AFTER_TOUCH_IN_MS)
+                    delay(multitapDurationInMs)
                     onRegularTap()
                 }
             }
@@ -103,7 +118,7 @@ fun TouchSurface(
     Box(modifier = modifier.pointerInteropFilter {
         when (it.action) {
             MotionEvent.ACTION_DOWN -> defaultActionDown(it)
-            MotionEvent.ACTION_UP -> defaultActionUp(onDoubleTab, onRegularTap)
+            MotionEvent.ACTION_UP -> defaultActionUp(onMultiTap, onRegularTap)
             MotionEvent.ACTION_MOVE -> handleMove(it, onMovement)
 
             else -> false
