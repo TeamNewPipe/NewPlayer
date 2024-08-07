@@ -74,8 +74,8 @@ fun VideoPlayerControllerUI(
     seekPositionChanged: (Float) -> Unit,
     seekingFinished: () -> Unit,
     embeddedDraggedDownBy: (Float) -> Unit,
-    fastSeekBackward: () -> Unit,
-    fastSeekForward: () -> Unit,
+    fastSeek: (Int) -> Unit,
+    finishFastSeek: () -> Unit
 ) {
 
     if (fullscreen) {
@@ -98,12 +98,12 @@ fun VideoPlayerControllerUI(
             showUi = showUi,
             uiVissible = uiVissible,
             fullscreen = fullscreen,
+            fastSeekSeconds = fastSeekSeconds,
             switchToFullscreen = switchToFullscreen,
             switchToEmbeddedView = switchToEmbeddedView,
             embeddedDraggedDownBy = embeddedDraggedDownBy,
-            fastSeekForward = fastSeekForward,
-            fastSeekBackward = fastSeekBackward,
-            fastSeekSeconds = fastSeekSeconds
+            fastSeek = fastSeek,
+            fastSeekFinished = finishFastSeek
         )
     }
 
@@ -134,12 +134,12 @@ fun VideoPlayerControllerUI(
             showUi = showUi,
             uiVissible = uiVissible,
             fullscreen = fullscreen,
+            fastSeekSeconds = fastSeekSeconds,
             switchToFullscreen = switchToFullscreen,
             switchToEmbeddedView = switchToEmbeddedView,
             embeddedDraggedDownBy = embeddedDraggedDownBy,
-            fastSeekForward = fastSeekForward,
-            fastSeekBackward = fastSeekBackward,
-            fastSeekSeconds = fastSeekSeconds
+            fastSeek = fastSeek,
+            fastSeekFinished = finishFastSeek
         )
 
         Box(modifier = Modifier.fillMaxSize()) {
@@ -219,10 +219,10 @@ fun VideoPlayerControllerUIPreviewEmbedded() {
                 uiVissible = true,
                 seekPosition = 0.3F,
                 isLoading = false,
-                durationInMs = 9*60*1000,
-                playbackPositionInMs = 6*60*1000,
+                durationInMs = 9 * 60 * 1000,
+                playbackPositionInMs = 6 * 60 * 1000,
                 bufferedPercentage = 0.4f,
-                fastSeekSeconds = 10,
+                fastSeekSeconds = 0,
                 play = {},
                 pause = {},
                 prevStream = {},
@@ -234,8 +234,8 @@ fun VideoPlayerControllerUIPreviewEmbedded() {
                 seekPositionChanged = {},
                 seekingFinished = {},
                 embeddedDraggedDownBy = {},
-                fastSeekBackward = {},
-                fastSeekForward = {})
+                fastSeek = {},
+                finishFastSeek = {})
         }
     }
 }
@@ -250,10 +250,10 @@ fun VideoPlayerControllerUIPreviewLandscape() {
                 uiVissible = true,
                 seekPosition = 0.3F,
                 isLoading = true,
-                durationInMs = 9*60*1000,
-                playbackPositionInMs = 6*60*1000,
+                durationInMs = 9 * 60 * 1000,
+                playbackPositionInMs = 6 * 60 * 1000,
                 bufferedPercentage = 0.4f,
-                fastSeekSeconds = 10,
+                fastSeekSeconds = 0,
                 play = {},
                 pause = {},
                 prevStream = {},
@@ -265,8 +265,8 @@ fun VideoPlayerControllerUIPreviewLandscape() {
                 seekPositionChanged = {},
                 seekingFinished = {},
                 embeddedDraggedDownBy = {},
-                fastSeekBackward = {},
-                fastSeekForward = {})
+                fastSeek = {},
+                finishFastSeek = {})
         }
     }
 }
@@ -282,10 +282,10 @@ fun VideoPlayerControllerUIPreviewPortrait() {
                 uiVissible = true,
                 seekPosition = 0.3F,
                 isLoading = false,
-                durationInMs = 9*60*1000,
-                playbackPositionInMs = 6*60*1000,
+                durationInMs = 9 * 60 * 1000,
+                playbackPositionInMs = 6 * 60 * 1000,
                 bufferedPercentage = 0.4f,
-                fastSeekSeconds = 10,
+                fastSeekSeconds = 0,
                 play = {},
                 pause = {},
                 prevStream = {},
@@ -297,8 +297,8 @@ fun VideoPlayerControllerUIPreviewPortrait() {
                 seekPositionChanged = {},
                 seekingFinished = {},
                 embeddedDraggedDownBy = {},
-                fastSeekForward = {},
-                fastSeekBackward = {})
+                fastSeek = {},
+                finishFastSeek = {})
         }
     }
 }

@@ -54,7 +54,7 @@ data class VideoPlayerUIState(
             isLoading = true,
             durationInMs = 0,
             playbackPositionInMs = 0,
-            fastseekSeconds = 10
+            fastseekSeconds = 0
         )
     }
 }

@@ -95,8 +95,8 @@ fun VideoPlayerControllerUIPreviewEmbeddedColorPreview() {
                 seekPositionChanged = {},
                 seekingFinished = {},
                 embeddedDraggedDownBy = {},
-                fastSeekForward = {},
-                fastSeekBackward = {})
+                fastSeek = {},
+                finishFastSeek = {})
         }
     }
 }

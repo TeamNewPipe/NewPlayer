@@ -92,6 +92,7 @@ fun TouchSurface(
                 onMultiTap(multitapAmount)
                 cancelMultitapJob = composableScope.launch {
                     delay(multitapDurationInMs)
+                    multitapAmount = 0
                     onMultiTapFinished()
                 }
             } else {

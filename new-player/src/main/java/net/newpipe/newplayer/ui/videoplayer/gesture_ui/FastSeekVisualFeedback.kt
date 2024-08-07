@@ -26,9 +26,12 @@ import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -36,10 +39,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.google.android.material.color.MaterialColors
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.SEEK_ANIMATION_DURATION_IN_MS
@@ -106,27 +112,33 @@ fun FastSeekVisualFeedback(modifier: Modifier = Modifier, seconds: Int, backward
     //val secondsString = stringResource(id = R.string.seconds)
     val secondsString = "Seconds"
 
-    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Row {
-            SeekerIcon(
-                backwards = backwards,
-                description = contentDescription,
-                color = if (backwards) animatedColor3 else animatedColor1
-            )
-            SeekerIcon(
-                backwards = backwards,
-                description = contentDescription,
-                color = animatedColor2
-            )
-            SeekerIcon(
-                backwards = backwards,
-                description = contentDescription,
-                color = if (backwards) animatedColor1 else animatedColor3
-            )
+    Surface(
+        color = Color.Black.copy(alpha = 0.5f),
+        modifier = modifier.clip(RoundedCornerShape(50.dp))
+    ) {
+        Box(modifier = Modifier.padding(10.dp, 5.dp)) {
+            Column(modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+                Row {
+                    SeekerIcon(
+                        backwards = backwards,
+                        description = contentDescription,
+                        color = if (backwards) animatedColor3 else animatedColor1
+                    )
+                    SeekerIcon(
+                        backwards = backwards,
+                        description = contentDescription,
+                        color = animatedColor2
+                    )
+                    SeekerIcon(
+                        backwards = backwards,
+                        description = contentDescription,
+                        color = if (backwards) animatedColor1 else animatedColor3
+                    )
+                }
+                Text(text = "$seconds $secondsString")
+            }
         }
-        Text(text = "$seconds $secondsString")
     }
-
 }
 
 
@@ -148,7 +160,7 @@ private fun SeekerIcon(backwards: Boolean, description: String, color: Color) {
 @Composable
 fun FastSeekVisualFeedbackPreviewBackwards() {
     VideoPlayerTheme {
-        Surface(modifier = Modifier.wrapContentSize(), color = Color.Black) {
+        Surface(modifier = Modifier.wrapContentSize(), color = Color.Gray) {
             FastSeekVisualFeedback(seconds = 10, backwards = true)
         }
     }
@@ -158,7 +170,7 @@ fun FastSeekVisualFeedbackPreviewBackwards() {
 @Composable
 fun FastSeekVisualFeedbackPreview() {
     VideoPlayerTheme {
-        Surface(modifier = Modifier.wrapContentSize(), color = Color.Black) {
+        Surface(modifier = Modifier.wrapContentSize(), color = Color.Gray) {
             FastSeekVisualFeedback(seconds = 10, backwards = false)
         }
     }

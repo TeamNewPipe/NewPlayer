@@ -268,19 +268,23 @@ class VideoPlayerViewModelImpl @Inject constructor(
         callbackListeners.forEach { it?.embeddedPlayerDraggedDown(offset) }
     }
 
-    override fun fastSeekForward() {
-        mutableUiState.update { it.copy(fastseekSeconds = newPlayer?.fastSeekAmountSec ?: 10) }
-        newPlayer?.fastSeekForward()
+    override fun fastSeek(count: Int) {
+        mutableUiState.update {
+            it.copy(
+                fastseekSeconds = count * (newPlayer?.fastSeekAmountSec ?: 10)
+            )
+        }
+
         if (mutableUiState.value.uiVisible) {
             resetHideUiDelayedJob()
         }
     }
 
-    override fun fastSeekBackward() {
-        mutableUiState.update { it.copy(fastseekSeconds = newPlayer?.fastSeekAmountSec ?: 10) }
-        newPlayer?.fastSeekBackward()
-        if (mutableUiState.value.uiVisible) {
-            resetHideUiDelayedJob()
+    override fun fastSeekFinished() {
+        val fastSeekAmount = mutableUiState.value.fastseekSeconds
+        newPlayer?.fastSeek(fastSeekAmount)
+        mutableUiState.update {
+            it.copy(fastseekSeconds = 0)
         }
     }
 
@@ -362,11 +366,11 @@ class VideoPlayerViewModelImpl @Inject constructor(
                 println("dymmy embeddedDraggedDown: offset: ${offset}")
             }
 
-            override fun fastSeekForward() {
+            override fun fastSeek(steps: Int) {
                 println("dummy impl")
             }
 
-            override fun fastSeekBackward() {
+            override fun fastSeekFinished() {
                 println("dummy impl")
             }
 

@@ -48,8 +48,8 @@ interface VideoPlayerViewModel {
     fun seekPositionChanged(newValue: Float)
     fun seekingFinished()
     fun embeddedDraggedDown(offset: Float)
-    fun fastSeekForward()
-    fun fastSeekBackward()
+    fun fastSeek(count: Int)
+    fun fastSeekFinished()
 
     interface Listener {
         fun onFullscreenToggle(isFullscreen: Boolean) {}
