@@ -279,19 +279,22 @@ class VideoPlayerViewModelImpl @Inject constructor(
         }
     }
 
-    override fun fastSeekFinished() {
+    override fun finishFastSeek() {
         val fastSeekAmount = mutableUiState.value.fastseekSeconds
-        Log.d(TAG, "$fastSeekAmount")
+        if (fastSeekAmount != 0) {
+            Log.d(TAG, "$fastSeekAmount")
 
-        newPlayer?.currentPosition = (newPlayer?.currentPosition ?: 0) + (fastSeekAmount * 1000)
-        mutableUiState.update {
-            it.copy(fastseekSeconds = 0)
+            newPlayer?.currentPosition = (newPlayer?.currentPosition ?: 0) + (fastSeekAmount * 1000)
+            mutableUiState.update {
+                it.copy(fastseekSeconds = 0)
+            }
         }
     }
 
     override fun switchToEmbeddedView() {
         callbackListeners.forEach { it?.onFullscreenToggle(false) }
         uiVisibilityJob?.cancel()
+        finishFastSeek()
         mutableUiState.update {
             it.copy(fullscreen = false, uiVissible = false)
         }
@@ -300,7 +303,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     override fun switchToFullscreen() {
         callbackListeners.forEach { it?.onFullscreenToggle(true) }
         uiVisibilityJob?.cancel()
-
+        finishFastSeek()
         mutableUiState.update {
             it.copy(fullscreen = true, uiVissible = false)
         }
@@ -371,7 +374,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
                 println("dummy impl")
             }
 
-            override fun fastSeekFinished() {
+            override fun finishFastSeek() {
                 println("dummy impl")
             }
 

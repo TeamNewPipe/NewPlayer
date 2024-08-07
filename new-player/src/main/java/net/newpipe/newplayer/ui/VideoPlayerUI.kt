@@ -165,7 +165,7 @@ fun VideoPlayerUI(
                 seekingFinished = viewModel::seekingFinished,
                 embeddedDraggedDownBy = viewModel::embeddedDraggedDown,
                 fastSeek = viewModel::fastSeek,
-                finishFastSeek = viewModel::fastSeekFinished
+                finishFastSeek = viewModel::finishFastSeek
             )
         }
     }
