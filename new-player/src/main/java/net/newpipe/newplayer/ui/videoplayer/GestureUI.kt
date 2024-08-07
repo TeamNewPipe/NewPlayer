@@ -88,10 +88,10 @@ fun GestureUI(
                 },
                 onMultiTapFinished = fastSeekFinished
             ) {
-                FadedAnimationForSeekFeedback(fastSeekSeconds, backwards = true) {
+                FadedAnimationForSeekFeedback(fastSeekSeconds, backwards = true) { fastSeekSecondsToDisplay ->
                     Box(modifier = Modifier.fillMaxSize()) {
                         FastSeekVisualFeedback(
-                            seconds = -fastSeekSeconds,
+                            seconds = -fastSeekSecondsToDisplay,
                             backwards = true,
                             modifier = Modifier.align(Alignment.CenterEnd)
                         )
@@ -117,11 +117,11 @@ fun GestureUI(
                 onMultiTap = fastSeek,
                 onMultiTapFinished = fastSeekFinished
             ) {
-                FadedAnimationForSeekFeedback(fastSeekSeconds) {
+                FadedAnimationForSeekFeedback(fastSeekSeconds) { fastSeekSecondsToDisplay ->
                     Box(modifier = Modifier.fillMaxSize()) {
                         FastSeekVisualFeedback(
                             modifier = Modifier.align(Alignment.CenterStart),
-                            seconds = fastSeekSeconds,
+                            seconds = fastSeekSecondsToDisplay,
                             backwards = false
                         )
                     }
@@ -150,11 +150,11 @@ fun GestureUI(
                 onMultiTapFinished = fastSeekFinished,
                 onMovement = handleDownwardMovement
             ) {
-                FadedAnimationForSeekFeedback(fastSeekSeconds, backwards = true) {
+                FadedAnimationForSeekFeedback(fastSeekSeconds, backwards = true) { fastSeekSecondsToDisplay ->
                     Box(modifier = Modifier.fillMaxSize()) {
                         FastSeekVisualFeedback(
                             modifier = Modifier.align(Alignment.Center),
-                            seconds = -fastSeekSeconds,
+                            seconds = -fastSeekSecondsToDisplay,
                             backwards = true
                         )
                     }
@@ -169,11 +169,11 @@ fun GestureUI(
                 onMultiTap = fastSeek,
                 onMultiTapFinished = fastSeekFinished
             ) {
-                FadedAnimationForSeekFeedback(fastSeekSeconds) {
+                FadedAnimationForSeekFeedback(fastSeekSeconds) { fastSeekSecondsToDisplay ->
                     Box(modifier = Modifier.fillMaxSize()) {
                         FastSeekVisualFeedback(
                             modifier = Modifier.align(Alignment.Center),
-                            seconds = fastSeekSeconds,
+                            seconds = fastSeekSecondsToDisplay,
                             backwards = false
                         )
                     }
@@ -189,8 +189,12 @@ fun GestureUI(
 fun FadedAnimationForSeekFeedback(
     fastSeekSeconds: Int,
     backwards: Boolean = false,
-    content: @Composable () -> Unit
+    content: @Composable (fastSeekSecondsToDisplay:Int) -> Unit
 ) {
+
+    var lastSecondsValue by remember {
+        mutableStateOf(0)
+    }
 
     val vissible = if (backwards) {
         fastSeekSeconds < 0
@@ -204,6 +208,13 @@ fun FadedAnimationForSeekFeedback(
         fastSeekSeconds < 0
     }
 
+    val valueToDisplay = if(vissible) {
+        lastSecondsValue = fastSeekSeconds
+        fastSeekSeconds
+    } else {
+        lastSecondsValue
+    }
+
     if (!disapearEmediatly) {
         AnimatedVisibility(
             visible = vissible,
@@ -212,7 +223,7 @@ fun FadedAnimationForSeekFeedback(
                 animationSpec = tween(SEEK_ANIMATION_FADE_OUT)
             )
         ) {
-            content()
+            content(valueToDisplay)
         }
     }
 }
@@ -248,7 +259,7 @@ fun FullscreenGestureUIPreviewInteractive() {
     }
 
     VideoPlayerTheme {
-        Surface(modifier = Modifier.wrapContentSize(), color = Color.DarkGray) {
+        Surface(modifier = Modifier.wrapContentSize(), color = Color.Black) {
             GestureUI(
                 modifier = Modifier,
                 hideUi = { },
