@@ -65,12 +65,11 @@ class VideoPlayerViewModelImpl @Inject constructor(
         set(value) {
             field = value
             installExoPlayer()
-            mutableUiState.update { it.copy(fastseekSeconds = field?.fastSeekAmountSec ?: 10) }
         }
 
     override val uiState = mutableUiState.asStateFlow()
 
-    override val player: Player?
+    override val internalPlayer: Player?
         get() = newPlayer?.internal_player
 
     override var minContentRatio: Float = 4F / 3F
@@ -109,7 +108,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
         }
 
     private fun installExoPlayer() {
-        player?.let { player ->
+        internalPlayer?.let { player ->
             Log.d(TAG, "Install player: ${player.videoSize.width}")
 
             player.addListener(object : Player.Listener {
@@ -228,9 +227,9 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     private fun updateProgressOnce() {
-        val progress = player?.currentPosition ?: 0
-        val duration = player?.duration ?: 1
-        val bufferedPercentage = (player?.bufferedPercentage?.toFloat() ?: 0f) / 100f
+        val progress = internalPlayer?.currentPosition ?: 0
+        val duration = internalPlayer?.duration ?: 1
+        val bufferedPercentage = (internalPlayer?.bufferedPercentage?.toFloat() ?: 0f) / 100f
         val progressPercentage = progress.toFloat() / duration.toFloat()
 
         mutableUiState.update {
@@ -259,8 +258,8 @@ class VideoPlayerViewModelImpl @Inject constructor(
     override fun seekingFinished() {
         resetHideUiDelayedJob()
         val seekerPosition = mutableUiState.value.seekerPosition
-        val seekPositionInMs = (player?.duration?.toFloat() ?: 0F) * seekerPosition
-        newPlayer?.seekTo(seekPositionInMs.toLong())
+        val seekPositionInMs = (internalPlayer?.duration?.toFloat() ?: 0F) * seekerPosition
+        newPlayer?.currentPosition = seekPositionInMs.toLong()
         Log.i(TAG, "Seek to Ms: $seekPositionInMs")
     }
 
@@ -282,7 +281,9 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     override fun fastSeekFinished() {
         val fastSeekAmount = mutableUiState.value.fastseekSeconds
-        newPlayer?.fastSeek(fastSeekAmount)
+        Log.d(TAG, "$fastSeekAmount")
+
+        newPlayer?.currentPosition = (newPlayer?.currentPosition ?: 0) + (fastSeekAmount * 1000)
         mutableUiState.update {
             it.copy(fastseekSeconds = 0)
         }
@@ -306,7 +307,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     private fun getEmbeddedUiRatio() =
-        player?.let { player ->
+        internalPlayer?.let { player ->
             val videoRatio = VideoSize.fromMedia3VideoSize(player.videoSize).getRatio()
             return (if (videoRatio.isNaN())
                 currentContentRatio
@@ -320,7 +321,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     companion object {
         val dummy = object : VideoPlayerViewModel {
             override var newPlayer: NewPlayer? = null
-            override val player: Player? = null
+            override val internalPlayer: Player? = null
             override val uiState = MutableStateFlow(VideoPlayerUIState.DEFAULT)
             override var minContentRatio = 4F / 3F
             override var maxContentRatio = 16F / 9F

@@ -52,8 +52,6 @@ interface NewPlayer {
     fun prepare()
     fun play()
     fun pause()
-    fun fastSeek(steps: Int)
-    fun seekTo(millisecond: Long)
     fun addToPlaylist(newItem: String)
     fun addListener(callbackListener: Listener)
 
@@ -85,9 +83,15 @@ class NewPlayerImpl(override val internal_player: Player, override val repositor
 
     private var callbackListeners: MutableList<NewPlayer.Listener> = ArrayList()
 
-    override val duartion: Long = internal_player.duration
-    override val bufferedPercentage: Int = internal_player.bufferedPercentage
-    override var currentPosition: Long = internal_player.currentPosition
+    override val duartion: Long
+        get() = internal_player.duration
+
+    override val bufferedPercentage: Int
+        get() = internal_player.bufferedPercentage
+    override var currentPosition: Long
+        get() = internal_player.currentPosition
+        set(value) {internal_player.seekTo(value)}
+
     override var fastSeekAmountSec: Int = 10
     override var playBackMode: PlayMode = PlayMode.EMBEDDED_VIDEO
     override var playList: MutableList<String> = ArrayList<String>()
@@ -112,15 +116,6 @@ class NewPlayerImpl(override val internal_player: Player, override val repositor
 
     override fun pause() {
         internal_player.pause()
-    }
-
-    override fun fastSeek(steps: Int) {
-        val currentPosition = internal_player.currentPosition
-        internal_player.seekTo(currentPosition + fastSeekAmountSec * 1000 * steps)
-    }
-
-    override fun seekTo(millisecond: Long) {
-        internal_player.seekTo(millisecond)
     }
 
     override fun addToPlaylist(newItem: String) {

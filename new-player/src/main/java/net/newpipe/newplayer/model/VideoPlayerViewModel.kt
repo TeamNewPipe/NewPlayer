@@ -29,7 +29,7 @@ import net.newpipe.newplayer.ui.ContentScale
 
 interface VideoPlayerViewModel {
     var newPlayer: NewPlayer?
-    val player: Player?
+    val internalPlayer: Player?
     val uiState: StateFlow<VideoPlayerUIState>
     var minContentRatio: Float
     var maxContentRatio: Float
