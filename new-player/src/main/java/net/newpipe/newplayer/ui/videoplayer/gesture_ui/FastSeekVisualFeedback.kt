@@ -20,12 +20,16 @@
 
 package net.newpipe.newplayer.ui.videoplayer.gesture_ui
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,29 +41,35 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.android.material.color.MaterialColors
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.SEEK_ANIMATION_DURATION_IN_MS
+import net.newpipe.newplayer.ui.videoplayer.SEEK_ANIMATION_FADE_IN
+import net.newpipe.newplayer.ui.videoplayer.SEEK_ANIMATION_FADE_OUT
 
 @Composable
 fun FastSeekVisualFeedback(modifier: Modifier = Modifier, seconds: Int, backwards: Boolean) {
 
     val contentDescription = String.format(
         if (backwards) {
-            "Fast seeking backward by %d seconds."
-            //stringResource(id = R.string.fast_seeking_backward)
+            //"Fast seeking backward by %d seconds."
+            stringResource(id = R.string.fast_seeking_backward)
         } else {
-            "Fast seeking forward by %d seconds."
-            //stringResource(id = R.string.fast_seeking_forward)
+            //"Fast seeking forward by %d seconds."
+            stringResource(id = R.string.fast_seeking_forward)
         }, seconds
     )
 
@@ -141,6 +151,49 @@ fun FastSeekVisualFeedback(modifier: Modifier = Modifier, seconds: Int, backward
     }
 }
 
+
+@Composable
+fun FadedAnimationForSeekFeedback(
+    fastSeekSeconds: Int,
+    backwards: Boolean = false,
+    content: @Composable (fastSeekSecondsToDisplay:Int) -> Unit
+) {
+
+    var lastSecondsValue by remember {
+        mutableStateOf(0)
+    }
+
+    val vissible = if (backwards) {
+        fastSeekSeconds < 0
+    } else {
+        0 < fastSeekSeconds
+    }
+
+    val disapearEmediatly = if (backwards) {
+        0 < fastSeekSeconds
+    } else {
+        fastSeekSeconds < 0
+    }
+
+    val valueToDisplay = if(vissible) {
+        lastSecondsValue = fastSeekSeconds
+        fastSeekSeconds
+    } else {
+        lastSecondsValue
+    }
+
+    if (!disapearEmediatly) {
+        AnimatedVisibility(
+            visible = vissible,
+            enter = fadeIn(animationSpec = tween(SEEK_ANIMATION_FADE_IN)),
+            exit = fadeOut(
+                animationSpec = tween(SEEK_ANIMATION_FADE_OUT)
+            )
+        ) {
+            content(valueToDisplay)
+        }
+    }
+}
 
 @Composable
 private fun SeekerIcon(backwards: Boolean, description: String, color: Color) {

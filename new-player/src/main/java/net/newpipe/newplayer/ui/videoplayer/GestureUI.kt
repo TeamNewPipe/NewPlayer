@@ -40,7 +40,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
+import net.newpipe.newplayer.ui.videoplayer.gesture_ui.EmbeddedGestureUI
 import net.newpipe.newplayer.ui.videoplayer.gesture_ui.FastSeekVisualFeedback
+import net.newpipe.newplayer.ui.videoplayer.gesture_ui.FullscreenGestureUI
+import net.newpipe.newplayer.ui.videoplayer.gesture_ui.FullscreenGestureUIPreview
 import net.newpipe.newplayer.ui.videoplayer.gesture_ui.TouchSurface
 import net.newpipe.newplayer.ui.videoplayer.gesture_ui.TouchedPosition
 
@@ -61,11 +64,15 @@ fun GestureUI(
     uiVissible: Boolean,
     fullscreen: Boolean,
     fastSeekSeconds: Int,
+    brightnes: Float,
+    soundVolume: Float,
     switchToFullscreen: () -> Unit,
     switchToEmbeddedView: () -> Unit,
     embeddedDraggedDownBy: (Float) -> Unit,
     fastSeek: (Int) -> Unit,
-    fastSeekFinished: () -> Unit
+    fastSeekFinished: () -> Unit,
+    volumeChange: (Float) -> Unit,
+    brightnesChange: (Float) -> Unit,
 ) {
     val defaultOnRegularTap = {
         if (uiVissible) {
@@ -76,227 +83,27 @@ fun GestureUI(
     }
 
     if (fullscreen) {
-        Row(modifier = modifier) {
-            TouchSurface(
-                modifier = Modifier
-                    .weight(1f),
-                multitapDurationInMs = FAST_SEEKMODE_DURATION,
-                onRegularTap = defaultOnRegularTap,
-                onMultiTap = {
-                    println("multitap ${-it}")
-                    fastSeek(-it)
-                },
-                onMultiTapFinished = fastSeekFinished
-            ) {
-                FadedAnimationForSeekFeedback(fastSeekSeconds, backwards = true) { fastSeekSecondsToDisplay ->
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        FastSeekVisualFeedback(
-                            seconds = -fastSeekSecondsToDisplay,
-                            backwards = true,
-                            modifier = Modifier.align(Alignment.CenterEnd)
-                        )
-                    }
-                }
-            }
-            TouchSurface(
-                modifier = Modifier
-                    .weight(1f),
-                onRegularTap = defaultOnRegularTap,
-                multitapDurationInMs = FAST_SEEKMODE_DURATION,
-                onMovement = { movement ->
-                    if (0 < movement.y) {
-                        switchToEmbeddedView()
-                    }
-                }
-            )
-            TouchSurface(
-                modifier = Modifier
-                    .weight(1f),
-                onRegularTap = defaultOnRegularTap,
-                multitapDurationInMs = FAST_SEEKMODE_DURATION,
-                onMultiTap = fastSeek,
-                onMultiTapFinished = fastSeekFinished
-            ) {
-                FadedAnimationForSeekFeedback(fastSeekSeconds) { fastSeekSecondsToDisplay ->
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        FastSeekVisualFeedback(
-                            modifier = Modifier.align(Alignment.CenterStart),
-                            seconds = fastSeekSecondsToDisplay,
-                            backwards = false
-                        )
-                    }
-                }
-            }
-        }
-    } else { // (!fullscreen)
-        val handleDownwardMovement = { movement: TouchedPosition ->
-            Log.d(TAG, "${movement.x}:${movement.y}")
-            if (0 < movement.y) {
-                embeddedDraggedDownBy(movement.y)
-            } else {
-                switchToFullscreen()
-            }
-        }
-
-        Row(modifier = modifier) {
-            TouchSurface(
-                modifier = Modifier
-                    .weight(1f),
-                multitapDurationInMs = FAST_SEEKMODE_DURATION,
-                onRegularTap = defaultOnRegularTap,
-                onMultiTap = {
-                    fastSeek(-it)
-                },
-                onMultiTapFinished = fastSeekFinished,
-                onMovement = handleDownwardMovement
-            ) {
-                FadedAnimationForSeekFeedback(fastSeekSeconds, backwards = true) { fastSeekSecondsToDisplay ->
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        FastSeekVisualFeedback(
-                            modifier = Modifier.align(Alignment.Center),
-                            seconds = -fastSeekSecondsToDisplay,
-                            backwards = true
-                        )
-                    }
-                }
-            }
-            TouchSurface(
-                modifier = Modifier
-                    .weight(1f),
-                multitapDurationInMs = FAST_SEEKMODE_DURATION,
-                onRegularTap = defaultOnRegularTap,
-                onMovement = handleDownwardMovement,
-                onMultiTap = fastSeek,
-                onMultiTapFinished = fastSeekFinished
-            ) {
-                FadedAnimationForSeekFeedback(fastSeekSeconds) { fastSeekSecondsToDisplay ->
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        FastSeekVisualFeedback(
-                            modifier = Modifier.align(Alignment.Center),
-                            seconds = fastSeekSecondsToDisplay,
-                            backwards = false
-                        )
-                    }
-                }
-            }
-        }
-
-    }
-}
-
-
-@Composable
-fun FadedAnimationForSeekFeedback(
-    fastSeekSeconds: Int,
-    backwards: Boolean = false,
-    content: @Composable (fastSeekSecondsToDisplay:Int) -> Unit
-) {
-
-    var lastSecondsValue by remember {
-        mutableStateOf(0)
-    }
-
-    val vissible = if (backwards) {
-        fastSeekSeconds < 0
+        FullscreenGestureUI(
+            uiVissible = uiVissible,
+            fastSeekSeconds = fastSeekSeconds,
+            hideUi = hideUi,
+            showUi = showUi,
+            fastSeek = fastSeek,
+            brightnes = brightnes,
+            volume = soundVolume,
+            switchToEmbeddedView = switchToEmbeddedView,
+            fastSeekFinished = fastSeekFinished,
+            volumeChange = volumeChange,
+            brightnesChange = brightnesChange)
     } else {
-        0 < fastSeekSeconds
-    }
-
-    val disapearEmediatly = if (backwards) {
-        0 < fastSeekSeconds
-    } else {
-        fastSeekSeconds < 0
-    }
-
-    val valueToDisplay = if(vissible) {
-        lastSecondsValue = fastSeekSeconds
-        fastSeekSeconds
-    } else {
-        lastSecondsValue
-    }
-
-    if (!disapearEmediatly) {
-        AnimatedVisibility(
-            visible = vissible,
-            enter = fadeIn(animationSpec = tween(SEEK_ANIMATION_FADE_IN)),
-            exit = fadeOut(
-                animationSpec = tween(SEEK_ANIMATION_FADE_OUT)
-            )
-        ) {
-            content(valueToDisplay)
-        }
+        EmbeddedGestureUI(
+            fastSeekSeconds = fastSeekSeconds,
+            uiVissible = uiVissible,
+            switchToFullscreen = switchToFullscreen,
+            embeddedDraggedDownBy = embeddedDraggedDownBy,
+            fastSeek = fastSeek,
+            fastSeekFinished = fastSeekFinished,
+            hideUi = hideUi,
+            showUi = showUi)
     }
 }
-
-
-@Preview(device = "spec:width=1080px,height=600px,dpi=440,orientation=landscape")
-@Composable
-fun FullscreenGestureUIPreview() {
-    VideoPlayerTheme {
-        Surface(modifier = Modifier.wrapContentSize(), color = Color.DarkGray) {
-            GestureUI(
-                modifier = Modifier,
-                hideUi = { },
-                showUi = { },
-                uiVissible = false,
-                fullscreen = true,
-                fastSeekSeconds = 0,
-                switchToFullscreen = { println("switch to fullscreen") },
-                switchToEmbeddedView = { println("switch to embedded") },
-                embeddedDraggedDownBy = { println("embedded dragged down") },
-                fastSeek = { println("fast seek by $it steps") },
-                fastSeekFinished = {})
-        }
-    }
-}
-
-@Preview(device = "spec:width=1080px,height=600px,dpi=440,orientation=landscape")
-@Composable
-fun FullscreenGestureUIPreviewInteractive() {
-
-    var seekSeconds by remember {
-        mutableStateOf(0)
-    }
-
-    VideoPlayerTheme {
-        Surface(modifier = Modifier.wrapContentSize(), color = Color.Black) {
-            GestureUI(
-                modifier = Modifier,
-                hideUi = { },
-                showUi = { },
-                uiVissible = false,
-                fullscreen = true,
-                fastSeekSeconds = seekSeconds,
-                switchToFullscreen = { println("switch to fullscreen") },
-                switchToEmbeddedView = { println("switch to embedded") },
-                embeddedDraggedDownBy = { println("embedded dragged down") },
-                fastSeek = { seekSeconds = it * 10 },
-                fastSeekFinished = {
-                    seekSeconds = 0
-                })
-        }
-    }
-}
-
-
-@Preview(device = "spec:width=600px,height=400px,dpi=440,orientation=landscape")
-@Composable
-fun EmbeddedGestureUIPreview() {
-    VideoPlayerTheme {
-        Surface(modifier = Modifier.wrapContentSize(), color = Color.DarkGray) {
-            GestureUI(
-                modifier = Modifier,
-                hideUi = { },
-                showUi = { },
-                uiVissible = false,
-                fullscreen = false,
-                fastSeekSeconds = 0,
-                switchToFullscreen = { println("switch to fullscreen") },
-                switchToEmbeddedView = { println("switch to embedded") },
-                embeddedDraggedDownBy = { println("embedded dragged down") },
-                fastSeek = { println("Fast seek by $it steps") },
-                fastSeekFinished = {})
-        }
-    }
-}
-

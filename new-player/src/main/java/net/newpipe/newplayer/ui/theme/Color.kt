@@ -84,6 +84,8 @@ fun VideoPlayerControllerUIPreviewEmbeddedColorPreview() {
                 playbackPositionInMs = 6*60*1000,
                 bufferedPercentage = 0.4f,
                 fastSeekSeconds = 10,
+                brightnes = 0f,
+                soundVolume = 0f,
                 play = {},
                 pause = {},
                 prevStream = {},
@@ -96,7 +98,9 @@ fun VideoPlayerControllerUIPreviewEmbeddedColorPreview() {
                 seekingFinished = {},
                 embeddedDraggedDownBy = {},
                 fastSeek = {},
-                finishFastSeek = {})
+                finishFastSeek = {},
+                brightnesChange = {},
+                volumeChange = {})
         }
     }
 }

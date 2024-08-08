@@ -63,6 +63,8 @@ fun VideoPlayerControllerUI(
     playbackPositionInMs: Long,
     bufferedPercentage: Float,
     fastSeekSeconds: Int,
+    soundVolume: Float,
+    brightnes: Float,
     play: () -> Unit,
     pause: () -> Unit,
     prevStream: () -> Unit,
@@ -75,7 +77,9 @@ fun VideoPlayerControllerUI(
     seekingFinished: () -> Unit,
     embeddedDraggedDownBy: (Float) -> Unit,
     fastSeek: (Int) -> Unit,
-    finishFastSeek: () -> Unit
+    finishFastSeek: () -> Unit,
+    brightnesChange: (Float) -> Unit,
+    volumeChange: (Float) -> Unit
 ) {
 
     if (fullscreen) {
@@ -99,11 +103,15 @@ fun VideoPlayerControllerUI(
             uiVissible = uiVissible,
             fullscreen = fullscreen,
             fastSeekSeconds = fastSeekSeconds,
+            brightnes = brightnes,
+            soundVolume = soundVolume,
             switchToFullscreen = switchToFullscreen,
             switchToEmbeddedView = switchToEmbeddedView,
             embeddedDraggedDownBy = embeddedDraggedDownBy,
             fastSeek = fastSeek,
-            fastSeekFinished = finishFastSeek
+            fastSeekFinished = finishFastSeek,
+            brightnesChange = brightnesChange,
+            volumeChange = volumeChange
         )
     }
 
@@ -135,11 +143,15 @@ fun VideoPlayerControllerUI(
             uiVissible = uiVissible,
             fullscreen = fullscreen,
             fastSeekSeconds = fastSeekSeconds,
+            soundVolume = soundVolume,
+            brightnes = brightnes,
             switchToFullscreen = switchToFullscreen,
             switchToEmbeddedView = switchToEmbeddedView,
             embeddedDraggedDownBy = embeddedDraggedDownBy,
             fastSeek = fastSeek,
-            fastSeekFinished = finishFastSeek
+            fastSeekFinished = finishFastSeek,
+            volumeChange = volumeChange,
+            brightnesChange = brightnesChange
         )
 
         Box(modifier = Modifier.fillMaxSize()) {
@@ -223,6 +235,8 @@ fun VideoPlayerControllerUIPreviewEmbedded() {
                 playbackPositionInMs = 6 * 60 * 1000,
                 bufferedPercentage = 0.4f,
                 fastSeekSeconds = 0,
+                soundVolume = 0f,
+                brightnes = 0f,
                 play = {},
                 pause = {},
                 prevStream = {},
@@ -235,7 +249,9 @@ fun VideoPlayerControllerUIPreviewEmbedded() {
                 seekingFinished = {},
                 embeddedDraggedDownBy = {},
                 fastSeek = {},
-                finishFastSeek = {})
+                finishFastSeek = {},
+                brightnesChange = {},
+                volumeChange = {})
         }
     }
 }
@@ -254,6 +270,8 @@ fun VideoPlayerControllerUIPreviewLandscape() {
                 playbackPositionInMs = 6 * 60 * 1000,
                 bufferedPercentage = 0.4f,
                 fastSeekSeconds = 0,
+                brightnes = 0f,
+                soundVolume = 0f,
                 play = {},
                 pause = {},
                 prevStream = {},
@@ -266,7 +284,9 @@ fun VideoPlayerControllerUIPreviewLandscape() {
                 seekingFinished = {},
                 embeddedDraggedDownBy = {},
                 fastSeek = {},
-                finishFastSeek = {})
+                finishFastSeek = {},
+                brightnesChange = {},
+                volumeChange = {})
         }
     }
 }
@@ -286,6 +306,8 @@ fun VideoPlayerControllerUIPreviewPortrait() {
                 playbackPositionInMs = 6 * 60 * 1000,
                 bufferedPercentage = 0.4f,
                 fastSeekSeconds = 0,
+                brightnes = 0f,
+                soundVolume = 0f,
                 play = {},
                 pause = {},
                 prevStream = {},
@@ -298,7 +320,9 @@ fun VideoPlayerControllerUIPreviewPortrait() {
                 seekingFinished = {},
                 embeddedDraggedDownBy = {},
                 fastSeek = {},
-                finishFastSeek = {})
+                finishFastSeek = {},
+                brightnesChange = {},
+                volumeChange = {})
         }
     }
 }

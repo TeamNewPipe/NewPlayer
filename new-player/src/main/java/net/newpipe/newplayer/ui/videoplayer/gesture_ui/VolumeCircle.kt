@@ -57,12 +57,19 @@ private const val LINE_STROKE_WIDTH = 4
 private const val CIRCLE_SIZE = 100
 
 @Composable
-fun VolumeCircle(modifier: Modifier = Modifier, volumeFraction: Float, isBrightnes: Boolean = false) {
-    assert(0f < volumeFraction && volumeFraction < 1f) {
-        Log.e(TAG, "Volume fraction must be in ragne [0;1]. It was $volumeFraction")
+fun VolumeCircle(
+    modifier: Modifier = Modifier,
+    volumeFraction: Float,
+    isBrightnes: Boolean = false
+) {
+    assert(0f <= volumeFraction && volumeFraction <= 1f) {
+         Log.e(TAG, "Volume fraction must be in ragne [0;1]. It was $volumeFraction")
     }
 
-    Box(modifier.shadow(elevation = 1.dp, shape = CircleShape).padding(2.dp)){
+    Box(
+        modifier
+            .shadow(elevation = 1.dp, shape = CircleShape)
+            .padding(2.dp)) {
         Canvas(Modifier.size(CIRCLE_SIZE.dp)) {
             val arcSize = (CIRCLE_SIZE - LINE_STROKE_WIDTH).dp.toPx();
             drawCircle(color = Color.Black.copy(alpha = 0.3f), radius = (CIRCLE_SIZE / 2).dp.toPx())
@@ -80,7 +87,9 @@ fun VolumeCircle(modifier: Modifier = Modifier, volumeFraction: Float, isBrightn
         }
 
         Icon(
-            modifier = Modifier.align(Alignment.Center).size(60.dp),
+            modifier = Modifier
+                .align(Alignment.Center)
+                .size(60.dp),
             imageVector = (if (isBrightnes) getBrightnesIcon(volumeFraction = volumeFraction)
             else getVolumeIcon(volumeFraction = volumeFraction)),
             contentDescription = stringResource(

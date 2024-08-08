@@ -291,6 +291,14 @@ class VideoPlayerViewModelImpl @Inject constructor(
         }
     }
 
+    override fun brightnesChange(changeRate: Float) {
+        TODO("Not yet implemented")
+    }
+
+    override fun volumeChange(changeRate: Float) {
+        TODO("Not yet implemented")
+    }
+
     override fun switchToEmbeddedView() {
         callbackListeners.forEach { it?.onFullscreenToggle(false) }
         uiVisibilityJob?.cancel()
@@ -375,6 +383,14 @@ class VideoPlayerViewModelImpl @Inject constructor(
             }
 
             override fun finishFastSeek() {
+                println("dummy impl")
+            }
+
+            override fun brightnesChange(changeRate: Float) {
+                println("dummy impl")
+            }
+
+            override fun volumeChange(changeRate: Float) {
                 println("dummy impl")
             }
 

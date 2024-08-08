@@ -47,6 +47,7 @@ fun TouchSurface(
     onMultiTap: (Int) -> Unit = {},
     onMultiTapFinished: () -> Unit = {},
     onRegularTap: () -> Unit = {},
+    onUp: () -> Unit = {},
     onMovement: (TouchedPosition) -> Unit = {},
     content: @Composable () -> Unit = {}
 ) {
@@ -82,6 +83,7 @@ fun TouchSurface(
     }
 
     val defaultActionUp = { onMultiTap: (Int) -> Unit, onRegularTap: () -> Unit ->
+        onUp()
         val currentTime = System.currentTimeMillis()
         if (!moveOccured) {
             val timeSinceLastTouch = currentTime - lastTouchTime

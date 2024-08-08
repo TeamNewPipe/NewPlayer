@@ -153,6 +153,8 @@ fun VideoPlayerUI(
                 playbackPositionInMs = uiState.playbackPositionInMs,
                 bufferedPercentage = uiState.bufferedPercentage,
                 fastSeekSeconds = uiState.fastseekSeconds,
+                brightnes = uiState.brightnes,
+                soundVolume = uiState.soundVolume,
                 play = viewModel::play,
                 pause = viewModel::pause,
                 prevStream = viewModel::prevStream,
@@ -165,7 +167,9 @@ fun VideoPlayerUI(
                 seekingFinished = viewModel::seekingFinished,
                 embeddedDraggedDownBy = viewModel::embeddedDraggedDown,
                 fastSeek = viewModel::fastSeek,
-                finishFastSeek = viewModel::finishFastSeek
+                finishFastSeek = viewModel::finishFastSeek,
+                volumeChange = viewModel::volumeChange,
+                brightnesChange = viewModel::brightnesChange
             )
         }
     }

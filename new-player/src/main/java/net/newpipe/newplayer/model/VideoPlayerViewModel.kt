@@ -50,6 +50,8 @@ interface VideoPlayerViewModel {
     fun embeddedDraggedDown(offset: Float)
     fun fastSeek(count: Int)
     fun finishFastSeek()
+    fun brightnesChange(changeRate: Float)
+    fun volumeChange(changeRate: Float)
 
     interface Listener {
         fun onFullscreenToggle(isFullscreen: Boolean) {}
