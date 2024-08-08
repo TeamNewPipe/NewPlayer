@@ -69,7 +69,6 @@ class VideoPlayerViewModelImpl @Inject constructor(
     var callbackListeners: MutableList<VideoPlayerViewModel.Listener?> = ArrayList()
 
     init {
-
         val soundVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC).toFloat() /
                 audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC).toFloat()
         mutableUiState.update {
@@ -304,7 +303,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
         }
     }
 
-    override fun brightnesChange(changeRate: Float) {
+    override fun brightnesChange(changeRate: Float, currentValue: Float) {
         TODO("Not yet implemented")
     }
 
@@ -407,7 +406,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
                 println("dummy impl")
             }
 
-            override fun brightnesChange(changeRate: Float) {
+            override fun brightnesChange(changeRate: Float, currentValue: Float) {
                 println("dummy impl")
             }
 

@@ -78,7 +78,7 @@ fun VideoPlayerControllerUI(
     embeddedDraggedDownBy: (Float) -> Unit,
     fastSeek: (Int) -> Unit,
     finishFastSeek: () -> Unit,
-    brightnesChange: (Float) -> Unit,
+    brightnesChange: (Float, Float) -> Unit,
     volumeChange: (Float) -> Unit
 ) {
 
@@ -86,6 +86,10 @@ fun VideoPlayerControllerUI(
         BackHandler {
             switchToEmbeddedView()
         }
+    }
+
+    val internalBrightnesChange = { rateChange: Float ->
+
     }
 
     val insets =
@@ -110,7 +114,7 @@ fun VideoPlayerControllerUI(
             embeddedDraggedDownBy = embeddedDraggedDownBy,
             fastSeek = fastSeek,
             fastSeekFinished = finishFastSeek,
-            brightnesChange = brightnesChange,
+            brightnesChange = internalBrightnesChange,
             volumeChange = volumeChange
         )
     }
@@ -151,7 +155,7 @@ fun VideoPlayerControllerUI(
             fastSeek = fastSeek,
             fastSeekFinished = finishFastSeek,
             volumeChange = volumeChange,
-            brightnesChange = brightnesChange
+            brightnesChange = internalBrightnesChange
         )
 
         Box(modifier = Modifier.fillMaxSize()) {
@@ -250,7 +254,7 @@ fun VideoPlayerControllerUIPreviewEmbedded() {
                 embeddedDraggedDownBy = {},
                 fastSeek = {},
                 finishFastSeek = {},
-                brightnesChange = {},
+                internalBrightnesChange = { a, b ->},
                 volumeChange = {})
         }
     }
@@ -285,7 +289,7 @@ fun VideoPlayerControllerUIPreviewLandscape() {
                 embeddedDraggedDownBy = {},
                 fastSeek = {},
                 finishFastSeek = {},
-                brightnesChange = {},
+                internalBrightnesChange = { a, b -> },
                 volumeChange = {})
         }
     }
@@ -321,7 +325,7 @@ fun VideoPlayerControllerUIPreviewPortrait() {
                 embeddedDraggedDownBy = {},
                 fastSeek = {},
                 finishFastSeek = {},
-                brightnesChange = {},
+                internalBrightnesChange = { a, b -> },
                 volumeChange = {})
         }
     }

@@ -20,9 +20,11 @@
 
 package net.newpipe.newplayer.utils
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.view.WindowManager
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalContext
@@ -39,6 +41,25 @@ fun LockScreenOrientation(orientation: Int) {
             activity.requestedOrientation = originalOrientation
         }
     }
+}
+
+@SuppressLint("NewApi")
+@Composable
+fun getScreenBrightnes() : Float {
+    val activity = LocalContext.current.findActivity()!!
+    val window = activity.window
+    val layout = window.attributes as WindowManager.LayoutParams
+    return layout.screenBrightness
+}
+
+@SuppressLint("NewApi")
+@Composable
+fun SetScreenBrightnes(value:Float) {
+    val activity = LocalContext.current.findActivity()!!
+    val window = activity.window
+    val layout = window.attributes as WindowManager.LayoutParams
+    layout.screenBrightness = value
+    window.attributes = layout
 }
 
 fun Context.findActivity(): Activity? = when (this) {

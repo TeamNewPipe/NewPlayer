@@ -169,7 +169,7 @@ fun VideoPlayerUI(
                 fastSeek = viewModel::fastSeek,
                 finishFastSeek = viewModel::finishFastSeek,
                 volumeChange = viewModel::volumeChange,
-                brightnesChange = viewModel::brightnesChange
+                internalBrightnesChange = viewModel::brightnesChange
             )
         }
     }

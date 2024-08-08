@@ -160,10 +160,9 @@ fun VideoPlayerControllerBottomUIPreview() {
                 bufferedPercentage = 0.4f,
                 switchToFullscreen = { },
                 switchToEmbeddedView = { },
-                seekPositionChanged = {}
-            ) {
-
-            }
+                seekPositionChanged = {},
+                seekingFinished = {}
+            )
         }
     }
 }
