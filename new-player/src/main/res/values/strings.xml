@@ -38,4 +38,6 @@
     <string name="fast_seeking_backward">Fast seeking backward by %d seconds.</string>
     <string name="fast_seeking_forward">Fast seeking forward by %d seconds.</string>
     <string name="seconds">Seconds</string>
+    <string name="volume_indicator">Volume indicator</string>
+    <string name="brightness_indicator">Brightness indicator</string>
 </resources>
