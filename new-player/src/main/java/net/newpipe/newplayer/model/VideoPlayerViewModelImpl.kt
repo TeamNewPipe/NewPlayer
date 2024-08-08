@@ -21,10 +21,14 @@
 package net.newpipe.newplayer.model
 
 import android.app.Application
+import android.content.Context.AUDIO_SERVICE
+import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -40,6 +44,7 @@ import kotlinx.coroutines.launch
 import net.newpipe.newplayer.utils.VideoSize
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.ui.ContentScale
+import kotlin.math.max
 
 val VIDEOPLAYER_UI_STATE = "video_player_ui_state"
 
@@ -58,7 +63,19 @@ class VideoPlayerViewModelImpl @Inject constructor(
     private var uiVisibilityJob: Job? = null
     private var progressUpdaterJob: Job? = null
 
+    private val audioManager =
+        getSystemService(application.applicationContext, AudioManager::class.java)!!
+
     var callbackListeners: MutableList<VideoPlayerViewModel.Listener?> = ArrayList()
+
+    init {
+
+        val soundVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC).toFloat() /
+                audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC).toFloat()
+        mutableUiState.update {
+            it.copy(soundVolume = soundVolume)
+        }
+    }
 
     //interface
     override var newPlayer: NewPlayer? = null
@@ -74,11 +91,10 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     override var minContentRatio: Float = 4F / 3F
         set(value) {
-            if (value <= 0 || maxContentRatio < value)
-                Log.e(
-                    TAG,
-                    "Ignoring maxContentRatio: It must not be 0 or less and it may not be bigger then mmaxContentRatio. It was Set to: $value"
-                )
+            if (value <= 0 || maxContentRatio < value) Log.e(
+                TAG,
+                "Ignoring maxContentRatio: It must not be 0 or less and it may not be bigger then mmaxContentRatio. It was Set to: $value"
+            )
             else {
                 field = value
                 mutableUiState.update { it.copy(embeddedUiRatio = getEmbeddedUiRatio()) }
@@ -88,11 +104,10 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     override var maxContentRatio: Float = 16F / 9F
         set(value) {
-            if (value <= 0 || value < minContentRatio)
-                Log.e(
-                    TAG,
-                    "Ignoring maxContentRatio: It must not be 0 or less and it may not be smaller then minContentRatio. It was Set to: $value"
-                )
+            if (value <= 0 || value < minContentRatio) Log.e(
+                TAG,
+                "Ignoring maxContentRatio: It must not be 0 or less and it may not be smaller then minContentRatio. It was Set to: $value"
+            )
             else {
                 field = value
                 mutableUiState.update { it.copy(embeddedUiRatio = getEmbeddedUiRatio()) }
@@ -131,8 +146,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
                         it.copy(isLoading = isLoading)
                     }
                     Log.i(
-                        TAG,
-                        if (isLoading) "Player started loading" else "Player finished loading"
+                        TAG, if (isLoading) "Player started loading" else "Player finished loading"
                     )
                 }
             })
@@ -146,8 +160,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
         Log.d(TAG, "Update Content ratio: $ratio")
         mutableUiState.update {
             it.copy(
-                contentRatio = currentContentRatio,
-                embeddedUiRatio = getEmbeddedUiRatio()
+                contentRatio = currentContentRatio, embeddedUiRatio = getEmbeddedUiRatio()
             )
         }
     }
@@ -296,7 +309,18 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun volumeChange(changeRate: Float) {
-        TODO("Not yet implemented")
+        val currentVolume = mutableUiState.value.soundVolume
+        val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC).toFloat()
+        // we multiply changeRate by 1.5 so your finger only has to swipe a portion of the whole
+        // screen in order to fully enable or disable the volume
+        val newVolume = (currentVolume + changeRate * 1.5f).coerceIn(0f, 1f)
+        audioManager.setStreamVolume(
+            AudioManager.STREAM_MUSIC, (newVolume * maxVolume).toInt(), 0
+        )
+        println("Blub: currentVolume: $currentVolume, changeRate: $changeRate, maxVolume: $maxVolume, newvolume: $newVolume")
+        mutableUiState.update {
+            it.copy(soundVolume = newVolume)
+        }
     }
 
     override fun switchToEmbeddedView() {
@@ -317,16 +341,13 @@ class VideoPlayerViewModelImpl @Inject constructor(
         }
     }
 
-    private fun getEmbeddedUiRatio() =
-        internalPlayer?.let { player ->
-            val videoRatio = VideoSize.fromMedia3VideoSize(player.videoSize).getRatio()
-            return (if (videoRatio.isNaN())
-                currentContentRatio
-            else
-                videoRatio).coerceIn(minContentRatio, maxContentRatio)
+    private fun getEmbeddedUiRatio() = internalPlayer?.let { player ->
+        val videoRatio = VideoSize.fromMedia3VideoSize(player.videoSize).getRatio()
+        return (if (videoRatio.isNaN()) currentContentRatio
+        else videoRatio).coerceIn(minContentRatio, maxContentRatio)
 
 
-        } ?: minContentRatio
+    } ?: minContentRatio
 
 
     companion object {

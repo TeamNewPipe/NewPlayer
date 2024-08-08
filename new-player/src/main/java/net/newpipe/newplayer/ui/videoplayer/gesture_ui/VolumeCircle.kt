@@ -66,10 +66,7 @@ fun VolumeCircle(
          Log.e(TAG, "Volume fraction must be in ragne [0;1]. It was $volumeFraction")
     }
 
-    Box(
-        modifier
-            .shadow(elevation = 1.dp, shape = CircleShape)
-            .padding(2.dp)) {
+    Box(modifier) {
         Canvas(Modifier.size(CIRCLE_SIZE.dp)) {
             val arcSize = (CIRCLE_SIZE - LINE_STROKE_WIDTH).dp.toPx();
             drawCircle(color = Color.Black.copy(alpha = 0.3f), radius = (CIRCLE_SIZE / 2).dp.toPx())
