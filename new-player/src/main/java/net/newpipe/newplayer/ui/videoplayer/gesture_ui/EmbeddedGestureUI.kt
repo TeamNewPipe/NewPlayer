@@ -33,7 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.ui.videoplayer.FAST_SEEKMODE_DURATION
+import net.newpipe.newplayer.ui.videoplayer.FAST_SEEK_MODE_DURATION
 
 private const val TAG = "EmbeddedGestureUI"
 
@@ -68,10 +68,10 @@ fun EmbeddedGestureUI(
     }
 
     Row(modifier = modifier) {
-        TouchSurface(
+        GestureSurface(
             modifier = Modifier
                 .weight(1f),
-            multitapDurationInMs = FAST_SEEKMODE_DURATION,
+            multiTapTimeoutInMs = FAST_SEEK_MODE_DURATION,
             onRegularTap = defaultOnRegularTap,
             onMultiTap = {
                 fastSeek(-it)
@@ -92,10 +92,10 @@ fun EmbeddedGestureUI(
                 }
             }
         }
-        TouchSurface(
+        GestureSurface(
             modifier = Modifier
                 .weight(1f),
-            multitapDurationInMs = FAST_SEEKMODE_DURATION,
+            multiTapTimeoutInMs = FAST_SEEK_MODE_DURATION,
             onRegularTap = defaultOnRegularTap,
             onMovement = handleDownwardMovement,
             onMultiTap = fastSeek,

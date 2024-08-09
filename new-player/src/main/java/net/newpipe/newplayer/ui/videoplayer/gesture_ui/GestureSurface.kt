@@ -40,10 +40,10 @@ import kotlinx.coroutines.launch
 
 @Composable
 @OptIn(ExperimentalComposeUiApi::class)
-fun TouchSurface(
+fun GestureSurface(
     modifier: Modifier,
     color: Color = Color.Transparent,
-    multitapDurationInMs: Long,
+    multiTapTimeoutInMs: Long,
     onMultiTap: (Int) -> Unit = {},
     onMultiTapFinished: () -> Unit = {},
     onRegularTap: () -> Unit = {},
@@ -87,19 +87,19 @@ fun TouchSurface(
         val currentTime = System.currentTimeMillis()
         if (!moveOccured) {
             val timeSinceLastTouch = currentTime - lastTouchTime
-            if (timeSinceLastTouch <= multitapDurationInMs) {
+            if (timeSinceLastTouch <= multiTapTimeoutInMs) {
                 regularTabJob?.cancel()
                 cancelMultitapJob?.cancel()
                 multitapAmount++
                 onMultiTap(multitapAmount)
                 cancelMultitapJob = composableScope.launch {
-                    delay(multitapDurationInMs)
+                    delay(multiTapTimeoutInMs)
                     multitapAmount = 0
                     onMultiTapFinished()
                 }
             } else {
                 regularTabJob = composableScope.launch {
-                    delay(multitapDurationInMs)
+                    delay(multiTapTimeoutInMs)
                     onRegularTap()
                 }
             }

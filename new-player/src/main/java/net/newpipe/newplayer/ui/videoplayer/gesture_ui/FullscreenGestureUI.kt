@@ -41,7 +41,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.tooling.preview.Preview
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.ui.videoplayer.FAST_SEEKMODE_DURATION
+import net.newpipe.newplayer.ui.videoplayer.FAST_SEEK_MODE_DURATION
+
+private enum class IndicatorMode {
+    NONE,
+    VOLUME_INDICATOR_VISSIBLE,
+    BRIGHTNESS_INDICATOR_VISSIBLE
+}
 
 @Composable
 fun FullscreenGestureUI(
@@ -58,7 +64,17 @@ fun FullscreenGestureUI(
     volumeChange: (Float) -> Unit,
     brightnesChange: (Float) -> Unit
 ) {
+
+    var heightPx by remember {
+        mutableStateOf(0f)
+    }
+
+    var indicatorMode by remember {
+        mutableStateOf(IndicatorMode.NONE)
+    }
+
     val defaultOnRegularTap = {
+
         if (uiVissible) {
             hideUi()
         } else {
@@ -66,26 +82,14 @@ fun FullscreenGestureUI(
         }
     }
 
-    var heightPx by remember {
-        mutableStateOf(0f)
-    }
-
-    var volumeIndicatorVissible by remember {
-        mutableStateOf(false)
-    }
-
-    var brightnesIndicatorVissible by remember {
-        mutableStateOf(false)
-    }
-
     Box(modifier = modifier.onGloballyPositioned { coordinates ->
         heightPx = coordinates.size.height.toFloat()
     }) {
         Row {
-            TouchSurface(
+            GestureSurface(
                 modifier = Modifier
                     .weight(1f),
-                multitapDurationInMs = FAST_SEEKMODE_DURATION,
+                multiTapTimeoutInMs = FAST_SEEK_MODE_DURATION,
                 onRegularTap = defaultOnRegularTap,
                 onMultiTap = {
                     println("multitap ${-it}")
@@ -93,12 +97,17 @@ fun FullscreenGestureUI(
                 },
                 onMultiTapFinished = fastSeekFinished,
                 onUp = {
-                    brightnesIndicatorVissible = false
+                    indicatorMode = IndicatorMode.NONE
                 },
-                onMovement = {change ->
-                    brightnesIndicatorVissible = true
-                    if (heightPx != 0f) {
-                        brightnesChange(-change.y / heightPx)
+                onMovement = { change ->
+                    if (indicatorMode == IndicatorMode.NONE
+                        || indicatorMode == IndicatorMode.BRIGHTNESS_INDICATOR_VISSIBLE
+                    ) {
+                        indicatorMode = IndicatorMode.BRIGHTNESS_INDICATOR_VISSIBLE
+
+                        if (heightPx != 0f) {
+                            brightnesChange(-change.y / heightPx)
+                        }
                     }
                 }
             ) {
@@ -115,31 +124,35 @@ fun FullscreenGestureUI(
                     }
                 }
             }
-            TouchSurface(
+            GestureSurface(
                 modifier = Modifier
                     .weight(1f),
                 onRegularTap = defaultOnRegularTap,
-                multitapDurationInMs = FAST_SEEKMODE_DURATION,
+                multiTapTimeoutInMs = FAST_SEEK_MODE_DURATION,
                 onMovement = { movement ->
                     if (0 < movement.y) {
                         switchToEmbeddedView()
                     }
                 }
             )
-            TouchSurface(
+            GestureSurface(
                 modifier = Modifier
                     .weight(1f),
                 onRegularTap = defaultOnRegularTap,
-                multitapDurationInMs = FAST_SEEKMODE_DURATION,
+                multiTapTimeoutInMs = FAST_SEEK_MODE_DURATION,
                 onMultiTap = fastSeek,
                 onMultiTapFinished = fastSeekFinished,
                 onUp = {
-                    volumeIndicatorVissible = false
+                    indicatorMode = IndicatorMode.NONE
                 },
                 onMovement = { change ->
-                    volumeIndicatorVissible = true
-                    if (heightPx != 0f) {
-                        volumeChange(-change.y / heightPx)
+                    if (indicatorMode == IndicatorMode.NONE
+                        || indicatorMode == IndicatorMode.VOLUME_INDICATOR_VISSIBLE
+                    ) {
+                        indicatorMode = IndicatorMode.VOLUME_INDICATOR_VISSIBLE
+                        if (heightPx != 0f) {
+                            volumeChange(-change.y / heightPx)
+                        }
                     }
                 }
             ) {
@@ -154,17 +167,21 @@ fun FullscreenGestureUI(
                 }
             }
         }
-        AnimatedVisibility(modifier = Modifier.align(Alignment.Center),
-            visible = volumeIndicatorVissible,
+        AnimatedVisibility(
+            modifier = Modifier.align(Alignment.Center),
+            visible = indicatorMode == IndicatorMode.VOLUME_INDICATOR_VISSIBLE,
             enter = scaleIn(initialScale = 0.95f, animationSpec = tween(100)),
-            exit = scaleOut(targetScale = 0.95f, animationSpec = tween(100))) {
+            exit = scaleOut(targetScale = 0.95f, animationSpec = tween(100))
+        ) {
             VolumeCircle(volumeFraction = volume)
         }
 
-        AnimatedVisibility(modifier = Modifier.align(Alignment.Center),
-            visible = brightnesIndicatorVissible,
+        AnimatedVisibility(
+            modifier = Modifier.align(Alignment.Center),
+            visible = indicatorMode == IndicatorMode.BRIGHTNESS_INDICATOR_VISSIBLE,
             enter = scaleIn(initialScale = 0.95f, animationSpec = tween(100)),
-            exit = scaleOut(targetScale = 0.95f, animationSpec = tween(100))) {
+            exit = scaleOut(targetScale = 0.95f, animationSpec = tween(100))
+        ) {
             VolumeCircle(
                 volumeFraction = brightnes,
                 modifier = Modifier.align(Alignment.Center),
