@@ -37,13 +37,13 @@ import androidx.compose.ui.input.pointer.pointerInteropFilter
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import net.newpipe.newplayer.ui.videoplayer.DELAY_UNTIL_SHOWING_UI_AFTER_TOUCH_IN_MS
 
 @Composable
 @OptIn(ExperimentalComposeUiApi::class)
 fun GestureSurface(
     modifier: Modifier,
     color: Color = Color.Transparent,
-    multiTapTimeoutInMs: Long,
     onMultiTap: (Int) -> Unit = {},
     onMultiTapFinished: () -> Unit = {},
     onRegularTap: () -> Unit = {},
@@ -59,7 +59,7 @@ fun GestureSurface(
         mutableStateOf(TouchedPosition(0f, 0f))
     }
 
-    var lastTouchTime by remember {
+    var lastFingerUpTime by remember {
         mutableStateOf(System.currentTimeMillis())
     }
 
@@ -86,26 +86,26 @@ fun GestureSurface(
         onUp()
         val currentTime = System.currentTimeMillis()
         if (!moveOccured) {
-            val timeSinceLastTouch = currentTime - lastTouchTime
-            if (timeSinceLastTouch <= multiTapTimeoutInMs) {
+            val timeSinceLastTouch = currentTime - lastFingerUpTime
+            if (timeSinceLastTouch <= DELAY_UNTIL_SHOWING_UI_AFTER_TOUCH_IN_MS) {
                 regularTabJob?.cancel()
                 cancelMultitapJob?.cancel()
                 multitapAmount++
                 onMultiTap(multitapAmount)
                 cancelMultitapJob = composableScope.launch {
-                    delay(multiTapTimeoutInMs)
+                    delay(DELAY_UNTIL_SHOWING_UI_AFTER_TOUCH_IN_MS)
                     multitapAmount = 0
                     onMultiTapFinished()
                 }
             } else {
                 regularTabJob = composableScope.launch {
-                    delay(multiTapTimeoutInMs)
+                    delay(DELAY_UNTIL_SHOWING_UI_AFTER_TOUCH_IN_MS)
                     onRegularTap()
                 }
             }
         }
         moveOccured = false
-        lastTouchTime = currentTime
+        lastFingerUpTime = currentTime
         true
     }
 

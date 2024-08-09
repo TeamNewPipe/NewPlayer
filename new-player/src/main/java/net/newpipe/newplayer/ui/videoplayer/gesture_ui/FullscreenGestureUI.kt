@@ -94,7 +94,6 @@ fun FullscreenGestureUI(
             GestureSurface(
                 modifier = Modifier
                     .weight(1f),
-                multiTapTimeoutInMs = FAST_SEEK_MODE_DURATION,
                 onRegularTap = defaultOnRegularTap,
                 onMultiTap = {
                     println("multitap ${-it}")
@@ -133,7 +132,6 @@ fun FullscreenGestureUI(
                 modifier = Modifier
                     .weight(1f),
                 onRegularTap = defaultOnRegularTap,
-                multiTapTimeoutInMs = FAST_SEEK_MODE_DURATION,
                 onMovement = { movement ->
                     if (0 < movement.y) {
                         switchToEmbeddedView()
@@ -144,7 +142,6 @@ fun FullscreenGestureUI(
                 modifier = Modifier
                     .weight(1f),
                 onRegularTap = defaultOnRegularTap,
-                multiTapTimeoutInMs = FAST_SEEK_MODE_DURATION,
                 onMultiTap = fastSeek,
                 onMultiTapFinished = fastSeekFinished,
                 onUp = {
