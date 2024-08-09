@@ -309,7 +309,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
                 "currentBrightnes: $currentBrightness, sytemBrightness: $systemBrightness, changeRate: $changeRate"
             )
 
-            val newBrightness = (currentBrightness + changeRate).coerceIn(0f, 1f)
+            val newBrightness = (currentBrightness + changeRate * 1.3f).coerceIn(0f, 1f)
             mutableUiState.update {
                 it.copy(brightness = newBrightness)
             }
@@ -321,7 +321,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
         val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC).toFloat()
         // we multiply changeRate by 1.5 so your finger only has to swipe a portion of the whole
         // screen in order to fully enable or disable the volume
-        val newVolume = (currentVolume + changeRate * 1.5f).coerceIn(0f, 1f)
+        val newVolume = (currentVolume + changeRate * 1.3f).coerceIn(0f, 1f)
         audioManager.setStreamVolume(
             AudioManager.STREAM_MUSIC, (newVolume * maxVolume).toInt(), 0
         )

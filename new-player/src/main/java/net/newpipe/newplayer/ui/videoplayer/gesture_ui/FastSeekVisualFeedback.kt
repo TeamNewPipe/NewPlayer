@@ -56,6 +56,7 @@ import androidx.compose.ui.unit.dp
 import com.google.android.material.color.MaterialColors
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
+import net.newpipe.newplayer.ui.videoplayer.INDICATOR_BACKGROUND_COLOR
 import net.newpipe.newplayer.ui.videoplayer.SEEK_ANIMATION_DURATION_IN_MS
 import net.newpipe.newplayer.ui.videoplayer.SEEK_ANIMATION_FADE_IN
 import net.newpipe.newplayer.ui.videoplayer.SEEK_ANIMATION_FADE_OUT
@@ -123,7 +124,7 @@ fun FastSeekVisualFeedback(modifier: Modifier = Modifier, seconds: Int, backward
     val secondsString = "Seconds"
 
     Surface(
-        color = Color.Black.copy(alpha = 0.5f),
+        color = INDICATOR_BACKGROUND_COLOR,
         modifier = modifier.clip(RoundedCornerShape(50.dp))
     ) {
         Box(modifier = Modifier.padding(10.dp, 5.dp)) {

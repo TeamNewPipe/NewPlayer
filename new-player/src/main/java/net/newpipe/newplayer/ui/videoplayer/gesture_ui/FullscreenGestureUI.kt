@@ -214,7 +214,7 @@ fun FullscreenGestureUIPreview() {
     }
 }
 
-@Preview(device = "spec:width=1080px,height=600px,dpi=440,orientation=landscape")
+@Preview(device = "spec:parent=pixel_8,orientation=landscape")
 @Composable
 fun FullscreenGestureUIPreviewInteractive() {
 

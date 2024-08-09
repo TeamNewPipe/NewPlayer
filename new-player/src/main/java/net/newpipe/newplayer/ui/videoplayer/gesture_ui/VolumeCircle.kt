@@ -47,11 +47,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
+import net.newpipe.newplayer.ui.videoplayer.INDICATOR_BACKGROUND_COLOR
 
 private const val TAG = "VolumeCircle"
 
-private const val LINE_STROKE_WIDTH = 4
-private const val CIRCLE_SIZE = 100
+private const val LINE_STROKE_WIDTH = 8
+private const val CIRCLE_SIZE = 150
 
 @Composable
 fun VolumeCircle(
@@ -59,14 +60,14 @@ fun VolumeCircle(
     volumeFraction: Float,
     isBrightness: Boolean = false
 ) {
-    assert(0f <= volumeFraction && volumeFraction <= 1f) {
+    assert(volumeFraction in 0f..1f) {
          Log.e(TAG, "Volume fraction must be in ragne [0;1]. It was $volumeFraction")
     }
 
     Box(modifier) {
         Canvas(Modifier.size(CIRCLE_SIZE.dp)) {
             val arcSize = (CIRCLE_SIZE - LINE_STROKE_WIDTH).dp.toPx();
-            drawCircle(color = Color.Black.copy(alpha = 0.3f), radius = (CIRCLE_SIZE / 2).dp.toPx())
+            drawCircle(color = INDICATOR_BACKGROUND_COLOR, radius = (CIRCLE_SIZE / 2).dp.toPx())
             drawArc(
                 topLeft = Offset(
                     (LINE_STROKE_WIDTH / 2).dp.toPx(), (LINE_STROKE_WIDTH / 2).dp.toPx()
@@ -76,14 +77,14 @@ fun VolumeCircle(
                 sweepAngle = 360f * volumeFraction,
                 useCenter = false,
                 color = Color.White,
-                style = Stroke(width = 4.dp.toPx(), cap = StrokeCap.Round)
+                style = Stroke(width = LINE_STROKE_WIDTH.dp.toPx(), cap = StrokeCap.Round)
             )
         }
 
         Icon(
             modifier = Modifier
                 .align(Alignment.Center)
-                .size(60.dp),
+                .size(80.dp),
             imageVector = (if (isBrightness) getBrightnesIcon(volumeFraction = volumeFraction)
             else getVolumeIcon(volumeFraction = volumeFraction)),
             contentDescription = stringResource(

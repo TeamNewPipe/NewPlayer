@@ -22,6 +22,7 @@ package net.newpipe.newplayer.ui.videoplayer
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import net.newpipe.newplayer.ui.videoplayer.gesture_ui.EmbeddedGestureUI
 import net.newpipe.newplayer.ui.videoplayer.gesture_ui.FullscreenGestureUI
 
@@ -33,6 +34,8 @@ const val SEEK_ANIMATION_DURATION_IN_MS = 300
 const val FAST_SEEK_MODE_DURATION = 500L
 const val SEEK_ANIMATION_FADE_IN = 200
 const val SEEK_ANIMATION_FADE_OUT = 500
+
+val INDICATOR_BACKGROUND_COLOR = Color.Black.copy(alpha = 0.3f)
 
 @Composable
 fun GestureUI(
@@ -62,6 +65,7 @@ fun GestureUI(
 
     if (fullscreen) {
         FullscreenGestureUI(
+            modifier = modifier,
             uiVissible = uiVissible,
             fastSeekSeconds = fastSeekSeconds,
             hideUi = hideUi,
@@ -75,6 +79,7 @@ fun GestureUI(
             brightnesChange = brightnessChange)
     } else {
         EmbeddedGestureUI(
+            modifier = modifier,
             fastSeekSeconds = fastSeekSeconds,
             uiVissible = uiVissible,
             switchToFullscreen = switchToFullscreen,
