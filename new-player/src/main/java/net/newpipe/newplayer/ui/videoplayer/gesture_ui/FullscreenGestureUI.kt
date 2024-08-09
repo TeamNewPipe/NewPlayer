@@ -22,7 +22,11 @@
 package net.newpipe.newplayer.ui.videoplayer.gesture_ui
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Box
@@ -30,6 +34,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,7 +57,7 @@ private enum class IndicatorMode {
 @Composable
 fun FullscreenGestureUI(
     modifier: Modifier = Modifier,
-    uiVissible: Boolean,
+    uiVisible: Boolean,
     fastSeekSeconds: Int,
     volume: Float,
     brightnes: Float,
@@ -75,7 +80,7 @@ fun FullscreenGestureUI(
 
     val defaultOnRegularTap = {
 
-        if (uiVissible) {
+        if (uiVisible) {
             hideUi()
         } else {
             showUi()
@@ -167,20 +172,17 @@ fun FullscreenGestureUI(
                 }
             }
         }
-        AnimatedVisibility(
+
+        IndicatorAnimation(
             modifier = Modifier.align(Alignment.Center),
             visible = indicatorMode == IndicatorMode.VOLUME_INDICATOR_VISSIBLE,
-            enter = scaleIn(initialScale = 0.95f, animationSpec = tween(100)),
-            exit = scaleOut(targetScale = 0.95f, animationSpec = tween(100))
         ) {
             VolumeCircle(volumeFraction = volume)
         }
 
-        AnimatedVisibility(
+        IndicatorAnimation(
             modifier = Modifier.align(Alignment.Center),
             visible = indicatorMode == IndicatorMode.BRIGHTNESS_INDICATOR_VISSIBLE,
-            enter = scaleIn(initialScale = 0.95f, animationSpec = tween(100)),
-            exit = scaleOut(targetScale = 0.95f, animationSpec = tween(100))
         ) {
             VolumeCircle(
                 volumeFraction = brightnes,
@@ -188,6 +190,41 @@ fun FullscreenGestureUI(
                 isBrightness = true
             )
         }
+    }
+}
+
+@Composable
+fun IndicatorAnimation(modifier: Modifier, visible: Boolean, content: @Composable () -> Unit) {
+    AnimatedVisibility(
+        modifier = modifier,
+        visible = visible,
+
+        // This animation would be equivalent to the one in the old player,
+        // However with f*** compose it looks janky and not at all as smooth as it did.
+        // So we only do fade in.
+        /*
+        enter = scaleIn(
+            initialScale = 0.90f, animationSpec = spring(stiffness = Spring.StiffnessMedium)
+        ) + fadeIn(animationSpec = spring(stiffness = Spring.StiffnessHigh)),
+        exit = scaleOut(
+            targetScale = 0.90f,
+            animationSpec = spring(stiffness = Spring.StiffnessLow)
+        ) + fadeOut(animationSpec = spring(stiffness = Spring.StiffnessHigh)),
+        */
+
+        /*
+        enter = scaleIn(
+            initialScale = 0.90f, animationSpec = spring(stiffness = Spring.StiffnessMedium)
+        ),
+        exit = scaleOut(
+            targetScale = 0.90f,
+            animationSpec = spring(stiffness = Spring.StiffnessMedium)
+        ),
+         */
+        enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessHigh)),
+        exit = fadeOut(animationSpec = spring(stiffness = Spring.StiffnessMedium))
+    ) {
+        content()
     }
 }
 
@@ -201,7 +238,7 @@ fun FullscreenGestureUIPreview() {
                 modifier = Modifier,
                 hideUi = { },
                 showUi = { },
-                uiVissible = false,
+                uiVisible = false,
                 fastSeekSeconds = 0,
                 volume = 0f,
                 brightnes = 0f,
@@ -230,13 +267,17 @@ fun FullscreenGestureUIPreviewInteractive() {
         mutableStateOf(0f)
     }
 
+    var uiVisible by remember {
+        mutableStateOf(false)
+    }
+
     VideoPlayerTheme {
         Surface(modifier = Modifier.wrapContentSize(), color = Color.Gray) {
             FullscreenGestureUI(
                 modifier = Modifier,
-                hideUi = { },
-                showUi = { },
-                uiVissible = false,
+                hideUi = { uiVisible = false },
+                showUi = { uiVisible = true },
+                uiVisible = uiVisible,
                 fastSeekSeconds = seekSeconds,
                 volume = soundVolume,
                 brightnes = brightnesValue,
@@ -251,6 +292,10 @@ fun FullscreenGestureUIPreviewInteractive() {
                 volumeChange = {
                     soundVolume = (soundVolume + it).coerceIn(0f, 1f)
                 })
+        }
+
+        AnimatedVisibility(uiVisible) {
+            Text("UI is Vissible")
         }
     }
 }

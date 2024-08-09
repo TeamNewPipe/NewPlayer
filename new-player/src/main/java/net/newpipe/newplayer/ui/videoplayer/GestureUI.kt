@@ -66,7 +66,7 @@ fun GestureUI(
     if (fullscreen) {
         FullscreenGestureUI(
             modifier = modifier,
-            uiVissible = uiVissible,
+            uiVisible = uiVissible,
             fastSeekSeconds = fastSeekSeconds,
             hideUi = hideUi,
             showUi = showUi,
