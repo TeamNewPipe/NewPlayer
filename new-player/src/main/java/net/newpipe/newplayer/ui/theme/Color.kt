@@ -96,7 +96,7 @@ fun VideoPlayerControllerUIPreviewEmbeddedColorPreview() {
                 embeddedDraggedDownBy = {},
                 fastSeek = {},
                 finishFastSeek = {},
-                internalBrightnesChange = {},
+                brightnessChange = {a, b ->},
                 volumeChange = {})
         }
     }

@@ -20,32 +20,10 @@
 
 package net.newpipe.newplayer.ui.videoplayer
 
-import android.util.Log
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.gesture_ui.EmbeddedGestureUI
-import net.newpipe.newplayer.ui.videoplayer.gesture_ui.FastSeekVisualFeedback
 import net.newpipe.newplayer.ui.videoplayer.gesture_ui.FullscreenGestureUI
-import net.newpipe.newplayer.ui.videoplayer.gesture_ui.FullscreenGestureUIPreview
-import net.newpipe.newplayer.ui.videoplayer.gesture_ui.TouchSurface
-import net.newpipe.newplayer.ui.videoplayer.gesture_ui.TouchedPosition
 
 private const val TAG = "TouchUi"
 
@@ -72,7 +50,7 @@ fun GestureUI(
     fastSeek: (Int) -> Unit,
     fastSeekFinished: () -> Unit,
     volumeChange: (Float) -> Unit,
-    brightnesChange: (Float) -> Unit,
+    brightnessChange: (Float) -> Unit,
 ) {
     val defaultOnRegularTap = {
         if (uiVissible) {
@@ -94,7 +72,7 @@ fun GestureUI(
             switchToEmbeddedView = switchToEmbeddedView,
             fastSeekFinished = fastSeekFinished,
             volumeChange = volumeChange,
-            brightnesChange = brightnesChange)
+            brightnesChange = brightnessChange)
     } else {
         EmbeddedGestureUI(
             fastSeekSeconds = fastSeekSeconds,

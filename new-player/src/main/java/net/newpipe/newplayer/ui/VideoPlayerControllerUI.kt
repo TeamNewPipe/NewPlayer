@@ -21,6 +21,7 @@
 package net.newpipe.newplayer.ui
 
 
+import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
@@ -44,6 +45,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
@@ -51,6 +53,7 @@ import net.newpipe.newplayer.ui.videoplayer.BottomUI
 import net.newpipe.newplayer.ui.videoplayer.CenterUI
 import net.newpipe.newplayer.ui.videoplayer.TopUI
 import net.newpipe.newplayer.ui.videoplayer.GestureUI
+import net.newpipe.newplayer.utils.getScreenBrightnes
 
 @Composable
 fun VideoPlayerControllerUI(
@@ -78,9 +81,11 @@ fun VideoPlayerControllerUI(
     embeddedDraggedDownBy: (Float) -> Unit,
     fastSeek: (Int) -> Unit,
     finishFastSeek: () -> Unit,
-    brightnesChange: (Float, Float) -> Unit,
+    brightnessChange: (Float, Float) -> Unit,
     volumeChange: (Float) -> Unit
 ) {
+
+    val context = LocalContext.current
 
     if (fullscreen) {
         BackHandler {
@@ -88,8 +93,9 @@ fun VideoPlayerControllerUI(
         }
     }
 
-    val internalBrightnesChange = { rateChange: Float ->
-
+    val internalBrightnessChange = { rateChange: Float ->
+        val systemBrightness = getScreenBrightnes(context as Activity)
+        brightnessChange(rateChange, systemBrightness)
     }
 
     val insets =
@@ -114,7 +120,7 @@ fun VideoPlayerControllerUI(
             embeddedDraggedDownBy = embeddedDraggedDownBy,
             fastSeek = fastSeek,
             fastSeekFinished = finishFastSeek,
-            brightnesChange = internalBrightnesChange,
+            brightnessChange = internalBrightnessChange,
             volumeChange = volumeChange
         )
     }
@@ -155,7 +161,7 @@ fun VideoPlayerControllerUI(
             fastSeek = fastSeek,
             fastSeekFinished = finishFastSeek,
             volumeChange = volumeChange,
-            brightnesChange = internalBrightnesChange
+            brightnessChange = internalBrightnessChange
         )
 
         Box(modifier = Modifier.fillMaxSize()) {
@@ -254,7 +260,7 @@ fun VideoPlayerControllerUIPreviewEmbedded() {
                 embeddedDraggedDownBy = {},
                 fastSeek = {},
                 finishFastSeek = {},
-                internalBrightnesChange = { a, b ->},
+                brightnessChange = { a, b ->},
                 volumeChange = {})
         }
     }
@@ -289,7 +295,7 @@ fun VideoPlayerControllerUIPreviewLandscape() {
                 embeddedDraggedDownBy = {},
                 fastSeek = {},
                 finishFastSeek = {},
-                internalBrightnesChange = { a, b -> },
+                brightnessChange = { a, b -> },
                 volumeChange = {})
         }
     }
@@ -325,7 +331,7 @@ fun VideoPlayerControllerUIPreviewPortrait() {
                 embeddedDraggedDownBy = {},
                 fastSeek = {},
                 finishFastSeek = {},
-                internalBrightnesChange = { a, b -> },
+                brightnessChange = { a, b -> },
                 volumeChange = {})
         }
     }

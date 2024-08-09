@@ -23,9 +23,7 @@ package net.newpipe.newplayer.ui.videoplayer.gesture_ui
 import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.VolumeDown
 import androidx.compose.material.icons.automirrored.filled.VolumeMute
@@ -40,7 +38,6 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -60,7 +57,7 @@ private const val CIRCLE_SIZE = 100
 fun VolumeCircle(
     modifier: Modifier = Modifier,
     volumeFraction: Float,
-    isBrightnes: Boolean = false
+    isBrightness: Boolean = false
 ) {
     assert(0f <= volumeFraction && volumeFraction <= 1f) {
          Log.e(TAG, "Volume fraction must be in ragne [0;1]. It was $volumeFraction")
@@ -87,10 +84,10 @@ fun VolumeCircle(
             modifier = Modifier
                 .align(Alignment.Center)
                 .size(60.dp),
-            imageVector = (if (isBrightnes) getBrightnesIcon(volumeFraction = volumeFraction)
+            imageVector = (if (isBrightness) getBrightnesIcon(volumeFraction = volumeFraction)
             else getVolumeIcon(volumeFraction = volumeFraction)),
             contentDescription = stringResource(
-                id = if (isBrightnes) R.string.brightness_indicator
+                id = if (isBrightness) R.string.brightness_indicator
                 else R.string.volume_indicator
             )
         )
@@ -115,7 +112,7 @@ private fun getBrightnesIcon(volumeFraction: Float) =
 fun VolumeCirclePreview() {
     VideoPlayerTheme {
         Surface(color = Color.White) {
-            VolumeCircle(volumeFraction = 0.3f, isBrightnes = false)
+            VolumeCircle(volumeFraction = 0.3f, isBrightness = false)
         }
     }
 }

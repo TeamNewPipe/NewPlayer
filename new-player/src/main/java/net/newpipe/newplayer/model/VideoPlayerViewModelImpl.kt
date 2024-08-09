@@ -21,13 +21,11 @@
 package net.newpipe.newplayer.model
 
 import android.app.Application
-import android.content.Context.AUDIO_SERVICE
 import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
@@ -44,7 +42,6 @@ import kotlinx.coroutines.launch
 import net.newpipe.newplayer.utils.VideoSize
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.ui.ContentScale
-import kotlin.math.max
 
 val VIDEOPLAYER_UI_STATE = "video_player_ui_state"
 
@@ -303,8 +300,20 @@ class VideoPlayerViewModelImpl @Inject constructor(
         }
     }
 
-    override fun brightnesChange(changeRate: Float, currentValue: Float) {
-        TODO("Not yet implemented")
+    override fun brightnessChange(changeRate: Float, systemBrightness: Float) {
+        if (mutableUiState.value.fullscreen) {
+            val currentBrightness = mutableUiState.value.brightness
+                ?: if (systemBrightness < 0f) 0.5f else systemBrightness
+            Log.d(
+                TAG,
+                "currentBrightnes: $currentBrightness, sytemBrightness: $systemBrightness, changeRate: $changeRate"
+            )
+
+            val newBrightness = (currentBrightness + changeRate).coerceIn(0f, 1f)
+            mutableUiState.update {
+                it.copy(brightness = newBrightness)
+            }
+        }
     }
 
     override fun volumeChange(changeRate: Float) {
@@ -406,7 +415,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
                 println("dummy impl")
             }
 
-            override fun brightnesChange(changeRate: Float, currentValue: Float) {
+            override fun brightnessChange(changeRate: Float, currentValue: Float) {
                 println("dummy impl")
             }
 

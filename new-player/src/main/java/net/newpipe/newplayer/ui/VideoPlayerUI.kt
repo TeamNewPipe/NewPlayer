@@ -22,6 +22,7 @@ package net.newpipe.newplayer.ui
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
+import android.util.Log
 import android.view.SurfaceView
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -55,6 +56,10 @@ import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelImpl
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.utils.LockScreenOrientation
+import net.newpipe.newplayer.utils.getScreenBrightnes
+import net.newpipe.newplayer.utils.setScreenBrightnes
+
+private const val TAG = "VideoPlayerUI"
 
 @Composable
 fun VideoPlayerUI(
@@ -90,7 +95,7 @@ fun VideoPlayerUI(
         }
 
         // Setup immersive mode
-        if (uiState.fullscreen && ! uiState.uiVissible) {
+        if (uiState.fullscreen && !uiState.uiVissible) {
             LaunchedEffect(key1 = true) {
                 windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
             }
@@ -125,6 +130,16 @@ fun VideoPlayerUI(
         val screenRatio =
             displayMetrics.widthPixels.toFloat() / displayMetrics.heightPixels.toFloat()
 
+        val systemScreenBrightnes = getScreenBrightnes(activity)
+
+        LaunchedEffect(key1 = uiState.brightness) {
+            Log.d(TAG, "New Brightnes: ${uiState.brightness}")
+            setScreenBrightnes(
+                uiState.brightness
+                    ?: if (systemScreenBrightnes < 0f) 0.5f else systemScreenBrightnes, activity
+            )
+        }
+
         // Set UI
         Surface(
             modifier = Modifier.then(
@@ -143,6 +158,7 @@ fun VideoPlayerUI(
                     contentRatio = uiState.contentRatio
                 )
             }
+
             VideoPlayerControllerUI(
                 isPlaying = uiState.playing,
                 fullscreen = uiState.fullscreen,
@@ -153,7 +169,8 @@ fun VideoPlayerUI(
                 playbackPositionInMs = uiState.playbackPositionInMs,
                 bufferedPercentage = uiState.bufferedPercentage,
                 fastSeekSeconds = uiState.fastseekSeconds,
-                brightnes = uiState.brightnes,
+                brightnes = uiState.brightness
+                    ?: if (systemScreenBrightnes < 0f) 0.5f else systemScreenBrightnes,
                 soundVolume = uiState.soundVolume,
                 play = viewModel::play,
                 pause = viewModel::pause,
@@ -169,7 +186,7 @@ fun VideoPlayerUI(
                 fastSeek = viewModel::fastSeek,
                 finishFastSeek = viewModel::finishFastSeek,
                 volumeChange = viewModel::volumeChange,
-                internalBrightnesChange = viewModel::brightnesChange
+                brightnessChange = viewModel::brightnessChange
             )
         }
     }

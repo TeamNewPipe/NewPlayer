@@ -24,6 +24,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.view.Window
 import android.view.WindowManager
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -44,18 +45,14 @@ fun LockScreenOrientation(orientation: Int) {
 }
 
 @SuppressLint("NewApi")
-@Composable
-fun getScreenBrightnes() : Float {
-    val activity = LocalContext.current.findActivity()!!
+fun getScreenBrightnes(activity: Activity) : Float {
     val window = activity.window
     val layout = window.attributes as WindowManager.LayoutParams
     return layout.screenBrightness
 }
 
 @SuppressLint("NewApi")
-@Composable
-fun SetScreenBrightnes(value:Float) {
-    val activity = LocalContext.current.findActivity()!!
+fun setScreenBrightnes(value:Float, activity: Activity) {
     val window = activity.window
     val layout = window.attributes as WindowManager.LayoutParams
     layout.screenBrightness = value

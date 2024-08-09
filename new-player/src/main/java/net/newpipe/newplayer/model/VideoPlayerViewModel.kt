@@ -50,7 +50,7 @@ interface VideoPlayerViewModel {
     fun embeddedDraggedDown(offset: Float)
     fun fastSeek(count: Int)
     fun finishFastSeek()
-    fun brightnesChange(changeRate: Float, currentValue: Float)
+    fun brightnessChange(changeRate: Float, systemBrightness: Float)
     fun volumeChange(changeRate: Float)
 
     interface Listener {
