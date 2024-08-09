@@ -32,6 +32,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import net.newpipe.newplayer.model.VideoPlayerUIState
+import net.newpipe.newplayer.model.VideoPlayerViewModel
+import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.FAST_SEEK_MODE_DURATION
 
@@ -39,49 +42,34 @@ private const val TAG = "EmbeddedGestureUI"
 
 @Composable
 fun EmbeddedGestureUI(
-    modifier: Modifier = Modifier,
-    fastSeekSeconds: Int,
-    uiVissible: Boolean,
-    switchToFullscreen: () -> Unit,
-    embeddedDraggedDownBy: (Float) -> Unit,
-    fastSeek: (Int) -> Unit,
-    fastSeekFinished: () -> Unit,
-    hideUi: () -> Unit,
-    showUi: () -> Unit
+    modifier: Modifier = Modifier, viewModel: VideoPlayerViewModel, uiState: VideoPlayerUIState
 ) {
 
     val handleDownwardMovement = { movement: TouchedPosition ->
         Log.d(TAG, "${movement.x}:${movement.y}")
         if (0 < movement.y) {
-            embeddedDraggedDownBy(movement.y)
+            viewModel.embeddedDraggedDown(movement.y)
         } else {
-            switchToFullscreen()
+            viewModel.switchToFullscreen()
         }
     }
 
     val defaultOnRegularTap = {
-        if (uiVissible) {
-            hideUi()
+        if (uiState.uiVissible) {
+            viewModel.hideUi()
         } else {
-            showUi()
+            viewModel.showUi()
         }
     }
 
     Row(modifier = modifier) {
         GestureSurface(
-            modifier = Modifier
-                .weight(1f),
-            multiTapTimeoutInMs = FAST_SEEK_MODE_DURATION,
-            onRegularTap = defaultOnRegularTap,
-            onMultiTap = {
-                fastSeek(-it)
-            },
-            onMultiTapFinished = fastSeekFinished,
-            onMovement = handleDownwardMovement
+            modifier = Modifier.weight(1f), onRegularTap = defaultOnRegularTap, onMultiTap = {
+                viewModel.fastSeek(-it)
+            }, onMultiTapFinished = viewModel::finishFastSeek, onMovement = handleDownwardMovement
         ) {
             FadedAnimationForSeekFeedback(
-                fastSeekSeconds,
-                backwards = true
+                uiState.fastSeekSeconds, backwards = true
             ) { fastSeekSecondsToDisplay ->
                 Box(modifier = Modifier.fillMaxSize()) {
                     FastSeekVisualFeedback(
@@ -93,15 +81,13 @@ fun EmbeddedGestureUI(
             }
         }
         GestureSurface(
-            modifier = Modifier
-                .weight(1f),
-            multiTapTimeoutInMs = FAST_SEEK_MODE_DURATION,
+            modifier = Modifier.weight(1f),
             onRegularTap = defaultOnRegularTap,
             onMovement = handleDownwardMovement,
-            onMultiTap = fastSeek,
-            onMultiTapFinished = fastSeekFinished
+            onMultiTap = viewModel::fastSeek,
+            onMultiTapFinished = viewModel::finishFastSeek
         ) {
-            FadedAnimationForSeekFeedback(fastSeekSeconds) { fastSeekSecondsToDisplay ->
+            FadedAnimationForSeekFeedback(uiState.fastSeekSeconds) { fastSeekSecondsToDisplay ->
                 Box(modifier = Modifier.fillMaxSize()) {
                     FastSeekVisualFeedback(
                         modifier = Modifier.align(Alignment.Center),
@@ -122,14 +108,21 @@ fun EmbeddedGestureUIPreview() {
         Surface(modifier = Modifier.wrapContentSize(), color = Color.DarkGray) {
             EmbeddedGestureUI(
                 modifier = Modifier,
-                hideUi = { },
-                showUi = { },
-                uiVissible = false,
-                fastSeekSeconds = 0,
-                switchToFullscreen = { println("switch to fullscreen") },
-                embeddedDraggedDownBy = { println("embedded dragged down") },
-                fastSeek = { println("Fast seek by $it steps") },
-                fastSeekFinished = {})
+                viewModel = object : VideoPlayerViewModelDummy() {
+                    override fun switchToEmbeddedView() {
+                        println("switch to fullscreen")
+                    }
+
+                    override fun embeddedDraggedDown(offset: Float) {
+                        println("embedded view dragged down by $offset")
+                    }
+
+                    override fun fastSeek(steps: Int) {
+                        println("fast seek by $steps steps")
+                    }
+                },
+                uiState = VideoPlayerUIState.DEFAULT,
+            )
         }
     }
 }

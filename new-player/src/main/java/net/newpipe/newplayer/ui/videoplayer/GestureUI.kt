@@ -23,6 +23,8 @@ package net.newpipe.newplayer.ui.videoplayer
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import net.newpipe.newplayer.model.VideoPlayerUIState
+import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.ui.videoplayer.gesture_ui.EmbeddedGestureUI
 import net.newpipe.newplayer.ui.videoplayer.gesture_ui.FullscreenGestureUI
 
@@ -39,54 +41,15 @@ val INDICATOR_BACKGROUND_COLOR = Color.Black.copy(alpha = 0.3f)
 
 @Composable
 fun GestureUI(
-    modifier: Modifier,
-    hideUi: () -> Unit,
-    showUi: () -> Unit,
-    uiVissible: Boolean,
-    fullscreen: Boolean,
-    fastSeekSeconds: Int,
-    brightnes: Float,
-    soundVolume: Float,
-    switchToFullscreen: () -> Unit,
-    switchToEmbeddedView: () -> Unit,
-    embeddedDraggedDownBy: (Float) -> Unit,
-    fastSeek: (Int) -> Unit,
-    fastSeekFinished: () -> Unit,
-    volumeChange: (Float) -> Unit,
-    brightnessChange: (Float) -> Unit,
+    modifier: Modifier, viewModel: VideoPlayerViewModel, uiState: VideoPlayerUIState
 ) {
-    val defaultOnRegularTap = {
-        if (uiVissible) {
-            hideUi()
-        } else {
-            showUi()
-        }
-    }
-
-    if (fullscreen) {
+    if (uiState.fullscreen) {
         FullscreenGestureUI(
-            modifier = modifier,
-            uiVisible = uiVissible,
-            fastSeekSeconds = fastSeekSeconds,
-            hideUi = hideUi,
-            showUi = showUi,
-            fastSeek = fastSeek,
-            brightnes = brightnes,
-            volume = soundVolume,
-            switchToEmbeddedView = switchToEmbeddedView,
-            fastSeekFinished = fastSeekFinished,
-            volumeChange = volumeChange,
-            brightnesChange = brightnessChange)
+            modifier = modifier, viewModel = viewModel, uiState = uiState
+        )
     } else {
         EmbeddedGestureUI(
-            modifier = modifier,
-            fastSeekSeconds = fastSeekSeconds,
-            uiVissible = uiVissible,
-            switchToFullscreen = switchToFullscreen,
-            embeddedDraggedDownBy = embeddedDraggedDownBy,
-            fastSeek = fastSeek,
-            fastSeekFinished = fastSeekFinished,
-            hideUi = hideUi,
-            showUi = showUi)
+            modifier = modifier, viewModel = viewModel, uiState = uiState
+        )
     }
 }

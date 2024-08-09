@@ -42,41 +42,41 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import net.newpipe.newplayer.R
+import net.newpipe.newplayer.model.VideoPlayerUIState
+import net.newpipe.newplayer.model.VideoPlayerViewModel
+import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
+import net.newpipe.newplayer.model.VideoPlayerViewModelImpl
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 @Composable
 fun CenterUI(
-    modifier: Modifier,
-    isPlaying: Boolean,
-    isLoading: Boolean,
-    play: () -> Unit,
-    pause: () -> Unit,
-    nextStream: () -> Unit,
-    prevStream: () -> Unit
+    modifier: Modifier = Modifier,
+    viewModel: VideoPlayerViewModel,
+    uiState: VideoPlayerUIState
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier,
     ) {
-        if (!isLoading) {
+        if (!uiState.isLoading) {
             CenterControllButton(
                 buttonModifier = Modifier.size(80.dp),
                 iconModifier = Modifier.size(40.dp),
                 icon = Icons.Filled.SkipPrevious,
                 contentDescriptoion = stringResource(R.string.widget_description_previous_stream),
-                onClick = prevStream
+                onClick = viewModel::prevStream
             )
 
             CenterControllButton(
                 buttonModifier = Modifier.size(80.dp),
                 iconModifier = Modifier.size(60.dp),
-                icon = if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
+                icon = if (uiState.playing) Icons.Filled.Pause else Icons.Filled.PlayArrow,
                 contentDescriptoion = stringResource(
-                    if (isPlaying) R.string.widget_description_pause
+                    if (uiState.playing) R.string.widget_description_pause
                     else R.string.widget_description_play
                 ),
-                onClick = if (isPlaying) pause else play
+                onClick = if (uiState.playing) viewModel::pause else viewModel::play
             )
 
             CenterControllButton(
@@ -84,7 +84,7 @@ fun CenterUI(
                 iconModifier = Modifier.size(40.dp),
                 icon = Icons.Filled.SkipNext,
                 contentDescriptoion = stringResource(R.string.widget_description_next_stream),
-                onClick = nextStream
+                onClick = viewModel::nextStream
             )
         }
     }
@@ -122,13 +122,12 @@ fun VideoPlayerControllerUICenterUIPreview() {
     VideoPlayerTheme {
         Surface(color = Color.Black) {
             CenterUI(
-                modifier = Modifier,
-                isPlaying = true,
-                isLoading = false,
-                play = {  },
-                pause = {  },
-                nextStream = { }) {
-            }
+                viewModel = VideoPlayerViewModelDummy(),
+                uiState = VideoPlayerUIState.DEFAULT.copy(
+                    isLoading = false,
+                    playing = true
+                )
+            )
         }
     }
 }

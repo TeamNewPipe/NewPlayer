@@ -21,14 +21,12 @@
 
 package net.newpipe.newplayer.ui.videoplayer.gesture_ui
 
+import android.app.Activity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,9 +42,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import net.newpipe.newplayer.model.VideoPlayerUIState
+import net.newpipe.newplayer.model.VideoPlayerViewModel
+import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.ui.videoplayer.FAST_SEEK_MODE_DURATION
+import net.newpipe.newplayer.utils.getDefaultBrightness
 
 private enum class IndicatorMode {
     NONE,
@@ -57,17 +59,8 @@ private enum class IndicatorMode {
 @Composable
 fun FullscreenGestureUI(
     modifier: Modifier = Modifier,
-    uiVisible: Boolean,
-    fastSeekSeconds: Int,
-    volume: Float,
-    brightnes: Float,
-    hideUi: () -> Unit,
-    showUi: () -> Unit,
-    fastSeek: (Int) -> Unit,
-    fastSeekFinished: () -> Unit,
-    switchToEmbeddedView: () -> Unit,
-    volumeChange: (Float) -> Unit,
-    brightnesChange: (Float) -> Unit
+    viewModel: VideoPlayerViewModel,
+    uiState: VideoPlayerUIState
 ) {
 
     var heightPx by remember {
@@ -80,12 +73,16 @@ fun FullscreenGestureUI(
 
     val defaultOnRegularTap = {
 
-        if (uiVisible) {
-            hideUi()
+        if (uiState.uiVisible) {
+            viewModel.hideUi()
         } else {
-            showUi()
+            viewModel.showUi()
         }
     }
+
+    val activity = LocalContext.current as Activity
+
+    val defaultBrightness = getDefaultBrightness(activity)
 
     Box(modifier = modifier.onGloballyPositioned { coordinates ->
         heightPx = coordinates.size.height.toFloat()
@@ -97,9 +94,9 @@ fun FullscreenGestureUI(
                 onRegularTap = defaultOnRegularTap,
                 onMultiTap = {
                     println("multitap ${-it}")
-                    fastSeek(-it)
+                    viewModel.fastSeek(-it)
                 },
-                onMultiTapFinished = fastSeekFinished,
+                onMultiTapFinished = viewModel::finishFastSeek,
                 onUp = {
                     indicatorMode = IndicatorMode.NONE
                 },
@@ -110,13 +107,13 @@ fun FullscreenGestureUI(
                         indicatorMode = IndicatorMode.BRIGHTNESS_INDICATOR_VISSIBLE
 
                         if (heightPx != 0f) {
-                            brightnesChange(-change.y / heightPx)
+                            viewModel.brightnessChange(-change.y / heightPx, defaultBrightness)
                         }
                     }
                 }
             ) {
                 FadedAnimationForSeekFeedback(
-                    fastSeekSeconds,
+                    uiState.fastSeekSeconds,
                     backwards = true
                 ) { fastSeekSecondsToDisplay ->
                     Box(modifier = Modifier.fillMaxSize()) {
@@ -134,7 +131,7 @@ fun FullscreenGestureUI(
                 onRegularTap = defaultOnRegularTap,
                 onMovement = { movement ->
                     if (0 < movement.y) {
-                        switchToEmbeddedView()
+                        viewModel.switchToEmbeddedView()
                     }
                 }
             )
@@ -142,8 +139,8 @@ fun FullscreenGestureUI(
                 modifier = Modifier
                     .weight(1f),
                 onRegularTap = defaultOnRegularTap,
-                onMultiTap = fastSeek,
-                onMultiTapFinished = fastSeekFinished,
+                onMultiTap = viewModel::fastSeek,
+                onMultiTapFinished = viewModel::finishFastSeek,
                 onUp = {
                     indicatorMode = IndicatorMode.NONE
                 },
@@ -153,12 +150,12 @@ fun FullscreenGestureUI(
                     ) {
                         indicatorMode = IndicatorMode.VOLUME_INDICATOR_VISSIBLE
                         if (heightPx != 0f) {
-                            volumeChange(-change.y / heightPx)
+                            viewModel.volumeChange(-change.y / heightPx)
                         }
                     }
                 }
             ) {
-                FadedAnimationForSeekFeedback(fastSeekSeconds) { fastSeekSecondsToDisplay ->
+                FadedAnimationForSeekFeedback(uiState.fastSeekSeconds) { fastSeekSecondsToDisplay ->
                     Box(modifier = Modifier.fillMaxSize()) {
                         FastSeekVisualFeedback(
                             modifier = Modifier.align(Alignment.CenterStart),
@@ -174,7 +171,7 @@ fun FullscreenGestureUI(
             modifier = Modifier.align(Alignment.Center),
             visible = indicatorMode == IndicatorMode.VOLUME_INDICATOR_VISSIBLE,
         ) {
-            VolumeCircle(volumeFraction = volume)
+            VolumeCircle(volumeFraction = uiState.soundVolume)
         }
 
         IndicatorAnimation(
@@ -182,7 +179,7 @@ fun FullscreenGestureUI(
             visible = indicatorMode == IndicatorMode.BRIGHTNESS_INDICATOR_VISSIBLE,
         ) {
             VolumeCircle(
-                volumeFraction = brightnes,
+                volumeFraction = uiState.brightness ?: defaultBrightness,
                 modifier = Modifier.align(Alignment.Center),
                 isBrightness = true
             )
@@ -233,17 +230,13 @@ fun FullscreenGestureUIPreview() {
         Surface(modifier = Modifier.wrapContentSize(), color = Color.DarkGray) {
             FullscreenGestureUI(
                 modifier = Modifier,
-                hideUi = { },
-                showUi = { },
-                uiVisible = false,
-                fastSeekSeconds = 0,
-                volume = 0f,
-                brightnes = 0f,
-                fastSeek = { println("fast seek by $it steps") },
-                fastSeekFinished = {},
-                switchToEmbeddedView = {},
-                brightnesChange = {},
-                volumeChange = {})
+                object : VideoPlayerViewModelDummy() {
+                    override fun fastSeek(steps: Int) {
+                        println("fast seek by $steps steps")
+                    }
+                },
+                VideoPlayerUIState.DEFAULT
+            )
         }
     }
 }
@@ -256,7 +249,7 @@ fun FullscreenGestureUIPreviewInteractive() {
         mutableStateOf(0)
     }
 
-    var brightnesValue by remember {
+    var brightnessValue by remember {
         mutableStateOf(0f)
     }
 
@@ -272,23 +265,38 @@ fun FullscreenGestureUIPreviewInteractive() {
         Surface(modifier = Modifier.wrapContentSize(), color = Color.Gray) {
             FullscreenGestureUI(
                 modifier = Modifier,
-                hideUi = { uiVisible = false },
-                showUi = { uiVisible = true },
-                uiVisible = uiVisible,
-                fastSeekSeconds = seekSeconds,
-                volume = soundVolume,
-                brightnes = brightnesValue,
-                fastSeek = { seekSeconds = it * 10 },
-                fastSeekFinished = {
-                    seekSeconds = 0
+                object : VideoPlayerViewModelDummy() {
+                    override fun hideUi() {
+                        uiVisible = false
+                    }
+
+                    override fun showUi() {
+                        uiVisible = true
+                    }
+
+                    override fun fastSeek(steps: Int) {
+                        seekSeconds = steps * 10
+                    }
+
+                    override fun finishFastSeek() {
+                        seekSeconds = 0
+                    }
+
+                    override fun brightnessChange(changeRate: Float, currentValue: Float) {
+                        brightnessValue = (brightnessValue + changeRate).coerceIn(0f, 1f)
+                    }
+
+                    override fun volumeChange(changeRate: Float) {
+                        soundVolume = (soundVolume + changeRate).coerceIn(0f, 1f)
+                    }
                 },
-                switchToEmbeddedView = {},
-                brightnesChange = {
-                    brightnesValue = (brightnesValue + it).coerceIn(0f, 1f)
-                },
-                volumeChange = {
-                    soundVolume = (soundVolume + it).coerceIn(0f, 1f)
-                })
+                uiState = VideoPlayerUIState.DEFAULT.copy(
+                    uiVissible = uiVisible,
+                    fastSeekSeconds = seekSeconds,
+                    soundVolume = soundVolume,
+                    brightness = brightnessValue
+                ),
+            )
         }
 
         AnimatedVisibility(uiVisible) {

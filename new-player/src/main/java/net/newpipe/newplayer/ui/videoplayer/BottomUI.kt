@@ -42,6 +42,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.os.ConfigurationCompat
 import net.newpipe.newplayer.R
+import net.newpipe.newplayer.model.VideoPlayerUIState
+import net.newpipe.newplayer.model.VideoPlayerViewModel
+import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
 import net.newpipe.newplayer.ui.seeker.DefaultSeekerColor
 import net.newpipe.newplayer.ui.seeker.Seeker
 import net.newpipe.newplayer.ui.seeker.SeekerColors
@@ -52,39 +55,33 @@ import kotlin.math.min
 
 @Composable
 fun BottomUI(
-    modifier: Modifier,
-    isFullscreen: Boolean,
-    seekPosition: Float,
-    durationInMs: Long,
-    playbackPositionInMs: Long,
-    bufferedPercentage: Float,
-    switchToFullscreen: () -> Unit,
-    switchToEmbeddedView: () -> Unit,
-    seekPositionChanged: (Float) -> Unit,
-    seekingFinished: () -> Unit
+    modifier: Modifier, viewModel: VideoPlayerViewModel, uiState: VideoPlayerUIState
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
     ) {
-        Text(getTimeStringFromMs(playbackPositionInMs, getLocale() ?: Locale.US))
+        Text(getTimeStringFromMs(uiState.playbackPositionInMs, getLocale() ?: Locale.US))
         Seeker(
             Modifier.weight(1F),
-            value = seekPosition,
-            onValueChange = seekPositionChanged,
-            onValueChangeFinished = seekingFinished,
-            readAheadValue = bufferedPercentage,
+            value = uiState.seekerPosition,
+            onValueChange = viewModel::seekPositionChanged,
+            onValueChangeFinished = viewModel::seekingFinished,
+            readAheadValue = uiState.bufferedPercentage,
             colors = customizedSeekerColors()
         )
 
         //Slider(value = 0.4F, onValueChange = {}, modifier = Modifier.weight(1F))
 
-        Text(getTimeStringFromMs(durationInMs, getLocale() ?: Locale.US))
+        Text(getTimeStringFromMs(uiState.durationInMs, getLocale() ?: Locale.US))
 
-        IconButton(onClick = if (isFullscreen) switchToEmbeddedView else switchToFullscreen) {
+        IconButton(
+            onClick = if (uiState.fullscreen) viewModel::switchToEmbeddedView
+            else viewModel::switchToFullscreen
+        ) {
             Icon(
-                imageVector = if (isFullscreen) Icons.Filled.FullscreenExit
+                imageVector = if (uiState.fullscreen) Icons.Filled.FullscreenExit
                 else Icons.Filled.Fullscreen,
                 contentDescription = stringResource(R.string.widget_description_toggle_fullscreen)
             )
@@ -93,7 +90,7 @@ fun BottomUI(
 }
 
 @Composable
-private fun customizedSeekerColors() : SeekerColors {
+private fun customizedSeekerColors(): SeekerColors {
     val colors = DefaultSeekerColor(
         progressColor = MaterialTheme.colorScheme.primary,
         thumbColor = MaterialTheme.colorScheme.primary,
@@ -124,7 +121,7 @@ private const val MILLIS_PER_DAY =
 private const val MILLIS_PER_HOUR = MINUTES_PER_HOUR * SECONDS_PER_MINUTE * MILLIS_PER_SECOND
 private const val MILLIS_PER_MINUTE = SECONDS_PER_MINUTE * MILLIS_PER_SECOND
 
-private fun getTimeStringFromMs(timeSpanInMs: Long, locale: Locale) : String {
+private fun getTimeStringFromMs(timeSpanInMs: Long, locale: Locale): String {
     val days = timeSpanInMs / MILLIS_PER_DAY
     val millisThisDay = timeSpanInMs - days * MILLIS_PER_DAY
     val hours = millisThisDay / MILLIS_PER_HOUR
@@ -153,15 +150,14 @@ fun VideoPlayerControllerBottomUIPreview() {
         Surface(color = Color.Black) {
             BottomUI(
                 modifier = Modifier,
-                isFullscreen = true,
-                seekPosition = 0.4F,
-                durationInMs = 90 * 60 * 1000,
-                playbackPositionInMs = 3 * 60 * 1000,
-                bufferedPercentage = 0.4f,
-                switchToFullscreen = { },
-                switchToEmbeddedView = { },
-                seekPositionChanged = {},
-                seekingFinished = {}
+                viewModel = VideoPlayerViewModelDummy(),
+                uiState = VideoPlayerUIState.DEFAULT.copy(
+                    fullscreen = true,
+                    seekerPosition = 0.4f,
+                    durationInMs = 90 * 60 * 1000,
+                    playbackPositionInMs = 3 * 60 * 1000,
+                    bufferedPercentage = 0.4f
+                ),
             )
         }
     }

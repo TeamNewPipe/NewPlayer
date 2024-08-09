@@ -23,6 +23,8 @@ package net.newpipe.newplayer.ui.theme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import net.newpipe.newplayer.model.VideoPlayerUIState
+import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
 import net.newpipe.newplayer.ui.PreviewBackgroundSurface
 import net.newpipe.newplayer.ui.VideoPlayerControllerUI
 
@@ -72,32 +74,20 @@ val video_player_scrim = Color(0xFF000000)
 fun VideoPlayerControllerUIPreviewEmbeddedColorPreview() {
     VideoPlayerTheme {
         PreviewBackgroundSurface {
-            VideoPlayerControllerUI(isPlaying = false,
-                fullscreen = false,
-                uiVissible = true,
-                seekPosition = 0.3F,
-                isLoading = false,
-                durationInMs = 9*60*1000,
-                playbackPositionInMs = 6*60*1000,
-                bufferedPercentage = 0.4f,
-                fastSeekSeconds = 10,
-                brightnes = 0f,
-                soundVolume = 0f,
-                play = {},
-                pause = {},
-                prevStream = {},
-                nextStream = {},
-                switchToFullscreen = {},
-                switchToEmbeddedView = {},
-                showUi = {},
-                hideUi = {},
-                seekPositionChanged = {},
-                seekingFinished = {},
-                embeddedDraggedDownBy = {},
-                fastSeek = {},
-                finishFastSeek = {},
-                brightnessChange = {a, b ->},
-                volumeChange = {})
+            VideoPlayerControllerUI(
+                viewModel = VideoPlayerViewModelDummy(),
+                uiState = VideoPlayerUIState.DEFAULT.copy(
+                    playing = true,
+                    fullscreen = false,
+                    uiVissible = true,
+                    seekerPosition = 0.3f,
+                    isLoading = false,
+                    durationInMs = 9 * 60 * 1000,
+                    playbackPositionInMs = 6 * 60 * 1000,
+                    bufferedPercentage = 0.4f,
+                    fastSeekSeconds = 10,
+                ),
+            )
         }
     }
 }

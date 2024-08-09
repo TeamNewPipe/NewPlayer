@@ -53,11 +53,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.media3.common.Player
 import net.newpipe.newplayer.model.VideoPlayerViewModel
-import net.newpipe.newplayer.model.VideoPlayerViewModelImpl
+import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.utils.LockScreenOrientation
-import net.newpipe.newplayer.utils.getScreenBrightnes
-import net.newpipe.newplayer.utils.setScreenBrightnes
+import net.newpipe.newplayer.utils.getDefaultBrightness
+import net.newpipe.newplayer.utils.setScreenBrightness
 
 private const val TAG = "VideoPlayerUI"
 
@@ -89,8 +89,7 @@ fun VideoPlayerUI(
         // Setup fullscreen
         if (uiState.fullscreen) {
             LaunchedEffect(key1 = true) {
-                WindowCompat.getInsetsController(window, view)
-                    .isAppearanceLightStatusBars = false
+                WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
             }
         }
 
@@ -130,13 +129,12 @@ fun VideoPlayerUI(
         val screenRatio =
             displayMetrics.widthPixels.toFloat() / displayMetrics.heightPixels.toFloat()
 
-        val systemScreenBrightnes = getScreenBrightnes(activity)
+        val defaultBrightness = getDefaultBrightness(activity)
 
         LaunchedEffect(key1 = uiState.brightness) {
             Log.d(TAG, "New Brightnes: ${uiState.brightness}")
-            setScreenBrightnes(
-                uiState.brightness
-                    ?: if (systemScreenBrightnes < 0f) 0.5f else systemScreenBrightnes, activity
+            setScreenBrightness(
+                uiState.brightness ?: defaultBrightness, activity
             )
         }
 
@@ -160,33 +158,7 @@ fun VideoPlayerUI(
             }
 
             VideoPlayerControllerUI(
-                isPlaying = uiState.playing,
-                fullscreen = uiState.fullscreen,
-                uiVissible = uiState.uiVissible,
-                seekPosition = uiState.seekerPosition,
-                isLoading = uiState.isLoading,
-                durationInMs = uiState.durationInMs,
-                playbackPositionInMs = uiState.playbackPositionInMs,
-                bufferedPercentage = uiState.bufferedPercentage,
-                fastSeekSeconds = uiState.fastseekSeconds,
-                brightnes = uiState.brightness
-                    ?: if (systemScreenBrightnes < 0f) 0.5f else systemScreenBrightnes,
-                soundVolume = uiState.soundVolume,
-                play = viewModel::play,
-                pause = viewModel::pause,
-                prevStream = viewModel::prevStream,
-                nextStream = viewModel::nextStream,
-                switchToFullscreen = viewModel::switchToFullscreen,
-                switchToEmbeddedView = viewModel::switchToEmbeddedView,
-                showUi = viewModel::showUi,
-                hideUi = viewModel::hideUi,
-                seekPositionChanged = viewModel::seekPositionChanged,
-                seekingFinished = viewModel::seekingFinished,
-                embeddedDraggedDownBy = viewModel::embeddedDraggedDown,
-                fastSeek = viewModel::fastSeek,
-                finishFastSeek = viewModel::finishFastSeek,
-                volumeChange = viewModel::volumeChange,
-                brightnessChange = viewModel::brightnessChange
+                viewModel, uiState = uiState
             )
         }
     }
@@ -253,6 +225,6 @@ fun PlaySurface(
 @Composable
 fun PlayerUIPreviewEmbeded() {
     VideoPlayerTheme {
-        VideoPlayerUI(viewModel = VideoPlayerViewModelImpl.dummy)
+        VideoPlayerUI(viewModel = VideoPlayerViewModelDummy())
     }
 }

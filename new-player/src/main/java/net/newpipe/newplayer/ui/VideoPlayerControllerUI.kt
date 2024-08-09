@@ -48,54 +48,34 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import net.newpipe.newplayer.model.VideoPlayerUIState
+import net.newpipe.newplayer.model.VideoPlayerViewModel
+import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
+import net.newpipe.newplayer.model.VideoPlayerViewModelImpl
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.BottomUI
 import net.newpipe.newplayer.ui.videoplayer.CenterUI
 import net.newpipe.newplayer.ui.videoplayer.TopUI
 import net.newpipe.newplayer.ui.videoplayer.GestureUI
-import net.newpipe.newplayer.utils.getScreenBrightnes
+import net.newpipe.newplayer.utils.getDefaultBrightness
 
 @Composable
 fun VideoPlayerControllerUI(
-    isPlaying: Boolean,
-    fullscreen: Boolean,
-    uiVissible: Boolean,
-    seekPosition: Float,
-    isLoading: Boolean,
-    durationInMs: Long,
-    playbackPositionInMs: Long,
-    bufferedPercentage: Float,
-    fastSeekSeconds: Int,
-    soundVolume: Float,
-    brightnes: Float,
-    play: () -> Unit,
-    pause: () -> Unit,
-    prevStream: () -> Unit,
-    nextStream: () -> Unit,
-    switchToFullscreen: () -> Unit,
-    switchToEmbeddedView: () -> Unit,
-    showUi: () -> Unit,
-    hideUi: () -> Unit,
-    seekPositionChanged: (Float) -> Unit,
-    seekingFinished: () -> Unit,
-    embeddedDraggedDownBy: (Float) -> Unit,
-    fastSeek: (Int) -> Unit,
-    finishFastSeek: () -> Unit,
-    brightnessChange: (Float, Float) -> Unit,
-    volumeChange: (Float) -> Unit
+    viewModel: VideoPlayerViewModel,
+    uiState: VideoPlayerUIState
 ) {
 
     val context = LocalContext.current
 
-    if (fullscreen) {
+    if (uiState.fullscreen) {
         BackHandler {
-            switchToEmbeddedView()
+            viewModel.switchToEmbeddedView()
         }
     }
 
     val internalBrightnessChange = { rateChange: Float ->
-        val systemBrightness = getScreenBrightnes(context as Activity)
-        brightnessChange(rateChange, systemBrightness)
+        val systemBrightness = getDefaultBrightness(context as Activity)
+        viewModel.brightnessChange(rateChange, systemBrightness)
     }
 
     val insets =
@@ -103,35 +83,23 @@ fun VideoPlayerControllerUI(
             .union(WindowInsets.displayCutout)
             .union(WindowInsets.waterfall)
 
-    if (!uiVissible) {
+    if (!uiState.uiVissible) {
         GestureUI(
             modifier = Modifier
                 .fillMaxSize(),
 //                .windowInsetsPadding(WindowInsets.systemGestures),
-            hideUi = hideUi,
-            showUi = showUi,
-            uiVissible = uiVissible,
-            fullscreen = fullscreen,
-            fastSeekSeconds = fastSeekSeconds,
-            brightnes = brightnes,
-            soundVolume = soundVolume,
-            switchToFullscreen = switchToFullscreen,
-            switchToEmbeddedView = switchToEmbeddedView,
-            embeddedDraggedDownBy = embeddedDraggedDownBy,
-            fastSeek = fastSeek,
-            fastSeekFinished = finishFastSeek,
-            brightnessChange = internalBrightnessChange,
-            volumeChange = volumeChange
+            viewModel = viewModel,
+            uiState = uiState
         )
     }
 
-    AnimatedVisibility(uiVissible) {
+    AnimatedVisibility(uiState.uiVissible) {
         Surface(
             modifier = Modifier.fillMaxSize(), color = Color(0x75000000)
         ) {}
     }
 
-    if (isLoading) {
+    if (uiState.isLoading) {
         Box(modifier = Modifier.fillMaxSize()) {
             CircularProgressIndicator(
                 modifier = Modifier
@@ -143,41 +111,25 @@ fun VideoPlayerControllerUI(
         }
     }
 
-    AnimatedVisibility(uiVissible) {
+    AnimatedVisibility(uiState.uiVissible) {
         GestureUI(
             modifier = Modifier
                 .fillMaxSize()
                 .windowInsetsPadding(WindowInsets.systemGestures),
-            hideUi = hideUi,
-            showUi = showUi,
-            uiVissible = uiVissible,
-            fullscreen = fullscreen,
-            fastSeekSeconds = fastSeekSeconds,
-            soundVolume = soundVolume,
-            brightnes = brightnes,
-            switchToFullscreen = switchToFullscreen,
-            switchToEmbeddedView = switchToEmbeddedView,
-            embeddedDraggedDownBy = embeddedDraggedDownBy,
-            fastSeek = fastSeek,
-            fastSeekFinished = finishFastSeek,
-            volumeChange = volumeChange,
-            brightnessChange = internalBrightnessChange
+            viewModel = viewModel,
+            uiState = uiState
         )
 
         Box(modifier = Modifier.fillMaxSize()) {
             CenterUI(
                 modifier = Modifier.align(Alignment.Center),
-                isPlaying = isPlaying,
-                isLoading = isLoading,
-                play = play,
-                pause = pause,
-                prevStream = prevStream,
-                nextStream = nextStream
+                viewModel = viewModel,
+                uiState = uiState
             )
         }
 
         Box(
-            modifier = if (fullscreen) Modifier.windowInsetsPadding(insets) else Modifier
+            modifier = if (uiState.fullscreen) Modifier.windowInsetsPadding(insets) else Modifier
         ) {
             TopUI(
                 modifier = Modifier
@@ -193,15 +145,8 @@ fun VideoPlayerControllerUI(
                     .padding(start = 16.dp, end = 16.dp)
                     .defaultMinSize(minHeight = 40.dp)
                     .fillMaxWidth(),
-                isFullscreen = fullscreen,
-                durationInMs = durationInMs,
-                playbackPositionInMs = playbackPositionInMs,
-                seekPosition = seekPosition,
-                bufferedPercentage = bufferedPercentage,
-                switchToFullscreen = switchToFullscreen,
-                switchToEmbeddedView = switchToEmbeddedView,
-                seekPositionChanged = seekPositionChanged,
-                seekingFinished = seekingFinished
+                viewModel = viewModel,
+                uiState = uiState
             )
         }
     }
@@ -236,32 +181,7 @@ fun PreviewBackgroundSurface(
 fun VideoPlayerControllerUIPreviewEmbedded() {
     VideoPlayerTheme {
         PreviewBackgroundSurface {
-            VideoPlayerControllerUI(isPlaying = false,
-                fullscreen = false,
-                uiVissible = true,
-                seekPosition = 0.3F,
-                isLoading = false,
-                durationInMs = 9 * 60 * 1000,
-                playbackPositionInMs = 6 * 60 * 1000,
-                bufferedPercentage = 0.4f,
-                fastSeekSeconds = 0,
-                soundVolume = 0f,
-                brightnes = 0f,
-                play = {},
-                pause = {},
-                prevStream = {},
-                nextStream = {},
-                switchToFullscreen = {},
-                switchToEmbeddedView = {},
-                showUi = {},
-                hideUi = {},
-                seekPositionChanged = {},
-                seekingFinished = {},
-                embeddedDraggedDownBy = {},
-                fastSeek = {},
-                finishFastSeek = {},
-                brightnessChange = { a, b ->},
-                volumeChange = {})
+            VideoPlayerControllerUI(VideoPlayerViewModelDummy(), VideoPlayerUIState.DEFAULT)
         }
     }
 }
@@ -271,32 +191,7 @@ fun VideoPlayerControllerUIPreviewEmbedded() {
 fun VideoPlayerControllerUIPreviewLandscape() {
     VideoPlayerTheme {
         PreviewBackgroundSurface {
-            VideoPlayerControllerUI(isPlaying = true,
-                fullscreen = true,
-                uiVissible = true,
-                seekPosition = 0.3F,
-                isLoading = true,
-                durationInMs = 9 * 60 * 1000,
-                playbackPositionInMs = 6 * 60 * 1000,
-                bufferedPercentage = 0.4f,
-                fastSeekSeconds = 0,
-                brightnes = 0f,
-                soundVolume = 0f,
-                play = {},
-                pause = {},
-                prevStream = {},
-                nextStream = {},
-                switchToEmbeddedView = {},
-                switchToFullscreen = {},
-                showUi = {},
-                hideUi = {},
-                seekPositionChanged = {},
-                seekingFinished = {},
-                embeddedDraggedDownBy = {},
-                fastSeek = {},
-                finishFastSeek = {},
-                brightnessChange = { a, b -> },
-                volumeChange = {})
+            VideoPlayerControllerUI(VideoPlayerViewModelDummy(), VideoPlayerUIState.DEFAULT)
         }
     }
 }
@@ -306,33 +201,7 @@ fun VideoPlayerControllerUIPreviewLandscape() {
 fun VideoPlayerControllerUIPreviewPortrait() {
     VideoPlayerTheme {
         PreviewBackgroundSurface {
-            VideoPlayerControllerUI(
-                isPlaying = false,
-                fullscreen = true,
-                uiVissible = true,
-                seekPosition = 0.3F,
-                isLoading = false,
-                durationInMs = 9 * 60 * 1000,
-                playbackPositionInMs = 6 * 60 * 1000,
-                bufferedPercentage = 0.4f,
-                fastSeekSeconds = 0,
-                brightnes = 0f,
-                soundVolume = 0f,
-                play = {},
-                pause = {},
-                prevStream = {},
-                nextStream = {},
-                switchToEmbeddedView = {},
-                switchToFullscreen = {},
-                showUi = {},
-                hideUi = {},
-                seekPositionChanged = {},
-                seekingFinished = {},
-                embeddedDraggedDownBy = {},
-                fastSeek = {},
-                finishFastSeek = {},
-                brightnessChange = { a, b -> },
-                volumeChange = {})
+            VideoPlayerControllerUI(VideoPlayerViewModelDummy(), VideoPlayerUIState.DEFAULT)
         }
     }
 }
