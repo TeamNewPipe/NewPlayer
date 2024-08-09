@@ -51,8 +51,8 @@ import net.newpipe.newplayer.ui.videoplayer.INDICATOR_BACKGROUND_COLOR
 
 private const val TAG = "VolumeCircle"
 
-private const val LINE_STROKE_WIDTH = 8
-private const val CIRCLE_SIZE = 150
+private const val LINE_STROKE_WIDTH =6
+private const val CIRCLE_SIZE = 130
 
 @Composable
 fun VolumeCircle(
