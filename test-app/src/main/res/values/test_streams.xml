@@ -22,7 +22,8 @@
 <resources>
     <string name="ccc_6502_video" translatable="false">https://ftp.fau.de/cdn.media.ccc.de/congress/2010/mp4-h264-HQ/27c3-4159-en-reverse_engineering_mos_6502.mp4</string>
     <string name="ccc_6502_audio" translatable="false">https://ftp.fau.de/cdn.media.ccc.de/congress/2010/ogg-audio-only/27c3-4159-en-reverse_engineering_mos_6502.ogg</string>
-    <string name="ccc_6502_thumbnails" translatable="false">https://cloud.newpipe-ev.de/remote.php/dav/public-files/YKGkfBlBNbkavqw/6502/onethirdsize/f000000%03d.jpg</string>
+    <string name="ccc_6402_thumbnail" translatable="false">https://static.media.ccc.de/media/congress/2010/27c3-4159-en-reverse_engineering_mos_6502.jpg</string>
+    <string name="ccc_6502_preview_thumbnails" translatable="false">https://cloud.newpipe-ev.de/remote.php/dav/public-files/YKGkfBlBNbkavqw/6502/onethirdsize/f000000%03d.jpg</string>
 
     <string name="portrait_video_example" translatable="false">https://va.media.tumblr.com/tumblr_sh62vjBX0j1z8ckep.mp4</string>
 
@@ -32,5 +33,6 @@
     <string name="ccc_imu_576_webm" translatable="false">https://ftp.fau.de/cdn.media.ccc.de/congress/2019/webm-sd/36c3-10694-eng-deu-Intel_Management_Engine_deep_dive_webm-sd.webm</string>
     <string name="ccc_imu_mp3" translatable="false">https://ftp.fau.de/cdn.media.ccc.de/congress/2019/mp3/36c3-10694-eng-Intel_Management_Engine_deep_dive_mp3.mp3</string>
     <string name="ccc_imu_opus" translatable="false">https://ftp.fau.de/cdn.media.ccc.de/congress/2019/opus/36c3-10694-eng-Intel_Management_Engine_deep_dive_opus.opus</string>
-    <string name="ccc_imu_thumbnails" translatable="false">https://cloud.newpipe-ev.de/remote.php/dav/public-files/YKGkfBlBNbkavqw/intel_mu/oneeigthsize/f000000%03d.jpg</string>
+    <string name="ccc_imu_thumbnail" translatable="false">https://static.media.ccc.de/media/congress/2019/10694-hd.jpg</string>
+    <string name="ccc_imu_preview_thumbnails" translatable="false">https://cloud.newpipe-ev.de/remote.php/dav/public-files/YKGkfBlBNbkavqw/intel_mu/oneeigthsize/f000000%03d.jpg</string>
 </resources>
