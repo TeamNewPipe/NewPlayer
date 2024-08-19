@@ -72,7 +72,6 @@ fun FullscreenGestureUI(
     }
 
     val defaultOnRegularTap = {
-
         if (uiState.uiVisible) {
             viewModel.hideUi()
         } else {

@@ -30,13 +30,6 @@ import net.newpipe.newplayer.ui.videoplayer.gesture_ui.FullscreenGestureUI
 
 private const val TAG = "TouchUi"
 
-
-const val DELAY_UNTIL_SHOWING_UI_AFTER_TOUCH_IN_MS: Long = 200
-const val SEEK_ANIMATION_DURATION_IN_MS = 300
-const val FAST_SEEK_MODE_DURATION = 500L
-const val SEEK_ANIMATION_FADE_IN = 200
-const val SEEK_ANIMATION_FADE_OUT = 500
-
 val INDICATOR_BACKGROUND_COLOR = Color.Black.copy(alpha = 0.3f)
 
 @Composable

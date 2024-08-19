@@ -57,9 +57,12 @@ import com.google.android.material.color.MaterialColors
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.INDICATOR_BACKGROUND_COLOR
-import net.newpipe.newplayer.ui.videoplayer.SEEK_ANIMATION_DURATION_IN_MS
-import net.newpipe.newplayer.ui.videoplayer.SEEK_ANIMATION_FADE_IN
-import net.newpipe.newplayer.ui.videoplayer.SEEK_ANIMATION_FADE_OUT
+
+const val SEEK_ANIMATION_DURATION_IN_MS = 300
+const val FAST_SEEK_MODE_DURATION = 500L
+const val SEEK_ANIMATION_FADE_IN = 200
+const val SEEK_ANIMATION_FADE_OUT = 500
+
 
 @Composable
 fun FastSeekVisualFeedback(modifier: Modifier = Modifier, seconds: Int, backwards: Boolean) {

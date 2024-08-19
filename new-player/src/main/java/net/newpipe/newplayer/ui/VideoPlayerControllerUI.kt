@@ -83,21 +83,18 @@ fun VideoPlayerControllerUI(
             .union(WindowInsets.displayCutout)
             .union(WindowInsets.waterfall)
 
-    if (!uiState.uiVissible) {
-        GestureUI(
-            modifier = Modifier
-                .fillMaxSize(),
-//                .windowInsetsPadding(WindowInsets.systemGestures),
-            viewModel = viewModel,
-            uiState = uiState
-        )
-    }
-
     AnimatedVisibility(uiState.uiVissible) {
         Surface(
             modifier = Modifier.fillMaxSize(), color = Color(0x75000000)
         ) {}
     }
+
+    GestureUI(
+        modifier = Modifier
+            .fillMaxSize(),
+        viewModel = viewModel,
+        uiState = uiState
+    )
 
     if (uiState.isLoading) {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -112,14 +109,6 @@ fun VideoPlayerControllerUI(
     }
 
     AnimatedVisibility(uiState.uiVissible) {
-        GestureUI(
-            modifier = Modifier
-                .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.systemGestures),
-            viewModel = viewModel,
-            uiState = uiState
-        )
-
         Box(modifier = Modifier.fillMaxSize()) {
             CenterUI(
                 modifier = Modifier.align(Alignment.Center),

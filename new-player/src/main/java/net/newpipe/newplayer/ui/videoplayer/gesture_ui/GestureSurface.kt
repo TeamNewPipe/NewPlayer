@@ -37,7 +37,9 @@ import androidx.compose.ui.input.pointer.pointerInteropFilter
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import net.newpipe.newplayer.ui.videoplayer.DELAY_UNTIL_SHOWING_UI_AFTER_TOUCH_IN_MS
+
+private const val MULTITAB_MODE_DELAY: Long = 300
+
 
 @Composable
 @OptIn(ExperimentalComposeUiApi::class)
@@ -84,28 +86,29 @@ fun GestureSurface(
 
     val defaultActionUp = { onMultiTap: (Int) -> Unit, onRegularTap: () -> Unit ->
         onUp()
-        val currentTime = System.currentTimeMillis()
         if (!moveOccured) {
+            val currentTime = System.currentTimeMillis()
             val timeSinceLastTouch = currentTime - lastFingerUpTime
-            if (timeSinceLastTouch <= DELAY_UNTIL_SHOWING_UI_AFTER_TOUCH_IN_MS) {
+            if (timeSinceLastTouch <= MULTITAB_MODE_DELAY) {
                 regularTabJob?.cancel()
                 cancelMultitapJob?.cancel()
                 multitapAmount++
                 onMultiTap(multitapAmount)
                 cancelMultitapJob = composableScope.launch {
-                    delay(DELAY_UNTIL_SHOWING_UI_AFTER_TOUCH_IN_MS)
+                    delay(MULTITAB_MODE_DELAY)
                     multitapAmount = 0
                     onMultiTapFinished()
                 }
             } else {
                 regularTabJob = composableScope.launch {
-                    delay(DELAY_UNTIL_SHOWING_UI_AFTER_TOUCH_IN_MS)
+                    delay(MULTITAB_MODE_DELAY)
                     onRegularTap()
                 }
             }
+
+            lastFingerUpTime = currentTime
         }
         moveOccured = false
-        lastFingerUpTime = currentTime
         true
     }
 

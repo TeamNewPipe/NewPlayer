@@ -36,7 +36,6 @@ import net.newpipe.newplayer.model.VideoPlayerUIState
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.ui.videoplayer.FAST_SEEK_MODE_DURATION
 
 private const val TAG = "EmbeddedGestureUI"
 
