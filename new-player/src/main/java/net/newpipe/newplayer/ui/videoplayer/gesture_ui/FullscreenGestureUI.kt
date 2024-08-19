@@ -290,7 +290,7 @@ fun FullscreenGestureUIPreviewInteractive() {
                     }
                 },
                 uiState = VideoPlayerUIState.DEFAULT.copy(
-                    uiVissible = uiVisible,
+                    uiVisible = uiVisible,
                     fastSeekSeconds = seekSeconds,
                     soundVolume = soundVolume,
                     brightness = brightnessValue

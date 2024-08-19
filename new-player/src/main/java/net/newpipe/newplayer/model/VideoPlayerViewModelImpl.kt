@@ -210,7 +210,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     override fun showUi() {
         mutableUiState.update {
-            it.copy(uiVissible = true)
+            it.copy(uiVisible = true)
         }
         resetHideUiDelayedJob()
         resetProgressUpdatePeriodicallyJob()
@@ -255,7 +255,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
         progressUpdaterJob?.cancel()
         uiVisibilityJob?.cancel()
         mutableUiState.update {
-            it.copy(uiVissible = false)
+            it.copy(uiVisible = false)
         }
     }
 
@@ -336,7 +336,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
         uiVisibilityJob?.cancel()
         finishFastSeek()
         mutableUiState.update {
-            it.copy(fullscreen = false, uiVissible = false)
+            it.copy(fullscreen = false, uiVisible = false)
         }
     }
 
@@ -345,7 +345,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
         uiVisibilityJob?.cancel()
         finishFastSeek()
         mutableUiState.update {
-            it.copy(fullscreen = true, uiVissible = false)
+            it.copy(fullscreen = true, uiVisible = false)
         }
     }
 

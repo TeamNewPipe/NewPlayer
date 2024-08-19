@@ -33,7 +33,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.systemGestures
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.waterfall
 import androidx.compose.foundation.layout.width
@@ -51,7 +50,6 @@ import androidx.compose.ui.unit.dp
 import net.newpipe.newplayer.model.VideoPlayerUIState
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
-import net.newpipe.newplayer.model.VideoPlayerViewModelImpl
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.BottomUI
 import net.newpipe.newplayer.ui.videoplayer.CenterUI
@@ -83,7 +81,7 @@ fun VideoPlayerControllerUI(
             .union(WindowInsets.displayCutout)
             .union(WindowInsets.waterfall)
 
-    AnimatedVisibility(uiState.uiVissible) {
+    AnimatedVisibility(uiState.uiVisible) {
         Surface(
             modifier = Modifier.fillMaxSize(), color = Color(0x75000000)
         ) {}
@@ -108,7 +106,8 @@ fun VideoPlayerControllerUI(
         }
     }
 
-    AnimatedVisibility(uiState.uiVissible) {
+    AnimatedVisibility(uiState.uiVisible) {
+
         Box(modifier = Modifier.fillMaxSize()) {
             CenterUI(
                 modifier = Modifier.align(Alignment.Center),

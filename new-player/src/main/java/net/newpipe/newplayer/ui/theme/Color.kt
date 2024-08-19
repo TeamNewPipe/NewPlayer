@@ -79,7 +79,7 @@ fun VideoPlayerControllerUIPreviewEmbeddedColorPreview() {
                 uiState = VideoPlayerUIState.DEFAULT.copy(
                     playing = true,
                     fullscreen = false,
-                    uiVissible = true,
+                    uiVisible = true,
                     seekerPosition = 0.3f,
                     isLoading = false,
                     durationInMs = 9 * 60 * 1000,

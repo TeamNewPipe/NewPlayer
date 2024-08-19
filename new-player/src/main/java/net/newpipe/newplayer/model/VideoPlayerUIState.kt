@@ -28,8 +28,7 @@ import net.newpipe.newplayer.ui.ContentScale
 data class VideoPlayerUIState(
     val playing: Boolean,
     var fullscreen: Boolean,
-    val uiVissible: Boolean,
-    var uiVisible: Boolean,
+    val uiVisible: Boolean,
     val contentRatio: Float,
     val embeddedUiRatio: Float,
     val contentFitMode: ContentScale,
@@ -48,7 +47,6 @@ data class VideoPlayerUIState(
         val DEFAULT = VideoPlayerUIState(
             playing = false,
             fullscreen = false,
-            uiVissible = false,
             uiVisible = false,
             contentRatio = 16 / 9f,
             embeddedUiRatio = 16f / 9f,

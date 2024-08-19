@@ -94,7 +94,7 @@ fun VideoPlayerUI(
         }
 
         // Setup immersive mode
-        if (uiState.fullscreen && !uiState.uiVissible) {
+        if (uiState.fullscreen && !uiState.uiVisible) {
             LaunchedEffect(key1 = true) {
                 windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
             }

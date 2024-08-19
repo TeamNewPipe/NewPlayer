@@ -54,7 +54,7 @@ fun EmbeddedGestureUI(
     }
 
     val defaultOnRegularTap = {
-        if (uiState.uiVissible) {
+        if (uiState.uiVisible) {
             viewModel.hideUi()
         } else {
             viewModel.showUi()
