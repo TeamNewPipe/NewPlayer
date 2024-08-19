@@ -133,6 +133,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
                 override fun onVideoSizeChanged(videoSize: androidx.media3.common.VideoSize) {
                     super.onVideoSizeChanged(videoSize)
+
                     updateContentRatio(VideoSize.fromMedia3VideoSize(videoSize))
                 }
 
@@ -210,7 +211,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     override fun showUi() {
         mutableUiState.update {
-            it.copy(uiVisible = true)
+            it.copy(uiMode = it.uiMode.getControllerUiVisibleState())
         }
         resetHideUiDelayedJob()
         resetProgressUpdatePeriodicallyJob()
@@ -255,7 +256,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
         progressUpdaterJob?.cancel()
         uiVisibilityJob?.cancel()
         mutableUiState.update {
-            it.copy(uiVisible = false)
+            it.copy(uiMode = it.uiMode.getUiHiddenState())
         }
     }
 
@@ -283,7 +284,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
             )
         }
 
-        if (mutableUiState.value.uiVisible) {
+        if (mutableUiState.value.uiMode.controllerUiVisible) {
             resetHideUiDelayedJob()
         }
     }
@@ -301,7 +302,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun brightnessChange(changeRate: Float, systemBrightness: Float) {
-        if (mutableUiState.value.fullscreen) {
+        if (mutableUiState.value.uiMode.fullscreen) {
             val currentBrightness = mutableUiState.value.brightness
                 ?: if (systemBrightness < 0f) 0.5f else systemBrightness
             Log.d(
@@ -336,7 +337,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
         uiVisibilityJob?.cancel()
         finishFastSeek()
         mutableUiState.update {
-            it.copy(fullscreen = false, uiVisible = false)
+            it.copy(uiMode = UIModeState.EMBEDDED_VIDEO)
         }
     }
 
@@ -345,7 +346,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
         uiVisibilityJob?.cancel()
         finishFastSeek()
         mutableUiState.update {
-            it.copy(fullscreen = true, uiVisible = false)
+            it.copy(uiMode = UIModeState.FULLSCREEN_VIDEO)
         }
     }
 

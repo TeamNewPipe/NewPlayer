@@ -26,9 +26,8 @@ import net.newpipe.newplayer.ui.ContentScale
 
 @Parcelize
 data class VideoPlayerUIState(
+    val uiMode: UIModeState,
     val playing: Boolean,
-    var fullscreen: Boolean,
-    val uiVisible: Boolean,
     val contentRatio: Float,
     val embeddedUiRatio: Float,
     val contentFitMode: ContentScale,
@@ -45,9 +44,8 @@ data class VideoPlayerUIState(
 ) : Parcelable {
     companion object {
         val DEFAULT = VideoPlayerUIState(
+            uiMode = UIModeState.PLACEHOLDER,
             playing = false,
-            fullscreen = false,
-            uiVisible = false,
             contentRatio = 16 / 9f,
             embeddedUiRatio = 16f / 9f,
             contentFitMode = ContentScale.FIT_INSIDE,

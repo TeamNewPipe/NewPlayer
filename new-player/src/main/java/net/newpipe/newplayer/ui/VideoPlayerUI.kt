@@ -87,20 +87,20 @@ fun VideoPlayerUI(
         val lifecycleOwner = LocalLifecycleOwner.current
 
         // Setup fullscreen
-        if (uiState.fullscreen) {
+        if (uiState.uiMode.fullscreen) {
             LaunchedEffect(key1 = true) {
                 WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
             }
         }
 
         // Setup immersive mode
-        if (uiState.fullscreen && !uiState.uiVisible) {
-            LaunchedEffect(key1 = true) {
-                windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
-            }
-        } else {
+        if (uiState.uiMode.systemUiVisible) {
             LaunchedEffect(key1 = false) {
                 windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
+            }
+        } else {
+            LaunchedEffect(key1 = true) {
+                windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
             }
         }
 
@@ -117,7 +117,7 @@ fun VideoPlayerUI(
         }
 
         // Set Screen Rotation
-        if (uiState.fullscreen) {
+        if (uiState.uiMode.fullscreen) {
             if (uiState.contentRatio < 1) {
                 LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             } else {
@@ -141,7 +141,7 @@ fun VideoPlayerUI(
         // Set UI
         Surface(
             modifier = Modifier.then(
-                if (uiState.fullscreen) Modifier.fillMaxSize()
+                if (uiState.uiMode.fullscreen) Modifier.fillMaxSize()
                 else Modifier
                     .fillMaxWidth()
                     .aspectRatio(uiState.embeddedUiRatio)
@@ -152,7 +152,8 @@ fun VideoPlayerUI(
                     player = viewModel.internalPlayer,
                     lifecycle = lifecycle,
                     fitMode = uiState.contentFitMode,
-                    uiRatio = if (uiState.fullscreen) screenRatio else uiState.embeddedUiRatio,
+                    uiRatio = if (uiState.uiMode.fullscreen) screenRatio
+                    else uiState.embeddedUiRatio,
                     contentRatio = uiState.contentRatio
                 )
             }

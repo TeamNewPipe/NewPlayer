@@ -31,7 +31,7 @@ class ActivityBrainSlug(val viewModel: VideoPlayerViewModel) {
         set(value) {
             field = value
             field?.let {
-                if (viewModel.uiState.value.fullscreen) {
+                if (viewModel.uiState.value.uiMode.fullscreen) {
                     removeSystemInsets()
                 } else {
                     addSystemInsets()
@@ -43,7 +43,7 @@ class ActivityBrainSlug(val viewModel: VideoPlayerViewModel) {
     var fullscreenPlayerView: VideoPlayerView? = null
         set(value) {
             field = value
-            if (viewModel.uiState.value.fullscreen) {
+            if (viewModel.uiState.value.uiMode.fullscreen) {
                 value?.visibility = View.VISIBLE
                 field?.viewModel = viewModel
             } else {
@@ -55,7 +55,7 @@ class ActivityBrainSlug(val viewModel: VideoPlayerViewModel) {
     var embeddedPlayerView: VideoPlayerView? = null
         set(value) {
             field = value
-            if (viewModel.uiState.value.fullscreen) {
+            if (viewModel.uiState.value.uiMode.fullscreen) {
                 field?.viewModel = null
                 value?.visibility = View.GONE
             } else {
@@ -83,7 +83,7 @@ class ActivityBrainSlug(val viewModel: VideoPlayerViewModel) {
 
     fun addViewToHideOnFullscreen(view: View) {
         viewsToHideOnFullscreen.add(view)
-        if (viewModel.uiState.value.fullscreen) {
+        if (viewModel.uiState.value.uiMode.fullscreen) {
             view.visibility = View.GONE
         }
     }

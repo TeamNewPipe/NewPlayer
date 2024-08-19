@@ -36,7 +36,7 @@ val INDICATOR_BACKGROUND_COLOR = Color.Black.copy(alpha = 0.3f)
 fun GestureUI(
     modifier: Modifier, viewModel: VideoPlayerViewModel, uiState: VideoPlayerUIState
 ) {
-    if (uiState.fullscreen) {
+    if (uiState.uiMode.fullscreen) {
         FullscreenGestureUI(
             modifier = modifier, viewModel = viewModel, uiState = uiState
         )

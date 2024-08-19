@@ -23,6 +23,7 @@ package net.newpipe.newplayer.ui.theme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.model.VideoPlayerUIState
 import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
 import net.newpipe.newplayer.ui.PreviewBackgroundSurface
@@ -77,9 +78,8 @@ fun VideoPlayerControllerUIPreviewEmbeddedColorPreview() {
             VideoPlayerControllerUI(
                 viewModel = VideoPlayerViewModelDummy(),
                 uiState = VideoPlayerUIState.DEFAULT.copy(
+                    uiMode = UIModeState.EMBEDDED_VIDEO_CONTROLLER_UI,
                     playing = true,
-                    fullscreen = false,
-                    uiVisible = true,
                     seekerPosition = 0.3f,
                     isLoading = false,
                     durationInMs = 9 * 60 * 1000,

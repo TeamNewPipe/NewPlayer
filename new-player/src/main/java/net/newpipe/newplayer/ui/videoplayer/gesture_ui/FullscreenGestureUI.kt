@@ -44,6 +44,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.model.VideoPlayerUIState
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
@@ -51,16 +52,12 @@ import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.utils.getDefaultBrightness
 
 private enum class IndicatorMode {
-    NONE,
-    VOLUME_INDICATOR_VISSIBLE,
-    BRIGHTNESS_INDICATOR_VISSIBLE
+    NONE, VOLUME_INDICATOR_VISSIBLE, BRIGHTNESS_INDICATOR_VISSIBLE
 }
 
 @Composable
 fun FullscreenGestureUI(
-    modifier: Modifier = Modifier,
-    viewModel: VideoPlayerViewModel,
-    uiState: VideoPlayerUIState
+    modifier: Modifier = Modifier, viewModel: VideoPlayerViewModel, uiState: VideoPlayerUIState
 ) {
 
     var heightPx by remember {
@@ -72,7 +69,7 @@ fun FullscreenGestureUI(
     }
 
     val defaultOnRegularTap = {
-        if (uiState.uiVisible) {
+        if (uiState.uiMode.controllerUiVisible) {
             viewModel.hideUi()
         } else {
             viewModel.showUi()
@@ -87,9 +84,7 @@ fun FullscreenGestureUI(
         heightPx = coordinates.size.height.toFloat()
     }) {
         Row {
-            GestureSurface(
-                modifier = Modifier
-                    .weight(1f),
+            GestureSurface(modifier = Modifier.weight(1f),
                 onRegularTap = defaultOnRegularTap,
                 onMultiTap = {
                     println("multitap ${-it}")
@@ -100,20 +95,16 @@ fun FullscreenGestureUI(
                     indicatorMode = IndicatorMode.NONE
                 },
                 onMovement = { change ->
-                    if (indicatorMode == IndicatorMode.NONE
-                        || indicatorMode == IndicatorMode.BRIGHTNESS_INDICATOR_VISSIBLE
-                    ) {
+                    if (indicatorMode == IndicatorMode.NONE || indicatorMode == IndicatorMode.BRIGHTNESS_INDICATOR_VISSIBLE) {
                         indicatorMode = IndicatorMode.BRIGHTNESS_INDICATOR_VISSIBLE
 
                         if (heightPx != 0f) {
                             viewModel.brightnessChange(-change.y / heightPx, defaultBrightness)
                         }
                     }
-                }
-            ) {
+                }) {
                 FadedAnimationForSeekFeedback(
-                    uiState.fastSeekSeconds,
-                    backwards = true
+                    uiState.fastSeekSeconds, backwards = true
                 ) { fastSeekSecondsToDisplay ->
                     Box(modifier = Modifier.fillMaxSize()) {
                         FastSeekVisualFeedback(
@@ -124,19 +115,14 @@ fun FullscreenGestureUI(
                     }
                 }
             }
-            GestureSurface(
-                modifier = Modifier
-                    .weight(1f),
+            GestureSurface(modifier = Modifier.weight(1f),
                 onRegularTap = defaultOnRegularTap,
                 onMovement = { movement ->
                     if (0 < movement.y) {
                         viewModel.switchToEmbeddedView()
                     }
-                }
-            )
-            GestureSurface(
-                modifier = Modifier
-                    .weight(1f),
+                })
+            GestureSurface(modifier = Modifier.weight(1f),
                 onRegularTap = defaultOnRegularTap,
                 onMultiTap = viewModel::fastSeek,
                 onMultiTapFinished = viewModel::finishFastSeek,
@@ -144,16 +130,13 @@ fun FullscreenGestureUI(
                     indicatorMode = IndicatorMode.NONE
                 },
                 onMovement = { change ->
-                    if (indicatorMode == IndicatorMode.NONE
-                        || indicatorMode == IndicatorMode.VOLUME_INDICATOR_VISSIBLE
-                    ) {
+                    if (indicatorMode == IndicatorMode.NONE || indicatorMode == IndicatorMode.VOLUME_INDICATOR_VISSIBLE) {
                         indicatorMode = IndicatorMode.VOLUME_INDICATOR_VISSIBLE
                         if (heightPx != 0f) {
                             viewModel.volumeChange(-change.y / heightPx)
                         }
                     }
-                }
-            ) {
+                }) {
                 FadedAnimationForSeekFeedback(uiState.fastSeekSeconds) { fastSeekSecondsToDisplay ->
                     Box(modifier = Modifier.fillMaxSize()) {
                         FastSeekVisualFeedback(
@@ -228,13 +211,11 @@ fun FullscreenGestureUIPreview() {
     VideoPlayerTheme {
         Surface(modifier = Modifier.wrapContentSize(), color = Color.DarkGray) {
             FullscreenGestureUI(
-                modifier = Modifier,
-                object : VideoPlayerViewModelDummy() {
+                modifier = Modifier, object : VideoPlayerViewModelDummy() {
                     override fun fastSeek(steps: Int) {
                         println("fast seek by $steps steps")
                     }
-                },
-                VideoPlayerUIState.DEFAULT
+                }, VideoPlayerUIState.DEFAULT
             )
         }
     }
@@ -290,7 +271,8 @@ fun FullscreenGestureUIPreviewInteractive() {
                     }
                 },
                 uiState = VideoPlayerUIState.DEFAULT.copy(
-                    uiVisible = uiVisible,
+                    uiMode = if (uiVisible) UIModeState.FULLSCREEN_VIDEO_CONTROLLER_UI
+                        else UIModeState.FULLSCREEN_VIDEO,
                     fastSeekSeconds = seekSeconds,
                     soundVolume = soundVolume,
                     brightness = brightnessValue

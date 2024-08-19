@@ -20,7 +20,6 @@
 
 package net.newpipe.newplayer.ui
 
-
 import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -57,15 +56,16 @@ import net.newpipe.newplayer.ui.videoplayer.TopUI
 import net.newpipe.newplayer.ui.videoplayer.GestureUI
 import net.newpipe.newplayer.utils.getDefaultBrightness
 
+val CONTROLLER_UI_BACKGROUND_COLOR = Color(0x75000000)
+
 @Composable
 fun VideoPlayerControllerUI(
-    viewModel: VideoPlayerViewModel,
-    uiState: VideoPlayerUIState
+    viewModel: VideoPlayerViewModel, uiState: VideoPlayerUIState
 ) {
 
     val context = LocalContext.current
 
-    if (uiState.fullscreen) {
+    if (uiState.uiMode.fullscreen) {
         BackHandler {
             viewModel.switchToEmbeddedView()
         }
@@ -77,21 +77,16 @@ fun VideoPlayerControllerUI(
     }
 
     val insets =
-        WindowInsets.systemBars
-            .union(WindowInsets.displayCutout)
-            .union(WindowInsets.waterfall)
+        WindowInsets.systemBars.union(WindowInsets.displayCutout).union(WindowInsets.waterfall)
 
-    AnimatedVisibility(uiState.uiVisible) {
+    AnimatedVisibility(uiState.uiMode.controllerUiVisible) {
         Surface(
-            modifier = Modifier.fillMaxSize(), color = Color(0x75000000)
+            modifier = Modifier.fillMaxSize(), color = CONTROLLER_UI_BACKGROUND_COLOR
         ) {}
     }
 
     GestureUI(
-        modifier = Modifier
-            .fillMaxSize(),
-        viewModel = viewModel,
-        uiState = uiState
+        modifier = Modifier.fillMaxSize(), viewModel = viewModel, uiState = uiState
     )
 
     if (uiState.isLoading) {
@@ -106,7 +101,7 @@ fun VideoPlayerControllerUI(
         }
     }
 
-    AnimatedVisibility(uiState.uiVisible) {
+    AnimatedVisibility(uiState.uiMode.controllerUiVisible) {
 
         Box(modifier = Modifier.fillMaxSize()) {
             CenterUI(
@@ -117,7 +112,7 @@ fun VideoPlayerControllerUI(
         }
 
         Box(
-            modifier = if (uiState.fullscreen) Modifier.windowInsetsPadding(insets) else Modifier
+            modifier = if (uiState.uiMode.fullscreen) Modifier.windowInsetsPadding(insets) else Modifier
         ) {
             TopUI(
                 modifier = Modifier

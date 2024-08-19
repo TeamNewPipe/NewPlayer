@@ -42,6 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.os.ConfigurationCompat
 import net.newpipe.newplayer.R
+import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.model.VideoPlayerUIState
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
@@ -77,11 +78,11 @@ fun BottomUI(
         Text(getTimeStringFromMs(uiState.durationInMs, getLocale() ?: Locale.US))
 
         IconButton(
-            onClick = if (uiState.fullscreen) viewModel::switchToEmbeddedView
+            onClick = if (uiState.uiMode.fullscreen) viewModel::switchToEmbeddedView
             else viewModel::switchToFullscreen
         ) {
             Icon(
-                imageVector = if (uiState.fullscreen) Icons.Filled.FullscreenExit
+                imageVector = if (uiState.uiMode.fullscreen) Icons.Filled.FullscreenExit
                 else Icons.Filled.Fullscreen,
                 contentDescription = stringResource(R.string.widget_description_toggle_fullscreen)
             )
@@ -152,7 +153,7 @@ fun VideoPlayerControllerBottomUIPreview() {
                 modifier = Modifier,
                 viewModel = VideoPlayerViewModelDummy(),
                 uiState = VideoPlayerUIState.DEFAULT.copy(
-                    fullscreen = true,
+                    uiMode = UIModeState.FULLSCREEN_VIDEO_CONTROLLER_UI,
                     seekerPosition = 0.4f,
                     durationInMs = 90 * 60 * 1000,
                     playbackPositionInMs = 3 * 60 * 1000,
