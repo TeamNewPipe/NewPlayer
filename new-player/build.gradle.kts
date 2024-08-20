@@ -66,6 +66,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.media3.common)
+    implementation(libs.coil.compose)
 
     ksp(libs.hilt.android.compiler)
     ksp(libs.androidx.hilt.compiler)

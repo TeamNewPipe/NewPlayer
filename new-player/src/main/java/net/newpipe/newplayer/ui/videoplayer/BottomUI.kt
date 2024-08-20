@@ -51,6 +51,8 @@ import net.newpipe.newplayer.ui.seeker.Seeker
 import net.newpipe.newplayer.ui.seeker.SeekerColors
 import net.newpipe.newplayer.ui.seeker.SeekerDefaults
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
+import net.newpipe.newplayer.utils.getLocale
+import net.newpipe.newplayer.utils.getTimeStringFromMs
 import java.util.Locale
 import kotlin.math.min
 
@@ -102,42 +104,6 @@ private fun customizedSeekerColors(): SeekerColors {
         disabledTrackColor = MaterialTheme.colorScheme.primary
     )
     return colors
-}
-
-@Composable
-@ReadOnlyComposable
-fun getLocale(): Locale? {
-    val configuration = LocalConfiguration.current
-    return ConfigurationCompat.getLocales(configuration).get(0)
-}
-
-
-private const val HOURS_PER_DAY = 24
-private const val MINUTES_PER_HOUR = 60
-private const val SECONDS_PER_MINUTE = 60
-private const val MILLIS_PER_SECOND = 1000
-
-private const val MILLIS_PER_DAY =
-    HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE * MILLIS_PER_SECOND
-private const val MILLIS_PER_HOUR = MINUTES_PER_HOUR * SECONDS_PER_MINUTE * MILLIS_PER_SECOND
-private const val MILLIS_PER_MINUTE = SECONDS_PER_MINUTE * MILLIS_PER_SECOND
-
-private fun getTimeStringFromMs(timeSpanInMs: Long, locale: Locale): String {
-    val days = timeSpanInMs / MILLIS_PER_DAY
-    val millisThisDay = timeSpanInMs - days * MILLIS_PER_DAY
-    val hours = millisThisDay / MILLIS_PER_HOUR
-    val millisThisHour = millisThisDay - hours * MILLIS_PER_HOUR
-    val minutes = millisThisHour / MILLIS_PER_MINUTE
-    val milliesThisMinute = millisThisHour - minutes * MILLIS_PER_MINUTE
-    val seconds = milliesThisMinute / MILLIS_PER_SECOND
-
-
-    val time_string =
-        if (0L < days) String.format(locale, "%d:%02d:%02d:%02d", days, hours, minutes, seconds)
-        else if (0L < hours) String.format(locale, "%d:%02d:%02d", hours, minutes, seconds)
-        else String.format(locale, "%d:%02d", minutes, seconds)
-
-    return time_string
 }
 
 ///////////////////////////////////////////////////////////////////

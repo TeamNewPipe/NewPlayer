@@ -40,4 +40,9 @@
     <string name="seconds">Seconds</string>
     <string name="volume_indicator">Volume indicator</string>
     <string name="brightness_indicator">Brightness indicator</string>
+    <string name="close_chapter_selection">Close chapter selection</string>
+    <string name="close_stream_selection">Close stream selection</string>
+    <string name="chapter">Chapter</string>
+    <string name="chapter_thumbnail">Chapter Thumbnail</string>
+    <string name="stream_item_drag_handle">Stream item drag handle</string>
 </resources>
