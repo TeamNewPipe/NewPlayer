@@ -1,5 +1,7 @@
 package net.newpipe.newplayer.model
 
+import net.newpipe.newplayer.PlayMode
+
 enum class UIModeState {
     PLACEHOLDER,
 
@@ -93,4 +95,16 @@ enum class UIModeState {
 
             else -> this
         }
+
+
+    companion object {
+        fun fromPlayMode(playMode: PlayMode) =
+            when (playMode) {
+                PlayMode.EMBEDDED_VIDEO -> EMBEDDED_VIDEO
+                PlayMode.FULLSCREEN_VIDEO -> FULLSCREEN_VIDEO
+                PlayMode.PIP -> TODO()
+                PlayMode.BACKGROUND -> TODO()
+                PlayMode.AUDIO_FOREGROUND -> TODO()
+            }
+    }
 }

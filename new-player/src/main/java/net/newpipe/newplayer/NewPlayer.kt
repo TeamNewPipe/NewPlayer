@@ -23,46 +23,66 @@ package net.newpipe.newplayer
 import android.app.Application
 import android.util.Log
 import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.MediaSource
-import java.lang.Exception
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlin.Exception
 
 enum class PlayMode {
     EMBEDDED_VIDEO,
     FULLSCREEN_VIDEO,
     PIP,
-    BACKGROND,
-    AUDIO_FORGROUND,
+    BACKGROUND,
+    AUDIO_FOREGROUND,
 }
 
 private val TAG = "NewPlayer"
 
 interface NewPlayer {
-    val internal_player: Player
+    // preferences
+    val preferredStreamVariants: List<String>
+
+    val internalPlayer: Player
     var playWhenReady: Boolean
-    val duartion: Long
+    val duration: Long
     val bufferedPercentage: Int
     val repository: MediaRepository
     var currentPosition: Long
     var fastSeekAmountSec: Int
     var playBackMode: PlayMode
-    var playList: MutableList<String>
+    var playMode: PlayMode?
 
+    // calbacks
+
+    interface Listener {
+        fun playModeChange(playMode: PlayMode) {}
+        fun onError(exception: Exception) {}
+    }
+
+    // methods
     fun prepare()
     fun play()
     fun pause()
-    fun addToPlaylist(newItem: String)
-    fun addListener(callbackListener: Listener)
-
-    //TODO: This is only temporary
-    fun setStream(stream: MediaItem)
+    fun addToPlaylist(item: String)
+    fun playStream(item: String, playMode: PlayMode)
+    fun playStream(item: String, streamVariant: String, playMode: PlayMode)
+    fun addCallbackListener(listener: Listener?)
 
     data class Builder(val app: Application, val repository: MediaRepository) {
-        private var mediaSourceFactory : MediaSource.Factory? = null
+        private var mediaSourceFactory: MediaSource.Factory? = null
+        private var preferredStreamVariants: List<String> = emptyList()
 
         fun setMediaSourceFactory(mediaSourceFactory: MediaSource.Factory) {
             this.mediaSourceFactory = mediaSourceFactory
+        }
+
+        fun setPreferredStreamVariants(preferredStreamVariants: List<String>) {
+            this.preferredStreamVariants = preferredStreamVariants
         }
 
         fun build(): NewPlayer {
@@ -70,67 +90,151 @@ interface NewPlayer {
             mediaSourceFactory?.let {
                 exoPlayerBuilder.setMediaSourceFactory(it)
             }
-            return NewPlayerImpl(exoPlayerBuilder.build(), repository = repository)
+            return NewPlayerImpl(
+                app = app,
+                internalPlayer = exoPlayerBuilder.build(),
+                repository = repository,
+                preferredStreamVariants = preferredStreamVariants
+            )
         }
     }
 
-    interface Listener {
-        fun onError(exception: Exception)
-    }
 }
 
-class NewPlayerImpl(override val internal_player: Player, override val repository: MediaRepository) : NewPlayer {
-
-    private var callbackListeners: MutableList<NewPlayer.Listener> = ArrayList()
-
-    override val duartion: Long
-        get() = internal_player.duration
+class NewPlayerImpl(
+    val app: Application,
+    override val internalPlayer: Player,
+    override val preferredStreamVariants: List<String>,
+    override val repository: MediaRepository,
+) : NewPlayer {
 
     override val bufferedPercentage: Int
-        get() = internal_player.bufferedPercentage
+        get() = internalPlayer.bufferedPercentage
     override var currentPosition: Long
-        get() = internal_player.currentPosition
-        set(value) {internal_player.seekTo(value)}
+        get() = internalPlayer.currentPosition
+        set(value) {
+            internalPlayer.seekTo(value)
+        }
 
     override var fastSeekAmountSec: Int = 10
     override var playBackMode: PlayMode = PlayMode.EMBEDDED_VIDEO
-    override var playList: MutableList<String> = ArrayList<String>()
+
+    private var callbackListener: ArrayList<NewPlayer.Listener?> = ArrayList()
+    private var playerScope = CoroutineScope(Dispatchers.Default + Job())
+
+    override var playMode: PlayMode? = null
+        set(value) {
+            field = value
+            if (field != null) {
+                callbackListener.forEach { it?.playModeChange(field!!) }
+            }
+        }
 
     override var playWhenReady: Boolean
         set(value) {
-            internal_player.playWhenReady = value
+            internalPlayer.playWhenReady = value
         }
-        get() = internal_player.playWhenReady
+        get() = internalPlayer.playWhenReady
+
+
+    override val duration: Long
+        get() = internalPlayer.duration
+
+
+    init {
+        internalPlayer.addListener(object: Player.Listener {
+            override fun onPlayerError(error: PlaybackException) {
+                launchJobAndCollectError {
+                    val item = internalPlayer.currentMediaItem?.mediaId
+                    val newUri = repository.tryAndRescueError(item, exception = error)
+                    if (newUri != null) {
+                        TODO("Implement handing new uri on fixed error")
+                    } else {
+                        callbackListener.forEach {
+                            it?.onError(error)
+                        }
+                    }
+                }
+            }
+        })
+    }
 
     override fun prepare() {
-        internal_player.prepare()
+        internalPlayer.prepare()
     }
 
     override fun play() {
-        if(internal_player.currentMediaItem != null) {
-            internal_player.play()
+        if (internalPlayer.currentMediaItem != null) {
+            internalPlayer.play()
         } else {
             Log.i(TAG, "Tried to start playing but no media Item was cued")
         }
     }
 
     override fun pause() {
-        internal_player.pause()
+        internalPlayer.pause()
     }
 
-    override fun addToPlaylist(newItem: String) {
-        Log.d(TAG, "Not implemented add to playlist")
+    override fun addToPlaylist(item: String) {
+        launchJobAndCollectError {
+            val mediaItem = toMediaItem(item)
+            internalPlayer.addMediaItem(mediaItem)
+        }
     }
 
-    override fun addListener(callbackListener: NewPlayer.Listener) {
-        callbackListeners.add(callbackListener)
+    override fun playStream(item: String, playMode: PlayMode) {
+        launchJobAndCollectError {
+            val mediaItem = toMediaItem(item)
+            internalPlayStream(mediaItem, playMode)
+        }
     }
 
-    override fun setStream(stream: MediaItem) {
-        if (internal_player.playbackState == Player.STATE_IDLE) {
-            internal_player.prepare()
+    override fun playStream(item: String, streamVariant: String, playMode: PlayMode) {
+        launchJobAndCollectError {
+            val stream = toMediaItem(item)
+            internalPlayStream(stream, playMode)
+        }
+    }
+
+    private fun internalPlayStream(mediaItem: MediaItem, playMode: PlayMode) {
+        if (internalPlayer.playbackState == Player.STATE_IDLE) {
+            internalPlayer.prepare()
+        }
+        this.playMode = playMode
+    }
+
+    private suspend fun toMediaItem(item: String, streamVariant: String): MediaItem {
+        val dataStream = repository.getStream(item, streamVariant)
+        val mediaItem = MediaItem.Builder().setMediaId(item).setUri(dataStream)
+        return mediaItem.build()
+    }
+
+    private suspend fun toMediaItem(item: String): MediaItem {
+
+        val availableStream = repository.getAvailableStreamVariants(item)
+        var selectedStream = availableStream[availableStream.size / 2]
+        for (preferredStream in preferredStreamVariants) {
+            if (preferredStream in availableStream) {
+                selectedStream = preferredStream
+                break;
+            }
         }
 
-        internal_player.setMediaItem(stream)
+        return toMediaItem(item, selectedStream)
+    }
+
+    private fun launchJobAndCollectError(task: suspend () -> Unit) =
+        playerScope.launch {
+            try {
+                task()
+            } catch (e: Exception) {
+                callbackListener.forEach {
+                    it?.onError(e)
+                }
+            }
+        }
+
+    override fun addCallbackListener(listener: NewPlayer.Listener?) {
+        callbackListener.add(listener)
     }
 }

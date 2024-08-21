@@ -8,7 +8,10 @@ import android.net.Uri
 import androidx.media3.common.MediaItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.MediaRepository
+import net.newpipe.newplayer.utils.OnlineThumbnail
+import net.newpipe.newplayer.utils.Thumbnail
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -41,33 +44,20 @@ class TestMediaRepository(val context: Context) : MediaRepository {
 
     override suspend fun getThumbnail(item: String) =
         when (item) {
-            "6502" -> withContext(Dispatchers.IO) {
-                val response =
-                    get("https://static.media.ccc.de/media/congress/2010/27c3-4159-en-reverse_engineering_mos_6502_preview.jpg")
+            "6502" ->
+                OnlineThumbnail("https://static.media.ccc.de/media/congress/2010/27c3-4159-en-reverse_engineering_mos_6502_preview.jpg")
 
-                BitmapFactory.decodeStream(response.body.byteStream())
-            }
+            "portrait" ->
+                OnlineThumbnail("https://64.media.tumblr.com/13f7e4065b4c583573a9a3e40750ccf8/9e8cf97a92704864-4b/s540x810/d966c97f755384b46dbe6d5350d35d0e9d4128ad.jpg")
 
-
-            "portrait" -> withContext(Dispatchers.IO) {
-                val response =
-                    get("https://64.media.tumblr.com/13f7e4065b4c583573a9a3e40750ccf8/9e8cf97a92704864-4b/s540x810/d966c97f755384b46dbe6d5350d35d0e9d4128ad.jpg")
-
-                BitmapFactory.decodeStream(response.body.byteStream())
-            }
-
-            "imu" -> withContext(Dispatchers.IO) {
-                val response =
-                    get("https://static.media.ccc.de/media/congress/2019/10694-hd_preview.jpg")
-
-                BitmapFactory.decodeStream(response.body.byteStream())
-            }
+            "imu" ->
+                OnlineThumbnail("https://static.media.ccc.de/media/congress/2019/10694-hd_preview.jpg")
 
             else -> throw Exception("Unknown stream: $item")
         }
 
 
-    override suspend fun getAvailableStreams(item: String): List<String> =
+    override suspend fun getAvailableStreamVariants(item: String): List<String> =
         when (item) {
             "6502" -> listOf("576p")
             "portrait" -> listOf("720p")
@@ -95,15 +85,38 @@ class TestMediaRepository(val context: Context) : MediaRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getPreviewThumbnails(item: String): List<Bitmap> {
+    override suspend fun getPreviewThumbnails(item: String): HashMap<Long, Thumbnail>? {
+        val templateUrl = when (item) {
+            "6502" -> context.getString(R.string.ccc_6502_preview_thumbnails)
+            "imu" -> context.getString(R.string.ccc_imu_preview_thumbnails)
+            "portrait" -> null
+                else -> throw Exception("Unknown stream: $item")
+        }
+
+        if(templateUrl != null) {
+            val thumbCount = when(item) {
+                "6502" -> 312
+                "imu" -> 361
+                else -> throw Exception("Unknown stream: $item") }
+
+            var thumbMap = HashMap<Long, Thumbnail>()
+
+            for (i in 1..thumbCount) {
+                val timeStamp= (i-1) * 10 * 1000
+                thumbMap.put(timeStamp.toLong(), OnlineThumbnail(String.format(templateUrl, i)))
+            }
+
+            return thumbMap
+        } else {
+            return null
+        }
+    }
+
+    override suspend fun getChapters(item: String): List<Chapter> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getChapters(item: String): List<Long> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getChapterThumbnail(item: String, chapter: Long): Bitmap {
+    override suspend fun getChapterThumbnail(item: String, chapter: Long): Thumbnail {
         TODO("Not yet implemented")
     }
 }

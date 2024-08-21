@@ -64,6 +64,10 @@ import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.utils.getLocale
 import net.newpipe.newplayer.utils.getTimeStringFromMs
 import coil.compose.AsyncImage
+import net.newpipe.newplayer.utils.BitmapThumbnail
+import net.newpipe.newplayer.utils.OnlineThumbnail
+import net.newpipe.newplayer.utils.Thumbnail
+import net.newpipe.newplayer.utils.VectorThumbnail
 
 @Composable
 fun StreamSelectUI(
@@ -125,7 +129,7 @@ private fun StreamSelectTopBar() {
 private fun ChapterItem(
     modifier: Modifier = Modifier,
     id: Int,
-    thumbnailUrl: String?,
+    thumbnail: Thumbnail?,
     chapterTitle: String,
     chapterStartInMs: Long,
     onClicked: (Int) -> Unit
@@ -141,10 +145,27 @@ private fun ChapterItem(
             )
             .clickable { onClicked(id) }
     ) {
-        if (thumbnailUrl != null) {
+        val contentDescription = stringResource(R.string.chapter)
+        if (thumbnail != null) {
+            when (thumbnail) {
+                is OnlineThumbnail -> AsyncImage(
+                    model = thumbnail.url,
+                    contentDescription =contentDescription
+                )
+
+                is BitmapThumbnail -> Image(
+                    bitmap = thumbnail.img,
+                    contentDescription = contentDescription
+                )
+
+                is VectorThumbnail -> Image(
+                    imageVector = thumbnail.vec,
+                    contentDescription = contentDescription
+                )
+            }
             AsyncImage(
-                model = thumbnailUrl,
-                contentDescription = stringResource(R.string.chapter)
+                model = thumbnail,
+                contentDescription = contentDescription
             )
         } else {
             Image(
@@ -171,7 +192,7 @@ private fun StreamItem(
     id: Int,
     title: String,
     creator: String?,
-    thumbnailUrl: String?,
+    thumbnail: Thumbnail?,
     lengthInMs: Long,
     onDragStart: (Int) -> Unit,
     onDragEnd: (Int) -> Unit,
@@ -180,10 +201,27 @@ private fun StreamItem(
     val locale = getLocale()!!
     Row(modifier = modifier.clickable { onClicked(id) }) {
         Box {
-            if (thumbnailUrl != null) {
+            val contentDescription = stringResource(R.string.chapter)
+            if (thumbnail != null) {
+                when (thumbnail) {
+                    is OnlineThumbnail -> AsyncImage(
+                        model = thumbnail.url,
+                        contentDescription =contentDescription
+                    )
+
+                    is BitmapThumbnail -> Image(
+                        bitmap = thumbnail.img,
+                        contentDescription = contentDescription
+                    )
+
+                    is VectorThumbnail -> Image(
+                        imageVector = thumbnail.vec,
+                        contentDescription = contentDescription
+                    )
+                }
                 AsyncImage(
-                    model = thumbnailUrl,
-                    contentDescription = stringResource(R.string.chapter)
+                    model = thumbnail,
+                    contentDescription = contentDescription
                 )
             } else {
                 Image(
@@ -209,10 +247,12 @@ private fun StreamItem(
             }
         }
 
-        Column(modifier = Modifier
-            .padding(8.dp)
-            .weight(1f)
-            .fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .padding(8.dp)
+                .weight(1f)
+                .fillMaxSize()
+        ) {
             Text(text = title, fontSize = 18.sp, fontWeight = FontWeight.Bold)
             if (creator != null) {
                 Text(text = creator)
@@ -223,15 +263,17 @@ private fun StreamItem(
             .fillMaxHeight()
             .aspectRatio(1f)
             .pointerInteropFilter {
-                when(it.action) {
+                when (it.action) {
                     MotionEvent.ACTION_UP -> {
                         onDragEnd(id)
                         false
                     }
+
                     MotionEvent.ACTION_DOWN -> {
                         onDragStart(id)
                         false
                     }
+
                     else -> true
                 }
             }) {
@@ -254,7 +296,7 @@ fun ChapterItemPreview() {
         Surface(modifier = Modifier.fillMaxSize(), color = Color.DarkGray) {
             ChapterItem(
                 id = 0,
-                thumbnailUrl = null,
+                thumbnail = null,
                 modifier = Modifier.fillMaxSize(),
                 chapterTitle = "Chapter Title",
                 chapterStartInMs = (4 * 60 + 32) * 1000,
@@ -274,7 +316,7 @@ fun StreamItemPreview() {
                 modifier = Modifier.fillMaxSize(),
                 title = "Video Title",
                 creator = "Video Creator",
-                thumbnailUrl = null,
+                thumbnail = null,
                 lengthInMs = 15 * 60 * 1000,
                 onDragStart = {},
                 onDragEnd = {},
