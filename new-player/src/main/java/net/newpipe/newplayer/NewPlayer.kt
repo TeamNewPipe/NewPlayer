@@ -31,6 +31,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import net.newpipe.newplayer.utils.PlayList
 import kotlin.Exception
 
 enum class PlayMode {
@@ -56,6 +57,8 @@ interface NewPlayer {
     var fastSeekAmountSec: Int
     var playBackMode: PlayMode
     var playMode: PlayMode?
+
+    var playlist: PlayList
 
     // calbacks
 
@@ -140,9 +143,10 @@ class NewPlayerImpl(
     override val duration: Long
         get() = internalPlayer.duration
 
+    override var playlist = PlayList(internalPlayer)
 
     init {
-        internalPlayer.addListener(object: Player.Listener {
+        internalPlayer.addListener(object : Player.Listener {
             override fun onPlayerError(error: PlaybackException) {
                 launchJobAndCollectError {
                     val item = internalPlayer.currentMediaItem?.mediaId
