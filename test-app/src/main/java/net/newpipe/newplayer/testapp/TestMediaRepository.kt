@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.media.Image
 import android.net.Uri
 import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.newpipe.newplayer.Chapter
@@ -65,9 +66,13 @@ class TestMediaRepository(val context: Context) : MediaRepository {
             else -> throw Exception("Unknown stream: $item")
         }
 
+    override suspend fun getAvailableSubtitleVariants(item: String): List<String> {
+        TODO("Not yet implemented")
+    }
+
 
     override suspend fun getStream(item: String, streamSelector: String) =
-        MediaItem.fromUri(
+        Uri.parse(
             when (item) {
                 "6502" -> context.getString(R.string.ccc_6502_video)
                 "portrait" -> context.getString(R.string.portrait_video_example)
@@ -81,28 +86,33 @@ class TestMediaRepository(val context: Context) : MediaRepository {
             }
         )
 
-    override suspend fun getLinkWithStreamOffset(item: String): String {
-        TODO("Not yet implemented")
-    }
+    override suspend fun getSubtitle(item: String, variant: String) =
+        Uri.parse(
+            when (item) {
+                "imu" -> context.getString(R.string.ccc_imu_subtitles)
+                else -> ""
+            }
+        )
 
     override suspend fun getPreviewThumbnails(item: String): HashMap<Long, Thumbnail>? {
         val templateUrl = when (item) {
             "6502" -> context.getString(R.string.ccc_6502_preview_thumbnails)
             "imu" -> context.getString(R.string.ccc_imu_preview_thumbnails)
             "portrait" -> null
-                else -> throw Exception("Unknown stream: $item")
+            else -> throw Exception("Unknown stream: $item")
         }
 
-        if(templateUrl != null) {
-            val thumbCount = when(item) {
+        if (templateUrl != null) {
+            val thumbCount = when (item) {
                 "6502" -> 312
                 "imu" -> 361
-                else -> throw Exception("Unknown stream: $item") }
+                else -> throw Exception("Unknown stream: $item")
+            }
 
             var thumbMap = HashMap<Long, Thumbnail>()
 
             for (i in 1..thumbCount) {
-                val timeStamp= (i-1) * 10 * 1000
+                val timeStamp = (i - 1) * 10 * 1000
                 thumbMap.put(timeStamp.toLong(), OnlineThumbnail(String.format(templateUrl, i)))
             }
 
@@ -112,11 +122,43 @@ class TestMediaRepository(val context: Context) : MediaRepository {
         }
     }
 
-    override suspend fun getChapters(item: String): List<Chapter> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun getChapters(item: String) =
+        when (item) {
+            "6502" -> context.resources.getIntArray(R.array.ccc_6502_chapters)
+            "imu" -> TODO()
+            else -> intArrayOf()
+        }.map {
+            Chapter(it.toLong(), "Dummy Chapter at timestamp $it")
+        }
 
-    override suspend fun getChapterThumbnail(item: String, chapter: Long): Thumbnail {
+    override suspend fun getChapterThumbnail(item: String, chapter: Long) =
+        when (item) {
+            "6502" -> OnlineThumbnail(
+                String.format(
+                    context.getString(R.string.ccc_6502_preview_thumbnails),
+                    chapter / (10 * 1000)
+                )
+            )
+
+            "imu" -> OnlineThumbnail(
+                String.format(
+                    context.getString(R.string.ccc_imu_preview_thumbnails),
+                    chapter / (10 * 1000)
+                )
+            )
+
+            else -> null
+        }
+
+    override suspend fun getTimestampLink(item: String, timestampInSeconds: Long) =
+        when (item) {
+            "6502" -> "${context.getString(R.string.ccc_6502_link)}#t=$timestampInSeconds"
+            "imu" -> "${context.getString(R.string.ccc_imu_link)}#t=$timestampInSeconds"
+            else -> ""
+        }
+
+
+    override suspend fun tryAndRescueError(item: String?, exception: PlaybackException): Uri? {
         TODO("Not yet implemented")
     }
 }

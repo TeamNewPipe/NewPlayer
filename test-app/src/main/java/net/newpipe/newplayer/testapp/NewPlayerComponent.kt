@@ -21,12 +21,16 @@
 package net.newpipe.newplayer.testapp
 
 import android.app.Application
+import android.util.Log
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.launch
 import net.newpipe.newplayer.NewPlayer
 import javax.inject.Singleton
+
+
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -34,6 +38,16 @@ object NewPlayerComponent {
     @Provides
     @Singleton
     fun provideNewPlayer(app: Application) : NewPlayer {
-        return NewPlayer.Builder(app, TestMediaRepository(app)).build()
+        val player = NewPlayer.Builder(app, TestMediaRepository(app)).build()
+        if(app is NewPlayerApp) {
+            app.appScope.launch {
+                while(true) {
+                    player.errorFlow.collect { e ->
+                        Log.e("NewPlayerException", e.stackTraceToString())
+                    }
+                }
+            }
+        }
+        return player
     }
 }

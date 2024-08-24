@@ -28,6 +28,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.Player
@@ -77,7 +78,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     override var newPlayer: NewPlayer? = null
         set(value) {
             field = value
-            installExoPlayer()
+            installNewPlayer()
         }
 
     override val uiState = mutableUiState.asStateFlow()
@@ -118,7 +119,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
             }
         }
 
-    private fun installExoPlayer() {
+    private fun installNewPlayer() {
         internalPlayer?.let { player ->
             Log.d(TAG, "Install player: ${player.videoSize.width}")
 
@@ -137,17 +138,29 @@ class VideoPlayerViewModelImpl @Inject constructor(
                     updateContentRatio(VideoSize.fromMedia3VideoSize(videoSize))
                 }
 
+
+                // TODO: This is not correctly applicable for loading indicator
                 override fun onIsLoadingChanged(isLoading: Boolean) {
                     super.onIsLoadingChanged(isLoading)
                     mutableUiState.update {
                         it.copy(isLoading = isLoading)
                     }
-                    Log.i(
-                        TAG, if (isLoading) "Player started loading" else "Player finished loading"
-                    )
                 }
             })
         }
+        newPlayer?.let{ newPlayer ->
+            viewModelScope.launch {
+                while(true) {
+                    newPlayer.playMode.collect { mode ->
+                        println("blub: $mode")
+                        mutableUiState.update {
+                            it.copy(uiMode = UIModeState.fromPlayMode(mode))
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     fun updateContentRatio(videoSize: VideoSize) {

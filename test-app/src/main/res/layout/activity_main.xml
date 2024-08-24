@@ -38,8 +38,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <FrameLayout
-        android:id="@+id/player_column"
+    <LinearLayout
+        android:id="@+id/embedded_player_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/buttons_layout"
@@ -51,7 +51,7 @@
         app:layout_constraintVertical_weight="1">
 
         <net.newpipe.newplayer.VideoPlayerView
-            android:id="@+id/new_player_video_view"
+            android:id="@+id/embedded_player"
             android:name="net.newpipe.newplayer.VideoPlayerFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
-    </FrameLayout>
+    </LinearLayout>
 
     <FrameLayout
         android:id="@id/buttons_layout"
@@ -69,7 +69,7 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/player_column"
+        app:layout_constraintTop_toBottomOf="@id/embedded_player_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintVertical_weight="1">
 

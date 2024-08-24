@@ -38,6 +38,7 @@ import net.newpipe.newplayer.PlayMode
 import net.newpipe.newplayer.VideoPlayerView
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelImpl
+import net.newpipe.newplayer.testapp.databinding.ActivityMainBinding
 import net.newpipe.newplayer.ui.ContentScale
 import javax.inject.Inject
 
@@ -51,20 +52,17 @@ class MainActivity : AppCompatActivity() {
 
     var activityBrainSlug: ActivityBrainSlug? = null
 
+    lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val embeddedPlayer = findViewById<VideoPlayerView>(R.id.new_player_video_view)
-        val startStreamButton = findViewById<Button>(R.id.start_stream_button)
-        val buttonsLayout = findViewById<View>(R.id.buttons_layout)
-        val embeddedPlayerLayout = findViewById<View>(R.id.player_column)
-        val fullscreenPlayer = findViewById<VideoPlayerView>(R.id.fullscreen_player)
-
-        startStreamButton.setOnClickListener {
+        binding.startStreamButton.setOnClickListener {
             newPlayer.playWhenReady = true
-            newPlayer.playStream(getString(R.string.ccc_6502_video), PlayMode.EMBEDDED_VIDEO)
+            newPlayer.playStream("6502", PlayMode.EMBEDDED_VIDEO)
         }
 
         videoPlayerViewModel.newPlayer = newPlayer
@@ -72,10 +70,10 @@ class MainActivity : AppCompatActivity() {
 
         activityBrainSlug = ActivityBrainSlug(videoPlayerViewModel)
         activityBrainSlug?.let {
-            it.embeddedPlayerView = embeddedPlayer
-            it.addViewToHideOnFullscreen(buttonsLayout)
-            it.addViewToHideOnFullscreen(embeddedPlayerLayout)
-            it.fullscreenPlayerView = fullscreenPlayer
+            it.embeddedPlayerView = binding.embeddedPlayer
+            it.addViewToHideOnFullscreen(binding.buttonsLayout as View)
+            it.addViewToHideOnFullscreen(binding.embeddedPlayerLayout as View)
+            it.fullscreenPlayerView = binding.fullscreenPlayer
             it.rootView = findViewById(R.id.main)
         }
     }

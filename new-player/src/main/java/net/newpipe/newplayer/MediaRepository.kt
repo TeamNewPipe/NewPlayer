@@ -31,17 +31,18 @@ interface MediaRepository {
     suspend fun getTitle(item: String) : String
     suspend fun getChannelName(item: String): String
     suspend fun getThumbnail(item: String): Thumbnail
-    suspend fun getAvailableStreamVariants(item: String): List<String>
-    suspend fun getAvailableSubtitleVariants(item: String): List<String>
 
+    suspend fun getAvailableStreamVariants(item: String): List<String>
     suspend fun getStream(item: String, streamSelector: String) : Uri
-    suspend fun getSubtitle(item: String, )
+
+    suspend fun getAvailableSubtitleVariants(item: String): List<String>
+    suspend fun getSubtitle(item: String, variant: String): Uri
 
     suspend fun getPreviewThumbnails(item: String) : HashMap<Long, Thumbnail>?
     suspend fun getChapters(item: String): List<Chapter>
-    suspend fun getChapterThumbnail(item: String, chapter: Long) : Thumbnail
+    suspend fun getChapterThumbnail(item: String, chapter: Long) : Thumbnail?
 
-    suspend fun getTimestampLink(item: String, timestampInSeconds: Long)
+    suspend fun getTimestampLink(item: String, timestampInSeconds: Long): String
 
     suspend fun tryAndRescueError(item: String?, exception: PlaybackException) : Uri?
 }

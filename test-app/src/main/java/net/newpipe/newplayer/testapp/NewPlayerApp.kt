@@ -21,7 +21,22 @@
 package net.newpipe.newplayer.testapp
 
 import android.app.Application
+import android.util.Log
 import dagger.hilt.android.HiltAndroidApp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import net.newpipe.newplayer.NewPlayer
+import javax.inject.Inject
+
+private const val TAG = "NewPlayerApp"
 
 @HiltAndroidApp
-class NewPlayerApp : Application()
+class NewPlayerApp : Application() {
+    val appScope = CoroutineScope(Dispatchers.Default + Job())
+}
+
+

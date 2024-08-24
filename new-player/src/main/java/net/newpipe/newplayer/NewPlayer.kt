@@ -128,7 +128,7 @@ class NewPlayerImpl(
     override var fastSeekAmountSec: Int = 10
     override var playBackMode: PlayMode = PlayMode.EMBEDDED_VIDEO
 
-    private var playerScope = CoroutineScope(Dispatchers.Default + Job())
+    private var playerScope = CoroutineScope(Dispatchers.Main + Job())
 
     override var playMode = MutableStateFlow<PlayMode?>(null)
 
@@ -192,7 +192,7 @@ class NewPlayerImpl(
 
     override fun playStream(item: String, streamVariant: String, playMode: PlayMode) {
         launchJobAndCollectError {
-            val stream = toMediaItem(item)
+            val stream = toMediaItem(item, streamVariant)
             internalPlayStream(stream, playMode)
         }
     }
@@ -202,6 +202,8 @@ class NewPlayerImpl(
             internalPlayer.prepare()
         }
         this.playMode.update { playMode }
+        this.internalPlayer.setMediaItem(mediaItem)
+        this.internalPlayer.play()
     }
 
     private suspend fun toMediaItem(item: String, streamVariant: String): MediaItem {

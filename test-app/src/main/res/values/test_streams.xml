@@ -20,22 +20,28 @@
 -->
 
 <resources>
+    <!-- "Reverse Engineering the MOS 6502 CPU" a talk from 27c3 -->
+    <string name="ccc_6502_link" translatable="false">https://media.ccc.de/v/27c3-4159-en-reverse_engineering_mos_6502</string>
     <string name="ccc_6502_video" translatable="false">https://ftp.fau.de/cdn.media.ccc.de/congress/2010/mp4-h264-HQ/27c3-4159-en-reverse_engineering_mos_6502.mp4</string>
     <string name="ccc_6502_audio" translatable="false">https://ftp.fau.de/cdn.media.ccc.de/congress/2010/ogg-audio-only/27c3-4159-en-reverse_engineering_mos_6502.ogg</string>
     <string name="ccc_6502_title" translatable="false">Reverse Engineering the MOS 6502 CPU </string>
     <string name="ccc_6502_channel" translatable="false">Michael Steil</string>
-    <string name="ccc_6402_thumbnail" translatable="false">https://static.media.ccc.de/media/congress/2010/27c3-4159-en-reverse_engineering_mos_6502.jpg</string>
+    <string name="ccc_6502_thumbnail" translatable="false">https://static.media.ccc.de/media/congress/2010/27c3-4159-en-reverse_engineering_mos_6502.jpg</string>
     <string name="ccc_6502_preview_thumbnails" translatable="false">https://cloud.newpipe-ev.de/remote.php/dav/public-files/YKGkfBlBNbkavqw/6502/onethirdsize/f000000%03d.jpg</string>
-    <string-array name="ccc_6502_chapters">
+    <integer-array name="ccc_6502_chapters">
         <item>600000</item>
         <item>1200000</item>
         <item>1800000</item>
         <item>2400000</item>
         <item>3600000</item>
-    </string-array>
+    </integer-array>
 
+    <!-- A thumbler Video. The creators tried to imitate an ai generated video. I found this in a Tom Scott newsletter. -->
     <string name="portrait_video_example" translatable="false">https://va.media.tumblr.com/tumblr_sh62vjBX0j1z8ckep.mp4</string>
 
+
+    <!-- "Intel Management Engine deep dive" a talk from 36c3 -->
+    <string name ="ccc_imu_link" translatable="false">https://media.ccc.de/v/36c3-10694-intel_management_engine_deep_dive</string>
     <string name="ccc_imu_1080_mp4" translatable="false">https://ftp.fau.de/cdn.media.ccc.de/congress/2019/h264-hd/36c3-10694-eng-deu-Intel_Management_Engine_deep_dive_hd.mp4</string>
     <string name="ccc_imu_576_mp4" translatable="false">https://ftp.fau.de/cdn.media.ccc.de/congress/2019/h264-sd/36c3-10694-eng-deu-Intel_Management_Engine_deep_dive_sd.mp4</string>
     <string name="ccc_imu_1080_webm" translatable="false">https://ftp.fau.de/cdn.media.ccc.de/congress/2019/webm-hd/36c3-10694-eng-deu-Intel_Management_Engine_deep_dive_webm-hd.webm</string>
@@ -46,12 +52,12 @@
     <string name="ccc_imu_channel" translatable="false">Peter Bosch</string>
     <string name="ccc_imu_thumbnail" translatable="false">https://static.media.ccc.de/media/congress/2019/10694-hd.jpg</string>
     <string name="ccc_imu_preview_thumbnails" translatable="false">https://cloud.newpipe-ev.de/remote.php/dav/public-files/YKGkfBlBNbkavqw/intel_mu/oneeigthsize/f000000%03d.jpg</string>
-    <string-array name="ccc_imu_chapters">
+    <integer-array name="ccc_imu_chapters">
         <item>600000</item>
         <item>1200000</item>
         <item>1800000</item>
         <item>2400000</item>
         <item>3600000</item>
-    </string-array>
+    </integer-array>
     <string name="ccc_imu_subtitles" translatable="false">https://cdn.media.ccc.de/congress/2019/36c3-10694-eng-deu-Intel_Management_Engine_deep_dive.en.srt</string>
 </resources>

@@ -31,6 +31,10 @@ android {
     namespace = "net.newpipe.newplayer.testapp"
     compileSdk = 34
 
+    viewBinding {
+        enable = true
+    }
+
     buildFeatures {
         compose = true
     }
