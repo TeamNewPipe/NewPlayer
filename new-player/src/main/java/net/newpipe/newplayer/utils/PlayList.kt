@@ -21,7 +21,9 @@
 
 package net.newpipe.newplayer.utils
 
+import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
+import androidx.media3.common.Player.Listener
 
 
 // TODO: This is cool, but it might still contains all raceconditions since two actors are mutating the
@@ -30,6 +32,8 @@ import androidx.media3.common.Player
 // even if the size in a previous query said otherwise, since between the size query and
 // a get element query the count of elements might have been changed by exoplayer itself
 // due to this reason some functions force the user to handle elements out of bounds exceptions.
+
+
 
 
 class PlayListIterator(
@@ -83,6 +87,7 @@ class PlayList(val exoPlayer: Player, val fromIndex: Int = 0, val toIndex: Int =
     override val size: Int
         get() = minOf(exoPlayer.mediaItemCount, toIndex) - fromIndex
 
+    // TODO: This contains a race condition. When the player might change the playlist while this function runns
     override fun contains(element: String): Boolean {
         for (i in fromIndex..minOf(exoPlayer.mediaItemCount, toIndex)) {
             try {
@@ -95,6 +100,7 @@ class PlayList(val exoPlayer: Player, val fromIndex: Int = 0, val toIndex: Int =
         return false
     }
 
+    // TODO: This contains a race condition. When the player might change the playlist while this function runns
     override fun containsAll(elements: Collection<String>): Boolean {
         for (element in elements) {
             if (!this.contains(element)) {
@@ -106,10 +112,10 @@ class PlayList(val exoPlayer: Player, val fromIndex: Int = 0, val toIndex: Int =
 
     @Throws(IndexOutOfBoundsException::class)
     override fun get(index: Int) =
-        if (index < fromIndex || toIndex < index)
-            throw IndexOutOfBoundsException("Accessed playlist item outside of permitted Playlist ListWindow: $index")
+        if (index < 0 || toIndex < index + fromIndex)
+            throw IndexOutOfBoundsException("Accessed playlist item outside of permitted Playlist ListWindow: $index with [$fromIndex;$toIndex[")
         else
-            exoPlayer.getMediaItemAt(index).mediaId
+            exoPlayer.getMediaItemAt(index + fromIndex).mediaId
 
     override fun isEmpty() = exoPlayer.mediaItemCount == 0 || fromIndex == toIndex
 
@@ -127,20 +133,27 @@ class PlayList(val exoPlayer: Player, val fromIndex: Int = 0, val toIndex: Int =
         )
 
     override fun lastIndexOf(element: String): Int {
-        for (i in minOf(toIndex, exoPlayer.mediaItemCount) downTo fromIndex) {
-            try {
-                if (exoPlayer.getMediaItemAt(i).mediaId == element) {
-                    return i - fromIndex
-                }
-            } catch (e: IndexOutOfBoundsException) {
-                return -1
+        var mediaItemCount = 0
+        var newMediaItemCount =  minOf(toIndex, exoPlayer.mediaItemCount)
+
+        // this while loop is there to catch raceconditions
+        while(mediaItemCount != newMediaItemCount) {
+            mediaItemCount = newMediaItemCount
+            for (i in minOf(toIndex, exoPlayer.mediaItemCount) downTo fromIndex) {
+                try {
+                    if (exoPlayer.getMediaItemAt(i).mediaId == element) {
+                        return i - fromIndex
+                    }
+                } catch (_: IndexOutOfBoundsException) {}
+
             }
+            newMediaItemCount = minOf(toIndex, exoPlayer.mediaItemCount)
         }
         return -1
     }
 
     override fun indexOf(element: String): Int {
-        for (i in fromIndex.. minOf(toIndex, exoPlayer.mediaItemCount)) {
+        for (i in fromIndex..minOf(toIndex, exoPlayer.mediaItemCount)) {
             try {
                 if (exoPlayer.getMediaItemAt(i).mediaId == element) {
                     return i - fromIndex

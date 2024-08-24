@@ -30,7 +30,14 @@ import androidx.media3.exoplayer.source.MediaSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.utils.PlayList
 import kotlin.Exception
 
@@ -56,16 +63,13 @@ interface NewPlayer {
     var currentPosition: Long
     var fastSeekAmountSec: Int
     var playBackMode: PlayMode
-    var playMode: PlayMode?
+    var playMode : MutableStateFlow<PlayMode?>
 
     var playlist: PlayList
 
-    // calbacks
+    // callbacks
 
-    interface Listener {
-        fun playModeChange(playMode: PlayMode) {}
-        fun onError(exception: Exception) {}
-    }
+    val errorFlow : SharedFlow<Exception>
 
     // methods
     fun prepare()
@@ -74,7 +78,6 @@ interface NewPlayer {
     fun addToPlaylist(item: String)
     fun playStream(item: String, playMode: PlayMode)
     fun playStream(item: String, streamVariant: String, playMode: PlayMode)
-    fun addCallbackListener(listener: Listener?)
 
     data class Builder(val app: Application, val repository: MediaRepository) {
         private var mediaSourceFactory: MediaSource.Factory? = null
@@ -111,6 +114,9 @@ class NewPlayerImpl(
     override val repository: MediaRepository,
 ) : NewPlayer {
 
+    var mutableErrorFlow =  MutableSharedFlow<Exception>()
+    override val errorFlow = mutableErrorFlow.asSharedFlow()
+
     override val bufferedPercentage: Int
         get() = internalPlayer.bufferedPercentage
     override var currentPosition: Long
@@ -122,16 +128,9 @@ class NewPlayerImpl(
     override var fastSeekAmountSec: Int = 10
     override var playBackMode: PlayMode = PlayMode.EMBEDDED_VIDEO
 
-    private var callbackListener: ArrayList<NewPlayer.Listener?> = ArrayList()
     private var playerScope = CoroutineScope(Dispatchers.Default + Job())
 
-    override var playMode: PlayMode? = null
-        set(value) {
-            field = value
-            if (field != null) {
-                callbackListener.forEach { it?.playModeChange(field!!) }
-            }
-        }
+    override var playMode = MutableStateFlow<PlayMode?>(null)
 
     override var playWhenReady: Boolean
         set(value) {
@@ -154,9 +153,7 @@ class NewPlayerImpl(
                     if (newUri != null) {
                         TODO("Implement handing new uri on fixed error")
                     } else {
-                        callbackListener.forEach {
-                            it?.onError(error)
-                        }
+                        mutableErrorFlow.emit(error)
                     }
                 }
             }
@@ -204,7 +201,7 @@ class NewPlayerImpl(
         if (internalPlayer.playbackState == Player.STATE_IDLE) {
             internalPlayer.prepare()
         }
-        this.playMode = playMode
+        this.playMode.update { playMode }
     }
 
     private suspend fun toMediaItem(item: String, streamVariant: String): MediaItem {
@@ -232,13 +229,7 @@ class NewPlayerImpl(
             try {
                 task()
             } catch (e: Exception) {
-                callbackListener.forEach {
-                    it?.onError(e)
-                }
+                mutableErrorFlow.emit(e)
             }
         }
-
-    override fun addCallbackListener(listener: NewPlayer.Listener?) {
-        callbackListener.add(listener)
-    }
 }

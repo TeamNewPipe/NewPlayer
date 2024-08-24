@@ -34,6 +34,7 @@ import androidx.media3.common.MediaItem
 import dagger.hilt.android.AndroidEntryPoint
 import net.newpipe.newplayer.ActivityBrainSlug
 import net.newpipe.newplayer.NewPlayer
+import net.newpipe.newplayer.PlayMode
 import net.newpipe.newplayer.VideoPlayerView
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelImpl
@@ -63,7 +64,7 @@ class MainActivity : AppCompatActivity() {
 
         startStreamButton.setOnClickListener {
             newPlayer.playWhenReady = true
-            newPlayer.setStream(MediaItem.fromUri(getString(R.string.ccc_6502_video)))
+            newPlayer.playStream(getString(R.string.ccc_6502_video), PlayMode.EMBEDDED_VIDEO)
         }
 
         videoPlayerViewModel.newPlayer = newPlayer
