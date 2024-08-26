@@ -96,6 +96,17 @@ enum class UIModeState {
             else -> this
         }
 
+    fun toPlayMode() = when(this) {
+        PLACEHOLDER -> null
+        EMBEDDED_VIDEO -> PlayMode.EMBEDDED_VIDEO
+        EMBEDDED_VIDEO_CONTROLLER_UI -> PlayMode.EMBEDDED_VIDEO
+        EMBEDDED_VIDEO_CHAPTER_SELECT -> PlayMode.EMBEDDED_VIDEO
+        EMBEDDED_VIDEO_STREAM_SELECT -> PlayMode.EMBEDDED_VIDEO
+        FULLSCREEN_VIDEO -> PlayMode.FULLSCREEN_VIDEO
+        FULLSCREEN_VIDEO_CONTROLLER_UI -> PlayMode.FULLSCREEN_VIDEO
+        FULLSCREEN_VIDEO_CHAPTER_SELECT -> PlayMode.FULLSCREEN_VIDEO
+        FULLSCREEN_VIDEO_STREAM_SELECT -> PlayMode.FULLSCREEN_VIDEO
+    }
 
     companion object {
         fun fromPlayMode(playMode: PlayMode?) =

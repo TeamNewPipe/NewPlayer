@@ -35,9 +35,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.utils.PlayList
 import kotlin.Exception
 
@@ -63,13 +63,14 @@ interface NewPlayer {
     var currentPosition: Long
     var fastSeekAmountSec: Int
     var playBackMode: PlayMode
-    var playMode : MutableStateFlow<PlayMode?>
+    var playMode: StateFlow<PlayMode?>
 
     var playlist: PlayList
 
     // callbacks
 
-    val errorFlow : SharedFlow<Exception>
+    val errorFlow: SharedFlow<Exception>
+    val onExoPlayerEvent: SharedFlow<Pair<Player, Player.Events>>
 
     // methods
     fun prepare()
@@ -78,6 +79,7 @@ interface NewPlayer {
     fun addToPlaylist(item: String)
     fun playStream(item: String, playMode: PlayMode)
     fun playStream(item: String, streamVariant: String, playMode: PlayMode)
+    fun setPlayMode(playMode: PlayMode)
 
     data class Builder(val app: Application, val repository: MediaRepository) {
         private var mediaSourceFactory: MediaSource.Factory? = null
@@ -114,7 +116,7 @@ class NewPlayerImpl(
     override val repository: MediaRepository,
 ) : NewPlayer {
 
-    var mutableErrorFlow =  MutableSharedFlow<Exception>()
+    var mutableErrorFlow = MutableSharedFlow<Exception>()
     override val errorFlow = mutableErrorFlow.asSharedFlow()
 
     override val bufferedPercentage: Int
@@ -130,7 +132,12 @@ class NewPlayerImpl(
 
     private var playerScope = CoroutineScope(Dispatchers.Main + Job())
 
-    override var playMode = MutableStateFlow<PlayMode?>(null)
+    var mutablePlayMode = MutableStateFlow<PlayMode?>(null)
+    override var playMode = mutablePlayMode.asStateFlow()
+
+    var mutableOnEvent = MutableSharedFlow<Pair<Player, Player.Events>>()
+    override val onExoPlayerEvent: SharedFlow<Pair<Player, Player.Events>> =
+        mutableOnEvent.asSharedFlow()
 
     override var playWhenReady: Boolean
         set(value) {
@@ -155,6 +162,13 @@ class NewPlayerImpl(
                     } else {
                         mutableErrorFlow.emit(error)
                     }
+                }
+            }
+
+            override fun onEvents(player: Player, events: Player.Events) {
+                super.onEvents(player, events)
+                launchJobAndCollectError {
+                    mutableOnEvent.emit(Pair(player, events))
                 }
             }
         })
@@ -197,11 +211,15 @@ class NewPlayerImpl(
         }
     }
 
+    override fun setPlayMode(playMode: PlayMode) {
+        this.mutablePlayMode.update { playMode }
+    }
+
     private fun internalPlayStream(mediaItem: MediaItem, playMode: PlayMode) {
         if (internalPlayer.playbackState == Player.STATE_IDLE) {
             internalPlayer.prepare()
         }
-        this.playMode.update { playMode }
+        this.mutablePlayMode.update { playMode }
         this.internalPlayer.setMediaItem(mediaItem)
         this.internalPlayer.play()
     }

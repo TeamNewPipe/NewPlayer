@@ -28,7 +28,6 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.Player
@@ -134,7 +133,6 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
                 override fun onVideoSizeChanged(videoSize: androidx.media3.common.VideoSize) {
                     super.onVideoSizeChanged(videoSize)
-
                     updateContentRatio(VideoSize.fromMedia3VideoSize(videoSize))
                 }
 
@@ -148,13 +146,13 @@ class VideoPlayerViewModelImpl @Inject constructor(
                 }
             })
         }
-        newPlayer?.let{ newPlayer ->
+        newPlayer?.let { newPlayer ->
             viewModelScope.launch {
-                while(true) {
-                    newPlayer.playMode.collect { mode ->
-                        println("blub: $mode")
+                newPlayer.playMode.collect { newMode ->
+                    val currentMode = mutableUiState.value.uiMode.toPlayMode()
+                    if (currentMode != newMode) {
                         mutableUiState.update {
-                            it.copy(uiMode = UIModeState.fromPlayMode(mode))
+                            it.copy(uiMode = UIModeState.fromPlayMode(newMode))
                         }
                     }
                 }
@@ -184,15 +182,15 @@ class VideoPlayerViewModelImpl @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun initUIState(instanceState: Bundle) {
 
-        val uiState =
+        val recoveredUiState =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) instanceState.getParcelable(
                 VIDEOPLAYER_UI_STATE, VideoPlayerUIState::class.java
             )
             else instanceState.getParcelable(VIDEOPLAYER_UI_STATE)
 
-        uiState?.let { uiState ->
+        if(recoveredUiState != null) {
             mutableUiState.update {
-                uiState
+                recoveredUiState
             }
         }
     }
@@ -349,17 +347,25 @@ class VideoPlayerViewModelImpl @Inject constructor(
         callbackListeners.forEach { it?.onFullscreenToggle(false) }
         uiVisibilityJob?.cancel()
         finishFastSeek()
-        mutableUiState.update {
-            it.copy(uiMode = UIModeState.EMBEDDED_VIDEO)
-        }
+        updateUiMode(UIModeState.EMBEDDED_VIDEO)
     }
 
     override fun switchToFullscreen() {
         callbackListeners.forEach { it?.onFullscreenToggle(true) }
         uiVisibilityJob?.cancel()
         finishFastSeek()
-        mutableUiState.update {
-            it.copy(uiMode = UIModeState.FULLSCREEN_VIDEO)
+        updateUiMode(UIModeState.FULLSCREEN_VIDEO)
+    }
+
+    private fun updateUiMode(newState: UIModeState) {
+        val newPlayMode = newState.toPlayMode()
+        val currentPlayMode = mutableUiState.value.uiMode.toPlayMode()
+        if(newPlayMode != currentPlayMode) {
+            newPlayer?.setPlayMode(newPlayMode!!)
+        } else {
+            mutableUiState.update {
+                it.copy(uiMode = newState)
+            }
         }
     }
 

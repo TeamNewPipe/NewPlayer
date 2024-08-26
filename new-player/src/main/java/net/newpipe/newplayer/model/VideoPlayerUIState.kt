@@ -46,7 +46,7 @@ data class VideoPlayerUIState(
         val DEFAULT = VideoPlayerUIState(
             // TODO: replace this with the placeholder state.
             // The actual initial state upon starting to play is dictated by the NewPlayer instance
-            uiMode = UIModeState.EMBEDDED_VIDEO,
+            uiMode = UIModeState.PLACEHOLDER,
             //uiMode = UIModeState.PLACEHOLDER,
             playing = false,
             contentRatio = 16 / 9f,
