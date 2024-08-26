@@ -75,6 +75,18 @@ class MainActivity : AppCompatActivity() {
             newPlayer.playStream("portrait", PlayMode.EMBEDDED_VIDEO)
         }
 
+        binding.add6502StreamButton.setOnClickListener {
+            newPlayer.addToPlaylist("6502")
+        }
+
+        binding.addImuStreamButton.setOnClickListener {
+            newPlayer.addToPlaylist("imu")
+        }
+
+        binding.addPortraitStreamButton.setOnClickListener {
+            newPlayer.addToPlaylist("portrait")
+        }
+
         videoPlayerViewModel.newPlayer = newPlayer
         videoPlayerViewModel.contentFitMode = ContentScale.FIT_INSIDE
 

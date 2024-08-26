@@ -62,8 +62,7 @@
 
     </LinearLayout>
 
-
-    <LinearLayout
+    <ScrollView
         android:id="@+id/buttons_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -74,28 +73,58 @@
         app:layout_constraintStart_toEndOf="@id/embedded_player_layout"
         app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/start_6502_stream_button"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Start 6502 Stream" />
-
-        <Button
-            android:id="@+id/start_imu_stream_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Start IMU Stream" />
-
-        <Button
-            android:id="@+id/start_portrait_stream_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Start Landscape Stream" />
+            android:orientation="vertical">
 
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/start_6502_stream_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Start 6502 Stream" />
+
+            <Button
+                android:id="@+id/start_imu_stream_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Start IMU Stream" />
+
+            <Button
+                android:id="@+id/start_portrait_stream_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Start Portrait Stream" />
+
+            <Button
+                android:id="@+id/add_6502_stream_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/material_dynamic_primary50"
+                android:text="Append 6502 Stream" />
+
+            <Button
+                android:id="@+id/add_imu_stream_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/material_dynamic_primary50"
+                android:text="Append IMU Stream" />
+
+            <Button
+                android:id="@+id/add_portrait_stream_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/material_dynamic_primary50"
+                android:text="Append Portrait Stream" />
+
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
