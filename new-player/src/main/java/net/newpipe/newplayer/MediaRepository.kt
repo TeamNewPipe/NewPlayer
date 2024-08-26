@@ -21,28 +21,34 @@
 package net.newpipe.newplayer
 
 import android.net.Uri
-import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import net.newpipe.newplayer.utils.Thumbnail
 
 data class Chapter(val chapterStartInMs: Long, val chapterTitle: String?)
 
+data class MetaInfo(
+    val title: String,
+    val channelName: String,
+    val thumbnail: Thumbnail?,
+    val lengthInS: Int
+)
+
+
 interface MediaRepository {
-    suspend fun getTitle(item: String) : String
-    suspend fun getChannelName(item: String): String
-    suspend fun getThumbnail(item: String): Thumbnail
+
+    suspend fun getMetaInfo(item: String): MetaInfo
 
     suspend fun getAvailableStreamVariants(item: String): List<String>
-    suspend fun getStream(item: String, streamSelector: String) : Uri
+    suspend fun getStream(item: String, streamSelector: String): Uri
 
     suspend fun getAvailableSubtitleVariants(item: String): List<String>
     suspend fun getSubtitle(item: String, variant: String): Uri
 
-    suspend fun getPreviewThumbnails(item: String) : HashMap<Long, Thumbnail>?
+    suspend fun getPreviewThumbnails(item: String): HashMap<Long, Thumbnail>?
     suspend fun getChapters(item: String): List<Chapter>
-    suspend fun getChapterThumbnail(item: String, chapter: Long) : Thumbnail?
+    suspend fun getChapterThumbnail(item: String, chapter: Long): Thumbnail?
 
     suspend fun getTimestampLink(item: String, timestampInSeconds: Long): String
 
-    suspend fun tryAndRescueError(item: String?, exception: PlaybackException) : Uri?
+    suspend fun tryAndRescueError(item: String?, exception: PlaybackException): Uri?
 }

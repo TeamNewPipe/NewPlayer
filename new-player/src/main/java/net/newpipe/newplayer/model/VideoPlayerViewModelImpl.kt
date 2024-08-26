@@ -30,6 +30,7 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -43,6 +44,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.newpipe.newplayer.utils.VideoSize
 import net.newpipe.newplayer.NewPlayer
+import net.newpipe.newplayer.playerInternals.getPlaylistItemsFromItemList
 import net.newpipe.newplayer.ui.ContentScale
 
 val VIDEOPLAYER_UI_STATE = "video_player_ui_state"
@@ -119,7 +121,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
             }
         }
 
-    var mutableEmbeddedPlayerDraggedDownBy = MutableSharedFlow<Float>()
+    private var mutableEmbeddedPlayerDraggedDownBy = MutableSharedFlow<Float>()
     override val embeddedPlayerDraggedDownBy = mutableEmbeddedPlayerDraggedDownBy.asSharedFlow()
 
     private fun installNewPlayer() {
@@ -148,6 +150,11 @@ class VideoPlayerViewModelImpl @Inject constructor(
                         it.copy(isLoading = isLoading)
                     }
                 }
+
+                override fun onPlaylistMetadataChanged(mediaMetadata: MediaMetadata) {
+                    super.onPlaylistMetadataChanged(mediaMetadata)
+                    updatePlaylist()
+               }
             })
         }
         newPlayer?.let { newPlayer ->
@@ -162,7 +169,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
                 }
             }
         }
-
+        updatePlaylist()
     }
 
     fun updateContentRatio(videoSize: VideoSize) {
@@ -393,4 +400,18 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
 
     } ?: minContentRatio
+
+    private fun updatePlaylist() {
+        newPlayer?.let { newPlayer ->
+            viewModelScope.launch {
+                val playlist = getPlaylistItemsFromItemList(
+                    newPlayer.playlist,
+                    newPlayer.repository
+                )
+                mutableUiState.update {
+                    it.copy(playList = playlist)
+                }
+            }
+        }
+    }
 }

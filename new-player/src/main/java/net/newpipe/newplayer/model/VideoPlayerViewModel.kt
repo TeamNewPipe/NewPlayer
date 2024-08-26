@@ -26,6 +26,8 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.ui.ContentScale
+import net.newpipe.newplayer.utils.Thumbnail
+
 
 interface VideoPlayerViewModel {
     var newPlayer: NewPlayer?

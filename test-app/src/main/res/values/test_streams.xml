@@ -35,10 +35,13 @@
         <item>2400000</item>
         <item>3600000</item>
     </integer-array>
+    <integer name="ccc_6502_length">3116</integer>
 
     <!-- A thumbler Video. The creators tried to imitate an ai generated video. I found this in a Tom Scott newsletter. -->
+    <string name="portrait_title" translatable="false">Imitating generative AI videos</string>
+    <string name="portrait_channel" translatable="false">rongzhi</string>
     <string name="portrait_video_example" translatable="false">https://va.media.tumblr.com/tumblr_sh62vjBX0j1z8ckep.mp4</string>
-
+    <integer name="portrait_length">23</integer>
 
     <!-- "Intel Management Engine deep dive" a talk from 36c3 -->
     <string name ="ccc_imu_link" translatable="false">https://media.ccc.de/v/36c3-10694-intel_management_engine_deep_dive</string>
@@ -60,4 +63,5 @@
         <item>3600000</item>
     </integer-array>
     <string name="ccc_imu_subtitles" translatable="false">https://cdn.media.ccc.de/congress/2019/36c3-10694-eng-deu-Intel_Management_Engine_deep_dive.en.srt</string>
+    <integer name="ccc_imu_length">3607</integer>
 </resources>

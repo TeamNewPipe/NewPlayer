@@ -38,7 +38,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import net.newpipe.newplayer.utils.PlayList
+import net.newpipe.newplayer.playerInternals.PlayList
 import kotlin.Exception
 
 enum class PlayMode {
@@ -60,6 +60,7 @@ interface NewPlayer {
     val duration: Long
     val bufferedPercentage: Int
     val repository: MediaRepository
+    val sharingLinkWithOffsetPossible: Boolean
     var currentPosition: Long
     var fastSeekAmountSec: Int
     var playBackMode: PlayMode
@@ -84,13 +85,21 @@ interface NewPlayer {
     data class Builder(val app: Application, val repository: MediaRepository) {
         private var mediaSourceFactory: MediaSource.Factory? = null
         private var preferredStreamVariants: List<String> = emptyList()
+        private var sharingLinkWithOffsetPossible = false
 
-        fun setMediaSourceFactory(mediaSourceFactory: MediaSource.Factory) {
+        fun setMediaSourceFactory(mediaSourceFactory: MediaSource.Factory) : Builder {
             this.mediaSourceFactory = mediaSourceFactory
+            return this
         }
 
-        fun setPreferredStreamVariants(preferredStreamVariants: List<String>) {
+        fun setPreferredStreamVariants(preferredStreamVariants: List<String>) : Builder {
             this.preferredStreamVariants = preferredStreamVariants
+            return this
+        }
+
+        fun setSharingLinkWithOffsetPossible(possible: Boolean) : Builder {
+            this.sharingLinkWithOffsetPossible = false
+            return this
         }
 
         fun build(): NewPlayer {
@@ -102,7 +111,8 @@ interface NewPlayer {
                 app = app,
                 internalPlayer = exoPlayerBuilder.build(),
                 repository = repository,
-                preferredStreamVariants = preferredStreamVariants
+                preferredStreamVariants = preferredStreamVariants,
+                sharingLinkWithOffsetPossible = sharingLinkWithOffsetPossible
             )
         }
     }
@@ -114,6 +124,7 @@ class NewPlayerImpl(
     override val internalPlayer: Player,
     override val preferredStreamVariants: List<String>,
     override val repository: MediaRepository,
+    override val sharingLinkWithOffsetPossible: Boolean
 ) : NewPlayer {
 
     var mutableErrorFlow = MutableSharedFlow<Exception>()
@@ -121,6 +132,7 @@ class NewPlayerImpl(
 
     override val bufferedPercentage: Int
         get() = internalPlayer.bufferedPercentage
+
     override var currentPosition: Long
         get() = internalPlayer.currentPosition
         set(value) {

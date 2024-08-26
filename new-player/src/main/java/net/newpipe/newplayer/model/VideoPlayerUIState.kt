@@ -22,9 +22,10 @@ package net.newpipe.newplayer.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import net.newpipe.newplayer.Chapter
+import net.newpipe.newplayer.playerInternals.PlaylistItem
 import net.newpipe.newplayer.ui.ContentScale
 
-@Parcelize
 data class VideoPlayerUIState(
     val uiMode: UIModeState,
     val playing: Boolean,
@@ -39,8 +40,10 @@ data class VideoPlayerUIState(
     val fastSeekSeconds: Int,
     val soundVolume: Float,
     val brightness: Float?,     // when null use system value
-    val embeddedUiConfig: EmbeddedUiConfig?
-) : Parcelable {
+    val embeddedUiConfig: EmbeddedUiConfig?,
+    val playList: List<PlaylistItem>,
+    val chapters: List<Chapter>
+) {
     companion object {
         val DEFAULT = VideoPlayerUIState(
             // TODO: replace this with the placeholder state.
@@ -59,7 +62,9 @@ data class VideoPlayerUIState(
             fastSeekSeconds = 0,
             soundVolume = 0f,
             brightness = null,
-            embeddedUiConfig = null
+            embeddedUiConfig = null,
+            playList = emptyList(),
+            chapters = emptyList()
         )
     }
 }

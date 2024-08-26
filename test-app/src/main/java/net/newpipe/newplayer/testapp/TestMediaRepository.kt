@@ -1,16 +1,11 @@
 package net.newpipe.newplayer.testapp
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.media.Image
 import android.net.Uri
-import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.MediaRepository
+import net.newpipe.newplayer.MetaInfo
 import net.newpipe.newplayer.utils.OnlineThumbnail
 import net.newpipe.newplayer.utils.Thumbnail
 import okhttp3.OkHttpClient
@@ -27,36 +22,29 @@ class TestMediaRepository(val context: Context) : MediaRepository {
         return client.newCall(request).execute()
     }
 
-    override suspend fun getTitle(item: String) =
+    override suspend fun getMetaInfo(item: String) =
         when (item) {
-            "6502" -> "Reverse engineering the MOS 6502"
-            "portrait" -> "Imitating generative AI videos"
-            "imu" -> "Intel Management Engine deep dive "
-            else -> throw Exception("Unknown stream: $item")
-        }
-
-    override suspend fun getChannelName(item: String) =
-        when (item) {
-            "6502" -> "27c3"
-            "portrait" -> "无所吊谓～"
-            "imu" -> "36c3"
-            else -> throw Exception("Unknown stream: $item")
-        }
-
-    override suspend fun getThumbnail(item: String) =
-        when (item) {
-            "6502" ->
-                OnlineThumbnail("https://static.media.ccc.de/media/congress/2010/27c3-4159-en-reverse_engineering_mos_6502_preview.jpg")
-
-            "portrait" ->
-                OnlineThumbnail("https://64.media.tumblr.com/13f7e4065b4c583573a9a3e40750ccf8/9e8cf97a92704864-4b/s540x810/d966c97f755384b46dbe6d5350d35d0e9d4128ad.jpg")
-
-            "imu" ->
-                OnlineThumbnail("https://static.media.ccc.de/media/congress/2019/10694-hd_preview.jpg")
+            "6502" -> MetaInfo(
+                title = context.getString(R.string.ccc_6502_title),
+                channelName = context.getString(R.string.ccc_6502_channel),
+                thumbnail = OnlineThumbnail(context.getString(R.string.ccc_6502_thumbnail)),
+                lengthInS = context.resources.getInteger(R.integer.ccc_6502_length)
+            )
+            "imu" -> MetaInfo(
+                title = context.getString(R.string.ccc_imu_title),
+                channelName = context.getString(R.string.ccc_imu_channel),
+                thumbnail = OnlineThumbnail(context.getString(R.string.ccc_imu_thumbnail)),
+                lengthInS = context.resources.getInteger(R.integer.ccc_imu_length)
+            )
+            "portrait" -> MetaInfo(
+                title = context.getString(R.string.portrait_title),
+                channelName = context.getString(R.string.portrait_channel),
+                thumbnail = null,
+                lengthInS = context.resources.getInteger(R.integer.portrait_length)
+            )
 
             else -> throw Exception("Unknown stream: $item")
         }
-
 
     override suspend fun getAvailableStreamVariants(item: String): List<String> =
         when (item) {

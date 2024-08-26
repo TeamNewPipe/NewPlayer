@@ -19,11 +19,9 @@
  *
  */
 
-package net.newpipe.newplayer.utils
+package net.newpipe.newplayer.playerInternals
 
-import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
-import androidx.media3.common.Player.Listener
 
 
 // TODO: This is cool, but it might still contains all raceconditions since two actors are mutating the
@@ -32,9 +30,6 @@ import androidx.media3.common.Player.Listener
 // even if the size in a previous query said otherwise, since between the size query and
 // a get element query the count of elements might have been changed by exoplayer itself
 // due to this reason some functions force the user to handle elements out of bounds exceptions.
-
-
-
 
 class PlayListIterator(
     val exoPlayer: Player,
