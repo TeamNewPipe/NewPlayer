@@ -22,6 +22,7 @@ package net.newpipe.newplayer.model
 
 import android.os.Bundle
 import androidx.media3.common.Player
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.ui.ContentScale
@@ -34,8 +35,8 @@ interface VideoPlayerViewModel {
     var minContentRatio: Float
     var maxContentRatio: Float
     var contentFitMode: ContentScale
+    val embeddedPlayerDraggedDownBy: SharedFlow<Float>
 
-    fun addCallbackListener(listener: Listener)
     fun initUIState(instanceState: Bundle)
     fun play()
     fun pause()
@@ -52,10 +53,4 @@ interface VideoPlayerViewModel {
     fun finishFastSeek()
     fun brightnessChange(changeRate: Float, systemBrightness: Float)
     fun volumeChange(changeRate: Float)
-
-    interface Listener {
-        fun onFullscreenToggle(isFullscreen: Boolean) {}
-
-        fun embeddedPlayerDraggedDown(offset: Float) {}
-    }
 }

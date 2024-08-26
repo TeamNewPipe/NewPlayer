@@ -2,7 +2,10 @@ package net.newpipe.newplayer.model
 
 import android.os.Bundle
 import androidx.media3.common.Player
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.ui.ContentScale
 
@@ -13,12 +16,9 @@ open class VideoPlayerViewModelDummy : VideoPlayerViewModel {
     override var minContentRatio = 4F / 3F
     override var maxContentRatio = 16F / 9F
     override var contentFitMode = ContentScale.FIT_INSIDE
+    override val embeddedPlayerDraggedDownBy = MutableSharedFlow<Float>().asSharedFlow()
 
     override fun initUIState(instanceState: Bundle) {
-        println("dummy impl")
-    }
-
-    override fun addCallbackListener(listener: VideoPlayerViewModel.Listener) {
         println("dummy impl")
     }
 

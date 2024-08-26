@@ -23,9 +23,16 @@ package net.newpipe.newplayer
 import android.view.View
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 
 class ActivityBrainSlug(val viewModel: VideoPlayerViewModel) {
+
+    val brainSlugScope = CoroutineScope(Dispatchers.Main + Job())
 
     var rootView: View? = null
         set(value) {
@@ -65,9 +72,9 @@ class ActivityBrainSlug(val viewModel: VideoPlayerViewModel) {
         }
 
     init {
-        viewModel.addCallbackListener(object : VideoPlayerViewModel.Listener {
-            override fun onFullscreenToggle(isFullscreen: Boolean) {
-                if (isFullscreen) {
+        brainSlugScope.launch {
+            viewModel.uiState.collect { uiState ->
+                if (uiState.uiMode.fullscreen) {
                     removeSystemInsets()
                     viewsToHideOnFullscreen.forEach { it.visibility = View.GONE }
                     fullscreenPlayerView?.visibility = View.VISIBLE
@@ -77,8 +84,7 @@ class ActivityBrainSlug(val viewModel: VideoPlayerViewModel) {
                     fullscreenPlayerView?.visibility = View.GONE
                 }
             }
-
-        })
+        }
     }
 
     fun addViewToHideOnFullscreen(view: View) {

@@ -26,15 +26,20 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.collection.mutableFloatFloatMapOf
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.Player
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -62,8 +67,6 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     private val audioManager =
         getSystemService(application.applicationContext, AudioManager::class.java)!!
-
-    var callbackListeners: MutableList<VideoPlayerViewModel.Listener?> = ArrayList()
 
     init {
         val soundVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC).toFloat() /
@@ -117,6 +120,9 @@ class VideoPlayerViewModelImpl @Inject constructor(
                 it.copy(contentFitMode = value)
             }
         }
+
+    var mutableEmbeddedPlayerDraggedDownBy = MutableSharedFlow<Float> ()
+    override val embeddedPlayerDraggedDownBy = mutableEmbeddedPlayerDraggedDownBy.asSharedFlow()
 
     private fun installNewPlayer() {
         internalPlayer?.let { player ->
@@ -193,10 +199,6 @@ class VideoPlayerViewModelImpl @Inject constructor(
                 recoveredUiState
             }
         }
-    }
-
-    override fun addCallbackListener(listener: VideoPlayerViewModel.Listener) {
-        callbackListeners.add(listener)
     }
 
     override fun play() {
@@ -285,7 +287,9 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun embeddedDraggedDown(offset: Float) {
-        callbackListeners.forEach { it?.embeddedPlayerDraggedDown(offset) }
+        viewModelScope.launch {
+            mutableEmbeddedPlayerDraggedDownBy.emit(offset)
+        }
     }
 
     override fun fastSeek(count: Int) {
@@ -344,14 +348,12 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun switchToEmbeddedView() {
-        callbackListeners.forEach { it?.onFullscreenToggle(false) }
         uiVisibilityJob?.cancel()
         finishFastSeek()
         updateUiMode(UIModeState.EMBEDDED_VIDEO)
     }
 
     override fun switchToFullscreen() {
-        callbackListeners.forEach { it?.onFullscreenToggle(true) }
         uiVisibilityJob?.cancel()
         finishFastSeek()
         updateUiMode(UIModeState.FULLSCREEN_VIDEO)
