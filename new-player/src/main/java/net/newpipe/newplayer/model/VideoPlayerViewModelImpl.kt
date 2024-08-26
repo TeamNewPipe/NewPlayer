@@ -26,19 +26,16 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.collection.mutableFloatFloatMapOf
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.Player
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
 import kotlinx.coroutines.flow.asStateFlow
@@ -51,6 +48,7 @@ import net.newpipe.newplayer.ui.ContentScale
 val VIDEOPLAYER_UI_STATE = "video_player_ui_state"
 
 private const val TAG = "VideoPlayerViewModel"
+
 
 @HiltViewModel
 class VideoPlayerViewModelImpl @Inject constructor(
@@ -121,7 +119,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
             }
         }
 
-    var mutableEmbeddedPlayerDraggedDownBy = MutableSharedFlow<Float> ()
+    var mutableEmbeddedPlayerDraggedDownBy = MutableSharedFlow<Float>()
     override val embeddedPlayerDraggedDownBy = mutableEmbeddedPlayerDraggedDownBy.asSharedFlow()
 
     private fun installNewPlayer() {
@@ -194,7 +192,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
             )
             else instanceState.getParcelable(VIDEOPLAYER_UI_STATE)
 
-        if(recoveredUiState != null) {
+        if (recoveredUiState != null) {
             mutableUiState.update {
                 recoveredUiState
             }
@@ -317,6 +315,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun brightnessChange(changeRate: Float, systemBrightness: Float) {
+
         if (mutableUiState.value.uiMode.fullscreen) {
             val currentBrightness = mutableUiState.value.brightness
                 ?: if (systemBrightness < 0f) 0.5f else systemBrightness
@@ -347,6 +346,21 @@ class VideoPlayerViewModelImpl @Inject constructor(
         }
     }
 
+    override fun onReportEmbeddedConfig(embeddedUiConfig: EmbeddedUiConfig?) {
+        if (embeddedUiConfig == null) {
+            mutableUiState.update {
+                it.copy(embeddedUiConfig = null)
+            }
+        } else {
+            if (uiState.value.embeddedUiConfig == null) {
+                println("gurken: ${embeddedUiConfig}")
+                mutableUiState.update {
+                    it.copy(embeddedUiConfig = embeddedUiConfig)
+                }
+            }
+        }
+    }
+
     override fun switchToEmbeddedView() {
         uiVisibilityJob?.cancel()
         finishFastSeek()
@@ -356,13 +370,14 @@ class VideoPlayerViewModelImpl @Inject constructor(
     override fun switchToFullscreen() {
         uiVisibilityJob?.cancel()
         finishFastSeek()
+
         updateUiMode(UIModeState.FULLSCREEN_VIDEO)
     }
 
     private fun updateUiMode(newState: UIModeState) {
         val newPlayMode = newState.toPlayMode()
         val currentPlayMode = mutableUiState.value.uiMode.toPlayMode()
-        if(newPlayMode != currentPlayMode) {
+        if (newPlayMode != currentPlayMode) {
             newPlayer?.setPlayMode(newPlayMode!!)
         } else {
             mutableUiState.update {

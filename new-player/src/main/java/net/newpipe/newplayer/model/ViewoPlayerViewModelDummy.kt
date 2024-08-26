@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.media3.common.Player
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.ui.ContentScale
@@ -62,11 +61,15 @@ open class VideoPlayerViewModelDummy : VideoPlayerViewModel {
         println("dummy impl")
     }
 
-    override fun brightnessChange(changeRate: Float, currentValue: Float) {
+    override fun brightnessChange(changeRate: Float, systemBrightness: Float) {
         println("dummy impl")
     }
 
     override fun volumeChange(changeRate: Float) {
+        println("dummy impl")
+    }
+
+    override fun onReportEmbeddedConfig(embeddedUiConfig: EmbeddedUiConfig?) {
         println("dummy impl")
     }
 

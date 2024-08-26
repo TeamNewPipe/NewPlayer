@@ -49,7 +49,7 @@ class VideoPlayerView : FrameLayout {
         defStyleAttr: Int = 0
     ) : super(context, attrs, defStyleAttr) {
         val view = LayoutInflater.from(context).inflate(R.layout.video_player_view, this)
-        composeView = view.findViewById<ComposeView>(R.id.video_player_compose_view)
+        composeView = view.findViewById(R.id.video_player_compose_view)
 
         applyViewModel()
     }

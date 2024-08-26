@@ -26,9 +26,10 @@ import androidx.core.view.WindowInsetsCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import net.newpipe.newplayer.model.VideoPlayerViewModel
+
+private const val TAG = "ActivityBrainSlug"
 
 class ActivityBrainSlug(val viewModel: VideoPlayerViewModel) {
 
@@ -78,10 +79,16 @@ class ActivityBrainSlug(val viewModel: VideoPlayerViewModel) {
                     removeSystemInsets()
                     viewsToHideOnFullscreen.forEach { it.visibility = View.GONE }
                     fullscreenPlayerView?.visibility = View.VISIBLE
+                    embeddedPlayerView?.visibility = View.GONE
+                    fullscreenPlayerView?.viewModel = viewModel
+                    embeddedPlayerView?.viewModel = null
                 } else {
                     addSystemInsets()
                     viewsToHideOnFullscreen.forEach { it.visibility = View.VISIBLE }
                     fullscreenPlayerView?.visibility = View.GONE
+                    embeddedPlayerView?.visibility = View.VISIBLE
+                    fullscreenPlayerView?.viewModel = null
+                    embeddedPlayerView?.viewModel = viewModel
                 }
             }
         }

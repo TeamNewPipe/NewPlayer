@@ -27,7 +27,6 @@ import kotlinx.coroutines.flow.StateFlow
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.ui.ContentScale
 
-
 interface VideoPlayerViewModel {
     var newPlayer: NewPlayer?
     val internalPlayer: Player?
@@ -53,4 +52,5 @@ interface VideoPlayerViewModel {
     fun finishFastSeek()
     fun brightnessChange(changeRate: Float, systemBrightness: Float)
     fun volumeChange(changeRate: Float)
+    fun onReportEmbeddedConfig(embeddedUiConfig: EmbeddedUiConfig?)
 }

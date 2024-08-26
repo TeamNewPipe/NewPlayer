@@ -37,6 +37,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,6 +53,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.media3.common.Player
+import net.newpipe.newplayer.model.EmbeddedUiConfig
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
@@ -86,21 +88,65 @@ fun VideoPlayerUI(
 
         val lifecycleOwner = LocalLifecycleOwner.current
 
+        val defaultBrightness = getDefaultBrightness(activity)
+        val screenOrientation = activity.requestedOrientation
+
         // Setup fullscreen
-        if (uiState.uiMode.fullscreen) {
-            LaunchedEffect(key1 = true) {
-                WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
+
+        var embeddedUiConfig: EmbeddedUiConfig? by rememberSaveable {
+            mutableStateOf(null)
+        }
+
+        LaunchedEffect(uiState.uiMode.fullscreen) {
+            if (uiState.uiMode.fullscreen) {
+                viewModel.onReportEmbeddedConfig(
+                    EmbeddedUiConfig(
+                        WindowCompat.getInsetsController(
+                            window,
+                            view
+                        ).isAppearanceLightStatusBars,
+                        defaultBrightness,
+                        screenOrientation,
+                    )
+                )
+            } else {
+                viewModel.onReportEmbeddedConfig(null)
             }
         }
 
-        // Setup immersive mode
-        if (uiState.uiMode.systemUiVisible) {
-            LaunchedEffect(key1 = false) {
+        LaunchedEffect(uiState.uiMode.fullscreen) {
+            if (uiState.uiMode.fullscreen) {
+                WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
+                    false
+            } else {
+                uiState.embeddedUiConfig?.let {
+                    WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
+                        it.systemBarInLightMode
+                }
+            }
+        }
+
+        // setup immersive mode
+        LaunchedEffect(
+            key1 = uiState.uiMode.controllerUiVisible,
+            key2 = uiState.uiMode.fullscreen
+        ) {
+            if (uiState.uiMode.fullscreen && !uiState.uiMode.systemUiVisible) {
+                windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+            } else {
                 windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
             }
+        }
+
+        if (uiState.uiMode.fullscreen) {
+            if (uiState.contentRatio < 1) {
+                LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+            } else {
+                LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+            }
         } else {
-            LaunchedEffect(key1 = true) {
-                windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+            uiState.embeddedUiConfig?.let {
+                LockScreenOrientation(orientation = it.screenOrientation)
             }
         }
 
@@ -116,20 +162,11 @@ fun VideoPlayerUI(
             }
         }
 
-        // Set Screen Rotation
-        if (uiState.uiMode.fullscreen) {
-            if (uiState.contentRatio < 1) {
-                LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-            } else {
-                LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
-            }
-        }
 
         val displayMetrics = activity.resources.displayMetrics
         val screenRatio =
             displayMetrics.widthPixels.toFloat() / displayMetrics.heightPixels.toFloat()
 
-        val defaultBrightness = getDefaultBrightness(activity)
 
         LaunchedEffect(key1 = uiState.brightness) {
             Log.d(TAG, "New Brightnes: ${uiState.brightness}")

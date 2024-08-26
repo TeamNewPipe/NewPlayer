@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,13 +26,15 @@ fun VideoPlayerLoadingPlaceholder(aspectRatio: Float = 3F / 1F) {
             .aspectRatio(aspectRatio),
         color = Color.Black
     ) {
-        Box(contentAlignment = Alignment.Center) {
-            CircularProgressIndicator(modifier = Modifier
-                .width(64.dp)
-                .height(64.dp)
-                .align((Alignment.Center)))
+        Box(modifier = Modifier.fillMaxSize()) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .width(64.dp)
+                    .height(64.dp)
+                    .align(Alignment.Center),
+                color = MaterialTheme.colorScheme.onSurface
+            )
         }
-
     }
 }
 

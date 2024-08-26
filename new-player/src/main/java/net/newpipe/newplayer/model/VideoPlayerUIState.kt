@@ -38,9 +38,8 @@ data class VideoPlayerUIState(
     val playbackPositionInMs: Long,
     val fastSeekSeconds: Int,
     val soundVolume: Float,
-
-    // when null use system value
-    val brightness: Float?
+    val brightness: Float?,     // when null use system value
+    val embeddedUiConfig: EmbeddedUiConfig?
 ) : Parcelable {
     companion object {
         val DEFAULT = VideoPlayerUIState(
@@ -59,7 +58,8 @@ data class VideoPlayerUIState(
             playbackPositionInMs = 0,
             fastSeekSeconds = 0,
             soundVolume = 0f,
-            brightness = null
+            brightness = null,
+            embeddedUiConfig = null
         )
     }
 }
