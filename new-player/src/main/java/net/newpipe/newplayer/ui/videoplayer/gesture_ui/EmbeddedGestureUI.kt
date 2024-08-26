@@ -28,6 +28,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,13 +48,28 @@ fun EmbeddedGestureUI(
     modifier: Modifier = Modifier, viewModel: VideoPlayerViewModel, uiState: VideoPlayerUIState
 ) {
 
-    val handleDownwardMovement = { movement: TouchedPosition ->
+    var downwardMovementMode by remember {
+        mutableStateOf(false)
+    }
+
+    val handleMovement = { movement: TouchedPosition ->
         Log.d(TAG, "${movement.x}:${movement.y}")
         if (0 < movement.y) {
             viewModel.embeddedDraggedDown(movement.y)
+            downwardMovementMode = true
         } else {
-            viewModel.switchToFullscreen()
+
+            // this check is there to allow a temporary move up in the downward gesture
+            if (downwardMovementMode == false) {
+                viewModel.switchToFullscreen()
+            } else {
+                viewModel.embeddedDraggedDown(movement.y)
+            }
         }
+    }
+
+    val handleUp = {
+        downwardMovementMode = false
     }
 
     val defaultOnRegularTap = {
@@ -69,7 +88,8 @@ fun EmbeddedGestureUI(
                 viewModel.fastSeek(-it)
             },
             onMultiTapFinished = viewModel::finishFastSeek,
-            onMovement = handleDownwardMovement
+            onMovement = handleMovement,
+            onUp = handleUp
         ) {
             FadedAnimationForSeekFeedback(
                 uiState.fastSeekSeconds, backwards = true
@@ -88,8 +108,8 @@ fun EmbeddedGestureUI(
             modifier = Modifier.weight(1f),
             onRegularTap = defaultOnRegularTap,
             onMultiTap = { count ->
-                if(count == 1) {
-                    if(uiState.playing) {
+                if (count == 1) {
+                    if (uiState.playing) {
                         viewModel.pause()
                         viewModel.showUi()
                     } else {
@@ -98,7 +118,8 @@ fun EmbeddedGestureUI(
                 }
             },
             onMultiTapFinished = viewModel::finishFastSeek,
-            onMovement = handleDownwardMovement
+            onMovement = handleMovement,
+            onUp = handleUp
         ) {
             Box(modifier = Modifier.fillMaxSize())
         }
@@ -106,9 +127,10 @@ fun EmbeddedGestureUI(
         GestureSurface(
             modifier = Modifier.weight(1f),
             onRegularTap = defaultOnRegularTap,
-            onMovement = handleDownwardMovement,
+            onMovement = handleMovement,
             onMultiTap = viewModel::fastSeek,
-            onMultiTapFinished = viewModel::finishFastSeek
+            onMultiTapFinished = viewModel::finishFastSeek,
+            onUp = handleUp
         ) {
             FadedAnimationForSeekFeedback(uiState.fastSeekSeconds) { fastSeekSecondsToDisplay ->
                 Box(modifier = Modifier.fillMaxSize()) {
