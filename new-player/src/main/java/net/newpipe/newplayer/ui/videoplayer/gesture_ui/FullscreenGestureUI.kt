@@ -121,6 +121,16 @@ fun FullscreenGestureUI(
                     if (0 < movement.y) {
                         viewModel.switchToEmbeddedView()
                     }
+                },
+                onMultiTap = { count ->
+                    if(count == 1)  {
+                        if(uiState.playing) {
+                            viewModel.pause()
+                            viewModel.showUi()
+                        } else {
+                            viewModel.play()
+                        }
+                    }
                 })
             GestureSurface(modifier = Modifier.weight(1f),
                 onRegularTap = defaultOnRegularTap,

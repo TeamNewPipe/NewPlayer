@@ -63,9 +63,13 @@ fun EmbeddedGestureUI(
 
     Row(modifier = modifier) {
         GestureSurface(
-            modifier = Modifier.weight(1f), onRegularTap = defaultOnRegularTap, onMultiTap = {
+            modifier = Modifier.weight(1f),
+            onRegularTap = defaultOnRegularTap,
+            onMultiTap = {
                 viewModel.fastSeek(-it)
-            }, onMultiTapFinished = viewModel::finishFastSeek, onMovement = handleDownwardMovement
+            },
+            onMultiTapFinished = viewModel::finishFastSeek,
+            onMovement = handleDownwardMovement
         ) {
             FadedAnimationForSeekFeedback(
                 uiState.fastSeekSeconds, backwards = true
@@ -79,6 +83,26 @@ fun EmbeddedGestureUI(
                 }
             }
         }
+
+        GestureSurface(
+            modifier = Modifier.weight(1f),
+            onRegularTap = defaultOnRegularTap,
+            onMultiTap = { count ->
+                if(count == 1) {
+                    if(uiState.playing) {
+                        viewModel.pause()
+                        viewModel.showUi()
+                    } else {
+                        viewModel.play()
+                    }
+                }
+            },
+            onMultiTapFinished = viewModel::finishFastSeek,
+            onMovement = handleDownwardMovement
+        ) {
+            Box(modifier = Modifier.fillMaxSize())
+        }
+
         GestureSurface(
             modifier = Modifier.weight(1f),
             onRegularTap = defaultOnRegularTap,
