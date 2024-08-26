@@ -60,9 +60,19 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.startStreamButton.setOnClickListener {
+        binding.start6502StreamButton.setOnClickListener {
             newPlayer.playWhenReady = true
             newPlayer.playStream("6502", PlayMode.EMBEDDED_VIDEO)
+        }
+
+        binding.startImuStreamButton.setOnClickListener {
+            newPlayer.playWhenReady = true
+            newPlayer.playStream("imu", PlayMode.EMBEDDED_VIDEO)
+        }
+
+        binding.startPortraitStreamButton.setOnClickListener {
+            newPlayer.playWhenReady = true
+            newPlayer.playStream("portrait", PlayMode.EMBEDDED_VIDEO)
         }
 
         videoPlayerViewModel.newPlayer = newPlayer
@@ -74,7 +84,7 @@ class MainActivity : AppCompatActivity() {
             it.addViewToHideOnFullscreen(binding.buttonsLayout as View)
             it.addViewToHideOnFullscreen(binding.embeddedPlayerLayout as View)
             it.fullscreenPlayerView = binding.fullscreenPlayer
-            it.rootView = findViewById(R.id.main)
+            it.rootView = binding.root
         }
     }
 }

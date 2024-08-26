@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- NewPlayer
+<?xml version="1.0" encoding="utf-8"?><!-- NewPlayer
 
     @author Christian Schabesberger
 
@@ -34,8 +33,8 @@
         android:layout_height="match_parent"
         android:minHeight="50dp"
         android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -64,26 +63,39 @@
     </LinearLayout>
 
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/buttons_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Start Stream"
-        app:layout_constraintHorizontal_weight="1"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@id/embedded_player_layout"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent">
 
         <Button
-            android:id="@+id/start_stream_button"
-            android:text="Start Stream"
-            android:layout_gravity="center"
+            android:id="@+id/start_6502_stream_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Start 6502 Stream" />
 
-    </FrameLayout>
+        <Button
+            android:id="@+id/start_imu_stream_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Start IMU Stream" />
+
+        <Button
+            android:id="@+id/start_portrait_stream_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Start Landscape Stream" />
 
 
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
