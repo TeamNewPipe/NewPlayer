@@ -65,7 +65,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     private var uiVisibilityJob: Job? = null
     private var progressUpdaterJob: Job? = null
 
-   // this is necesary to restore the embedded view UI configuration when returning from fullscreen
+    // this is necesary to restore the embedded view UI configuration when returning from fullscreen
     private var embeddedUiConfig: EmbeddedUiConfig? = null
 
     private val audioManager =
@@ -166,8 +166,10 @@ class VideoPlayerViewModelImpl @Inject constructor(
                     val currentMode = mutableUiState.value.uiMode.toPlayMode()
                     if (currentMode != newMode) {
                         mutableUiState.update {
-                            it.copy(uiMode = UIModeState.fromPlayMode(newMode),
-                                embeddedUiConfig = embeddedUiConfig)
+                            it.copy(
+                                uiMode = UIModeState.fromPlayMode(newMode),
+                                embeddedUiConfig = embeddedUiConfig
+                            )
                         }
                     }
                 }
@@ -357,21 +359,20 @@ class VideoPlayerViewModelImpl @Inject constructor(
         }
     }
 
-    override fun openStreamSelection(selectChapter: Boolean) {
-        mutableUiState.update {
-            it.copy(
-                uiMode = if (selectChapter) it.uiMode.getChapterSelectUiState()
-                else it.uiMode.getStreamSelectUiState()
-            )
+    override fun openStreamSelection(selectChapter: Boolean, embeddedUiConfig: EmbeddedUiConfig) {
+        println("gurken openSelection ${embeddedUiConfig}")
+        uiVisibilityJob?.cancel()
+        if (!uiState.value.uiMode.fullscreen) {
+            this.embeddedUiConfig = embeddedUiConfig
         }
+        updateUiMode(
+            if (selectChapter) uiState.value.uiMode.getChapterSelectUiState()
+            else uiState.value.uiMode.getStreamSelectUiState()
+        )
     }
 
     override fun closeStreamSelection() {
-        mutableUiState.update {
-            it.copy(
-                uiMode = it.uiMode.getUiHiddenState()
-            )
-        }
+        updateUiMode(uiState.value.uiMode.getUiHiddenState())
     }
 
     override fun switchToEmbeddedView() {
@@ -381,6 +382,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun switchToFullscreen(embeddedUiConfig: EmbeddedUiConfig) {
+        println("gurken fullscreen: ${embeddedUiConfig}")
         uiVisibilityJob?.cancel()
         finishFastSeek()
 

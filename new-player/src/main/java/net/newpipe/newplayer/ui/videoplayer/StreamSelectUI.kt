@@ -34,6 +34,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -68,6 +69,7 @@ import net.newpipe.newplayer.utils.BitmapThumbnail
 import net.newpipe.newplayer.utils.OnlineThumbnail
 import net.newpipe.newplayer.utils.Thumbnail
 import net.newpipe.newplayer.utils.VectorThumbnail
+import net.newpipe.newplayer.utils.getInsets
 
 @Composable
 fun StreamSelectUI(
@@ -75,7 +77,13 @@ fun StreamSelectUI(
     viewModel: VideoPlayerViewModel,
     uiState: VideoPlayerUIState
 ) {
-    Surface(modifier = Modifier.fillMaxSize(), color = CONTROLLER_UI_BACKGROUND_COLOR) {
+    val insets = getInsets()
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(insets),
+        color = CONTROLLER_UI_BACKGROUND_COLOR
+    ) {
         Scaffold(
             topBar = {
                 if (isChapterSelect) {
@@ -150,7 +158,7 @@ private fun ChapterItem(
             when (thumbnail) {
                 is OnlineThumbnail -> AsyncImage(
                     model = thumbnail.url,
-                    contentDescription =contentDescription
+                    contentDescription = contentDescription
                 )
 
                 is BitmapThumbnail -> Image(
@@ -206,7 +214,7 @@ private fun StreamItem(
                 when (thumbnail) {
                     is OnlineThumbnail -> AsyncImage(
                         model = thumbnail.url,
-                        contentDescription =contentDescription
+                        contentDescription = contentDescription
                     )
 
                     is BitmapThumbnail -> Image(

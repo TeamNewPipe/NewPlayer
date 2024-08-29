@@ -69,7 +69,7 @@ open class VideoPlayerViewModelDummy : VideoPlayerViewModel {
         println("dummy impl")
     }
 
-    override fun openStreamSelection(selectChapter: Boolean) {
+    override fun openStreamSelection(selectChapter: Boolean, embeddedUiConfig: EmbeddedUiConfig) {
         println("dummy impl")
     }
 

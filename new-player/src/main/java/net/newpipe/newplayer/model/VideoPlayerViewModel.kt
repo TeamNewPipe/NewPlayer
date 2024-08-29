@@ -54,6 +54,6 @@ interface VideoPlayerViewModel {
     fun finishFastSeek()
     fun brightnessChange(changeRate: Float, systemBrightness: Float)
     fun volumeChange(changeRate: Float)
-    fun openStreamSelection(selectChapter: Boolean)
+    fun openStreamSelection(selectChapter: Boolean, embeddedUiConfig: EmbeddedUiConfig)
     fun closeStreamSelection()
 }

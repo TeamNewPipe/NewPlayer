@@ -25,6 +25,11 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.view.WindowManager
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.waterfall
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -93,6 +98,10 @@ fun getEmbeddedUiConfig(activity: Activity): EmbeddedUiConfig {
         screenOrientation = screenOrientation
     )
 }
+
+@Composable
+fun getInsets()  =
+    WindowInsets.systemBars.union(WindowInsets.displayCutout).union(WindowInsets.waterfall)
 
 private const val HOURS_PER_DAY = 24
 private const val MINUTES_PER_HOUR = 60

@@ -98,9 +98,7 @@ fun VideoPlayerUI(
                 WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
                     false
             } else {
-                println("gurken dings")
                 uiState.embeddedUiConfig?.let {
-                    println("gurken bumbs")
                     WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
                         it.systemBarInLightMode
                 }

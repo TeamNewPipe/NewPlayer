@@ -55,6 +55,7 @@ import net.newpipe.newplayer.ui.videoplayer.CenterUI
 import net.newpipe.newplayer.ui.videoplayer.TopUI
 import net.newpipe.newplayer.ui.videoplayer.GestureUI
 import net.newpipe.newplayer.utils.getDefaultBrightness
+import net.newpipe.newplayer.utils.getInsets
 
 val CONTROLLER_UI_BACKGROUND_COLOR = Color(0x75000000)
 
@@ -76,8 +77,7 @@ fun VideoPlayerControllerUI(
         viewModel.brightnessChange(rateChange, systemBrightness)
     }
 
-    val insets =
-        WindowInsets.systemBars.union(WindowInsets.displayCutout).union(WindowInsets.waterfall)
+    val insets = getInsets()
 
     AnimatedVisibility(uiState.uiMode.controllerUiVisible) {
         Surface(

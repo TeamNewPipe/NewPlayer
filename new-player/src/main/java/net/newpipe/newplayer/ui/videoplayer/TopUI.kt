@@ -20,6 +20,7 @@
 
 package net.newpipe.newplayer.ui.videoplayer
 
+import android.app.Activity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -38,6 +39,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,6 +51,7 @@ import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.theme.video_player_onSurface
+import net.newpipe.newplayer.utils.getEmbeddedUiConfig
 
 @Composable
 fun TopUI(
@@ -56,6 +59,7 @@ fun TopUI(
     viewModel: VideoPlayerViewModel,
     uiState: VideoPlayerUIState
 ) {
+    val embeddedUiConfig = getEmbeddedUiConfig(activity = LocalContext.current as Activity)
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
@@ -88,7 +92,7 @@ fun TopUI(
             )
         }
         IconButton(
-            onClick = { viewModel.openStreamSelection(selectChapter = true) },
+            onClick = { viewModel.openStreamSelection(selectChapter = true, embeddedUiConfig) },
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.MenuBook,
@@ -96,7 +100,7 @@ fun TopUI(
             )
         }
         IconButton(
-            onClick = { viewModel.openStreamSelection(selectChapter = false) },
+            onClick = { viewModel.openStreamSelection(selectChapter = false, embeddedUiConfig) },
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.List,
