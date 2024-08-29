@@ -55,11 +55,37 @@ enum class UIModeState {
                 else -> false
             }
 
-    val systemUiVisible: Boolean
+    val isStreamSelect: Boolean
         get() =
-            when (this) {
+            when(this) {
+                EMBEDDED_VIDEO_STREAM_SELECT -> true
+                FULLSCREEN_VIDEO_STREAM_SELECT -> true
+                else -> false
+            }
+
+    val isChapterSelect: Boolean
+        get() =
+            when(this) {
+                EMBEDDED_VIDEO_CHAPTER_SELECT -> true
+                FULLSCREEN_VIDEO_CHAPTER_SELECT -> true
+                else -> false
+            }
+
+    val systemInsetsVisible: Boolean
+        get() =
+            when(this) {
                 FULLSCREEN_VIDEO -> false
                 else -> true
+            }
+
+    val fitScreenRotation: Boolean
+        get() =
+            when(this) {
+                FULLSCREEN_VIDEO -> true
+                FULLSCREEN_VIDEO_CONTROLLER_UI -> true
+                FULLSCREEN_VIDEO_CHAPTER_SELECT -> true
+                FULLSCREEN_VIDEO_STREAM_SELECT -> true
+                else -> false
             }
 
     // STATE TRANSITIONS
@@ -71,7 +97,6 @@ enum class UIModeState {
 
             else -> this
         }
-
 
     fun getUiHiddenState() =
         when (this) {

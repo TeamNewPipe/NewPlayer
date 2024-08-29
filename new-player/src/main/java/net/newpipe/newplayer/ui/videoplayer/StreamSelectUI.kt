@@ -80,7 +80,7 @@ fun StreamSelectUI(
             topBar = {
                 if (isChapterSelect) {
                     ChapterSelectTopBar(onClose = {
-                        TODO("implement me")
+                        viewModel.closeStreamSelection()
                     })
                 } else {
                     StreamSelectTopBar()

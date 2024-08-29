@@ -24,6 +24,7 @@ import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.util.Log
 import android.view.SurfaceView
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -37,7 +38,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,6 +57,7 @@ import net.newpipe.newplayer.model.EmbeddedUiConfig
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
+import net.newpipe.newplayer.ui.videoplayer.StreamSelectUI
 import net.newpipe.newplayer.utils.LockScreenOrientation
 import net.newpipe.newplayer.utils.getDefaultBrightness
 import net.newpipe.newplayer.utils.setScreenBrightness
@@ -89,37 +90,17 @@ fun VideoPlayerUI(
         val lifecycleOwner = LocalLifecycleOwner.current
 
         val defaultBrightness = getDefaultBrightness(activity)
-        val screenOrientation = activity.requestedOrientation
 
         // Setup fullscreen
-
-        var embeddedUiConfig: EmbeddedUiConfig? by rememberSaveable {
-            mutableStateOf(null)
-        }
-
-        LaunchedEffect(uiState.uiMode.fullscreen) {
-            if (uiState.uiMode.fullscreen) {
-                viewModel.onReportEmbeddedConfig(
-                    EmbeddedUiConfig(
-                        WindowCompat.getInsetsController(
-                            window,
-                            view
-                        ).isAppearanceLightStatusBars,
-                        defaultBrightness,
-                        screenOrientation,
-                    )
-                )
-            } else {
-                viewModel.onReportEmbeddedConfig(null)
-            }
-        }
 
         LaunchedEffect(uiState.uiMode.fullscreen) {
             if (uiState.uiMode.fullscreen) {
                 WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
                     false
             } else {
+                println("gurken dings")
                 uiState.embeddedUiConfig?.let {
+                    println("gurken bumbs")
                     WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
                         it.systemBarInLightMode
                 }
@@ -128,17 +109,16 @@ fun VideoPlayerUI(
 
         // setup immersive mode
         LaunchedEffect(
-            key1 = uiState.uiMode.controllerUiVisible,
-            key2 = uiState.uiMode.fullscreen
+            key1 = uiState.uiMode.systemInsetsVisible,
         ) {
-            if (uiState.uiMode.fullscreen && !uiState.uiMode.systemUiVisible) {
+            if (uiState.uiMode.fullscreen && !uiState.uiMode.systemInsetsVisible) {
                 windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
             } else {
                 windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
             }
         }
 
-        if (uiState.uiMode.fullscreen) {
+        if (uiState.uiMode.fitScreenRotation) {
             if (uiState.contentRatio < 1) {
                 LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             } else {
@@ -195,9 +175,19 @@ fun VideoPlayerUI(
                 )
             }
 
+            // the checks if VideoPlayerControllerUI should be visible or not are done by
+            // The VideoPlayerControllerUI composable itself. This is because Visibility of
+            // the controller is more complicated than just using a simple if statement.
             VideoPlayerControllerUI(
                 viewModel, uiState = uiState
             )
+
+            AnimatedVisibility(visible = uiState.uiMode.isStreamSelect) {
+                StreamSelectUI(viewModel = viewModel, uiState = uiState, isChapterSelect = false)
+            }
+            AnimatedVisibility(visible = uiState.uiMode.isChapterSelect) {
+                StreamSelectUI(viewModel = viewModel, uiState = uiState, isChapterSelect = true)
+            }
         }
     }
 }

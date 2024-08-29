@@ -20,6 +20,7 @@
 
 package net.newpipe.newplayer.ui.videoplayer
 
+import android.app.Activity
 import android.app.LocaleConfig
 import android.icu.text.DecimalFormat
 import androidx.compose.foundation.layout.Arrangement
@@ -38,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.os.ConfigurationCompat
@@ -51,6 +53,7 @@ import net.newpipe.newplayer.ui.seeker.Seeker
 import net.newpipe.newplayer.ui.seeker.SeekerColors
 import net.newpipe.newplayer.ui.seeker.SeekerDefaults
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
+import net.newpipe.newplayer.utils.getEmbeddedUiConfig
 import net.newpipe.newplayer.utils.getLocale
 import net.newpipe.newplayer.utils.getTimeStringFromMs
 import java.util.Locale
@@ -79,9 +82,14 @@ fun BottomUI(
 
         Text(getTimeStringFromMs(uiState.durationInMs, getLocale() ?: Locale.US))
 
+        val embeddedUiConfig = getEmbeddedUiConfig(LocalContext.current as Activity)
         IconButton(
             onClick = if (uiState.uiMode.fullscreen) viewModel::switchToEmbeddedView
-            else viewModel::switchToFullscreen
+            else {
+                { // <- head of lambda ... yea kotlin is weird
+                    viewModel.switchToFullscreen(embeddedUiConfig)
+                }
+            }
         ) {
             Icon(
                 imageVector = if (uiState.uiMode.fullscreen) Icons.Filled.FullscreenExit

@@ -29,7 +29,7 @@ open class VideoPlayerViewModelDummy : VideoPlayerViewModel {
         println("dummy impl")
     }
 
-    override fun switchToFullscreen() {
+    override fun switchToFullscreen(embeddedUiConfig: EmbeddedUiConfig) {
         println("dummy impl")
     }
 
@@ -69,7 +69,11 @@ open class VideoPlayerViewModelDummy : VideoPlayerViewModel {
         println("dummy impl")
     }
 
-    override fun onReportEmbeddedConfig(embeddedUiConfig: EmbeddedUiConfig?) {
+    override fun openStreamSelection(selectChapter: Boolean) {
+        println("dummy impl")
+    }
+
+    override fun closeStreamSelection() {
         println("dummy impl")
     }
 

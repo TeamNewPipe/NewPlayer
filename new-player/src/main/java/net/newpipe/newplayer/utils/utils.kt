@@ -31,7 +31,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.core.os.ConfigurationCompat
+import androidx.core.view.WindowCompat
+import net.newpipe.newplayer.model.EmbeddedUiConfig
 import java.util.Locale
 
 @Composable
@@ -44,14 +47,14 @@ fun LockScreenOrientation(orientation: Int) {
 }
 
 @SuppressLint("NewApi")
-fun getDefaultBrightness(activity: Activity) : Float {
+fun getDefaultBrightness(activity: Activity): Float {
     val window = activity.window
     val layout = window.attributes as WindowManager.LayoutParams
-    return if(layout.screenBrightness < 0) 0.5f else layout.screenBrightness
+    return if (layout.screenBrightness < 0) 0.5f else layout.screenBrightness
 }
 
 @SuppressLint("NewApi")
-fun setScreenBrightness(value:Float, activity: Activity) {
+fun setScreenBrightness(value: Float, activity: Activity) {
     val window = activity.window
     val layout = window.attributes as WindowManager.LayoutParams
     layout.screenBrightness = value
@@ -72,6 +75,24 @@ fun getLocale(): Locale? {
     return ConfigurationCompat.getLocales(configuration).get(0)
 }
 
+@Composable
+@ReadOnlyComposable
+fun getEmbeddedUiConfig(activity: Activity): EmbeddedUiConfig {
+    val window = activity.window
+    val view = LocalView.current
+
+    val isLightStatusBar = WindowCompat.getInsetsController(
+        window,
+        view
+    ).isAppearanceLightStatusBars
+    val screenOrientation = activity.requestedOrientation
+    val defaultBrightness = getDefaultBrightness(activity)
+    return EmbeddedUiConfig(
+        systemBarInLightMode = isLightStatusBar,
+        brightness = defaultBrightness,
+        screenOrientation = screenOrientation
+    )
+}
 
 private const val HOURS_PER_DAY = 24
 private const val MINUTES_PER_HOUR = 60

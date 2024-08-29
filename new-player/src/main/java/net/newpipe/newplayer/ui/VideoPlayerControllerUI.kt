@@ -119,7 +119,9 @@ fun VideoPlayerControllerUI(
                     .align(Alignment.TopStart)
                     .fillMaxWidth()
                     .defaultMinSize(minHeight = 45.dp)
-                    .padding(top = 4.dp, start = 16.dp, end = 16.dp)
+                    .padding(top = 4.dp, start = 16.dp, end = 16.dp),
+                viewModel = viewModel,
+                uiState = uiState
             )
 
             BottomUI(

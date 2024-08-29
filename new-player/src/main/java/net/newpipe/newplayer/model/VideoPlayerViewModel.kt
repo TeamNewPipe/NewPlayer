@@ -43,7 +43,7 @@ interface VideoPlayerViewModel {
     fun pause()
     fun prevStream()
     fun nextStream()
-    fun switchToFullscreen()
+    fun switchToFullscreen(embeddedUiConfig: EmbeddedUiConfig)
     fun switchToEmbeddedView()
     fun showUi()
     fun hideUi()
@@ -54,5 +54,6 @@ interface VideoPlayerViewModel {
     fun finishFastSeek()
     fun brightnessChange(changeRate: Float, systemBrightness: Float)
     fun volumeChange(changeRate: Float)
-    fun onReportEmbeddedConfig(embeddedUiConfig: EmbeddedUiConfig?)
+    fun openStreamSelection(selectChapter: Boolean)
+    fun closeStreamSelection()
 }

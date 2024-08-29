@@ -65,12 +65,15 @@ class VideoPlayerViewModelImpl @Inject constructor(
     private var uiVisibilityJob: Job? = null
     private var progressUpdaterJob: Job? = null
 
+   // this is necesary to restore the embedded view UI configuration when returning from fullscreen
+    private var embeddedUiConfig: EmbeddedUiConfig? = null
+
     private val audioManager =
         getSystemService(application.applicationContext, AudioManager::class.java)!!
 
     init {
-        val soundVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC).toFloat() /
-                audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC).toFloat()
+        val soundVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+            .toFloat() / audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC).toFloat()
         mutableUiState.update {
             it.copy(soundVolume = soundVolume)
         }
@@ -154,7 +157,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
                 override fun onPlaylistMetadataChanged(mediaMetadata: MediaMetadata) {
                     super.onPlaylistMetadataChanged(mediaMetadata)
                     updatePlaylist()
-               }
+                }
             })
         }
         newPlayer?.let { newPlayer ->
@@ -163,7 +166,8 @@ class VideoPlayerViewModelImpl @Inject constructor(
                     val currentMode = mutableUiState.value.uiMode.toPlayMode()
                     if (currentMode != newMode) {
                         mutableUiState.update {
-                            it.copy(uiMode = UIModeState.fromPlayMode(newMode))
+                            it.copy(uiMode = UIModeState.fromPlayMode(newMode),
+                                embeddedUiConfig = embeddedUiConfig)
                         }
                     }
                 }
@@ -353,18 +357,20 @@ class VideoPlayerViewModelImpl @Inject constructor(
         }
     }
 
-    override fun onReportEmbeddedConfig(embeddedUiConfig: EmbeddedUiConfig?) {
-        if (embeddedUiConfig == null) {
-            mutableUiState.update {
-                it.copy(embeddedUiConfig = null)
-            }
-        } else {
-            if (uiState.value.embeddedUiConfig == null) {
-                println("gurken: ${embeddedUiConfig}")
-                mutableUiState.update {
-                    it.copy(embeddedUiConfig = embeddedUiConfig)
-                }
-            }
+    override fun openStreamSelection(selectChapter: Boolean) {
+        mutableUiState.update {
+            it.copy(
+                uiMode = if (selectChapter) it.uiMode.getChapterSelectUiState()
+                else it.uiMode.getStreamSelectUiState()
+            )
+        }
+    }
+
+    override fun closeStreamSelection() {
+        mutableUiState.update {
+            it.copy(
+                uiMode = it.uiMode.getUiHiddenState()
+            )
         }
     }
 
@@ -374,10 +380,11 @@ class VideoPlayerViewModelImpl @Inject constructor(
         updateUiMode(UIModeState.EMBEDDED_VIDEO)
     }
 
-    override fun switchToFullscreen() {
+    override fun switchToFullscreen(embeddedUiConfig: EmbeddedUiConfig) {
         uiVisibilityJob?.cancel()
         finishFastSeek()
 
+        this.embeddedUiConfig = embeddedUiConfig
         updateUiMode(UIModeState.FULLSCREEN_VIDEO)
     }
 
@@ -405,8 +412,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
         newPlayer?.let { newPlayer ->
             viewModelScope.launch {
                 val playlist = getPlaylistItemsFromItemList(
-                    newPlayer.playlist,
-                    newPlayer.repository
+                    newPlayer.playlist, newPlayer.repository
                 )
                 mutableUiState.update {
                     it.copy(playList = playlist)

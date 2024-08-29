@@ -44,11 +44,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import net.newpipe.newplayer.R
+import net.newpipe.newplayer.model.VideoPlayerUIState
+import net.newpipe.newplayer.model.VideoPlayerViewModel
+import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.theme.video_player_onSurface
 
 @Composable
-fun TopUI(modifier: Modifier) {
+fun TopUI(
+    modifier: Modifier,
+    viewModel: VideoPlayerViewModel,
+    uiState: VideoPlayerUIState
+) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
@@ -81,7 +88,7 @@ fun TopUI(modifier: Modifier) {
             )
         }
         IconButton(
-            onClick = { /*TODO*/ },
+            onClick = { viewModel.openStreamSelection(selectChapter = true) },
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.MenuBook,
@@ -89,7 +96,7 @@ fun TopUI(modifier: Modifier) {
             )
         }
         IconButton(
-            onClick = { /*TODO*/ },
+            onClick = { viewModel.openStreamSelection(selectChapter = false) },
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.List,
@@ -109,7 +116,7 @@ fun TopUI(modifier: Modifier) {
 fun VideoPlayerControllerTopUIPreview() {
     VideoPlayerTheme {
         Surface(color = Color.Black) {
-            TopUI(modifier = Modifier)
+            TopUI(modifier = Modifier, VideoPlayerViewModelDummy(), VideoPlayerUIState.DEFAULT)
         }
     }
 }
