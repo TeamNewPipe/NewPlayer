@@ -43,6 +43,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.utils.VideoSize
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.playerInternals.getPlaylistItemsFromItemList
@@ -397,6 +398,14 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
         this.embeddedUiConfig = embeddedUiConfig
         updateUiMode(UIModeState.FULLSCREEN_VIDEO)
+    }
+
+    override fun chapterSelected(chapter: Chapter) {
+        println("gurken chapter selectd: $chapter")
+    }
+
+    override fun streamSelected(streamId: Int) {
+        println("stream selected: $streamId")
     }
 
     private fun updateUiMode(newState: UIModeState) {

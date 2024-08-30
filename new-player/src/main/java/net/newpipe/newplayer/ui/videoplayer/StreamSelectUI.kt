@@ -21,29 +21,32 @@
 package net.newpipe.newplayer.ui.videoplayer
 
 import android.view.MotionEvent
+import android.view.Surface
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DragHandle
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -65,6 +68,7 @@ import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.utils.getLocale
 import net.newpipe.newplayer.utils.getTimeStringFromMs
 import coil.compose.AsyncImage
+import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.utils.BitmapThumbnail
 import net.newpipe.newplayer.utils.OnlineThumbnail
 import net.newpipe.newplayer.utils.Thumbnail
@@ -79,12 +83,14 @@ fun StreamSelectUI(
 ) {
     val insets = getInsets()
     Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(insets),
+        modifier = Modifier.fillMaxSize(),
         color = CONTROLLER_UI_BACKGROUND_COLOR
     ) {
         Scaffold(
+            modifier = Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(insets),
+            containerColor = Color.Transparent,
             topBar = {
                 if (isChapterSelect) {
                     ChapterSelectTopBar(onClose = {
@@ -95,37 +101,50 @@ fun StreamSelectUI(
                 }
             }
         ) { innerPadding ->
-            Surface(
+            LazyColumn(
                 modifier = Modifier
                     .padding(innerPadding)
-                    .fillMaxSize(), color = Color.Red
+                    .fillMaxSize(),
             ) {
+                if (isChapterSelect) {
+                    items(uiState.chapters.size) { chapterIndex ->
+                        val chapter = uiState.chapters[chapterIndex]
+                        ChapterItem(
+                            id = chapterIndex,
+                            chapterTitle = chapter.chapterTitle ?: "",
+                            chapterStartInMs = chapter.chapterStartInMs,
+                            thumbnail = chapter.thumbnail,
+                            onClicked = {
+                                viewModel.chapterSelected(chapter)
+                            }
+                        )
+                    }
+                } else {
 
+                }
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ChapterSelectTopBar(modifier: Modifier = Modifier, onClose: () -> Unit) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Spacer(modifier = Modifier.width(20.dp))
-        //Text(stringResource(R.string.chapter))
-        Text("Chapter TODO")
-        Spacer(modifier = Modifier.weight(1F))
-        IconButton(
-            onClick = onClose
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Close,
-                contentDescription = stringResource(R.string.close_chapter_selection)
-            )
-        }
-    }
+    TopAppBar(modifier = modifier,
+        colors = topAppBarColors(containerColor = Color.Transparent),
+        title = {
+            Text("Chapter TODO")
+            //Text(stringResource(R.string.chapter))
+        }, actions = {
+            IconButton(
+                onClick = onClose
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Close,
+                    contentDescription = stringResource(R.string.close_chapter_selection)
+                )
+            }
+        })
 }
 
 @Composable
@@ -150,7 +169,7 @@ private fun ChapterItem(
                 top = 4.dp,
                 bottom = 4.dp,
                 end = 4.dp
-            )
+            ).height(80.dp)
             .clickable { onClicked(id) }
     ) {
         val contentDescription = stringResource(R.string.chapter)
@@ -348,11 +367,29 @@ fun ChapterTopBarPreview() {
 @Composable
 fun VideoPlayerStreamSelectUIPreview() {
     VideoPlayerTheme {
-        Surface(modifier = Modifier.fillMaxSize(), color = Color.Green) {
+        Surface(modifier = Modifier.fillMaxSize(), color = Color.Red) {
             StreamSelectUI(
                 isChapterSelect = true,
                 viewModel = VideoPlayerViewModelDummy(),
-                uiState = VideoPlayerUIState.DEFAULT
+                uiState = VideoPlayerUIState.DEFAULT.copy(
+                    chapters = arrayListOf(
+                        Chapter(
+                            chapterStartInMs = 5000,
+                            chapterTitle = "First Chapter",
+                            thumbnail = null
+                        ),
+                        Chapter(
+                            chapterStartInMs = 10000,
+                            chapterTitle = "Second Chapter",
+                            thumbnail = null
+                        ),
+                        Chapter(
+                            chapterStartInMs = 20000,
+                            chapterTitle = "Third Chapter",
+                            thumbnail = null
+                        ),
+                    )
+                )
             )
         }
     }

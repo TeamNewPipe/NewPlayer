@@ -24,7 +24,7 @@ import android.net.Uri
 import androidx.media3.common.PlaybackException
 import net.newpipe.newplayer.utils.Thumbnail
 
-data class Chapter(val chapterStartInMs: Long, val chapterTitle: String?)
+data class Chapter(val chapterStartInMs: Long, val chapterTitle: String?, val thumbnail: Thumbnail?)
 
 data class MetaInfo(
     val title: String,
@@ -46,7 +46,6 @@ interface MediaRepository {
 
     suspend fun getPreviewThumbnails(item: String): HashMap<Long, Thumbnail>?
     suspend fun getChapters(item: String): List<Chapter>
-    suspend fun getChapterThumbnail(item: String, chapter: Long): Thumbnail?
 
     suspend fun getTimestampLink(item: String, timestampInSeconds: Long): String
 

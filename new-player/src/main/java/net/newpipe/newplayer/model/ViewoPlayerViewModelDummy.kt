@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.ui.ContentScale
 
@@ -81,6 +82,14 @@ open class VideoPlayerViewModelDummy : VideoPlayerViewModel {
 
     override fun closeStreamSelection() {
         println("dummy impl")
+    }
+
+    override fun chapterSelected(chapter: Chapter) {
+        println("dummp impl chapter selected: $chapter")
+    }
+
+    override fun streamSelected(streamId: Int) {
+        println("dummy impl stream selected: $streamId")
     }
 
     override fun pause() {

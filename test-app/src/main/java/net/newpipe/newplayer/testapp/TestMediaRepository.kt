@@ -30,12 +30,14 @@ class TestMediaRepository(val context: Context) : MediaRepository {
                 thumbnail = OnlineThumbnail(context.getString(R.string.ccc_6502_thumbnail)),
                 lengthInS = context.resources.getInteger(R.integer.ccc_6502_length)
             )
+
             "imu" -> MetaInfo(
                 title = context.getString(R.string.ccc_imu_title),
                 channelName = context.getString(R.string.ccc_imu_channel),
                 thumbnail = OnlineThumbnail(context.getString(R.string.ccc_imu_thumbnail)),
                 lengthInS = context.resources.getInteger(R.integer.ccc_imu_length)
             )
+
             "portrait" -> MetaInfo(
                 title = context.getString(R.string.portrait_title),
                 channelName = context.getString(R.string.portrait_channel),
@@ -113,29 +115,29 @@ class TestMediaRepository(val context: Context) : MediaRepository {
     override suspend fun getChapters(item: String) =
         when (item) {
             "6502" -> context.resources.getIntArray(R.array.ccc_6502_chapters)
-            "imu" -> TODO()
+            "imu" -> context.resources.getIntArray(R.array.ccc_imu_chapters)
             else -> intArrayOf()
         }.map {
-            Chapter(it.toLong(), "Dummy Chapter at timestamp $it")
-        }
+            Chapter(
+                it.toLong(), chapterTitle = "Dummy Chapter at timestamp $it",
+                thumbnail = when (item) {
+                    "6502" -> OnlineThumbnail(
+                        String.format(
+                            context.getString(R.string.ccc_6502_preview_thumbnails),
+                            it / (10 * 1000)
+                        )
+                    )
 
-    override suspend fun getChapterThumbnail(item: String, chapter: Long) =
-        when (item) {
-            "6502" -> OnlineThumbnail(
-                String.format(
-                    context.getString(R.string.ccc_6502_preview_thumbnails),
-                    chapter / (10 * 1000)
-                )
+                    "imu" -> OnlineThumbnail(
+                        String.format(
+                            context.getString(R.string.ccc_imu_preview_thumbnails),
+                            it / (10 * 1000)
+                        )
+                    )
+
+                    else -> null
+                }
             )
-
-            "imu" -> OnlineThumbnail(
-                String.format(
-                    context.getString(R.string.ccc_imu_preview_thumbnails),
-                    chapter / (10 * 1000)
-                )
-            )
-
-            else -> null
         }
 
     override suspend fun getTimestampLink(item: String, timestampInSeconds: Long) =

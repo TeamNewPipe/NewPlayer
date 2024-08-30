@@ -24,6 +24,7 @@ import android.os.Bundle
 import androidx.media3.common.Player
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.ui.ContentScale
 import net.newpipe.newplayer.utils.Thumbnail
@@ -58,4 +59,6 @@ interface VideoPlayerViewModel {
     fun volumeChange(changeRate: Float)
     fun openStreamSelection(selectChapter: Boolean, embeddedUiConfig: EmbeddedUiConfig)
     fun closeStreamSelection()
+    fun chapterSelected(chapter: Chapter)
+    fun streamSelected(streamId: Int)
 }
