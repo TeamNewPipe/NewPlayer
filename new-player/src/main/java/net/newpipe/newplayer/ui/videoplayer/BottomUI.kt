@@ -43,6 +43,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.os.ConfigurationCompat
+import androidx.lifecycle.viewModelScope
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.model.VideoPlayerUIState
@@ -68,7 +69,8 @@ fun BottomUI(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
     ) {
-        Text(getTimeStringFromMs(uiState.playbackPositionInMs, getLocale() ?: Locale.US))
+        val locale = getLocale()!!
+        Text(getTimeStringFromMs(uiState.playbackPositionInMs, getLocale() ?: locale))
         Seeker(
             Modifier.weight(1F),
             value = uiState.seekerPosition,
@@ -80,7 +82,7 @@ fun BottomUI(
 
         //Slider(value = 0.4F, onValueChange = {}, modifier = Modifier.weight(1F))
 
-        Text(getTimeStringFromMs(uiState.durationInMs, getLocale() ?: Locale.US))
+        Text(getTimeStringFromMs(uiState.durationInMs, getLocale() ?: locale))
 
         val embeddedUiConfig = getEmbeddedUiConfig(LocalContext.current as Activity)
         IconButton(

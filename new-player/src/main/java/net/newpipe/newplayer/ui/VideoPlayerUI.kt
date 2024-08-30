@@ -71,7 +71,7 @@ fun VideoPlayerUI(
 ) {
     if (viewModel == null) {
         VideoPlayerLoadingPlaceholder()
-    } else if (viewModel.internalPlayer == null) {
+    } else if (viewModel.newPlayer == null) {
         VideoPlayerLoadingPlaceholder(viewModel.uiState.collectAsState().value.embeddedUiRatio)
     } else {
         val uiState by viewModel.uiState.collectAsState()
@@ -171,7 +171,7 @@ fun VideoPlayerUI(
         ) {
             Box(contentAlignment = Alignment.Center) {
                 PlaySurface(
-                    player = viewModel.internalPlayer,
+                    player = viewModel.newPlayer?.internalPlayer,
                     lifecycle = lifecycle,
                     fitMode = uiState.contentFitMode,
                     uiRatio = if (uiState.uiMode.fullscreen) screenRatio

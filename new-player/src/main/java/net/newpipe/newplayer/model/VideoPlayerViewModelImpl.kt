@@ -90,9 +90,6 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     override val uiState = mutableUiState.asStateFlow()
 
-    override val internalPlayer: Player?
-        get() = newPlayer?.internalPlayer
-
     override var minContentRatio: Float = 4F / 3F
         set(value) {
             if (value <= 0 || maxContentRatio < value) Log.e(
@@ -133,7 +130,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     override val onBackPressed: SharedFlow<Unit> = mutableOnBackPressed.asSharedFlow()
 
     private fun installNewPlayer() {
-        internalPlayer?.let { player ->
+        newPlayer?.internalPlayer?.let { player ->
             Log.d(TAG, "Install player: ${player.videoSize.width}")
 
             player.addListener(object : Player.Listener {
@@ -158,11 +155,6 @@ class VideoPlayerViewModelImpl @Inject constructor(
                         it.copy(isLoading = isLoading)
                     }
                 }
-
-                override fun onPlaylistMetadataChanged(mediaMetadata: MediaMetadata) {
-                    super.onPlaylistMetadataChanged(mediaMetadata)
-                    updatePlaylist()
-                }
             })
         }
         newPlayer?.let { newPlayer ->
@@ -179,8 +171,12 @@ class VideoPlayerViewModelImpl @Inject constructor(
                     }
                 }
             }
+            viewModelScope.launch {
+                newPlayer.playlistInPlaylistItems.collect { playlist ->
+                    mutableUiState.update { it.copy(playList = playlist) }
+                }
+            }
         }
-        updatePlaylist()
     }
 
     fun updateContentRatio(videoSize: VideoSize) {
@@ -266,9 +262,10 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     private fun updateProgressOnce() {
-        val progress = internalPlayer?.currentPosition ?: 0
-        val duration = internalPlayer?.duration ?: 1
-        val bufferedPercentage = (internalPlayer?.bufferedPercentage?.toFloat() ?: 0f) / 100f
+        val progress = newPlayer?.currentPosition ?: 0
+        val duration = newPlayer?.duration ?: 1
+        val bufferedPercentage =
+            (newPlayer?.bufferedPercentage?.toFloat() ?: 0f) / 100f
         val progressPercentage = progress.toFloat() / duration.toFloat()
 
         mutableUiState.update {
@@ -297,13 +294,13 @@ class VideoPlayerViewModelImpl @Inject constructor(
     override fun seekingFinished() {
         resetHideUiDelayedJob()
         val seekerPosition = mutableUiState.value.seekerPosition
-        val seekPositionInMs = (internalPlayer?.duration?.toFloat() ?: 0F) * seekerPosition
+        val seekPositionInMs = (newPlayer?.duration?.toFloat() ?: 0F) * seekerPosition
         newPlayer?.currentPosition = seekPositionInMs.toLong()
         Log.i(TAG, "Seek to Ms: $seekPositionInMs")
     }
 
     override fun embeddedDraggedDown(offset: Float) {
-        saveTryEmit(mutableEmbeddedPlayerDraggedDownBy, offset)
+        safeTryEmit(mutableEmbeddedPlayerDraggedDownBy, offset)
     }
 
     override fun fastSeek(count: Int) {
@@ -362,7 +359,6 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun openStreamSelection(selectChapter: Boolean, embeddedUiConfig: EmbeddedUiConfig) {
-        println("gurken openSelection ${embeddedUiConfig}")
         uiVisibilityJob?.cancel()
         if (!uiState.value.uiMode.fullscreen) {
             this.embeddedUiConfig = embeddedUiConfig
@@ -388,7 +384,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
         if (nextMode != null) {
             updateUiMode(nextMode)
         } else {
-            saveTryEmit(mutableOnBackPressed, Unit)
+            safeTryEmit(mutableOnBackPressed, Unit)
         }
     }
 
@@ -408,6 +404,25 @@ class VideoPlayerViewModelImpl @Inject constructor(
         println("stream selected: $streamId")
     }
 
+    override fun setRepeatmode(repeatMode: Int) {
+        assert(
+            repeatMode == Player.REPEAT_MODE_ALL
+                    || repeatMode == Player.REPEAT_MODE_OFF
+                    || repeatMode == Player.REPEAT_MODE_ONE
+        ) {
+            "Illegal repeat mode: $repeatMode"
+        }
+        TODO("Not yet implemented")
+    }
+
+    override fun setSuffleEnabled(enabled: Boolean) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onStorePlaylist() {
+        TODO("Not yet implemented")
+    }
+
     private fun updateUiMode(newState: UIModeState) {
         val newPlayMode = newState.toPlayMode()
         val currentPlayMode = mutableUiState.value.uiMode.toPlayMode()
@@ -420,7 +435,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
         }
     }
 
-    private fun getEmbeddedUiRatio() = internalPlayer?.let { player ->
+    private fun getEmbeddedUiRatio() = newPlayer?.internalPlayer?.let { player ->
         val videoRatio = VideoSize.fromMedia3VideoSize(player.videoSize).getRatio()
         return (if (videoRatio.isNaN()) currentContentRatio
         else videoRatio).coerceIn(minContentRatio, maxContentRatio)
@@ -428,21 +443,8 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     } ?: minContentRatio
 
-    private fun updatePlaylist() {
-        newPlayer?.let { newPlayer ->
-            viewModelScope.launch {
-                val playlist = getPlaylistItemsFromItemList(
-                    newPlayer.playlist, newPlayer.repository
-                )
-                mutableUiState.update {
-                    it.copy(playList = playlist)
-                }
-            }
-        }
-    }
-
-    private fun <T> saveTryEmit(sharedFlow: MutableSharedFlow<T>, value: T) {
-        if(sharedFlow.tryEmit(value)) {
+    private fun <T> safeTryEmit(sharedFlow: MutableSharedFlow<T>, value: T) {
+        if (!sharedFlow.tryEmit(value)) {
             viewModelScope.launch {
                 sharedFlow.emit(value)
             }

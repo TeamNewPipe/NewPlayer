@@ -45,4 +45,10 @@
     <string name="chapter">Chapter</string>
     <string name="chapter_thumbnail">Chapter Thumbnail</string>
     <string name="stream_item_drag_handle">Stream item drag handle</string>
+    <string name="repeat_mode_no_repeat">Repeat mode: No repeat</string>
+    <string name="repeat_mode_repeat_all">Repeat mode: Repeat all</string>
+    <string name="repeat_mode_repeat_current">Repeat mode: Repeat currently playing</string>
+    <string name="shuffle_on">Shuffle playlist enabled</string>
+    <string name="shuffle_off">Shuffle playlist disabled</string>
+    <string name="store_playlist">Save current playlist</string>
 </resources>

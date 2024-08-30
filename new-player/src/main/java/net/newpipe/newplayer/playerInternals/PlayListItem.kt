@@ -53,4 +53,10 @@ suspend fun getPlaylistItemsFromItemList(items: List<String>, mediaRepo: MediaRe
         }
     }
 
-
+fun getPlaylistDurationInS(items: List<PlaylistItem>) : Int {
+    var duration = 0
+    for(item in items) {
+        duration += item.lengthInS
+    }
+    return duration
+}

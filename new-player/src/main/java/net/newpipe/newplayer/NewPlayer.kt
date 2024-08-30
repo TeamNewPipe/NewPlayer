@@ -23,8 +23,10 @@ package net.newpipe.newplayer
 import android.app.Application
 import android.util.Log
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
+import androidx.media3.common.Timeline
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.MediaSource
 import kotlinx.coroutines.CoroutineScope
@@ -39,6 +41,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.newpipe.newplayer.playerInternals.PlayList
+import net.newpipe.newplayer.playerInternals.PlaylistItem
+import net.newpipe.newplayer.playerInternals.getPlaylistItemsFromItemList
 import kotlin.Exception
 
 enum class PlayMode {
@@ -59,14 +63,14 @@ interface NewPlayer {
     var playWhenReady: Boolean
     val duration: Long
     val bufferedPercentage: Int
-    val repository: MediaRepository
     val sharingLinkWithOffsetPossible: Boolean
     var currentPosition: Long
     var fastSeekAmountSec: Int
     var playBackMode: PlayMode
     var playMode: StateFlow<PlayMode?>
 
-    var playlist: PlayList
+    val playlist: PlayList
+    val playlistInPlaylistItems: StateFlow<List<PlaylistItem>>
 
     // callbacks
 
@@ -87,17 +91,17 @@ interface NewPlayer {
         private var preferredStreamVariants: List<String> = emptyList()
         private var sharingLinkWithOffsetPossible = false
 
-        fun setMediaSourceFactory(mediaSourceFactory: MediaSource.Factory) : Builder {
+        fun setMediaSourceFactory(mediaSourceFactory: MediaSource.Factory): Builder {
             this.mediaSourceFactory = mediaSourceFactory
             return this
         }
 
-        fun setPreferredStreamVariants(preferredStreamVariants: List<String>) : Builder {
+        fun setPreferredStreamVariants(preferredStreamVariants: List<String>): Builder {
             this.preferredStreamVariants = preferredStreamVariants
             return this
         }
 
-        fun setSharingLinkWithOffsetPossible(possible: Boolean) : Builder {
+        fun setSharingLinkWithOffsetPossible(possible: Boolean): Builder {
             this.sharingLinkWithOffsetPossible = false
             return this
         }
@@ -123,7 +127,7 @@ class NewPlayerImpl(
     val app: Application,
     override val internalPlayer: Player,
     override val preferredStreamVariants: List<String>,
-    override val repository: MediaRepository,
+    private val repository: MediaRepository,
     override val sharingLinkWithOffsetPossible: Boolean
 ) : NewPlayer {
 
@@ -161,9 +165,14 @@ class NewPlayerImpl(
     override val duration: Long
         get() = internalPlayer.duration
 
-    override var playlist = PlayList(internalPlayer)
+    override val playlist = PlayList(internalPlayer)
+
+    val mutablePlaylistAsPlaylistItems = MutableStateFlow<List<PlaylistItem>>(emptyList())
+    override val playlistInPlaylistItems: StateFlow<List<PlaylistItem>> =
+        mutablePlaylistAsPlaylistItems.asStateFlow()
 
     init {
+        println("gurken init")
         internalPlayer.addListener(object : Player.Listener {
             override fun onPlayerError(error: PlaybackException) {
                 launchJobAndCollectError {
@@ -183,7 +192,26 @@ class NewPlayerImpl(
                     mutableOnEvent.emit(Pair(player, events))
                 }
             }
+
+            override fun onTimelineChanged(timeline: Timeline, reason: Int) {
+                super.onTimelineChanged(timeline, reason)
+                updatePlaylistItems()
+            }
         })
+    }
+
+    private fun updatePlaylistItems() {
+        playerScope.launch {
+            val playlist = getPlaylistItemsFromItemList(playlist, repository)
+            var playlistDuration = 0
+            for (item in playlist) {
+                playlistDuration += item.lengthInS
+            }
+
+            mutablePlaylistAsPlaylistItems.update {
+                playlist
+            }
+        }
     }
 
     override fun prepare() {

@@ -12,7 +12,6 @@ import net.newpipe.newplayer.ui.ContentScale
 
 open class VideoPlayerViewModelDummy : VideoPlayerViewModel {
     override var newPlayer: NewPlayer? = null
-    override val internalPlayer: Player? = null
     override val uiState = MutableStateFlow(VideoPlayerUIState.DEFAULT)
     override var minContentRatio = 4F / 3F
     override var maxContentRatio = 16F / 9F
@@ -90,6 +89,18 @@ open class VideoPlayerViewModelDummy : VideoPlayerViewModel {
 
     override fun streamSelected(streamId: Int) {
         println("dummy impl stream selected: $streamId")
+    }
+
+    override fun setRepeatmode(repeatMode: Int) {
+        println("dummy impl repeat mode: $repeatMode")
+    }
+
+    override fun setSuffleEnabled(enabled: Boolean) {
+        println("dummy impl shuffle enabled: $enabled")
+    }
+
+    override fun onStorePlaylist() {
+        TODO("Not yet implemented")
     }
 
     override fun pause() {

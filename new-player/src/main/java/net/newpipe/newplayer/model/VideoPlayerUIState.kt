@@ -20,8 +20,7 @@
 
 package net.newpipe.newplayer.model
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import androidx.media3.common.Player
 import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.playerInternals.PlaylistItem
 import net.newpipe.newplayer.ui.ContentScale
@@ -42,7 +41,10 @@ data class VideoPlayerUIState(
     val brightness: Float?,     // when null use system value
     val embeddedUiConfig: EmbeddedUiConfig?,
     val playList: List<PlaylistItem>,
-    val chapters: List<Chapter>
+    val chapters: List<Chapter>,
+    val shuffleEnabled: Boolean,
+    val repeatMode: Int,
+    val playListDurationInS: Int
 ) {
     companion object {
         val DEFAULT = VideoPlayerUIState(
@@ -64,7 +66,10 @@ data class VideoPlayerUIState(
             brightness = null,
             embeddedUiConfig = null,
             playList = emptyList(),
-            chapters = emptyList()
+            chapters = emptyList(),
+            shuffleEnabled = false,
+            repeatMode = Player.REPEAT_MODE_OFF,
+            playListDurationInS = 0
         )
     }
 }

@@ -32,7 +32,6 @@ import net.newpipe.newplayer.utils.Thumbnail
 
 interface VideoPlayerViewModel {
     var newPlayer: NewPlayer?
-    val internalPlayer: Player?
     val uiState: StateFlow<VideoPlayerUIState>
     var minContentRatio: Float
     var maxContentRatio: Float
@@ -61,4 +60,7 @@ interface VideoPlayerViewModel {
     fun closeStreamSelection()
     fun chapterSelected(chapter: Chapter)
     fun streamSelected(streamId: Int)
+    fun setRepeatmode(repeatMode: Int)
+    fun setSuffleEnabled(enabled: Boolean)
+    fun onStorePlaylist()
 }
