@@ -24,6 +24,7 @@ import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.util.Log
 import android.view.SurfaceView
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -102,6 +103,12 @@ fun VideoPlayerUI(
                     WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
                         it.systemBarInLightMode
                 }
+            }
+        }
+
+        if (uiState.uiMode.fullscreen) {
+            BackHandler {
+                viewModel.onBackPressed()
             }
         }
 

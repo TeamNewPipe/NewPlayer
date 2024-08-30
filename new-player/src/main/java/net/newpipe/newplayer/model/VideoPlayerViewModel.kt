@@ -37,6 +37,7 @@ interface VideoPlayerViewModel {
     var maxContentRatio: Float
     var contentFitMode: ContentScale
     val embeddedPlayerDraggedDownBy: SharedFlow<Float>
+    val onBackPressed: SharedFlow<Unit>
 
     fun initUIState(instanceState: Bundle)
     fun play()
@@ -45,6 +46,7 @@ interface VideoPlayerViewModel {
     fun nextStream()
     fun switchToFullscreen(embeddedUiConfig: EmbeddedUiConfig)
     fun switchToEmbeddedView()
+    fun onBackPressed()
     fun showUi()
     fun hideUi()
     fun seekPositionChanged(newValue: Float)

@@ -153,6 +153,16 @@ enum class UIModeState {
         FULLSCREEN_VIDEO_STREAM_SELECT -> PlayMode.FULLSCREEN_VIDEO
     }
 
+    fun getNextModeWhenBackPressed() = when(this) {
+        EMBEDDED_VIDEO_CHAPTER_SELECT -> EMBEDDED_VIDEO
+        EMBEDDED_VIDEO_STREAM_SELECT -> EMBEDDED_VIDEO
+        FULLSCREEN_VIDEO -> EMBEDDED_VIDEO
+        FULLSCREEN_VIDEO_STREAM_SELECT -> FULLSCREEN_VIDEO
+        FULLSCREEN_VIDEO_CHAPTER_SELECT -> FULLSCREEN_VIDEO
+        FULLSCREEN_VIDEO_CONTROLLER_UI -> EMBEDDED_VIDEO
+        else -> null
+    }
+
     companion object {
         fun fromPlayMode(playMode: PlayMode?) =
             if (playMode != null)

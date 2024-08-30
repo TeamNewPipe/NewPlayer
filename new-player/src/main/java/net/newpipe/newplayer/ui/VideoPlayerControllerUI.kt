@@ -64,19 +64,6 @@ fun VideoPlayerControllerUI(
     viewModel: VideoPlayerViewModel, uiState: VideoPlayerUIState
 ) {
 
-    val context = LocalContext.current
-
-    if (uiState.uiMode.fullscreen) {
-        BackHandler {
-            viewModel.switchToEmbeddedView()
-        }
-    }
-
-    val internalBrightnessChange = { rateChange: Float ->
-        val systemBrightness = getDefaultBrightness(context as Activity)
-        viewModel.brightnessChange(rateChange, systemBrightness)
-    }
-
     val insets = getInsets()
 
     AnimatedVisibility(uiState.uiMode.controllerUiVisible) {

@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.media3.common.Player
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.ui.ContentScale
@@ -16,6 +17,7 @@ open class VideoPlayerViewModelDummy : VideoPlayerViewModel {
     override var maxContentRatio = 16F / 9F
     override var contentFitMode = ContentScale.FIT_INSIDE
     override val embeddedPlayerDraggedDownBy = MutableSharedFlow<Float>().asSharedFlow()
+    override val onBackPressed: SharedFlow<Unit> = MutableSharedFlow<Unit>().asSharedFlow()
 
     override fun initUIState(instanceState: Bundle) {
         println("dummy impl")
@@ -26,6 +28,10 @@ open class VideoPlayerViewModelDummy : VideoPlayerViewModel {
     }
 
     override fun switchToEmbeddedView() {
+        println("dummy impl")
+    }
+
+    override fun onBackPressed() {
         println("dummy impl")
     }
 

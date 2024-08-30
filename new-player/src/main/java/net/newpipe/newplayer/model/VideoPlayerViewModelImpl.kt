@@ -37,6 +37,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
 import kotlinx.coroutines.flow.asStateFlow
@@ -126,6 +127,9 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     private var mutableEmbeddedPlayerDraggedDownBy = MutableSharedFlow<Float>()
     override val embeddedPlayerDraggedDownBy = mutableEmbeddedPlayerDraggedDownBy.asSharedFlow()
+
+    private var mutableOnBackPressed = MutableSharedFlow<Unit>()
+    override val onBackPressed: SharedFlow<Unit> = mutableOnBackPressed.asSharedFlow()
 
     private fun installNewPlayer() {
         internalPlayer?.let { player ->
@@ -298,9 +302,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun embeddedDraggedDown(offset: Float) {
-        viewModelScope.launch {
-            mutableEmbeddedPlayerDraggedDownBy.emit(offset)
-        }
+        saveTryEmit(mutableEmbeddedPlayerDraggedDownBy, offset)
     }
 
     override fun fastSeek(count: Int) {
@@ -328,7 +330,6 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun brightnessChange(changeRate: Float, systemBrightness: Float) {
-
         if (mutableUiState.value.uiMode.fullscreen) {
             val currentBrightness = mutableUiState.value.brightness
                 ?: if (systemBrightness < 0f) 0.5f else systemBrightness
@@ -381,8 +382,16 @@ class VideoPlayerViewModelImpl @Inject constructor(
         updateUiMode(UIModeState.EMBEDDED_VIDEO)
     }
 
+    override fun onBackPressed() {
+        val nextMode = uiState.value.uiMode.getNextModeWhenBackPressed()
+        if (nextMode != null) {
+            updateUiMode(nextMode)
+        } else {
+            saveTryEmit(mutableOnBackPressed, Unit)
+        }
+    }
+
     override fun switchToFullscreen(embeddedUiConfig: EmbeddedUiConfig) {
-        println("gurken fullscreen: ${embeddedUiConfig}")
         uiVisibilityJob?.cancel()
         finishFastSeek()
 
@@ -419,6 +428,14 @@ class VideoPlayerViewModelImpl @Inject constructor(
                 mutableUiState.update {
                     it.copy(playList = playlist)
                 }
+            }
+        }
+    }
+
+    private fun <T> saveTryEmit(sharedFlow: MutableSharedFlow<T>, value: T) {
+        if(sharedFlow.tryEmit(value)) {
+            viewModelScope.launch {
+                sharedFlow.emit(value)
             }
         }
     }
