@@ -25,13 +25,16 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DragHandle
@@ -47,6 +50,7 @@ import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -77,34 +81,40 @@ fun StreamItem(
     val locale = getLocale()!!
     Row(modifier = modifier
         .clickable { onClicked(id) }
-        .height(80.dp)) {
-        Box {
+        .padding(5.dp)
+        .height(IntrinsicSize.Min)) {
+        Box(
+            modifier = Modifier
+                .aspectRatio(16f / 9f)
+                .wrapContentHeight()
+                .fillMaxWidth()
+        ) {
             val contentDescription = stringResource(R.string.chapter)
             if (thumbnail != null) {
                 when (thumbnail) {
                     is OnlineThumbnail -> AsyncImage(
+                        modifier = Modifier.fillMaxSize(),
                         model = thumbnail.url,
                         contentDescription = contentDescription
                     )
 
                     is BitmapThumbnail -> Image(
+                        modifier = Modifier.fillMaxSize(),
                         bitmap = thumbnail.img,
                         contentDescription = contentDescription
                     )
 
                     is VectorThumbnail -> Image(
+                        modifier = Modifier.fillMaxSize(),
                         imageVector = thumbnail.vec,
                         contentDescription = contentDescription
                     )
                 }
-                AsyncImage(
-                    model = thumbnail,
-                    contentDescription = contentDescription
-                )
             } else {
                 Image(
-                    painterResource(R.drawable.tiny_placeholder),
-                    contentDescription = stringResource(R.string.chapter_thumbnail)
+                    modifier = Modifier.fillMaxSize(),
+                    painter = painterResource(R.drawable.tiny_placeholder),
+                    contentDescription = contentDescription
                 )
             }
             Surface(
@@ -118,28 +128,37 @@ fun StreamItem(
                     modifier = Modifier.padding(
                         start = 4.dp,
                         end = 4.dp,
-                        top = 2.dp,
-                        bottom = 2.dp
-                    ), text = getTimeStringFromMs(lengthInMs, locale)
+                        top = 0.5.dp,
+                        bottom = 0.5.dp
+                    ),
+                    text = getTimeStringFromMs(lengthInMs, locale, leadingZerosForMinutes = false),
+                    fontSize = 14.sp,
                 )
             }
         }
 
         Column(
             modifier = Modifier
-                .padding(8.dp)
+                .padding(1.dp)
                 .weight(1f)
-                .fillMaxSize()
+                .height(IntrinsicSize.Min)
+                .fillMaxWidth()
         ) {
-            Text(text = title, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            Text(
+                text = title, fontSize = 14.sp, fontWeight = FontWeight.Bold, maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
             if (creator != null) {
-                Text(text = creator)
+                Text(
+                    text = creator, fontSize = 13.sp, fontWeight = FontWeight.Light, maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         }
 
         Box(modifier = Modifier
-            .fillMaxHeight()
             .aspectRatio(1f)
+            .fillMaxSize()
             .pointerInteropFilter {
                 when (it.action) {
                     MotionEvent.ACTION_UP -> {
@@ -157,7 +176,7 @@ fun StreamItem(
             }) {
             Icon(
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(25.dp)
                     .align(Alignment.Center),
                 imageVector = Icons.Filled.DragHandle,
                 //contentDescription = stringResource(R.string.stream_item_drag_handle)
@@ -172,17 +191,18 @@ fun StreamItem(
 fun StreamItemPreview() {
     VideoPlayerTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = Color.DarkGray) {
-            StreamItem(
-                id = 0,
-                modifier = Modifier.fillMaxSize(),
-                title = "Video Title",
-                creator = "Video Creator",
-                thumbnail = null,
-                lengthInMs = 15 * 60 * 1000,
-                onDragStart = {},
-                onDragEnd = {},
-                onClicked = {}
-            )
+            Box(modifier = Modifier.fillMaxSize()) {
+                StreamItem(
+                    id = 0,
+                    title = "Video Title",
+                    creator = "Video Creator",
+                    thumbnail = null,
+                    lengthInMs = 15 * 60 * 1000,
+                    onDragStart = {},
+                    onDragEnd = {},
+                    onClicked = {}
+                )
+            }
         }
     }
 }

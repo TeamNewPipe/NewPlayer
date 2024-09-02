@@ -57,6 +57,7 @@ import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.NewPlayerException
 import net.newpipe.newplayer.playerInternals.PlaylistItem
+import net.newpipe.newplayer.ui.STREAMSELECT_UI_BACKGROUND_COLOR
 import net.newpipe.newplayer.ui.videoplayer.streamselect.ChapterItem
 import net.newpipe.newplayer.ui.videoplayer.streamselect.ChapterSelectTopBar
 import net.newpipe.newplayer.ui.videoplayer.streamselect.StreamItem
@@ -72,7 +73,7 @@ fun StreamSelectUI(
     val insets = getInsets()
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = CONTROLLER_UI_BACKGROUND_COLOR
+        color = STREAMSELECT_UI_BACKGROUND_COLOR
     ) {
         Scaffold(
             modifier = Modifier
@@ -94,7 +95,7 @@ fun StreamSelectUI(
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(10.dp),
+//                verticalArrangement = Arrangement.spacedBy(10.dp),
                 contentPadding = PaddingValues(start = 8.dp, end = 4.dp)
             ) {
                 if (isChapterSelect) {

@@ -41,6 +41,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.Player
 import net.newpipe.newplayer.NewPlayerException
@@ -68,7 +69,9 @@ fun StreamSelectTopBar(
             val duration = getPlaylistDurationInS(uiState.playList).toLong() * 1000
             val durationString = getTimeStringFromMs(timeSpanInMs = duration, locale)
             Text(
-                text = "00:00/$durationString"
+                text = "00:00/$durationString",
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }, actions = {
             IconButton(

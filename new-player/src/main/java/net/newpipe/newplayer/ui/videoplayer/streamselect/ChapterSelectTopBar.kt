@@ -35,6 +35,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
@@ -45,8 +46,7 @@ fun ChapterSelectTopBar(modifier: Modifier = Modifier, onClose: () -> Unit) {
     TopAppBar(modifier = modifier,
         colors = topAppBarColors(containerColor = Color.Transparent),
         title = {
-            Text("Chapter TODO")
-            //Text(stringResource(R.string.chapter))
+            Text(stringResource(R.string.chapter), maxLines = 1, overflow = TextOverflow.Ellipsis)
         }, actions = {
             IconButton(
                 onClick = onClose

@@ -42,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,9 +56,7 @@ import net.newpipe.newplayer.utils.getEmbeddedUiConfig
 
 @Composable
 fun TopUI(
-    modifier: Modifier,
-    viewModel: VideoPlayerViewModel,
-    uiState: VideoPlayerUIState
+    modifier: Modifier, viewModel: VideoPlayerViewModel, uiState: VideoPlayerUIState
 ) {
     val embeddedUiConfig = getEmbeddedUiConfig(activity = LocalContext.current as Activity)
     Row(
@@ -66,12 +65,16 @@ fun TopUI(
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Column(horizontalAlignment = Alignment.Start, modifier = Modifier.weight(1F)) {
-            Text("The Title", fontSize = 15.sp, fontWeight = FontWeight.Bold)
             Text(
-                "The Channel",
-                fontSize = 12.sp,
-
-                )
+                "The Title",
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                "The Channel", fontSize = 12.sp, maxLines = 1, overflow = TextOverflow.Ellipsis
+            )
         }
         Button(
             onClick = { /*TODO*/ },

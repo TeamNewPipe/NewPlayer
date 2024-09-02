@@ -113,7 +113,7 @@ private const val MILLIS_PER_DAY =
 private const val MILLIS_PER_HOUR = MINUTES_PER_HOUR * SECONDS_PER_MINUTE * MILLIS_PER_SECOND
 private const val MILLIS_PER_MINUTE = SECONDS_PER_MINUTE * MILLIS_PER_SECOND
 
-fun getTimeStringFromMs(timeSpanInMs: Long, locale: Locale): String {
+fun getTimeStringFromMs(timeSpanInMs: Long, locale: Locale, leadingZerosForMinutes:Boolean = true): String {
     val days = timeSpanInMs / MILLIS_PER_DAY
     val millisThisDay = timeSpanInMs - days * MILLIS_PER_DAY
     val hours = millisThisDay / MILLIS_PER_HOUR
@@ -126,7 +126,7 @@ fun getTimeStringFromMs(timeSpanInMs: Long, locale: Locale): String {
     val time_string =
         if (0L < days) String.format(locale, "%d:%02d:%02d:%02d", days, hours, minutes, seconds)
         else if (0L < hours) String.format(locale, "%d:%02d:%02d", hours, minutes, seconds)
-        else String.format(locale, "%02d:%02d", minutes, seconds)
+        else String.format(locale, if(leadingZerosForMinutes) "%02d:%02d" else "%d:%02d", minutes, seconds)
 
     return time_string
 }

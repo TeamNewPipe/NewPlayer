@@ -58,6 +58,7 @@ import net.newpipe.newplayer.utils.getDefaultBrightness
 import net.newpipe.newplayer.utils.getInsets
 
 val CONTROLLER_UI_BACKGROUND_COLOR = Color(0x75000000)
+val STREAMSELECT_UI_BACKGROUND_COLOR = Color(0xba000000)
 
 @Composable
 fun VideoPlayerControllerUI(

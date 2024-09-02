@@ -37,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -64,6 +65,7 @@ fun ChapterItem(
     Row(
         modifier = modifier
             .height(80.dp)
+            .padding(5.dp)
             .clickable { onClicked(id) }
     ) {
         val contentDescription = stringResource(R.string.chapter)
@@ -98,8 +100,18 @@ fun ChapterItem(
             modifier = Modifier.padding(start = 8.dp),
             horizontalAlignment = Alignment.Start,
         ) {
-            Text(text = chapterTitle, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            Text(getTimeStringFromMs(chapterStartInMs, locale))
+            Text(
+                text = chapterTitle,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                getTimeStringFromMs(chapterStartInMs, locale),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         }
 
     }
