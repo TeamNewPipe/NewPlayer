@@ -80,8 +80,6 @@ fun BottomUI(
             colors = customizedSeekerColors()
         )
 
-        //Slider(value = 0.4F, onValueChange = {}, modifier = Modifier.weight(1F))
-
         Text(getTimeStringFromMs(uiState.durationInMs, getLocale() ?: locale))
 
         val embeddedUiConfig = getEmbeddedUiConfig(LocalContext.current as Activity)

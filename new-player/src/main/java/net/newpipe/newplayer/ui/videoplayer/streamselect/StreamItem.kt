@@ -65,7 +65,68 @@ import net.newpipe.newplayer.utils.VectorThumbnail
 import net.newpipe.newplayer.utils.getLocale
 import net.newpipe.newplayer.utils.getTimeStringFromMs
 
+@Composable
+private fun Thumbnail(thumbnail: Thumbnail?, contentDescription: String) {
+    if (thumbnail != null) {
+        when (thumbnail) {
+            is OnlineThumbnail -> AsyncImage(
+                modifier = Modifier.fillMaxSize(),
+                model = thumbnail.url,
+                contentDescription = contentDescription
+            )
+
+            is BitmapThumbnail -> Image(
+                modifier = Modifier.fillMaxSize(),
+                bitmap = thumbnail.img,
+                contentDescription = contentDescription
+            )
+
+            is VectorThumbnail -> Image(
+                modifier = Modifier.fillMaxSize(),
+                imageVector = thumbnail.vec,
+                contentDescription = contentDescription
+            )
+        }
+    } else {
+        Image(
+            painter = painterResource(R.drawable.tiny_placeholder),
+            contentDescription = contentDescription
+        )
+    }
+}
+
 @OptIn(ExperimentalComposeUiApi::class)
+@Composable
+private fun DragComposable(onDragStart: () -> Unit, onDragEnd: () -> Unit) {
+    Box(modifier = Modifier
+        .aspectRatio(1f)
+        .fillMaxSize()
+        .pointerInteropFilter {
+            when (it.action) {
+                MotionEvent.ACTION_UP -> {
+                    onDragEnd()
+                    false
+                }
+
+                MotionEvent.ACTION_DOWN -> {
+                    onDragStart()
+                    false
+                }
+
+                else -> true
+            }
+        }) {
+        Icon(
+            modifier = Modifier
+                .size(25.dp)
+                .align(Alignment.Center),
+            imageVector = Icons.Filled.DragHandle,
+            //contentDescription = stringResource(R.string.stream_item_drag_handle)
+            contentDescription = "placeholer, TODO: FIXME"
+        )
+    }
+}
+
 @Composable
 fun StreamItem(
     modifier: Modifier = Modifier,
@@ -86,37 +147,10 @@ fun StreamItem(
         Box(
             modifier = Modifier
                 .aspectRatio(16f / 9f)
-                .wrapContentHeight()
-                .fillMaxWidth()
+                .wrapContentSize()
         ) {
-            val contentDescription = stringResource(R.string.chapter)
-            if (thumbnail != null) {
-                when (thumbnail) {
-                    is OnlineThumbnail -> AsyncImage(
-                        modifier = Modifier.fillMaxSize(),
-                        model = thumbnail.url,
-                        contentDescription = contentDescription
-                    )
-
-                    is BitmapThumbnail -> Image(
-                        modifier = Modifier.fillMaxSize(),
-                        bitmap = thumbnail.img,
-                        contentDescription = contentDescription
-                    )
-
-                    is VectorThumbnail -> Image(
-                        modifier = Modifier.fillMaxSize(),
-                        imageVector = thumbnail.vec,
-                        contentDescription = contentDescription
-                    )
-                }
-            } else {
-                Image(
-                    modifier = Modifier.fillMaxSize(),
-                    painter = painterResource(R.drawable.tiny_placeholder),
-                    contentDescription = contentDescription
-                )
-            }
+            val contentDescription = stringResource(R.string.stream_item_thumbnail)
+            Thumbnail(thumbnail, contentDescription)
             Surface(
                 color = CONTROLLER_UI_BACKGROUND_COLOR,
                 modifier = Modifier
@@ -141,7 +175,7 @@ fun StreamItem(
             modifier = Modifier
                 .padding(1.dp)
                 .weight(1f)
-                .height(IntrinsicSize.Min)
+                .wrapContentHeight()
                 .fillMaxWidth()
         ) {
             Text(
@@ -156,37 +190,12 @@ fun StreamItem(
             }
         }
 
-        Box(modifier = Modifier
-            .aspectRatio(1f)
-            .fillMaxSize()
-            .pointerInteropFilter {
-                when (it.action) {
-                    MotionEvent.ACTION_UP -> {
-                        onDragEnd(id)
-                        false
-                    }
+        DragComposable(onDragStart = { onDragStart(id) }, onDragEnd = { onDragEnd(id) })
 
-                    MotionEvent.ACTION_DOWN -> {
-                        onDragStart(id)
-                        false
-                    }
-
-                    else -> true
-                }
-            }) {
-            Icon(
-                modifier = Modifier
-                    .size(25.dp)
-                    .align(Alignment.Center),
-                imageVector = Icons.Filled.DragHandle,
-                //contentDescription = stringResource(R.string.stream_item_drag_handle)
-                contentDescription = "placeholer, TODO: FIXME"
-            )
-        }
     }
 }
 
-@Preview(device = "spec:width=1080px,height=200px,dpi=440,orientation=landscape")
+@Preview(device = "spec:width=1080px,height=400px,dpi=440,orientation=landscape")
 @Composable
 fun StreamItemPreview() {
     VideoPlayerTheme {

@@ -95,7 +95,6 @@ fun StreamSelectUI(
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxSize(),
-//                verticalArrangement = Arrangement.spacedBy(10.dp),
                 contentPadding = PaddingValues(start = 8.dp, end = 4.dp)
             ) {
                 if (isChapterSelect) {

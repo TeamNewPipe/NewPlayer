@@ -43,7 +43,8 @@
     <string name="close_chapter_selection">Close chapter selection</string>
     <string name="close_stream_selection">Close stream selection</string>
     <string name="chapter">Chapter</string>
-    <string name="chapter_thumbnail">Chapter Thumbnail</string>
+    <string name="chapter_thumbnail">Chapter thumbnail</string>
+    <string name="stream_item_thumbnail">Stream item thumbnail</string>
     <string name="stream_item_drag_handle">Stream item drag handle</string>
     <string name="repeat_mode_no_repeat">Repeat mode: No repeat</string>
     <string name="repeat_mode_repeat_all">Repeat mode: Repeat all</string>

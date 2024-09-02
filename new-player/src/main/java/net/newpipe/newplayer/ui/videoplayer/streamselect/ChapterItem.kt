@@ -68,7 +68,7 @@ fun ChapterItem(
             .padding(5.dp)
             .clickable { onClicked(id) }
     ) {
-        val contentDescription = stringResource(R.string.chapter)
+        val contentDescription = stringResource(R.string.chapter_thumbnail)
         if (thumbnail != null) {
             when (thumbnail) {
                 is OnlineThumbnail -> AsyncImage(
