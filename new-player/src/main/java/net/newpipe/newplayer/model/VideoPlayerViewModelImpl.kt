@@ -46,6 +46,7 @@ import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.utils.VideoSize
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.ui.ContentScale
+import java.util.LinkedList
 
 val VIDEOPLAYER_UI_STATE = "video_player_ui_state"
 
@@ -61,6 +62,9 @@ class VideoPlayerViewModelImpl @Inject constructor(
     // private
     private val mutableUiState = MutableStateFlow(VideoPlayerUIState.DEFAULT)
     private var currentContentRatio = 1F
+
+    private var playlistItemToBeMoved: Int? = null
+    private var playlistItemNewPosition: Int = 0
 
     private var uiVisibilityJob: Job? = null
     private var progressUpdaterJob: Job? = null
@@ -422,12 +426,33 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun movePlaylistItem(from: Int, to: Int) {
-        newPlayer?.movePlaylistItem(from, to)
+        if(playlistItemToBeMoved == null) {
+            playlistItemToBeMoved = from
+        }
+        playlistItemNewPosition = to
+        val tempList = LinkedList(uiState.value.playList)
+        val item = uiState.value.playList[from]
+        tempList.removeAt(from)
+        tempList.add(to, item)
+        mutableUiState.update {
+            it.copy(
+                playList = tempList
+            )
+        }
+    }
+
+    override fun onStreamItemDragFinished() {
+        playlistItemToBeMoved?.let {
+            newPlayer?.movePlaylistItem(it, playlistItemNewPosition)
+        }
+        playlistItemToBeMoved = null
     }
 
     override fun removePlaylistItem(index: Int) {
         newPlayer?.removePlaylistItem(index)
     }
+
+
 
     private fun updateUiMode(newState: UIModeState) {
         val newPlayMode = newState.toPlayMode()

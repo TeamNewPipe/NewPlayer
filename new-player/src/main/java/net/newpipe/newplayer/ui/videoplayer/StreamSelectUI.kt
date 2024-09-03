@@ -51,7 +51,9 @@ import net.newpipe.newplayer.ui.videoplayer.streamselect.ChapterItem
 import net.newpipe.newplayer.ui.videoplayer.streamselect.ChapterSelectTopBar
 import net.newpipe.newplayer.ui.videoplayer.streamselect.StreamItem
 import net.newpipe.newplayer.ui.videoplayer.streamselect.StreamSelectTopBar
+import net.newpipe.newplayer.utils.ReorderHapticFeedbackType
 import net.newpipe.newplayer.utils.getInsets
+import net.newpipe.newplayer.utils.rememberReorderHapticFeedback
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
@@ -122,14 +124,14 @@ fun ReorderableStreamItemsList(
     viewModel: VideoPlayerViewModel,
     uiState: VideoPlayerUIState
 ) {
+    val haptic = rememberReorderHapticFeedback()
 
     val lazyListState = rememberLazyListState()
     val reorderableLazyListState =
         rememberReorderableLazyListState(lazyListState = lazyListState) { from, to ->
+            haptic.performHapticFeedback(ReorderHapticFeedbackType.MOVE)
             viewModel.movePlaylistItem(from.index, to.index)
         }
-
-
 
     LazyColumn(
         modifier = Modifier
@@ -149,7 +151,9 @@ fun ReorderableStreamItemsList(
                     thumbnail = playlistItem.thumbnail,
                     lengthInMs = playlistItem.lengthInS.toLong() * 1000,
                     onClicked = { viewModel.streamSelected(it) },
-                    reorderableScope = this@ReorderableItem
+                    reorderableScope = this@ReorderableItem,
+                    haptic = haptic,
+                    onDragFinished = viewModel::onStreamItemDragFinished
                 )
             }
         }

@@ -111,6 +111,10 @@ open class VideoPlayerViewModelDummy : VideoPlayerViewModel {
         println("dummy impl")
     }
 
+    override fun onStreamItemDragFinished() {
+        println("dummy impl")
+    }
+
     override fun pause() {
         println("dummy pause")
     }

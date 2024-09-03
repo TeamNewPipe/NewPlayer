@@ -22,6 +22,7 @@ package net.newpipe.newplayer.ui.videoplayer.streamselect
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,6 +40,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -55,6 +57,8 @@ import net.newpipe.newplayer.ui.CONTROLLER_UI_BACKGROUND_COLOR
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.utils.BitmapThumbnail
 import net.newpipe.newplayer.utils.OnlineThumbnail
+import net.newpipe.newplayer.utils.ReorderHapticFeedback
+import net.newpipe.newplayer.utils.ReorderHapticFeedbackType
 import net.newpipe.newplayer.utils.Thumbnail
 import net.newpipe.newplayer.utils.VectorThumbnail
 import net.newpipe.newplayer.utils.getLocale
@@ -100,9 +104,14 @@ fun StreamItem(
     thumbnail: Thumbnail?,
     lengthInMs: Long,
     onClicked: (Int) -> Unit,
-    reorderableScope: ReorderableCollectionItemScope?
+    onDragFinished: () -> Unit,
+    reorderableScope: ReorderableCollectionItemScope?,
+    haptic: ReorderHapticFeedback?
 ) {
     val locale = getLocale()!!
+
+    val interactionSource = remember { MutableInteractionSource() }
+
     Row(
         modifier = modifier
             .padding(5.dp)
@@ -159,7 +168,16 @@ fun StreamItem(
                     Modifier
                         .aspectRatio(1f)
                         .fillMaxSize()
-                        .draggableHandle()
+                        .draggableHandle(
+                            onDragStarted = {
+                                haptic?.performHapticFeedback(ReorderHapticFeedbackType.START)
+                            },
+                            onDragStopped = {
+                                haptic?.performHapticFeedback(ReorderHapticFeedbackType.END)
+                                onDragFinished()
+                            },
+                            interactionSource = interactionSource,
+                        )
                 }
             } else {
                 Modifier
@@ -190,7 +208,9 @@ fun StreamItemPreview() {
                     thumbnail = null,
                     lengthInMs = 15 * 60 * 1000,
                     onClicked = {},
-                    reorderableScope = null
+                    reorderableScope = null,
+                    haptic = null,
+                    onDragFinished = {}
                 )
             }
         }
