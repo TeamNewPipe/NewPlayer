@@ -30,7 +30,6 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -46,7 +45,6 @@ import kotlinx.coroutines.launch
 import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.utils.VideoSize
 import net.newpipe.newplayer.NewPlayer
-import net.newpipe.newplayer.playerInternals.getPlaylistItemsFromItemList
 import net.newpipe.newplayer.ui.ContentScale
 
 val VIDEOPLAYER_UI_STATE = "video_player_ui_state"
@@ -172,7 +170,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
                 }
             }
             viewModelScope.launch {
-                newPlayer.playlistInPlaylistItems.collect { playlist ->
+                newPlayer.playlist.collect { playlist ->
                     mutableUiState.update { it.copy(playList = playlist) }
                 }
             }
@@ -421,6 +419,14 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     override fun onStorePlaylist() {
         TODO("Not yet implemented")
+    }
+
+    override fun movePlaylistItem(from: Int, to: Int) {
+        newPlayer?.movePlaylistItem(from, to)
+    }
+
+    override fun removePlaylistItem(index: Int) {
+        newPlayer?.removePlaylistItem(index)
     }
 
     private fun updateUiMode(newState: UIModeState) {

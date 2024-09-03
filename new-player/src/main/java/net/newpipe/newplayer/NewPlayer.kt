@@ -23,7 +23,6 @@ package net.newpipe.newplayer
 import android.app.Application
 import android.util.Log
 import androidx.media3.common.MediaItem
-import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.Timeline
@@ -40,10 +39,11 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import net.newpipe.newplayer.playerInternals.PlayList
 import net.newpipe.newplayer.playerInternals.PlaylistItem
-import net.newpipe.newplayer.playerInternals.getPlaylistItemsFromItemList
+import net.newpipe.newplayer.playerInternals.getPlaylistItemsFromExoplayer
+import net.newpipe.newplayer.utils.Thumbnail
 import kotlin.Exception
+import kotlin.random.Random
 
 enum class PlayMode {
     EMBEDDED_VIDEO,
@@ -69,8 +69,7 @@ interface NewPlayer {
     var playBackMode: PlayMode
     var playMode: StateFlow<PlayMode?>
 
-    val playlist: PlayList
-    val playlistInPlaylistItems: StateFlow<List<PlaylistItem>>
+    val playlist: StateFlow<List<PlaylistItem>>
 
     // callbacks
 
@@ -82,6 +81,8 @@ interface NewPlayer {
     fun play()
     fun pause()
     fun addToPlaylist(item: String)
+    fun movePlaylistItem(fromIndex: Int, toIndex: Int)
+    fun removePlaylistItem(index: Int)
     fun playStream(item: String, playMode: PlayMode)
     fun playStream(item: String, streamVariant: String, playMode: PlayMode)
     fun setPlayMode(playMode: PlayMode)
@@ -131,6 +132,8 @@ class NewPlayerImpl(
     override val sharingLinkWithOffsetPossible: Boolean
 ) : NewPlayer {
 
+    private var uniqueIdToIdLookup = HashMap<Long, String>()
+
     var mutableErrorFlow = MutableSharedFlow<Exception>()
     override val errorFlow = mutableErrorFlow.asSharedFlow()
 
@@ -165,11 +168,9 @@ class NewPlayerImpl(
     override val duration: Long
         get() = internalPlayer.duration
 
-    override val playlist = PlayList(internalPlayer)
-
-    val mutablePlaylistAsPlaylistItems = MutableStateFlow<List<PlaylistItem>>(emptyList())
-    override val playlistInPlaylistItems: StateFlow<List<PlaylistItem>> =
-        mutablePlaylistAsPlaylistItems.asStateFlow()
+    val mutablePlaylist = MutableStateFlow<List<PlaylistItem>>(emptyList())
+    override val playlist: StateFlow<List<PlaylistItem>> =
+        mutablePlaylist.asStateFlow()
 
     init {
         println("gurken init")
@@ -202,13 +203,13 @@ class NewPlayerImpl(
 
     private fun updatePlaylistItems() {
         playerScope.launch {
-            val playlist = getPlaylistItemsFromItemList(playlist, repository)
+            val playlist = getPlaylistItemsFromExoplayer(internalPlayer, repository, uniqueIdToIdLookup)
             var playlistDuration = 0
             for (item in playlist) {
                 playlistDuration += item.lengthInS
             }
 
-            mutablePlaylistAsPlaylistItems.update {
+            mutablePlaylist.update {
                 playlist
             }
         }
@@ -235,6 +236,14 @@ class NewPlayerImpl(
             val mediaItem = toMediaItem(item)
             internalPlayer.addMediaItem(mediaItem)
         }
+    }
+
+    override fun movePlaylistItem(fromIndex: Int, toIndex: Int) {
+        internalPlayer.moveMediaItem(fromIndex, toIndex)
+    }
+
+    override fun removePlaylistItem(index: Int) {
+        internalPlayer.removeMediaItem(index)
     }
 
     override fun playStream(item: String, playMode: PlayMode) {
@@ -266,7 +275,9 @@ class NewPlayerImpl(
 
     private suspend fun toMediaItem(item: String, streamVariant: String): MediaItem {
         val dataStream = repository.getStream(item, streamVariant)
-        val mediaItem = MediaItem.Builder().setMediaId(item).setUri(dataStream)
+        val uniqueId = Random.nextLong()
+        uniqueIdToIdLookup.set(uniqueId, item)
+        val mediaItem = MediaItem.Builder().setMediaId(uniqueId.toString()).setUri(dataStream)
         return mediaItem.build()
     }
 

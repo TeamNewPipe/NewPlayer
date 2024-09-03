@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.media3.common)
     implementation(libs.coil.compose)
+    implementation(libs.reorderable)
 
     ksp(libs.hilt.android.compiler)
     ksp(libs.androidx.hilt.compiler)

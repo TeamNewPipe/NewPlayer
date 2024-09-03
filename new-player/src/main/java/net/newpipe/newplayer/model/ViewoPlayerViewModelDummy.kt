@@ -100,7 +100,15 @@ open class VideoPlayerViewModelDummy : VideoPlayerViewModel {
     }
 
     override fun onStorePlaylist() {
-        TODO("Not yet implemented")
+        println("dummy impl")
+    }
+
+    override fun movePlaylistItem(from: Int, to: Int) {
+        println("dummy impl")
+    }
+
+    override fun removePlaylistItem(index: Int) {
+        println("dummy impl")
     }
 
     override fun pause() {

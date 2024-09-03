@@ -20,33 +20,28 @@
 
 package net.newpipe.newplayer.ui.videoplayer.streamselect
 
-import android.view.MotionEvent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -64,6 +59,7 @@ import net.newpipe.newplayer.utils.Thumbnail
 import net.newpipe.newplayer.utils.VectorThumbnail
 import net.newpipe.newplayer.utils.getLocale
 import net.newpipe.newplayer.utils.getTimeStringFromMs
+import sh.calvin.reorderable.ReorderableCollectionItemScope
 
 @Composable
 private fun Thumbnail(thumbnail: Thumbnail?, contentDescription: String) {
@@ -95,38 +91,6 @@ private fun Thumbnail(thumbnail: Thumbnail?, contentDescription: String) {
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
-@Composable
-private fun DragComposable(onDragStart: () -> Unit, onDragEnd: () -> Unit) {
-    Box(modifier = Modifier
-        .aspectRatio(1f)
-        .fillMaxSize()
-        .pointerInteropFilter {
-            when (it.action) {
-                MotionEvent.ACTION_UP -> {
-                    onDragEnd()
-                    false
-                }
-
-                MotionEvent.ACTION_DOWN -> {
-                    onDragStart()
-                    false
-                }
-
-                else -> true
-            }
-        }) {
-        Icon(
-            modifier = Modifier
-                .size(25.dp)
-                .align(Alignment.Center),
-            imageVector = Icons.Filled.DragHandle,
-            //contentDescription = stringResource(R.string.stream_item_drag_handle)
-            contentDescription = "placeholer, TODO: FIXME"
-        )
-    }
-}
-
 @Composable
 fun StreamItem(
     modifier: Modifier = Modifier,
@@ -135,19 +99,19 @@ fun StreamItem(
     creator: String?,
     thumbnail: Thumbnail?,
     lengthInMs: Long,
-    onDragStart: (Int) -> Unit,
-    onDragEnd: (Int) -> Unit,
-    onClicked: (Int) -> Unit
+    onClicked: (Int) -> Unit,
+    reorderableScope: ReorderableCollectionItemScope?
 ) {
     val locale = getLocale()!!
-    Row(modifier = modifier
-        .clickable { onClicked(id) }
-        .padding(5.dp)
-        .height(IntrinsicSize.Min)) {
+    Row(
+        modifier = modifier
+            .padding(5.dp)
+            .height(60.dp)
+    ) {
         Box(
             modifier = Modifier
                 .aspectRatio(16f / 9f)
-                .wrapContentSize()
+                .fillMaxSize()
         ) {
             val contentDescription = stringResource(R.string.stream_item_thumbnail)
             Thumbnail(thumbnail, contentDescription)
@@ -189,11 +153,29 @@ fun StreamItem(
                 )
             }
         }
-
-        DragComposable(onDragStart = { onDragStart(id) }, onDragEnd = { onDragEnd(id) })
-
+        IconButton(
+            modifier = if (reorderableScope != null) {
+                with(reorderableScope) {
+                    Modifier
+                        .aspectRatio(1f)
+                        .fillMaxSize()
+                        .draggableHandle()
+                }
+            } else {
+                Modifier
+                    .aspectRatio(1f)
+                    .fillMaxSize()
+            },
+            onClick = {}
+        ) {
+            Icon(
+                imageVector = Icons.Filled.DragHandle,
+                contentDescription = stringResource(R.string.stream_item_drag_handle)
+            )
+        }
     }
 }
+
 
 @Preview(device = "spec:width=1080px,height=400px,dpi=440,orientation=landscape")
 @Composable
@@ -207,9 +189,8 @@ fun StreamItemPreview() {
                     creator = "Video Creator",
                     thumbnail = null,
                     lengthInMs = 15 * 60 * 1000,
-                    onDragStart = {},
-                    onDragEnd = {},
-                    onClicked = {}
+                    onClicked = {},
+                    reorderableScope = null
                 )
             }
         }

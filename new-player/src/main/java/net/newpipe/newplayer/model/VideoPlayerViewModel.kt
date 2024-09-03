@@ -63,4 +63,6 @@ interface VideoPlayerViewModel {
     fun setRepeatmode(repeatMode: Int)
     fun setSuffleEnabled(enabled: Boolean)
     fun onStorePlaylist()
+    fun movePlaylistItem(from: Int, to: Int)
+    fun removePlaylistItem(index: Int)
 }
