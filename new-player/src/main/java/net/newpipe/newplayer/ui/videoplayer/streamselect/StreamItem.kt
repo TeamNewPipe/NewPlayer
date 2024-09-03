@@ -20,8 +20,13 @@
 
 package net.newpipe.newplayer.ui.videoplayer.streamselect
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,6 +42,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -55,6 +61,8 @@ import coil.compose.AsyncImage
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.ui.CONTROLLER_UI_BACKGROUND_COLOR
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
+import net.newpipe.newplayer.ui.videoplayer.gesture_ui.SEEK_ANIMATION_FADE_IN
+import net.newpipe.newplayer.ui.videoplayer.gesture_ui.SEEK_ANIMATION_FADE_OUT
 import net.newpipe.newplayer.utils.BitmapThumbnail
 import net.newpipe.newplayer.utils.OnlineThumbnail
 import net.newpipe.newplayer.utils.ReorderHapticFeedback
@@ -98,98 +106,121 @@ private fun Thumbnail(thumbnail: Thumbnail?, contentDescription: String) {
 @Composable
 fun StreamItem(
     modifier: Modifier = Modifier,
-    id: Int,
+    uniqueId: Long,
     title: String,
     creator: String?,
     thumbnail: Thumbnail?,
     lengthInMs: Long,
-    onClicked: (Int) -> Unit,
+    onClicked: (Long) -> Unit,
     onDragFinished: () -> Unit,
     reorderableScope: ReorderableCollectionItemScope?,
-    haptic: ReorderHapticFeedback?
+    haptic: ReorderHapticFeedback?,
+    isDragging: Boolean
 ) {
     val locale = getLocale()!!
 
     val interactionSource = remember { MutableInteractionSource() }
+    Box(modifier = modifier.height(60.dp).clickable {
+        onClicked(uniqueId)
+    }) {
 
-    Row(
-        modifier = modifier
-            .padding(5.dp)
-            .height(60.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .aspectRatio(16f / 9f)
-                .fillMaxSize()
+        AnimatedVisibility(
+            visible = isDragging,
+            enter = fadeIn(animationSpec = tween(200)),
+            exit = fadeOut(animationSpec = tween(400))
         ) {
-            val contentDescription = stringResource(R.string.stream_item_thumbnail)
-            Thumbnail(thumbnail, contentDescription)
             Surface(
-                color = CONTROLLER_UI_BACKGROUND_COLOR,
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.background,
+                shadowElevation = 8.dp
+            ) {}
+        }
+
+        Row(
+            modifier = modifier
+                .padding(5.dp)
+        ) {
+            Box(
                 modifier = Modifier
-                    .wrapContentSize()
-                    .align(Alignment.BottomEnd)
-                    .padding(4.dp)
+                    .aspectRatio(16f / 9f)
+                    .fillMaxSize()
+            ) {
+                val contentDescription = stringResource(R.string.stream_item_thumbnail)
+                Thumbnail(thumbnail, contentDescription)
+                Surface(
+                    color = CONTROLLER_UI_BACKGROUND_COLOR,
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .align(Alignment.BottomEnd)
+                        .padding(4.dp)
+                ) {
+                    Text(
+                        modifier = Modifier.padding(
+                            start = 4.dp,
+                            end = 4.dp,
+                            top = 0.5.dp,
+                            bottom = 0.5.dp
+                        ),
+                        text = getTimeStringFromMs(
+                            lengthInMs,
+                            locale,
+                            leadingZerosForMinutes = false
+                        ),
+                        fontSize = 14.sp,
+                    )
+                }
+            }
+
+            Column(
+                modifier = Modifier
+                    .padding(1.dp)
+                    .weight(1f)
+                    .wrapContentHeight()
+                    .fillMaxWidth()
             ) {
                 Text(
-                    modifier = Modifier.padding(
-                        start = 4.dp,
-                        end = 4.dp,
-                        top = 0.5.dp,
-                        bottom = 0.5.dp
-                    ),
-                    text = getTimeStringFromMs(lengthInMs, locale, leadingZerosForMinutes = false),
-                    fontSize = 14.sp,
-                )
-            }
-        }
-
-        Column(
-            modifier = Modifier
-                .padding(1.dp)
-                .weight(1f)
-                .wrapContentHeight()
-                .fillMaxWidth()
-        ) {
-            Text(
-                text = title, fontSize = 14.sp, fontWeight = FontWeight.Bold, maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            if (creator != null) {
-                Text(
-                    text = creator, fontSize = 13.sp, fontWeight = FontWeight.Light, maxLines = 1,
+                    text = title, fontSize = 14.sp, fontWeight = FontWeight.Bold, maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
+                if (creator != null) {
+                    Text(
+                        text = creator,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Light,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
-        }
-        IconButton(
-            modifier = if (reorderableScope != null) {
-                with(reorderableScope) {
+            IconButton(
+                modifier = if (reorderableScope != null) {
+                    with(reorderableScope) {
+                        Modifier
+                            .aspectRatio(1f)
+                            .fillMaxSize()
+                            .draggableHandle(
+                                onDragStarted = {
+                                    haptic?.performHapticFeedback(ReorderHapticFeedbackType.START)
+                                },
+                                onDragStopped = {
+                                    haptic?.performHapticFeedback(ReorderHapticFeedbackType.END)
+                                    onDragFinished()
+                                },
+                                interactionSource = interactionSource,
+                            )
+                    }
+                } else {
                     Modifier
                         .aspectRatio(1f)
                         .fillMaxSize()
-                        .draggableHandle(
-                            onDragStarted = {
-                                haptic?.performHapticFeedback(ReorderHapticFeedbackType.START)
-                            },
-                            onDragStopped = {
-                                haptic?.performHapticFeedback(ReorderHapticFeedbackType.END)
-                                onDragFinished()
-                            },
-                            interactionSource = interactionSource,
-                        )
-                }
-            } else {
-                Modifier
-                    .aspectRatio(1f)
-                    .fillMaxSize()
-            },
-            onClick = {}
-        ) {
-            Icon(
-                imageVector = Icons.Filled.DragHandle,
-                contentDescription = stringResource(R.string.stream_item_drag_handle)
-            )
+                },
+                onClick = {}
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.DragHandle,
+                    contentDescription = stringResource(R.string.stream_item_drag_handle)
+                )
+            }
         }
     }
 }
@@ -202,7 +233,7 @@ fun StreamItemPreview() {
         Surface(modifier = Modifier.fillMaxSize(), color = Color.DarkGray) {
             Box(modifier = Modifier.fillMaxSize()) {
                 StreamItem(
-                    id = 0,
+                    uniqueId = 0,
                     title = "Video Title",
                     creator = "Video Creator",
                     thumbnail = null,
@@ -210,7 +241,8 @@ fun StreamItemPreview() {
                     onClicked = {},
                     reorderableScope = null,
                     haptic = null,
-                    onDragFinished = {}
+                    onDragFinished = {},
+                    isDragging = false,
                 )
             }
         }
