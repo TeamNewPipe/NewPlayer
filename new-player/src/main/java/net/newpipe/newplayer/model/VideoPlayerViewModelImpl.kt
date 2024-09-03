@@ -45,6 +45,7 @@ import kotlinx.coroutines.launch
 import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.utils.VideoSize
 import net.newpipe.newplayer.NewPlayer
+import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.ui.ContentScale
 import java.util.LinkedList
 
@@ -132,7 +133,8 @@ class VideoPlayerViewModelImpl @Inject constructor(
     override val onBackPressed: SharedFlow<Unit> = mutableOnBackPressed.asSharedFlow()
 
     private fun installNewPlayer() {
-        newPlayer?.internalPlayer?.let { player ->
+        newPlayer?.let { newPlayer ->
+            val player = newPlayer.internalPlayer
             Log.d(TAG, "Install player: ${player.videoSize.width}")
 
             player.addListener(object : Player.Listener {
@@ -155,6 +157,20 @@ class VideoPlayerViewModelImpl @Inject constructor(
                     super.onIsLoadingChanged(isLoading)
                     mutableUiState.update {
                         it.copy(isLoading = isLoading)
+                    }
+                }
+
+                override fun onRepeatModeChanged(repeatMode: Int) {
+                    super.onRepeatModeChanged(repeatMode)
+                    mutableUiState.update {
+                        it.copy(repeatMode = newPlayer.repeatMode)
+                    }
+                }
+
+                override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
+                    super.onShuffleModeEnabledChanged(shuffleModeEnabled)
+                    mutableUiState.update {
+                        it.copy(shuffleEnabled = newPlayer.shuffle)
                     }
                 }
             })
@@ -406,19 +422,20 @@ class VideoPlayerViewModelImpl @Inject constructor(
         println("stream selected: $streamId")
     }
 
-    override fun setRepeatmode(repeatMode: Int) {
-        assert(
-            repeatMode == Player.REPEAT_MODE_ALL
-                    || repeatMode == Player.REPEAT_MODE_OFF
-                    || repeatMode == Player.REPEAT_MODE_ONE
-        ) {
-            "Illegal repeat mode: $repeatMode"
+    override fun cycleRepeatmode() {
+        newPlayer?.let {
+            it.repeatMode = when (it.repeatMode) {
+                RepeatMode.DONT_REPEAT -> RepeatMode.REPEAT_ALL
+                RepeatMode.REPEAT_ALL -> RepeatMode.REPEAT_ONE
+                RepeatMode.REPEAT_ONE -> RepeatMode.DONT_REPEAT
+            }
         }
-        TODO("Not yet implemented")
     }
 
-    override fun setSuffleEnabled(enabled: Boolean) {
-        TODO("Not yet implemented")
+    override fun toggleShuffle() {
+        newPlayer?.let {
+            it.shuffle = !it.shuffle
+        }
     }
 
     override fun onStorePlaylist() {
@@ -426,7 +443,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun movePlaylistItem(from: Int, to: Int) {
-        if(playlistItemToBeMoved == null) {
+        if (playlistItemToBeMoved == null) {
             playlistItemToBeMoved = from
         }
         playlistItemNewPosition = to
@@ -451,7 +468,6 @@ class VideoPlayerViewModelImpl @Inject constructor(
     override fun removePlaylistItem(index: Int) {
         newPlayer?.removePlaylistItem(index)
     }
-
 
 
     private fun updateUiMode(newState: UIModeState) {

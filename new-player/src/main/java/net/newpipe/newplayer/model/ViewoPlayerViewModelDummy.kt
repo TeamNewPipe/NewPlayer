@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.NewPlayer
+import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.ui.ContentScale
 
 open class VideoPlayerViewModelDummy : VideoPlayerViewModel {
@@ -91,12 +92,12 @@ open class VideoPlayerViewModelDummy : VideoPlayerViewModel {
         println("dummy impl stream selected: $streamId")
     }
 
-    override fun setRepeatmode(repeatMode: Int) {
-        println("dummy impl repeat mode: $repeatMode")
+    override fun cycleRepeatmode() {
+        println("dummy impl")
     }
 
-    override fun setSuffleEnabled(enabled: Boolean) {
-        println("dummy impl shuffle enabled: $enabled")
+    override fun toggleShuffle() {
+        println("dummy impl")
     }
 
     override fun onStorePlaylist() {

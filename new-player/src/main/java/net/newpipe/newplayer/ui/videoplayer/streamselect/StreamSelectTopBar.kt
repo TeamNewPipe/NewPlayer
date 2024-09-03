@@ -46,6 +46,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.Player
 import net.newpipe.newplayer.NewPlayerException
 import net.newpipe.newplayer.R
+import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.model.VideoPlayerUIState
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
@@ -75,41 +76,28 @@ fun StreamSelectTopBar(
             )
         }, actions = {
             IconButton(
-                onClick = {
-                    viewModel.setRepeatmode(
-                        when (uiState.repeatMode) {
-                            Player.REPEAT_MODE_OFF -> Player.REPEAT_MODE_ALL
-                            Player.REPEAT_MODE_ALL -> Player.REPEAT_MODE_ONE
-                            Player.REPEAT_MODE_ONE -> Player.REPEAT_MODE_OFF
-                            else -> throw NewPlayerException("Unknown repeat mode: ${uiState.repeatMode}")
-                        }
-                    )
-                }
+                onClick = viewModel::cycleRepeatmode
             ) {
                 when (uiState.repeatMode) {
-                    Player.REPEAT_MODE_OFF -> Icon(
+                    RepeatMode.DONT_REPEAT -> Icon(
                         imageVector = Icons.Filled.Repeat,
                         contentDescription = stringResource(R.string.repeat_mode_no_repeat)
                     )
 
-                    Player.REPEAT_MODE_ALL -> Icon(
+                    RepeatMode.REPEAT_ALL -> Icon(
                         imageVector = Icons.Filled.RepeatOn,
                         contentDescription = stringResource(R.string.repeat_mode_repeat_all)
                     )
 
-                    Player.REPEAT_MODE_ONE -> Icon(
+                    RepeatMode.REPEAT_ONE -> Icon(
                         imageVector = Icons.Filled.RepeatOneOn,
                         contentDescription = stringResource(R.string.repeat_mode_repeat_all)
                     )
-
-                    else -> throw NewPlayerException("Unknown repeat mode: ${uiState.repeatMode}")
                 }
             }
 
             IconButton(
-                onClick = {
-                    viewModel.setSuffleEnabled(!uiState.shuffleEnabled)
-                }
+                onClick = viewModel::toggleShuffle
             ) {
                 if (uiState.shuffleEnabled) {
                     Icon(

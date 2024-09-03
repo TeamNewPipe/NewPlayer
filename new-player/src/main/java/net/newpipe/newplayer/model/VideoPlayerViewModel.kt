@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.NewPlayer
+import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.ui.ContentScale
 import net.newpipe.newplayer.utils.Thumbnail
 
@@ -60,8 +61,8 @@ interface VideoPlayerViewModel {
     fun closeStreamSelection()
     fun chapterSelected(chapter: Chapter)
     fun streamSelected(streamId: Int)
-    fun setRepeatmode(repeatMode: Int)
-    fun setSuffleEnabled(enabled: Boolean)
+    fun cycleRepeatmode()
+    fun toggleShuffle()
     fun onStorePlaylist()
     fun movePlaylistItem(from: Int, to: Int)
     fun removePlaylistItem(index: Int)

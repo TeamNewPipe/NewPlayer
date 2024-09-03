@@ -53,6 +53,12 @@ enum class PlayMode {
     AUDIO_FOREGROUND,
 }
 
+enum class RepeatMode {
+    DONT_REPEAT,
+    REPEAT_ALL,
+    REPEAT_ONE
+}
+
 private val TAG = "NewPlayer"
 
 interface NewPlayer {
@@ -68,6 +74,8 @@ interface NewPlayer {
     var fastSeekAmountSec: Int
     var playBackMode: PlayMode
     var playMode: StateFlow<PlayMode?>
+    var shuffle: Boolean
+    var repeatMode: RepeatMode
 
     val playlist: StateFlow<List<PlaylistItem>>
 
@@ -153,6 +161,27 @@ class NewPlayerImpl(
 
     var mutablePlayMode = MutableStateFlow<PlayMode?>(null)
     override var playMode = mutablePlayMode.asStateFlow()
+
+    override var shuffle: Boolean
+        get() = internalPlayer.shuffleModeEnabled
+        set(value) {
+            internalPlayer.shuffleModeEnabled = value
+        }
+
+    override var repeatMode: RepeatMode
+        get() = when(internalPlayer.repeatMode) {
+            Player.REPEAT_MODE_OFF -> RepeatMode.DONT_REPEAT
+            Player.REPEAT_MODE_ALL -> RepeatMode.REPEAT_ALL
+            Player.REPEAT_MODE_ONE -> RepeatMode.REPEAT_ONE
+            else -> throw NewPlayerException("Unknown Repeatmode option returned by ExoPlayer: ${internalPlayer.repeatMode}")
+        }
+        set(value) {
+            when(value) {
+                RepeatMode.DONT_REPEAT -> internalPlayer.repeatMode = Player.REPEAT_MODE_OFF
+                RepeatMode.REPEAT_ALL -> internalPlayer.repeatMode = Player.REPEAT_MODE_ALL
+                RepeatMode.REPEAT_ONE -> internalPlayer.repeatMode = Player.REPEAT_MODE_ONE
+            }
+        }
 
     var mutableOnEvent = MutableSharedFlow<Pair<Player, Player.Events>>()
     override val onExoPlayerEvent: SharedFlow<Pair<Player, Player.Events>> =
