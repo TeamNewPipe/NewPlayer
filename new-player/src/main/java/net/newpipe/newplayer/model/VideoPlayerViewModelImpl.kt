@@ -30,8 +30,6 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.media3.common.MediaItem
-import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -42,7 +40,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.newpipe.newplayer.Chapter
@@ -73,6 +70,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     private var uiVisibilityJob: Job? = null
     private var progressUpdaterJob: Job? = null
+    private var playlistProgressUpdatrJob: Job? = null
 
     // this is necesary to restore the embedded view UI configuration when returning from fullscreen
     private var embeddedUiConfig: EmbeddedUiConfig? = null
@@ -295,7 +293,6 @@ class VideoPlayerViewModelImpl @Inject constructor(
                 delay(1000)
             }
         }
-
     }
 
     private fun updateProgressOnce() {
@@ -310,7 +307,33 @@ class VideoPlayerViewModelImpl @Inject constructor(
                 seekerPosition = progressPercentage,
                 durationInMs = duration,
                 playbackPositionInMs = progress,
-                bufferedPercentage = bufferedPercentage
+                bufferedPercentage = bufferedPercentage,
+            )
+        }
+    }
+
+    private fun resetPlaylistProgressUpdaterJob() {
+        playlistProgressUpdatrJob?.cancel()
+        playlistProgressUpdatrJob = viewModelScope.launch {
+            while (true) {
+                updateProgressInPlaylistOnce()
+                delay(1000)
+            }
+        }
+    }
+
+    private fun updateProgressInPlaylistOnce() {
+        var progress = 0
+        val currentlyPlaying = uiState.value.currentlyPlaying.uniqueId
+        for (item in uiState.value.playList) {
+            if (item.uniqueId == currentlyPlaying)
+                break;
+            progress += item.lengthInS
+        }
+        progress += ((newPlayer?.currentPosition ?: 0) / 1000).toInt()
+        mutableUiState.update {
+            it.copy(
+                playbackPositionInPlaylistS = progress
             )
         }
     }
@@ -396,6 +419,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun openStreamSelection(selectChapter: Boolean, embeddedUiConfig: EmbeddedUiConfig) {
+        resetPlaylistProgressUpdaterJob()
         uiVisibilityJob?.cancel()
         if (!uiState.value.uiMode.fullscreen) {
             this.embeddedUiConfig = embeddedUiConfig
@@ -407,6 +431,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun closeStreamSelection() {
+        playlistProgressUpdatrJob?.cancel()
         updateUiMode(uiState.value.uiMode.getUiHiddenState())
     }
 

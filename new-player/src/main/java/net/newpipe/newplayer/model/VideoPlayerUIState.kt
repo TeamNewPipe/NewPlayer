@@ -36,6 +36,7 @@ data class VideoPlayerUIState(
     val isLoading: Boolean,
     val durationInMs: Long,
     val playbackPositionInMs: Long,
+    val playbackPositionInPlaylistS: Int,
     val fastSeekSeconds: Int,
     val soundVolume: Float,
     val brightness: Float?,     // when null use system value
@@ -58,6 +59,7 @@ data class VideoPlayerUIState(
             bufferedPercentage = 0f,
             isLoading = true,
             durationInMs = 0,
+            playbackPositionInPlaylistS = 0,
             playbackPositionInMs = 0,
             fastSeekSeconds = 0,
             soundVolume = 0f,
@@ -78,6 +80,7 @@ data class VideoPlayerUIState(
             bufferedPercentage = 0.5f,
             isLoading = false,
             durationInMs = 420,
+            playbackPositionInPlaylistS = 5039,
             playbackPositionInMs = 69,
             fastSeekSeconds = 10,
             soundVolume = 0.5f,
