@@ -37,6 +37,7 @@ import androidx.compose.ui.input.pointer.pointerInteropFilter
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 private const val MULTITAB_MODE_DELAY: Long = 300
 
@@ -115,9 +116,14 @@ fun GestureSurface(
     val handleMove = { event: MotionEvent, lambda: (movement: TouchedPosition) -> Unit ->
         val currentTouchedPosition = TouchedPosition(event.x, event.y)
         val movement = currentTouchedPosition - lastTouchedPosition
+
         lastTouchedPosition = currentTouchedPosition
         moveOccured = true
-        lambda(movement)
+
+        // filter out left and right movements as these are not important for the app
+        if(abs(movement.x) <= abs(movement.y)) {
+            lambda(movement)
+        }
         true
     }
 
