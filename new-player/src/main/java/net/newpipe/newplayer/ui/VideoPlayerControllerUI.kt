@@ -77,7 +77,7 @@ fun VideoPlayerControllerUI(
         modifier = Modifier.fillMaxSize(), viewModel = viewModel, uiState = uiState
     )
 
-    if (uiState.isLoading) {
+    AnimatedVisibility(uiState.isLoading) {
         Box(modifier = Modifier.fillMaxSize()) {
             CircularProgressIndicator(
                 modifier = Modifier
@@ -91,12 +91,14 @@ fun VideoPlayerControllerUI(
 
     AnimatedVisibility(uiState.uiMode.controllerUiVisible) {
 
-        Box(modifier = Modifier.fillMaxSize()) {
-            CenterUI(
-                modifier = Modifier.align(Alignment.Center),
-                viewModel = viewModel,
-                uiState = uiState
-            )
+        AnimatedVisibility(visible = !uiState.isLoading) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                CenterUI(
+                    modifier = Modifier.align(Alignment.Center),
+                    viewModel = viewModel,
+                    uiState = uiState
+                )
+            }
         }
 
         Box(
@@ -128,11 +130,6 @@ fun VideoPlayerControllerUI(
 ///////////////////////////////////////////////////////////////////
 // Utils
 ///////////////////////////////////////////////////////////////////
-
-@Composable
-private fun ViewInFullScreen() {
-    //LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
-}
 
 @Composable
 fun PreviewBackgroundSurface(

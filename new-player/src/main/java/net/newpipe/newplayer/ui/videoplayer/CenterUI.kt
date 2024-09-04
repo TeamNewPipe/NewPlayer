@@ -20,6 +20,7 @@
 
 package net.newpipe.newplayer.ui.videoplayer
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -45,7 +46,6 @@ import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.VideoPlayerUIState
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
-import net.newpipe.newplayer.model.VideoPlayerViewModelImpl
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 @Composable
@@ -59,34 +59,33 @@ fun CenterUI(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier,
     ) {
-        if (!uiState.isLoading) {
-            CenterControllButton(
-                buttonModifier = Modifier.size(80.dp),
-                iconModifier = Modifier.size(40.dp),
-                icon = Icons.Filled.SkipPrevious,
-                contentDescriptoion = stringResource(R.string.widget_description_previous_stream),
-                onClick = viewModel::prevStream
-            )
 
-            CenterControllButton(
-                buttonModifier = Modifier.size(80.dp),
-                iconModifier = Modifier.size(60.dp),
-                icon = if (uiState.playing) Icons.Filled.Pause else Icons.Filled.PlayArrow,
-                contentDescriptoion = stringResource(
-                    if (uiState.playing) R.string.widget_description_pause
-                    else R.string.widget_description_play
-                ),
-                onClick = if (uiState.playing) viewModel::pause else viewModel::play
-            )
+        CenterControllButton(
+            buttonModifier = Modifier.size(80.dp),
+            iconModifier = Modifier.size(40.dp),
+            icon = Icons.Filled.SkipPrevious,
+            contentDescription = stringResource(R.string.widget_description_previous_stream),
+            onClick = viewModel::prevStream
+        )
 
-            CenterControllButton(
-                buttonModifier = Modifier.size(80.dp),
-                iconModifier = Modifier.size(40.dp),
-                icon = Icons.Filled.SkipNext,
-                contentDescriptoion = stringResource(R.string.widget_description_next_stream),
-                onClick = viewModel::nextStream
-            )
-        }
+        CenterControllButton(
+            buttonModifier = Modifier.size(80.dp),
+            iconModifier = Modifier.size(60.dp),
+            icon = if (uiState.playing) Icons.Filled.Pause else Icons.Filled.PlayArrow,
+            contentDescription = stringResource(
+                if (uiState.playing) R.string.widget_description_pause
+                else R.string.widget_description_play
+            ),
+            onClick = if (uiState.playing) viewModel::pause else viewModel::play
+        )
+
+        CenterControllButton(
+            buttonModifier = Modifier.size(80.dp),
+            iconModifier = Modifier.size(40.dp),
+            icon = Icons.Filled.SkipNext,
+            contentDescription = stringResource(R.string.widget_description_next_stream),
+            onClick = viewModel::nextStream
+        )
     }
 }
 
@@ -95,7 +94,7 @@ private fun CenterControllButton(
     buttonModifier: Modifier,
     iconModifier: Modifier,
     icon: ImageVector,
-    contentDescriptoion: String?,
+    contentDescription: String?,
     onClick: () -> Unit
 ) {
     Button(
@@ -107,7 +106,7 @@ private fun CenterControllButton(
         modifier = buttonModifier
     ) {
         Icon(
-            imageVector = icon, modifier = iconModifier, contentDescription = contentDescriptoion
+            imageVector = icon, modifier = iconModifier, contentDescription = contentDescription
         )
     }
 }

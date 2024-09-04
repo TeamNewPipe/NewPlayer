@@ -21,6 +21,7 @@
 package net.newpipe.newplayer.ui.videoplayer
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.FitScreen
@@ -42,6 +43,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalDensity
@@ -129,14 +131,17 @@ fun DropDownMenu() {
     }
 
 }
+
 ///////////////////////////////////////////////////////////////////
 // Preview
 ///////////////////////////////////////////////////////////////////
 
-@Preview(device = "spec:width=1080px,height=600px,dpi=440,orientation=landscape")
+@Preview(device = "spec:width=1080px,height=1080px,dpi=440,orientation=landscape")
 @Composable
 fun VideoPlayerControllerDropDownPreview() {
     VideoPlayerTheme {
-        DropDownMenu()
+        Box(Modifier.fillMaxSize()){
+            DropDownMenu()
+        }
     }
 }
