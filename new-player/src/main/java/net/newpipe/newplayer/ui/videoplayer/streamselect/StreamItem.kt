@@ -38,6 +38,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material3.Icon
@@ -49,6 +50,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -59,8 +61,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import net.newpipe.newplayer.R
+import net.newpipe.newplayer.playerInternals.PlaylistItem
 import net.newpipe.newplayer.ui.CONTROLLER_UI_BACKGROUND_COLOR
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
+import net.newpipe.newplayer.ui.videoplayer.ITEM_CORNER_SHAPE
 import net.newpipe.newplayer.ui.videoplayer.gesture_ui.SEEK_ANIMATION_FADE_IN
 import net.newpipe.newplayer.ui.videoplayer.gesture_ui.SEEK_ANIMATION_FADE_OUT
 import net.newpipe.newplayer.utils.BitmapThumbnail
@@ -74,55 +78,25 @@ import net.newpipe.newplayer.utils.getTimeStringFromMs
 import sh.calvin.reorderable.ReorderableCollectionItemScope
 
 @Composable
-private fun Thumbnail(thumbnail: Thumbnail?, contentDescription: String) {
-    if (thumbnail != null) {
-        when (thumbnail) {
-            is OnlineThumbnail -> AsyncImage(
-                modifier = Modifier.fillMaxSize(),
-                model = thumbnail.url,
-                contentDescription = contentDescription
-            )
-
-            is BitmapThumbnail -> Image(
-                modifier = Modifier.fillMaxSize(),
-                bitmap = thumbnail.img,
-                contentDescription = contentDescription
-            )
-
-            is VectorThumbnail -> Image(
-                modifier = Modifier.fillMaxSize(),
-                imageVector = thumbnail.vec,
-                contentDescription = contentDescription
-            )
-        }
-    } else {
-        Image(
-            painter = painterResource(R.drawable.tiny_placeholder),
-            contentDescription = contentDescription
-        )
-    }
-}
-
-@Composable
 fun StreamItem(
     modifier: Modifier = Modifier,
-    uniqueId: Long,
-    title: String,
-    creator: String?,
-    thumbnail: Thumbnail?,
-    lengthInMs: Long,
+    playlistItem: PlaylistItem,
     onClicked: (Long) -> Unit,
     onDragFinished: () -> Unit,
     reorderableScope: ReorderableCollectionItemScope?,
     haptic: ReorderHapticFeedback?,
-    isDragging: Boolean
+    isDragging: Boolean,
+    isCurrentlyPlaying: Boolean
 ) {
     val locale = getLocale()!!
 
     val interactionSource = remember { MutableInteractionSource() }
-    Box(modifier = modifier.height(60.dp).clickable {
-        onClicked(uniqueId)
-    }) {
+    Box(modifier = modifier
+        .height(60.dp)
+        .clip(ITEM_CORNER_SHAPE)
+        .clickable {
+            onClicked(playlistItem.uniqueId)
+        }) {
 
         AnimatedVisibility(
             visible = isDragging,
@@ -132,13 +106,25 @@ fun StreamItem(
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background,
-                shadowElevation = 8.dp
+                shadowElevation = 8.dp,
+                shape = ITEM_CORNER_SHAPE
+            ) {}
+        }
+
+        AnimatedVisibility(
+            visible = isCurrentlyPlaying,
+            enter = fadeIn(animationSpec = tween(200)),
+            exit = fadeOut(animationSpec = tween(400))
+        ) {
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = Color.White.copy(alpha = 0.2f),
             ) {}
         }
 
         Row(
             modifier = modifier
-                .padding(5.dp)
+                .padding(0.dp)
         ) {
             Box(
                 modifier = Modifier
@@ -146,9 +132,14 @@ fun StreamItem(
                     .fillMaxSize()
             ) {
                 val contentDescription = stringResource(R.string.stream_item_thumbnail)
-                Thumbnail(thumbnail, contentDescription)
+                Thumbnail(
+                    thumbnail = playlistItem.thumbnail,
+                    contentDescription = contentDescription,
+                    shape = ITEM_CORNER_SHAPE
+                )
                 Surface(
                     color = CONTROLLER_UI_BACKGROUND_COLOR,
+                    shape = ITEM_CORNER_SHAPE,
                     modifier = Modifier
                         .wrapContentSize()
                         .align(Alignment.BottomEnd)
@@ -162,7 +153,7 @@ fun StreamItem(
                             bottom = 0.5.dp
                         ),
                         text = getTimeStringFromMs(
-                            lengthInMs,
+                            playlistItem.lengthInS * 1000L,
                             locale,
                             leadingZerosForMinutes = false
                         ),
@@ -173,24 +164,25 @@ fun StreamItem(
 
             Column(
                 modifier = Modifier
-                    .padding(1.dp)
+                    .padding(6.dp)
                     .weight(1f)
                     .wrapContentHeight()
                     .fillMaxWidth()
             ) {
                 Text(
-                    text = title, fontSize = 14.sp, fontWeight = FontWeight.Bold, maxLines = 1,
+                    text = playlistItem.title,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                if (creator != null) {
-                    Text(
-                        text = creator,
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Light,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
+                Text(
+                    text = playlistItem.creator,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Light,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
             IconButton(
                 modifier = if (reorderableScope != null) {
@@ -233,16 +225,13 @@ fun StreamItemPreview() {
         Surface(modifier = Modifier.fillMaxSize(), color = Color.DarkGray) {
             Box(modifier = Modifier.fillMaxSize()) {
                 StreamItem(
-                    uniqueId = 0,
-                    title = "Video Title",
-                    creator = "Video Creator",
-                    thumbnail = null,
-                    lengthInMs = 15 * 60 * 1000,
+                    playlistItem = PlaylistItem.DUMMY,
                     onClicked = {},
                     reorderableScope = null,
                     haptic = null,
                     onDragFinished = {},
                     isDragging = false,
+                    isCurrentlyPlaying = true
                 )
             }
         }

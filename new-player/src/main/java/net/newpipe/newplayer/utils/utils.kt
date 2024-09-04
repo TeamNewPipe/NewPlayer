@@ -24,9 +24,12 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.graphics.drawable.shapes.Shape
 import android.view.WindowManager
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.waterfall
@@ -34,11 +37,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.core.os.ConfigurationCompat
 import androidx.core.view.WindowCompat
+import coil.compose.AsyncImage
+import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.EmbeddedUiConfig
 import java.util.Locale
 
@@ -100,7 +108,7 @@ fun getEmbeddedUiConfig(activity: Activity): EmbeddedUiConfig {
 }
 
 @Composable
-fun getInsets()  =
+fun getInsets() =
     WindowInsets.systemBars.union(WindowInsets.displayCutout).union(WindowInsets.waterfall)
 
 private const val HOURS_PER_DAY = 24
@@ -113,7 +121,11 @@ private const val MILLIS_PER_DAY =
 private const val MILLIS_PER_HOUR = MINUTES_PER_HOUR * SECONDS_PER_MINUTE * MILLIS_PER_SECOND
 private const val MILLIS_PER_MINUTE = SECONDS_PER_MINUTE * MILLIS_PER_SECOND
 
-fun getTimeStringFromMs(timeSpanInMs: Long, locale: Locale, leadingZerosForMinutes:Boolean = true): String {
+fun getTimeStringFromMs(
+    timeSpanInMs: Long,
+    locale: Locale,
+    leadingZerosForMinutes: Boolean = true
+): String {
     val days = timeSpanInMs / MILLIS_PER_DAY
     val millisThisDay = timeSpanInMs - days * MILLIS_PER_DAY
     val hours = millisThisDay / MILLIS_PER_HOUR
@@ -126,7 +138,55 @@ fun getTimeStringFromMs(timeSpanInMs: Long, locale: Locale, leadingZerosForMinut
     val time_string =
         if (0L < days) String.format(locale, "%d:%02d:%02d:%02d", days, hours, minutes, seconds)
         else if (0L < hours) String.format(locale, "%d:%02d:%02d", hours, minutes, seconds)
-        else String.format(locale, if(leadingZerosForMinutes) "%02d:%02d" else "%d:%02d", minutes, seconds)
+        else String.format(
+            locale,
+            if (leadingZerosForMinutes) "%02d:%02d" else "%d:%02d",
+            minutes,
+            seconds
+        )
 
     return time_string
 }
+
+@Composable
+fun Thumbnail(
+    modifier: Modifier = Modifier,
+    thumbnail: Thumbnail?,
+    contentDescription: String,
+    shape: androidx.compose.ui.graphics.Shape? = null
+) {
+    val modifier = if (shape == null) {
+        modifier
+    } else {
+        modifier
+            .clip(shape)
+    }
+
+    when (thumbnail) {
+        is OnlineThumbnail -> AsyncImage(
+            modifier = modifier,
+            model = thumbnail.url,
+            contentDescription = contentDescription
+        )
+
+        is BitmapThumbnail -> Image(
+            modifier = modifier,
+            bitmap = thumbnail.img,
+            contentDescription = contentDescription
+        )
+
+        is VectorThumbnail -> Image(
+            modifier = modifier,
+            imageVector = thumbnail.vec,
+            contentDescription = contentDescription
+        )
+
+        null -> Image(
+            modifier = modifier,
+            painter = painterResource(R.drawable.tiny_placeholder),
+            contentDescription = contentDescription
+        )
+    }
+}
+
+

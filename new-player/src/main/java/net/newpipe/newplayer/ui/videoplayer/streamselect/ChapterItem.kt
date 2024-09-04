@@ -33,6 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -44,6 +45,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
+import net.newpipe.newplayer.ui.videoplayer.ITEM_CORNER_SHAPE
 import net.newpipe.newplayer.utils.BitmapThumbnail
 import net.newpipe.newplayer.utils.OnlineThumbnail
 import net.newpipe.newplayer.utils.Thumbnail
@@ -65,39 +67,19 @@ fun ChapterItem(
     Row(
         modifier = modifier
             .height(80.dp)
-            .padding(5.dp)
+            .clip(ITEM_CORNER_SHAPE)
             .clickable { onClicked(id) }
     ) {
         val contentDescription = stringResource(R.string.chapter_thumbnail)
-        if (thumbnail != null) {
-            when (thumbnail) {
-                is OnlineThumbnail -> AsyncImage(
-                    model = thumbnail.url,
-                    contentDescription = contentDescription
-                )
-
-                is BitmapThumbnail -> Image(
-                    bitmap = thumbnail.img,
-                    contentDescription = contentDescription
-                )
-
-                is VectorThumbnail -> Image(
-                    imageVector = thumbnail.vec,
-                    contentDescription = contentDescription
-                )
-            }
-            AsyncImage(
-                model = thumbnail,
-                contentDescription = contentDescription
-            )
-        } else {
-            Image(
-                painterResource(R.drawable.tiny_placeholder),
-                contentDescription = stringResource(R.string.chapter_thumbnail)
-            )
-        }
+        Thumbnail(
+            thumbnail = thumbnail,
+            contentDescription = contentDescription,
+            shape = ITEM_CORNER_SHAPE
+        )
         Column(
-            modifier = Modifier.padding(start = 8.dp),
+            modifier = Modifier
+                .padding(start = 8.dp, top = 5.dp, bottom = 5.dp)
+                .weight(1f),
             horizontalAlignment = Alignment.Start,
         ) {
             Text(

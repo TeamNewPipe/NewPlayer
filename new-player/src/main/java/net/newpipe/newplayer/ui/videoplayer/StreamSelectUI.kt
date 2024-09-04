@@ -20,22 +20,19 @@
 
 package net.newpipe.newplayer.ui.videoplayer
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -57,6 +54,7 @@ import net.newpipe.newplayer.utils.rememberReorderHapticFeedback
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
+val ITEM_CORNER_SHAPE = RoundedCornerShape(10.dp)
 
 @Composable
 fun StreamSelectUI(
@@ -85,34 +83,36 @@ fun StreamSelectUI(
                 }
             }
         ) { innerPadding ->
-            if (isChapterSelect) {
-                LazyColumn(
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .fillMaxSize(),
-                    contentPadding = PaddingValues(start = 8.dp, end = 4.dp)
-                ) {
+            Box(modifier = Modifier.padding(innerPadding)) {
+                if (isChapterSelect) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .padding(start = 5.dp, end = 5.dp)
+                            .fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(5.dp),
+                    ) {
 
-                    items(uiState.chapters.size) { chapterIndex ->
-                        val chapter = uiState.chapters[chapterIndex]
-                        ChapterItem(
-                            id = chapterIndex,
-                            chapterTitle = chapter.chapterTitle ?: "",
-                            chapterStartInMs = chapter.chapterStartInMs,
-                            thumbnail = chapter.thumbnail,
-                            onClicked = {
-                                viewModel.chapterSelected(chapter)
-                            }
-                        )
+                        items(uiState.chapters.size) { chapterIndex ->
+                            val chapter = uiState.chapters[chapterIndex]
+                            ChapterItem(
+                                id = chapterIndex,
+                                chapterTitle = chapter.chapterTitle ?: "",
+                                chapterStartInMs = chapter.chapterStartInMs,
+                                thumbnail = chapter.thumbnail,
+                                onClicked = {
+                                    viewModel.chapterSelected(chapter)
+                                }
+                            )
+                        }
+
                     }
-
+                } else {
+                    ReorderableStreamItemsList(
+                        padding = PaddingValues(start = 5.dp, end = 5.dp),
+                        viewModel = viewModel,
+                        uiState = uiState
+                    )
                 }
-            } else {
-                ReorderableStreamItemsList(
-                    innerPadding = innerPadding,
-                    viewModel = viewModel,
-                    uiState = uiState
-                )
             }
         }
     }
@@ -120,7 +120,7 @@ fun StreamSelectUI(
 
 @Composable
 fun ReorderableStreamItemsList(
-    innerPadding: PaddingValues,
+    padding: PaddingValues,
     viewModel: VideoPlayerViewModel,
     uiState: VideoPlayerUIState
 ) {
@@ -135,8 +135,9 @@ fun ReorderableStreamItemsList(
 
     LazyColumn(
         modifier = Modifier
-            .padding(innerPadding)
+            .padding(padding)
             .fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(5.dp),
         state = lazyListState
     ) {
         itemsIndexed(uiState.playList, key = {_, item -> item.uniqueId}) { index, playlistItem ->
@@ -145,16 +146,13 @@ fun ReorderableStreamItemsList(
                 key = playlistItem.uniqueId
             ) { isDragging ->
                 StreamItem(
-                    uniqueId = playlistItem.uniqueId,
-                    title = playlistItem.title,
-                    creator = playlistItem.creator,
-                    thumbnail = playlistItem.thumbnail,
-                    lengthInMs = playlistItem.lengthInS.toLong() * 1000,
+                    playlistItem = playlistItem,
                     onClicked = { viewModel.streamSelected(0) },
                     reorderableScope = this@ReorderableItem,
                     haptic = haptic,
                     onDragFinished = viewModel::onStreamItemDragFinished,
-                    isDragging = isDragging
+                    isDragging = isDragging,
+                    isCurrentlyPlaying = playlistItem.uniqueId == uiState.currentlyPlaying.uniqueId
                 )
             }
         }
@@ -227,7 +225,8 @@ fun VideoPlayerStreamSelectUIPreview() {
                             thumbnail = null,
                             uniqueId = 2
                         )
-                    )
+                    ),
+                    currentlyPlaying = PlaylistItem.DUMMY.copy(uniqueId = 1)
                 )
             )
         }
