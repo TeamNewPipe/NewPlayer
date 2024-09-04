@@ -30,6 +30,8 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -154,10 +156,9 @@ class VideoPlayerViewModelImpl @Inject constructor(
                 }
 
 
-                // TODO: This is not correctly applicable for loading indicator
                 override fun onIsLoadingChanged(isLoading: Boolean) {
                     super.onIsLoadingChanged(isLoading)
-                    if(!player.isPlaying) {
+                    if (!player.isPlaying) {
                         mutableUiState.update {
                             it.copy(isLoading = isLoading)
                         }
@@ -202,6 +203,13 @@ class VideoPlayerViewModelImpl @Inject constructor(
                 newPlayer.currentlyPlaying.collect { playlistItem ->
                     mutableUiState.update {
                         it.copy(currentlyPlaying = playlistItem ?: PlaylistItem.DEFAULT)
+                    }
+                }
+            }
+            viewModelScope.launch {
+                newPlayer.currentChapters.collect { chapters ->
+                    mutableUiState.update {
+                        it.copy(chapters = chapters)
                     }
                 }
             }
@@ -477,7 +485,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun dialogVisible(visible: Boolean) {
-        if(visible) {
+        if (visible) {
             uiVisibilityJob?.cancel()
         } else {
             resetHideUiDelayedJob()

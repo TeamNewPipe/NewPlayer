@@ -37,6 +37,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.newpipe.newplayer.playerInternals.PlaylistItem
@@ -78,6 +79,8 @@ interface NewPlayer {
 
     val playlist: StateFlow<List<PlaylistItem>>
     val currentlyPlaying: StateFlow<PlaylistItem?>
+
+    val currentChapters: StateFlow<List<Chapter>>
 
     // callbacks
 
@@ -201,6 +204,9 @@ class NewPlayerImpl(
     private val mutableCurrentlyPlaying = MutableStateFlow<PlaylistItem?>(null)
     override val currentlyPlaying: StateFlow<PlaylistItem?> = mutableCurrentlyPlaying.asStateFlow()
 
+    private val mutableCurrentChapter = MutableStateFlow<List<Chapter>>(emptyList())
+    override val currentChapters: StateFlow<List<Chapter>> = mutableCurrentChapter.asStateFlow()
+
     init {
         println("gurken init")
         internalPlayer.addListener(object : Player.Listener {
@@ -246,12 +252,22 @@ class NewPlayerImpl(
                             mutableCurrentlyPlaying.update { item }
                         }
                     }
-
-
                 }
-
             }
         })
+
+        playerScope.launch {
+            currentlyPlaying.collect { playing ->
+                playing?.let {
+                    try {
+                        val chapters = repository.getChapters(playing.id)
+                        mutableCurrentChapter.update { chapters }
+                    } catch (e: Exception) {
+                        mutableErrorFlow.emit(e)
+                    }
+                }
+            }
+        }
     }
 
     private fun updatePlaylistItems() {
@@ -363,4 +379,5 @@ class NewPlayerImpl(
                 mutableErrorFlow.emit(e)
             }
         }
+
 }

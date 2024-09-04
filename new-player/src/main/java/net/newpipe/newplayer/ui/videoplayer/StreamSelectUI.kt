@@ -91,7 +91,6 @@ fun StreamSelectUI(
                             .fillMaxSize(),
                         verticalArrangement = Arrangement.spacedBy(5.dp),
                     ) {
-
                         items(uiState.chapters.size) { chapterIndex ->
                             val chapter = uiState.chapters[chapterIndex]
                             ChapterItem(
