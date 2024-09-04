@@ -142,7 +142,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
                     super.onIsPlayingChanged(isPlaying)
                     Log.d(TAG, "Playing state changed. Is Playing: $isPlaying")
                     mutableUiState.update {
-                        it.copy(playing = isPlaying)
+                        it.copy(playing = isPlaying, isLoading = false)
                     }
                 }
 
@@ -155,8 +155,10 @@ class VideoPlayerViewModelImpl @Inject constructor(
                 // TODO: This is not correctly applicable for loading indicator
                 override fun onIsLoadingChanged(isLoading: Boolean) {
                     super.onIsLoadingChanged(isLoading)
-                    mutableUiState.update {
-                        it.copy(isLoading = isLoading)
+                    if(!player.isPlaying) {
+                        mutableUiState.update {
+                            it.copy(isLoading = isLoading)
+                        }
                     }
                 }
 
@@ -263,7 +265,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     private fun resetHideUiDelayedJob() {
         uiVisibilityJob?.cancel()
         uiVisibilityJob = viewModelScope.launch {
-            delay(4000)
+            delay(2000)
             hideUi()
         }
     }
