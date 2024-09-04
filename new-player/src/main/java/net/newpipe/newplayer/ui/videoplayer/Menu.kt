@@ -68,7 +68,10 @@ fun DropDownMenu(viewModel: VideoPlayerViewModel, uiState: VideoPlayerUIState) {
     }
 
     Box {
-        IconButton(onClick = { showMainMenu = true }, modifier = Modifier.onPlaced {
+        IconButton(onClick = {
+            showMainMenu = true
+            viewModel.dialogVisible(true)
+        }, modifier = Modifier.onPlaced {
             offsetY = with(pixel_density) {
                 it.size.height.toDp()
             }
@@ -82,7 +85,9 @@ fun DropDownMenu(viewModel: VideoPlayerViewModel, uiState: VideoPlayerUIState) {
         DropdownMenu(modifier = Modifier.align(Alignment.TopStart),
             offset = DpOffset(x = 0.dp, y = -offsetY),
             expanded = showMainMenu,
-            onDismissRequest = { showMainMenu = false }) {
+            onDismissRequest = { showMainMenu = false
+                viewModel.dialogVisible(false)
+            }) {
             DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_open_in_browser)) },
                 leadingIcon = {
                     Icon(
