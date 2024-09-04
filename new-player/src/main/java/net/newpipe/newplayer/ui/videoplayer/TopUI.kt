@@ -21,6 +21,7 @@
 package net.newpipe.newplayer.ui.videoplayer
 
 import android.app.Activity
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -94,21 +95,25 @@ fun TopUI(
                 "1x", fontWeight = FontWeight.Bold, modifier = Modifier.padding(0.dp)
             )
         }
-        IconButton(
-            onClick = { viewModel.openStreamSelection(selectChapter = true, embeddedUiConfig) },
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.MenuBook,
-                contentDescription = stringResource(R.string.widget_description_chapter_selection)
-            )
+        AnimatedVisibility(visible = uiState.chapters.isNotEmpty()) {
+            IconButton(
+                onClick = { viewModel.openStreamSelection(selectChapter = true, embeddedUiConfig) },
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.MenuBook,
+                    contentDescription = stringResource(R.string.widget_description_chapter_selection)
+                )
+            }
         }
-        IconButton(
-            onClick = { viewModel.openStreamSelection(selectChapter = false, embeddedUiConfig) },
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.List,
-                contentDescription = stringResource(R.string.widget_descriptoin_playlist_item_selection)
-            )
+        androidx.compose.animation.AnimatedVisibility(visible = 1 < uiState.playList.size) {
+            IconButton(
+                onClick = { viewModel.openStreamSelection(selectChapter = false, embeddedUiConfig) },
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.List,
+                    contentDescription = stringResource(R.string.widget_descriptoin_playlist_item_selection)
+                )
+            }
         }
         DropDownMenu()
     }
