@@ -21,6 +21,7 @@
 
 package net.newpipe.newplayer.playerInternals
 
+import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
@@ -37,12 +38,55 @@ data class PlaylistItem(
     val uniqueId: Long,
     val thumbnail: Thumbnail?,
     val lengthInS: Int
-)
+) {
+    companion object {
+        val DEFAULT = PlaylistItem(
+            title = "",
+            creator = "",
+            id = "",
+            uniqueId = -1L,
+            thumbnail = null,
+            lengthInS = 0
+        )
 
-suspend fun getPlaylistItemsFromExoplayer(player: Player, mediaRepo: MediaRepository, idLookupTable: HashMap<Long, String>) =
+        val DUMMY = PlaylistItem(
+            title = "Superawesome Video",
+            creator = "Yours truely",
+            id = "some_id",
+            uniqueId = 12345L,
+            thumbnail = null,
+            lengthInS = 420
+        )
+    }
+}
+
+suspend fun fetchPlaylistItem(
+    uniqueId: Long,
+    mediaRepo: MediaRepository,
+    idLookupTable: HashMap<Long, String>
+) : PlaylistItem {
+    val id = idLookupTable[uniqueId]
+        ?: throw NewPlayerException("Unknown uniqueId: $uniqueId, uniqueId Id mapping error. Something went wrong during datafetching.")
+    val metaInfo = mediaRepo.getMetaInfo(id)
+
+    return PlaylistItem(
+        title = metaInfo.title,
+        creator = metaInfo.channelName,
+        id = id,
+        thumbnail = metaInfo.thumbnail,
+        lengthInS = metaInfo.lengthInS,
+        uniqueId = uniqueId
+    )
+}
+
+
+suspend fun getPlaylistItemsFromExoplayer(
+    player: Player,
+    mediaRepo: MediaRepository,
+    idLookupTable: HashMap<Long, String>
+) =
     with(CoroutineScope(coroutineContext)) {
-        (0..player.mediaItemCount-1).map { index ->
-            println("gurken index: $index")
+        (0..player.mediaItemCount - 1).map { index ->
             val mediaItem = player.getMediaItemAt(index)
             val uniqueId = mediaItem.mediaId.toLong()
             val id = idLookupTable.get(uniqueId)
@@ -67,9 +111,9 @@ suspend fun getPlaylistItemsFromExoplayer(player: Player, mediaRepo: MediaReposi
         }
     }
 
-fun getPlaylistDurationInS(items: List<PlaylistItem>) : Int {
+fun getPlaylistDurationInS(items: List<PlaylistItem>): Int {
     var duration = 0
-    for(item in items) {
+    for (item in items) {
         duration += item.lengthInS
     }
     return duration

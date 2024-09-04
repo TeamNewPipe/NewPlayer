@@ -51,6 +51,7 @@ import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.VideoPlayerUIState
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
+import net.newpipe.newplayer.playerInternals.PlaylistItem
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.theme.video_player_onSurface
 import net.newpipe.newplayer.utils.getEmbeddedUiConfig
@@ -67,14 +68,17 @@ fun TopUI(
     ) {
         Column(horizontalAlignment = Alignment.Start, modifier = Modifier.weight(1F)) {
             Text(
-                "The Title",
+                uiState.currentlyPlaying.title,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                "The Channel", fontSize = 12.sp, maxLines = 1, overflow = TextOverflow.Ellipsis
+                uiState.currentlyPlaying.creator,
+                fontSize = 12.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
         Button(
@@ -105,9 +109,14 @@ fun TopUI(
                 )
             }
         }
-        androidx.compose.animation.AnimatedVisibility(visible = 1 < uiState.playList.size) {
+        AnimatedVisibility(visible = 1 < uiState.playList.size) {
             IconButton(
-                onClick = { viewModel.openStreamSelection(selectChapter = false, embeddedUiConfig) },
+                onClick = {
+                    viewModel.openStreamSelection(
+                        selectChapter = false,
+                        embeddedUiConfig
+                    )
+                },
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.List,
@@ -115,7 +124,7 @@ fun TopUI(
                 )
             }
         }
-        DropDownMenu()
+        DropDownMenu(viewModel, uiState)
     }
 }
 
@@ -128,7 +137,9 @@ fun TopUI(
 fun VideoPlayerControllerTopUIPreview() {
     VideoPlayerTheme {
         Surface(color = Color.Black) {
-            TopUI(modifier = Modifier, VideoPlayerViewModelDummy(), VideoPlayerUIState.DEFAULT)
+            TopUI(
+                modifier = Modifier, VideoPlayerViewModelDummy(), VideoPlayerUIState.DUMMY
+            )
         }
     }
 }

@@ -52,13 +52,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import net.newpipe.newplayer.R
+import net.newpipe.newplayer.model.VideoPlayerUIState
+import net.newpipe.newplayer.model.VideoPlayerViewModel
+import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 @Composable
-fun DropDownMenu() {
+fun DropDownMenu(viewModel: VideoPlayerViewModel, uiState: VideoPlayerUIState) {
     var showMainMenu: Boolean by remember { mutableStateOf(false) }
 
-    var pixel_density = LocalDensity.current
+    val pixel_density = LocalDensity.current
 
     var offsetY by remember {
         mutableStateOf(0.dp)
@@ -140,8 +143,8 @@ fun DropDownMenu() {
 @Composable
 fun VideoPlayerControllerDropDownPreview() {
     VideoPlayerTheme {
-        Box(Modifier.fillMaxSize()){
-            DropDownMenu()
+        Box(Modifier.fillMaxSize()) {
+            DropDownMenu(VideoPlayerViewModelDummy(), VideoPlayerUIState.DUMMY)
         }
     }
 }

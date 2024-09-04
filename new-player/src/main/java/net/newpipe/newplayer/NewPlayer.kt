@@ -40,8 +40,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.newpipe.newplayer.playerInternals.PlaylistItem
+import net.newpipe.newplayer.playerInternals.fetchPlaylistItem
 import net.newpipe.newplayer.playerInternals.getPlaylistItemsFromExoplayer
-import net.newpipe.newplayer.utils.Thumbnail
 import kotlin.Exception
 import kotlin.random.Random
 
@@ -72,12 +72,12 @@ interface NewPlayer {
     val sharingLinkWithOffsetPossible: Boolean
     var currentPosition: Long
     var fastSeekAmountSec: Int
-    var playBackMode: PlayMode
-    var playMode: StateFlow<PlayMode?>
+    val playBackMode: MutableStateFlow<PlayMode?>
     var shuffle: Boolean
     var repeatMode: RepeatMode
 
     val playlist: StateFlow<List<PlaylistItem>>
+    val currentlyPlaying: StateFlow<PlaylistItem?>
 
     // callbacks
 
@@ -93,7 +93,6 @@ interface NewPlayer {
     fun removePlaylistItem(index: Int)
     fun playStream(item: String, playMode: PlayMode)
     fun playStream(item: String, streamVariant: String, playMode: PlayMode)
-    fun setPlayMode(playMode: PlayMode)
 
     data class Builder(val app: Application, val repository: MediaRepository) {
         private var mediaSourceFactory: MediaSource.Factory? = null
@@ -155,12 +154,10 @@ class NewPlayerImpl(
         }
 
     override var fastSeekAmountSec: Int = 10
-    override var playBackMode: PlayMode = PlayMode.EMBEDDED_VIDEO
 
     private var playerScope = CoroutineScope(Dispatchers.Main + Job())
 
-    var mutablePlayMode = MutableStateFlow<PlayMode?>(null)
-    override var playMode = mutablePlayMode.asStateFlow()
+    override var playBackMode = MutableStateFlow<PlayMode?>(null)
 
     override var shuffle: Boolean
         get() = internalPlayer.shuffleModeEnabled
@@ -169,21 +166,21 @@ class NewPlayerImpl(
         }
 
     override var repeatMode: RepeatMode
-        get() = when(internalPlayer.repeatMode) {
+        get() = when (internalPlayer.repeatMode) {
             Player.REPEAT_MODE_OFF -> RepeatMode.DONT_REPEAT
             Player.REPEAT_MODE_ALL -> RepeatMode.REPEAT_ALL
             Player.REPEAT_MODE_ONE -> RepeatMode.REPEAT_ONE
             else -> throw NewPlayerException("Unknown Repeatmode option returned by ExoPlayer: ${internalPlayer.repeatMode}")
         }
         set(value) {
-            when(value) {
+            when (value) {
                 RepeatMode.DONT_REPEAT -> internalPlayer.repeatMode = Player.REPEAT_MODE_OFF
                 RepeatMode.REPEAT_ALL -> internalPlayer.repeatMode = Player.REPEAT_MODE_ALL
                 RepeatMode.REPEAT_ONE -> internalPlayer.repeatMode = Player.REPEAT_MODE_ONE
             }
         }
 
-    var mutableOnEvent = MutableSharedFlow<Pair<Player, Player.Events>>()
+    private var mutableOnEvent = MutableSharedFlow<Pair<Player, Player.Events>>()
     override val onExoPlayerEvent: SharedFlow<Pair<Player, Player.Events>> =
         mutableOnEvent.asSharedFlow()
 
@@ -197,9 +194,12 @@ class NewPlayerImpl(
     override val duration: Long
         get() = internalPlayer.duration
 
-    val mutablePlaylist = MutableStateFlow<List<PlaylistItem>>(emptyList())
+    private val mutablePlaylist = MutableStateFlow<List<PlaylistItem>>(emptyList())
     override val playlist: StateFlow<List<PlaylistItem>> =
         mutablePlaylist.asStateFlow()
+
+    private val mutableCurrentlyPlaying = MutableStateFlow<PlaylistItem?>(null)
+    override val currentlyPlaying: StateFlow<PlaylistItem?> = mutableCurrentlyPlaying.asStateFlow()
 
     init {
         println("gurken init")
@@ -227,12 +227,37 @@ class NewPlayerImpl(
                 super.onTimelineChanged(timeline, reason)
                 updatePlaylistItems()
             }
+
+            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                super.onMediaItemTransition(mediaItem, reason)
+                mediaItem?.let {
+                    val playlistItem = getPlaylistItem(mediaItem.mediaId.toLong())
+                    if (playlistItem != null) {
+                        mutableCurrentlyPlaying.update {
+                            playlistItem
+                        }
+                    } else {
+                        launchJobAndCollectError {
+                            val item = fetchPlaylistItem(
+                                uniqueId = mediaItem.mediaId.toLong(),
+                                mediaRepo = repository,
+                                idLookupTable = uniqueIdToIdLookup
+                            )
+                            mutableCurrentlyPlaying.update { item }
+                        }
+                    }
+
+
+                }
+
+            }
         })
     }
 
     private fun updatePlaylistItems() {
         playerScope.launch {
-            val playlist = getPlaylistItemsFromExoplayer(internalPlayer, repository, uniqueIdToIdLookup)
+            val playlist =
+                getPlaylistItemsFromExoplayer(internalPlayer, repository, uniqueIdToIdLookup)
             var playlistDuration = 0
             for (item in playlist) {
                 playlistDuration += item.lengthInS
@@ -242,6 +267,15 @@ class NewPlayerImpl(
                 playlist
             }
         }
+    }
+
+    private fun getPlaylistItem(uniqueId: Long): PlaylistItem? {
+        for (item in playlist.value) {
+            if (item.uniqueId == uniqueId) {
+                return item
+            }
+        }
+        return null
     }
 
     override fun prepare() {
@@ -289,15 +323,12 @@ class NewPlayerImpl(
         }
     }
 
-    override fun setPlayMode(playMode: PlayMode) {
-        this.mutablePlayMode.update { playMode }
-    }
 
     private fun internalPlayStream(mediaItem: MediaItem, playMode: PlayMode) {
         if (internalPlayer.playbackState == Player.STATE_IDLE) {
             internalPlayer.prepare()
         }
-        this.mutablePlayMode.update { playMode }
+        this.playBackMode.update { playMode }
         this.internalPlayer.setMediaItem(mediaItem)
         this.internalPlayer.play()
     }
@@ -305,7 +336,7 @@ class NewPlayerImpl(
     private suspend fun toMediaItem(item: String, streamVariant: String): MediaItem {
         val dataStream = repository.getStream(item, streamVariant)
         val uniqueId = Random.nextLong()
-        uniqueIdToIdLookup.set(uniqueId, item)
+        uniqueIdToIdLookup[uniqueId] = item
         val mediaItem = MediaItem.Builder().setMediaId(uniqueId.toString()).setUri(dataStream)
         return mediaItem.build()
     }

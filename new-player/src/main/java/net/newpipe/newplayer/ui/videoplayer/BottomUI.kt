@@ -126,7 +126,7 @@ fun VideoPlayerControllerBottomUIPreview() {
             BottomUI(
                 modifier = Modifier,
                 viewModel = VideoPlayerViewModelDummy(),
-                uiState = VideoPlayerUIState.DEFAULT.copy(
+                uiState = VideoPlayerUIState.DUMMY.copy(
                     uiMode = UIModeState.FULLSCREEN_VIDEO_CONTROLLER_UI,
                     seekerPosition = 0.4f,
                     durationInMs = 90 * 60 * 1000,

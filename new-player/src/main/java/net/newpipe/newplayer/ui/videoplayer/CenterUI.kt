@@ -122,7 +122,7 @@ fun VideoPlayerControllerUICenterUIPreview() {
         Surface(color = Color.Black) {
             CenterUI(
                 viewModel = VideoPlayerViewModelDummy(),
-                uiState = VideoPlayerUIState.DEFAULT.copy(
+                uiState = VideoPlayerUIState.DUMMY.copy(
                     isLoading = false,
                     playing = true
                 )

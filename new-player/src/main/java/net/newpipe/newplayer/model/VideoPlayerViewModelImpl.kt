@@ -40,12 +40,14 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.utils.VideoSize
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.RepeatMode
+import net.newpipe.newplayer.playerInternals.PlaylistItem
 import net.newpipe.newplayer.ui.ContentScale
 import java.util.LinkedList
 
@@ -179,7 +181,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
         }
         newPlayer?.let { newPlayer ->
             viewModelScope.launch {
-                newPlayer.playMode.collect { newMode ->
+                newPlayer.playBackMode.collect { newMode ->
                     val currentMode = mutableUiState.value.uiMode.toPlayMode()
                     if (currentMode != newMode) {
                         mutableUiState.update {
@@ -194,6 +196,13 @@ class VideoPlayerViewModelImpl @Inject constructor(
             viewModelScope.launch {
                 newPlayer.playlist.collect { playlist ->
                     mutableUiState.update { it.copy(playList = playlist) }
+                }
+            }
+            viewModelScope.launch {
+                newPlayer.currentlyPlaying.collect { playlistItem ->
+                    mutableUiState.update {
+                        it.copy(currentlyPlaying = playlistItem ?: PlaylistItem.DEFAULT)
+                    }
                 }
             }
         }
@@ -467,6 +476,14 @@ class VideoPlayerViewModelImpl @Inject constructor(
         playlistItemToBeMoved = null
     }
 
+    override fun dialogVisible(visible: Boolean) {
+        if(visible) {
+            uiVisibilityJob?.cancel()
+        } else {
+            resetHideUiDelayedJob()
+        }
+    }
+
     override fun removePlaylistItem(index: Int) {
         newPlayer?.removePlaylistItem(index)
     }
@@ -476,7 +493,9 @@ class VideoPlayerViewModelImpl @Inject constructor(
         val newPlayMode = newState.toPlayMode()
         val currentPlayMode = mutableUiState.value.uiMode.toPlayMode()
         if (newPlayMode != currentPlayMode) {
-            newPlayer?.setPlayMode(newPlayMode!!)
+            newPlayer?.playBackMode?.update {
+                newPlayMode!!
+            }
         } else {
             mutableUiState.update {
                 it.copy(uiMode = newState)

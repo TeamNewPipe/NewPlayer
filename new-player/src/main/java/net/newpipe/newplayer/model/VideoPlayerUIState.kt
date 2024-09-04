@@ -20,7 +20,6 @@
 
 package net.newpipe.newplayer.model
 
-import androidx.media3.common.Player
 import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.playerInternals.PlaylistItem
@@ -45,14 +44,12 @@ data class VideoPlayerUIState(
     val chapters: List<Chapter>,
     val shuffleEnabled: Boolean,
     val repeatMode: RepeatMode,
-    val playListDurationInS: Int
+    val playListDurationInS: Int,
+    val currentlyPlaying: PlaylistItem
 ) {
     companion object {
         val DEFAULT = VideoPlayerUIState(
-            // TODO: replace this with the placeholder state.
-            // The actual initial state upon starting to play is dictated by the NewPlayer instance
             uiMode = UIModeState.PLACEHOLDER,
-            //uiMode = UIModeState.PLACEHOLDER,
             playing = false,
             contentRatio = 16 / 9f,
             embeddedUiRatio = 16f / 9f,
@@ -70,7 +67,24 @@ data class VideoPlayerUIState(
             chapters = emptyList(),
             shuffleEnabled = false,
             repeatMode = RepeatMode.DONT_REPEAT,
-            playListDurationInS = 0
+            playListDurationInS = 0,
+            currentlyPlaying = PlaylistItem.DEFAULT
+        )
+
+        val DUMMY = DEFAULT.copy(
+            uiMode = UIModeState.EMBEDDED_VIDEO,
+            playing = true,
+            seekerPosition = 0.3f,
+            bufferedPercentage = 0.5f,
+            isLoading = false,
+            durationInMs = 420,
+            playbackPositionInMs = 69,
+            fastSeekSeconds = 10,
+            soundVolume = 0.5f,
+            brightness = 0.2f,
+            shuffleEnabled = true,
+            playListDurationInS = 5493,
+            currentlyPlaying = PlaylistItem.DUMMY
         )
     }
 }

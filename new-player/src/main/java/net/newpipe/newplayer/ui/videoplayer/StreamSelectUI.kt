@@ -201,7 +201,7 @@ fun VideoPlayerStreamSelectUIPreview() {
             StreamSelectUI(
                 isChapterSelect = false,
                 viewModel = VideoPlayerViewModelDummy(),
-                uiState = VideoPlayerUIState.DEFAULT.copy(
+                uiState = VideoPlayerUIState.DUMMY.copy(
                     playList = arrayListOf(
                         PlaylistItem(
                             id = "6502",

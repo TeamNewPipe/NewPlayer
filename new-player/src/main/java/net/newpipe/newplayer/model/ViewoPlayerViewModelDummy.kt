@@ -116,6 +116,10 @@ open class VideoPlayerViewModelDummy : VideoPlayerViewModel {
         println("dummy impl")
     }
 
+    override fun dialogVisible(visible: Boolean) {
+        println("dummy impl dialog visible: $visible")
+    }
+
     override fun pause() {
         println("dummy pause")
     }

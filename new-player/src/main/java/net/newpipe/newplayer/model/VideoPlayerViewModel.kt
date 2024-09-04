@@ -67,4 +67,5 @@ interface VideoPlayerViewModel {
     fun movePlaylistItem(from: Int, to: Int)
     fun removePlaylistItem(index: Int)
     fun onStreamItemDragFinished()
+    fun dialogVisible(visible: Boolean)
 }
