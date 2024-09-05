@@ -500,6 +500,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
                 playList = tempList
             )
         }
+        resetPlaylistProgressUpdaterJob()
     }
 
     override fun onStreamItemDragFinished() {
