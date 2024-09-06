@@ -145,6 +145,11 @@ class VideoPlayerViewModelImpl @Inject constructor(
                     mutableUiState.update {
                         it.copy(playing = isPlaying, isLoading = false)
                     }
+                    if(isPlaying && uiState.value.uiMode.controllerUiVisible) {
+                        resetHideUiDelayedJob()
+                    } else {
+                        uiVisibilityJob?.cancel()
+                    }
                 }
 
                 override fun onVideoSizeChanged(videoSize: androidx.media3.common.VideoSize) {
@@ -181,6 +186,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
             viewModelScope.launch {
                 newPlayer.playBackMode.collect { newMode ->
                     val currentMode = mutableUiState.value.uiMode.toPlayMode()
+                    println("gurken mode: $currentMode newMode: $newMode")
                     if (currentMode != newMode) {
                         mutableUiState.update {
                             it.copy(

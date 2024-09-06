@@ -55,6 +55,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.media3.common.Player
 import net.newpipe.newplayer.model.EmbeddedUiConfig
+import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
@@ -116,10 +117,10 @@ fun VideoPlayerUI(
         LaunchedEffect(
             key1 = uiState.uiMode.systemInsetsVisible,
         ) {
-            if (uiState.uiMode.fullscreen && !uiState.uiMode.systemInsetsVisible) {
-                windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
-            } else {
+            if (uiState.uiMode.systemInsetsVisible) {
                 windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
+            } else {
+                windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
             }
         }
 
@@ -161,37 +162,45 @@ fun VideoPlayerUI(
         }
 
         // Set UI
-        Surface(
-            modifier = Modifier.then(
-                if (uiState.uiMode.fullscreen) Modifier.fillMaxSize()
-                else Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(uiState.embeddedUiRatio)
-            ), color = Color.Black
-        ) {
-            Box(contentAlignment = Alignment.Center) {
-                PlaySurface(
-                    player = viewModel.newPlayer?.internalPlayer,
-                    lifecycle = lifecycle,
-                    fitMode = uiState.contentFitMode,
-                    uiRatio = if (uiState.uiMode.fullscreen) screenRatio
-                    else uiState.embeddedUiRatio,
-                    contentRatio = uiState.contentRatio
+        if (uiState.uiMode == UIModeState.PLACEHOLDER) {
+            VideoPlayerLoadingPlaceholder(uiState.embeddedUiRatio)
+        } else {
+            Surface(
+                modifier = Modifier.then(
+                    if (uiState.uiMode.fullscreen) Modifier.fillMaxSize()
+                    else Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(uiState.embeddedUiRatio)
+                ), color = Color.Black
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    PlaySurface(
+                        player = viewModel.newPlayer?.internalPlayer,
+                        lifecycle = lifecycle,
+                        fitMode = uiState.contentFitMode,
+                        uiRatio = if (uiState.uiMode.fullscreen) screenRatio
+                        else uiState.embeddedUiRatio,
+                        contentRatio = uiState.contentRatio
+                    )
+                }
+
+                // the checks if VideoPlayerControllerUI should be visible or not are done by
+                // The VideoPlayerControllerUI composable itself. This is because Visibility of
+                // the controller is more complicated than just using a simple if statement.
+                VideoPlayerControllerUI(
+                    viewModel, uiState = uiState
                 )
-            }
 
-            // the checks if VideoPlayerControllerUI should be visible or not are done by
-            // The VideoPlayerControllerUI composable itself. This is because Visibility of
-            // the controller is more complicated than just using a simple if statement.
-            VideoPlayerControllerUI(
-                viewModel, uiState = uiState
-            )
-
-            AnimatedVisibility(visible = uiState.uiMode.isStreamSelect) {
-                StreamSelectUI(viewModel = viewModel, uiState = uiState, isChapterSelect = false)
-            }
-            AnimatedVisibility(visible = uiState.uiMode.isChapterSelect) {
-                StreamSelectUI(viewModel = viewModel, uiState = uiState, isChapterSelect = true)
+                AnimatedVisibility(visible = uiState.uiMode.isStreamSelect) {
+                    StreamSelectUI(
+                        viewModel = viewModel,
+                        uiState = uiState,
+                        isChapterSelect = false
+                    )
+                }
+                AnimatedVisibility(visible = uiState.uiMode.isChapterSelect) {
+                    StreamSelectUI(viewModel = viewModel, uiState = uiState, isChapterSelect = true)
+                }
             }
         }
     }

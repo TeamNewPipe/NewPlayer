@@ -21,6 +21,7 @@
 package net.newpipe.newplayer.ui.videoplayer.streamselect
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -42,12 +43,17 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DragHandle
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -78,12 +84,14 @@ import net.newpipe.newplayer.utils.getLocale
 import net.newpipe.newplayer.utils.getTimeStringFromMs
 import sh.calvin.reorderable.ReorderableCollectionItemScope
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StreamItem(
     modifier: Modifier = Modifier,
     playlistItem: PlaylistItem,
     onClicked: (Long) -> Unit,
     onDragFinished: () -> Unit,
+    onDelete: () -> Unit,
     reorderableScope: ReorderableCollectionItemScope?,
     haptic: ReorderHapticFeedback?,
     isDragging: Boolean,
@@ -92,128 +100,151 @@ fun StreamItem(
     val locale = getLocale()!!
 
     val interactionSource = remember { MutableInteractionSource() }
-    Box(modifier = modifier
-        .height(60.dp)
-        .clip(ITEM_CORNER_SHAPE)
-        .clickable {
-            onClicked(playlistItem.uniqueId)
-        }) {
 
-        AnimatedVisibility(
-            visible = isDragging,
-            enter = fadeIn(animationSpec = tween(200)),
-            exit = fadeOut(animationSpec = tween(400))
-        ) {
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background,
-                shadowElevation = 8.dp,
-                shape = ITEM_CORNER_SHAPE
-            ) {}
+    val dismissState = rememberSwipeToDismissBoxState(confirmValueChange = {
+        when (it) {
+            SwipeToDismissBoxValue.StartToEnd -> {
+                onDelete()
+                true
+            }
+
+            SwipeToDismissBoxValue.EndToStart -> {
+                onDelete()
+                true
+            }
+
+            SwipeToDismissBoxValue.Settled -> true
         }
+    })
 
-        AnimatedVisibility(
-            visible = isCurrentlyPlaying,
-            enter = fadeIn(animationSpec = tween(200)),
-            exit = fadeOut(animationSpec = tween(400))
-        ) {
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = Color.White.copy(alpha = 0.2f),
-            ) {}
-        }
+    SwipeToDismissBox(
+        modifier = modifier.height(60.dp), state = dismissState,
+        backgroundContent = {
+        },
+    ) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .clip(ITEM_CORNER_SHAPE)
+            .clickable {
+                onClicked(playlistItem.uniqueId)
+            }) {
 
-        Row(
-            modifier = modifier
-                .padding(0.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .aspectRatio(16f / 9f)
-                    .fillMaxSize()
+            androidx.compose.animation.AnimatedVisibility(
+                visible = isDragging,
+                enter = fadeIn(animationSpec = tween(200)),
+                exit = fadeOut(animationSpec = tween(400))
             ) {
-                val contentDescription = stringResource(R.string.stream_item_thumbnail)
-                Thumbnail(
-                    modifier = Modifier.fillMaxHeight(),
-                    thumbnail = playlistItem.thumbnail,
-                    contentDescription = contentDescription,
-                    shape = ITEM_CORNER_SHAPE
-                )
                 Surface(
-                    color = CONTROLLER_UI_BACKGROUND_COLOR,
-                    shape = ITEM_CORNER_SHAPE,
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background,
+                    shadowElevation = 8.dp,
+                    shape = ITEM_CORNER_SHAPE
+                ) {}
+            }
+
+            androidx.compose.animation.AnimatedVisibility(
+                visible = isCurrentlyPlaying,
+                enter = fadeIn(animationSpec = tween(200)),
+                exit = fadeOut(animationSpec = tween(400))
+            ) {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = Color.White.copy(alpha = 0.2f),
+                ) {}
+            }
+
+            Row(
+                modifier = modifier
+                    .padding(0.dp)
+            ) {
+                Box(
                     modifier = Modifier
-                        .wrapContentSize()
-                        .align(Alignment.BottomEnd)
-                        .padding(4.dp)
+                        .aspectRatio(16f / 9f)
+                        .fillMaxSize()
+                ) {
+                    val contentDescription = stringResource(R.string.stream_item_thumbnail)
+                    Thumbnail(
+                        modifier = Modifier.fillMaxHeight(),
+                        thumbnail = playlistItem.thumbnail,
+                        contentDescription = contentDescription,
+                        shape = ITEM_CORNER_SHAPE
+                    )
+                    Surface(
+                        color = CONTROLLER_UI_BACKGROUND_COLOR,
+                        shape = ITEM_CORNER_SHAPE,
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .align(Alignment.BottomEnd)
+                            .padding(4.dp)
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(
+                                start = 4.dp,
+                                end = 4.dp,
+                                top = 0.5.dp,
+                                bottom = 0.5.dp
+                            ),
+                            text = getTimeStringFromMs(
+                                playlistItem.lengthInS * 1000L,
+                                locale,
+                                leadingZerosForMinutes = false
+                            ),
+                            fontSize = 14.sp,
+                        )
+                    }
+                }
+
+                Column(
+                    modifier = Modifier
+                        .padding(6.dp)
+                        .weight(1f)
+                        .wrapContentHeight()
+                        .fillMaxWidth()
                 ) {
                     Text(
-                        modifier = Modifier.padding(
-                            start = 4.dp,
-                            end = 4.dp,
-                            top = 0.5.dp,
-                            bottom = 0.5.dp
-                        ),
-                        text = getTimeStringFromMs(
-                            playlistItem.lengthInS * 1000L,
-                            locale,
-                            leadingZerosForMinutes = false
-                        ),
+                        text = playlistItem.title,
                         fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = playlistItem.creator,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Light,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
-            }
-
-            Column(
-                modifier = Modifier
-                    .padding(6.dp)
-                    .weight(1f)
-                    .wrapContentHeight()
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    text = playlistItem.title,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = playlistItem.creator,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Light,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-            IconButton(
-                modifier = if (reorderableScope != null) {
-                    with(reorderableScope) {
+                IconButton(
+                    modifier = if (reorderableScope != null) {
+                        with(reorderableScope) {
+                            Modifier
+                                .aspectRatio(1f)
+                                .fillMaxSize()
+                                .draggableHandle(
+                                    onDragStarted = {
+                                        haptic?.performHapticFeedback(ReorderHapticFeedbackType.START)
+                                    },
+                                    onDragStopped = {
+                                        haptic?.performHapticFeedback(ReorderHapticFeedbackType.END)
+                                        onDragFinished()
+                                    },
+                                    interactionSource = interactionSource,
+                                )
+                        }
+                    } else {
                         Modifier
                             .aspectRatio(1f)
                             .fillMaxSize()
-                            .draggableHandle(
-                                onDragStarted = {
-                                    haptic?.performHapticFeedback(ReorderHapticFeedbackType.START)
-                                },
-                                onDragStopped = {
-                                    haptic?.performHapticFeedback(ReorderHapticFeedbackType.END)
-                                    onDragFinished()
-                                },
-                                interactionSource = interactionSource,
-                            )
-                    }
-                } else {
-                    Modifier
-                        .aspectRatio(1f)
-                        .fillMaxSize()
-                },
-                onClick = {}
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.DragHandle,
-                    contentDescription = stringResource(R.string.stream_item_drag_handle)
-                )
+                    },
+                    onClick = {}
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.DragHandle,
+                        contentDescription = stringResource(R.string.stream_item_drag_handle)
+                    )
+                }
             }
         }
     }
@@ -233,7 +264,8 @@ fun StreamItemPreview() {
                     haptic = null,
                     onDragFinished = {},
                     isDragging = false,
-                    isCurrentlyPlaying = true
+                    isCurrentlyPlaying = true,
+                    onDelete = {println("has ben deleted")}
                 )
             }
         }

@@ -40,6 +40,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.playerInternals.PlaylistItem
 import net.newpipe.newplayer.playerInternals.fetchPlaylistItem
 import net.newpipe.newplayer.playerInternals.getPlaylistItemsFromExoplayer
@@ -47,6 +48,7 @@ import kotlin.Exception
 import kotlin.random.Random
 
 enum class PlayMode {
+    IDLE,
     EMBEDDED_VIDEO,
     FULLSCREEN_VIDEO,
     PIP,
@@ -73,7 +75,7 @@ interface NewPlayer {
     val sharingLinkWithOffsetPossible: Boolean
     var currentPosition: Long
     var fastSeekAmountSec: Int
-    val playBackMode: MutableStateFlow<PlayMode?>
+    val playBackMode: MutableStateFlow<PlayMode>
     var shuffle: Boolean
     var repeatMode: RepeatMode
 
@@ -162,7 +164,7 @@ class NewPlayerImpl(
 
     private var playerScope = CoroutineScope(Dispatchers.Main + Job())
 
-    override var playBackMode = MutableStateFlow<PlayMode?>(null)
+    override var playBackMode = MutableStateFlow(PlayMode.IDLE)
 
     override var shuffle: Boolean
         get() = internalPlayer.shuffleModeEnabled
@@ -281,6 +283,11 @@ class NewPlayerImpl(
     }
 
     private fun updatePlaylistItems() {
+        if (internalPlayer.mediaItemCount == 0) {
+            playBackMode.update {
+                PlayMode.IDLE
+            }
+        }
         playerScope.launch {
             val playlist =
                 getPlaylistItemsFromExoplayer(internalPlayer, repository, uniqueIdToIdLookup)

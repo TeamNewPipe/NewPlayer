@@ -157,7 +157,10 @@ fun ReorderableStreamItemsList(
                     haptic = haptic,
                     onDragFinished = viewModel::onStreamItemDragFinished,
                     isDragging = isDragging,
-                    isCurrentlyPlaying = playlistItem.uniqueId == uiState.currentlyPlaying.uniqueId
+                    isCurrentlyPlaying = playlistItem.uniqueId == uiState.currentlyPlaying.uniqueId,
+                    onDelete = {
+                        viewModel.removePlaylistItem(index)
+                    }
                 )
             }
         }

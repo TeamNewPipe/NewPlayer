@@ -57,7 +57,7 @@ enum class UIModeState {
 
     val isStreamSelect: Boolean
         get() =
-            when(this) {
+            when (this) {
                 EMBEDDED_VIDEO_STREAM_SELECT -> true
                 FULLSCREEN_VIDEO_STREAM_SELECT -> true
                 else -> false
@@ -65,7 +65,7 @@ enum class UIModeState {
 
     val isChapterSelect: Boolean
         get() =
-            when(this) {
+            when (this) {
                 EMBEDDED_VIDEO_CHAPTER_SELECT -> true
                 FULLSCREEN_VIDEO_CHAPTER_SELECT -> true
                 else -> false
@@ -73,14 +73,14 @@ enum class UIModeState {
 
     val systemInsetsVisible: Boolean
         get() =
-            when(this) {
+            when (this) {
                 FULLSCREEN_VIDEO -> false
                 else -> true
             }
 
     val fitScreenRotation: Boolean
         get() =
-            when(this) {
+            when (this) {
                 FULLSCREEN_VIDEO -> true
                 FULLSCREEN_VIDEO_CONTROLLER_UI -> true
                 FULLSCREEN_VIDEO_CHAPTER_SELECT -> true
@@ -141,8 +141,8 @@ enum class UIModeState {
             else -> this
         }
 
-    fun toPlayMode() = when(this) {
-        PLACEHOLDER -> null
+    fun toPlayMode() = when (this) {
+        PLACEHOLDER -> PlayMode.IDLE
         EMBEDDED_VIDEO -> PlayMode.EMBEDDED_VIDEO
         EMBEDDED_VIDEO_CONTROLLER_UI -> PlayMode.EMBEDDED_VIDEO
         EMBEDDED_VIDEO_CHAPTER_SELECT -> PlayMode.EMBEDDED_VIDEO
@@ -153,7 +153,7 @@ enum class UIModeState {
         FULLSCREEN_VIDEO_STREAM_SELECT -> PlayMode.FULLSCREEN_VIDEO
     }
 
-    fun getNextModeWhenBackPressed() = when(this) {
+    fun getNextModeWhenBackPressed() = when (this) {
         EMBEDDED_VIDEO_CHAPTER_SELECT -> EMBEDDED_VIDEO
         EMBEDDED_VIDEO_STREAM_SELECT -> EMBEDDED_VIDEO
         FULLSCREEN_VIDEO -> EMBEDDED_VIDEO
@@ -164,16 +164,14 @@ enum class UIModeState {
     }
 
     companion object {
-        fun fromPlayMode(playMode: PlayMode?) =
-            if (playMode != null)
-                when (playMode) {
-                    PlayMode.EMBEDDED_VIDEO -> EMBEDDED_VIDEO
-                    PlayMode.FULLSCREEN_VIDEO -> FULLSCREEN_VIDEO
-                    PlayMode.PIP -> TODO()
-                    PlayMode.BACKGROUND -> TODO()
-                    PlayMode.AUDIO_FOREGROUND -> TODO()
-                }
-            else PLACEHOLDER
-
+        fun fromPlayMode(playMode: PlayMode) =
+            when (playMode) {
+                PlayMode.IDLE -> PLACEHOLDER
+                PlayMode.EMBEDDED_VIDEO -> EMBEDDED_VIDEO
+                PlayMode.FULLSCREEN_VIDEO -> FULLSCREEN_VIDEO
+                PlayMode.PIP -> TODO()
+                PlayMode.BACKGROUND -> TODO()
+                PlayMode.AUDIO_FOREGROUND -> TODO()
+            }
     }
 }
