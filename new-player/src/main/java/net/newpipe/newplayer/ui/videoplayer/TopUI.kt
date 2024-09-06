@@ -51,16 +51,14 @@ import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.VideoPlayerUIState
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
-import net.newpipe.newplayer.playerInternals.PlaylistItem
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.theme.video_player_onSurface
-import net.newpipe.newplayer.utils.getEmbeddedUiConfig
 
 @Composable
 fun TopUI(
     modifier: Modifier, viewModel: VideoPlayerViewModel, uiState: VideoPlayerUIState
 ) {
-    val embeddedUiConfig = getEmbeddedUiConfig(activity = LocalContext.current as Activity)
+
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
@@ -101,7 +99,7 @@ fun TopUI(
         }
         AnimatedVisibility(visible = uiState.chapters.isNotEmpty()) {
             IconButton(
-                onClick = { viewModel.openStreamSelection(selectChapter = true, embeddedUiConfig) },
+                onClick = { viewModel.openStreamSelection(selectChapter = true) },
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.MenuBook,
@@ -113,8 +111,7 @@ fun TopUI(
             IconButton(
                 onClick = {
                     viewModel.openStreamSelection(
-                        selectChapter = false,
-                        embeddedUiConfig
+                        selectChapter = false
                     )
                 },
             ) {

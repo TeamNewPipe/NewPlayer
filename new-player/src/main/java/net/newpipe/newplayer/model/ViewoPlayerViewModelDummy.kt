@@ -36,7 +36,7 @@ open class VideoPlayerViewModelDummy : VideoPlayerViewModel {
         println("dummy impl")
     }
 
-    override fun switchToFullscreen(embeddedUiConfig: EmbeddedUiConfig) {
+    override fun switchToFullscreen() {
         println("dummy impl")
     }
 
@@ -61,7 +61,7 @@ open class VideoPlayerViewModelDummy : VideoPlayerViewModel {
     }
 
     override fun fastSeek(steps: Int) {
-        println("dummy impl")
+        println("dummy impl, steps: $steps")
     }
 
     override fun finishFastSeek() {
@@ -76,7 +76,7 @@ open class VideoPlayerViewModelDummy : VideoPlayerViewModel {
         println("dummy impl")
     }
 
-    override fun openStreamSelection(selectChapter: Boolean, embeddedUiConfig: EmbeddedUiConfig) {
+    override fun openStreamSelection(selectChapter: Boolean) {
         println("dummy impl")
     }
 

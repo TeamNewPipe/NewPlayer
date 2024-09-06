@@ -57,6 +57,37 @@ internal fun segmentToPxValues(
 
     val rangeSize = range.endInclusive - range.start
     val sortedSegments = segments.distinct().sortedBy { it.start }
+    val segmentRangesPxs = sortedSegments.map { segment ->
+
+        // percent of the start of this segment in the range size
+        val percentStart = (segment.start - range.start) * 100 / rangeSize
+        val percentEnd = (segment.end - range.start) * 100 / rangeSize
+        val startPx = percentStart * widthPx / 100
+        val endPx = percentEnd * widthPx / 100
+        Pair(startPx, endPx)
+    }
+
+    return sortedSegments.mapIndexed { index, segment ->
+        SegmentPxs(
+            name = segment.name,
+            color = segment.color,
+            startPx = segmentRangesPxs[index].first,
+            endPx = segmentRangesPxs[index].second
+        )
+    }
+}
+
+internal fun chapterSegmentToPxValues(
+    segments: List<ChapterSegment>,
+    range: ClosedFloatingPointRange<Float>,
+    widthPx: Float,
+): List<SegmentPxs> {
+
+    val rangeSize = range.endInclusive - range.start
+    val sortedSegments = ArrayList(segments.distinct().sortedBy { it.start })
+    if(sortedSegments.isNotEmpty()) {
+        sortedSegments.removeAt(0)
+    }
     val segmentStartPxs = sortedSegments.map { segment ->
 
         // percent of the start of this segment in the range size

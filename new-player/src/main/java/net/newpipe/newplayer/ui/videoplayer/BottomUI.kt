@@ -23,6 +23,7 @@ package net.newpipe.newplayer.ui.videoplayer
 import android.app.Activity
 import android.app.LocaleConfig
 import android.icu.text.DecimalFormat
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
@@ -44,21 +45,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.os.ConfigurationCompat
 import androidx.lifecycle.viewModelScope
+import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.model.VideoPlayerUIState
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
+import net.newpipe.newplayer.ui.seeker.ChapterSegment
 import net.newpipe.newplayer.ui.seeker.DefaultSeekerColor
 import net.newpipe.newplayer.ui.seeker.Seeker
 import net.newpipe.newplayer.ui.seeker.SeekerColors
-import net.newpipe.newplayer.ui.seeker.SeekerDefaults
+import net.newpipe.newplayer.ui.seeker.Segment
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.utils.getEmbeddedUiConfig
 import net.newpipe.newplayer.utils.getLocale
 import net.newpipe.newplayer.utils.getTimeStringFromMs
-import java.util.Locale
-import kotlin.math.min
+
+
+private const val TAG = "BottomUI"
 
 @Composable
 fun BottomUI(
@@ -77,17 +80,17 @@ fun BottomUI(
             onValueChange = viewModel::seekPositionChanged,
             onValueChangeFinished = viewModel::seekingFinished,
             readAheadValue = uiState.bufferedPercentage,
-            colors = customizedSeekerColors()
+            colors = customizedSeekerColors(),
+            chapterSegments = getSeekerSegmentsFromChapters(uiState.chapters, uiState.durationInMs)
         )
 
         Text(getTimeStringFromMs(uiState.durationInMs, getLocale() ?: locale))
 
-        val embeddedUiConfig = getEmbeddedUiConfig(LocalContext.current as Activity)
         IconButton(
             onClick = if (uiState.uiMode.fullscreen) viewModel::switchToEmbeddedView
             else {
                 { // <- head of lambda ... yea kotlin is weird
-                    viewModel.switchToFullscreen(embeddedUiConfig)
+                    viewModel.switchToFullscreen()
                 }
             }
         ) {
@@ -113,6 +116,21 @@ private fun customizedSeekerColors(): SeekerColors {
     )
     return colors
 }
+
+private fun getSeekerSegmentsFromChapters(chapters: List<Chapter>, duration: Long) =
+    chapters.map { chapter ->
+        val markPosition = chapter.chapterStartInMs.toFloat() / duration.toFloat()
+        if (markPosition < 0f || 1f < markPosition) {
+            Log.e(
+                TAG,
+                "Chapter mark outside of stream duration range: chapter: ${chapter.chapterTitle}, mark in ms: ${chapter.chapterStartInMs}, vidoe duration in ms: ${duration}"
+            )
+            ChapterSegment(name = chapter.chapterTitle ?: "", start = 0f)
+        } else {
+            ChapterSegment(name = chapter.chapterTitle ?: "", start = markPosition)
+        }
+    }
+
 
 ///////////////////////////////////////////////////////////////////
 // Preview

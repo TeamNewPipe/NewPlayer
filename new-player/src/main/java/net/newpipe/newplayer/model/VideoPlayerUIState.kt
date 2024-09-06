@@ -81,7 +81,7 @@ data class VideoPlayerUIState(
             seekerPosition = 0.3f,
             bufferedPercentage = 0.5f,
             isLoading = false,
-            durationInMs = 420,
+            durationInMs = 12000,
             playbackPositionInPlaylistS = 5039,
             playbackPositionInMs = 69,
             fastSeekSeconds = 10,
@@ -93,6 +93,11 @@ data class VideoPlayerUIState(
             currentPlaylistItemIndex = 1,
             chapters = arrayListOf(
                 Chapter(
+                    chapterStartInMs = 0,
+                    chapterTitle = "Intro",
+                    thumbnail = null
+                ),
+                Chapter(
                     chapterStartInMs = 5000,
                     chapterTitle = "First Chapter",
                     thumbnail = null
@@ -102,11 +107,6 @@ data class VideoPlayerUIState(
                     chapterTitle = "Second Chapter",
                     thumbnail = null
                 ),
-                Chapter(
-                    chapterStartInMs = 20000,
-                    chapterTitle = "Third Chapter",
-                    thumbnail = null
-                )
             ),
             playList = arrayListOf(
                 PlaylistItem(

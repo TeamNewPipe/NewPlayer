@@ -36,11 +36,8 @@ import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.requiredSizeIn
@@ -49,8 +46,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.progressSemantics
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -75,7 +70,6 @@ import androidx.compose.ui.graphics.drawscope.rotateRad
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.disabled
@@ -135,18 +129,25 @@ fun Seeker(
     onValueChange: (Float) -> Unit,
     onValueChangeFinished: (() -> Unit)? = null,
     segments: List<Segment> = emptyList(),
+    chapterSegments: List<ChapterSegment> = emptyList(),
     enabled: Boolean = true,
     colors: SeekerColors = SeekerDefaults.seekerColors(),
     dimensions: SeekerDimensions = SeekerDefaults.seekerDimensions(),
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
     if (segments.isNotEmpty()) {
-        require(segments.first().start == range.start) {
-            "the first segment should start from range start value"
-        }
         segments.forEach {
+            require(it.start in range && it.end in range) {
+                "segment must lie withing the range: segment: ${it.name} start: ${it.start}, end: ${it.end}, range: ${range}"
+            }
+        }
+    }
+
+
+    if (chapterSegments.isNotEmpty()) {
+        chapterSegments.forEach {
             require(it.start in range) {
-                "segment must start from withing the range."
+                "chapter segment must lie withing the range: segment: ${it.name} start: ${it.start} range: ${range}"
             }
         }
     }
@@ -176,6 +177,10 @@ fun Seeker(
 
         val segmentStarts = remember(segments, range, widthPx) {
             segmentToPxValues(segments, range, widthPx)
+        }
+
+        val chapterSegmentsPx = remember(chapterSegments, range, widthPx) {
+            chapterSegmentToPxValues(chapterSegments, range, widthPx)
         }
 
         LaunchedEffect(thumbValue, segments) {
@@ -259,6 +264,7 @@ fun Seeker(
             readAheadValuePx = readAheadValuePx,
             enabled = enabled,
             segments = segmentStarts,
+            chapterSegments = chapterSegmentsPx,
             colors = colors,
             dimensions = dimensions,
             interactionSource = interactionSource
@@ -276,6 +282,7 @@ private fun Seeker(
     readAheadValuePx: Float,
     enabled: Boolean,
     segments: List<SegmentPxs>,
+    chapterSegments: List<SegmentPxs>,
     colors: SeekerColors,
     dimensions: SeekerDimensions,
     interactionSource: MutableInteractionSource
@@ -288,6 +295,7 @@ private fun Seeker(
             modifier = Modifier.fillMaxSize(),
             enabled = enabled,
             segments = segments,
+            chapterSegments = chapterSegments,
             colors = colors,
             widthPx = widthPx,
             valuePx = valuePx,
@@ -310,6 +318,7 @@ private fun Track(
     modifier: Modifier,
     enabled: Boolean,
     segments: List<SegmentPxs>,
+    chapterSegments: List<SegmentPxs>,
     colors: SeekerColors,
     widthPx: Float,
     valuePx: Float,
@@ -334,35 +343,16 @@ private fun Track(
         val left = thumbRadius.toPx()
 
         translate(left = left) {
-            if (segments.isEmpty()) {
-                // draw the track with a single line.
-                drawLine(
-                    start = Offset(rtlAware(0f, widthPx, isRtl), center.y),
-                    end = Offset(rtlAware(widthPx, widthPx, isRtl), center.y),
-                    color = trackColor,
-                    strokeWidth = trackHeight.toPx(),
-                    cap = StrokeCap.Round
-                )
-            } else {
-                // draw segments in their respective color,
-                // excluding gaps (which will be cleared out later)
-                for (index in segments.indices) {
-                    val segment = segments[index]
-                    val segmentColor = when (segment.color) {
-                        Color.Unspecified -> trackColor
-                        else -> segment.color
-                    }
-                    drawSegment(
-                        startPx = rtlAware(segment.startPx, widthPx, isRtl),
-                        endPx = rtlAware(segment.endPx, widthPx, isRtl),
-                        trackColor = segmentColor,
-                        trackHeight = trackHeight.toPx(),
-                        blendMode = BlendMode.SrcOver,
-                        startCap = if (index == 0) StrokeCap.Round else null,
-                        endCap = if (index == segments.lastIndex) StrokeCap.Round else null
-                    )
-                }
-            }
+
+            // draw the track with a single line.
+            drawLine(
+                start = Offset(rtlAware(0f, widthPx, isRtl), center.y),
+                end = Offset(rtlAware(widthPx, widthPx, isRtl), center.y),
+                color = trackColor,
+                strokeWidth = trackHeight.toPx(),
+                cap = StrokeCap.Round
+            )
+
 
             // readAhead indicator
             drawLine(
@@ -382,14 +372,28 @@ private fun Track(
                 cap = StrokeCap.Round
             )
 
-            // clear segment gaps
+            // draw segments in their respective color,
             for (index in segments.indices) {
-                if (index == segments.lastIndex) break // skip "gap" after last segment
                 val segment = segments[index]
-                drawGap(
-                    startPx = rtlAware(segment.endPx - segmentGap.toPx(), widthPx, isRtl),
+                val segmentColor = when (segment.color) {
+                    Color.Unspecified -> trackColor
+                    else -> segment.color
+                }
+                drawSegment(
+                    startPx = rtlAware(segment.startPx, widthPx, isRtl),
                     endPx = rtlAware(segment.endPx, widthPx, isRtl),
+                    trackColor = segmentColor,
                     trackHeight = trackHeight.toPx(),
+                    blendMode = BlendMode.SrcOver,
+                )
+            }
+
+            // clear segment gaps
+            for (index in chapterSegments.indices) {
+                val segment = chapterSegments[index]
+                drawDot(
+                    x = rtlAware(segment.startPx, widthPx, isRtl),
+                    trackHeight = trackHeight.toPx()
                 )
             }
         }
@@ -485,8 +489,6 @@ private fun DrawScope.drawSegment(
     trackColor: Color,
     trackHeight: Float,
     blendMode: BlendMode,
-    startCap: StrokeCap? = null,
-    endCap: StrokeCap? = null
 ) {
     drawLine(
         start = Offset(startPx, center.y),
@@ -494,8 +496,7 @@ private fun DrawScope.drawSegment(
         color = trackColor,
         strokeWidth = trackHeight,
         blendMode = blendMode,
-        endCap = endCap,
-        startCap = startCap
+        cap = StrokeCap.Round
     )
 }
 
@@ -510,6 +511,18 @@ private fun DrawScope.drawGap(
         color = Color.Black, // any color will do
         strokeWidth = trackHeight + 2, // add 2 to prevent hairline borders from rounding
         blendMode = BlendMode.Clear
+    )
+}
+
+private fun DrawScope.drawDot(
+    x: Float,
+    trackHeight: Float
+) {
+    drawCircle(
+        radius = (trackHeight / 2f) * 0.8f,
+        center = Offset(x = x, y = center.y),
+        color = Color.Gray.copy(alpha = 0.9f),
+        blendMode = BlendMode.SrcOver
     )
 }
 
@@ -580,14 +593,21 @@ private fun Modifier.progressSemantics(
 @Composable
 fun SeekerPreview() {
     val segments = listOf(
-        Segment(name = "Intro", start = 0f),
-        Segment(name = "Talk 1", start = 0.5f),
-        Segment(name = "Talk 2", start = 0.8f),
+        Segment(name = "Intro", start = 0.1f, end = 0.3f, color = Color.Green),
+        Segment(name = "Talk 1", start = 0.5f, end = 0.6f, color = Color.Cyan),
+        Segment(name = "Talk 2", start = 0.8f, end = 0.85f, color = Color.Blue),
+    )
+
+    val chapterSegments = listOf(
+        ChapterSegment(name = "Intro", start = 0.0f, color = Color.Green),
+        ChapterSegment(name = "Talk 1", start = 0.55f, color = Color.Cyan),
+        ChapterSegment(name = "Talk 2", start = 0.9f, color = Color.Blue),
     )
     Seeker(
         value = 0.7f,
         range = 0f..1f,
         segments = segments,
+        chapterSegments = chapterSegments,
         onValueChange = { },
     )
 }

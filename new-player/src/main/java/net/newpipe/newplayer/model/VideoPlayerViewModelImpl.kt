@@ -432,11 +432,8 @@ class VideoPlayerViewModelImpl @Inject constructor(
         }
     }
 
-    override fun openStreamSelection(selectChapter: Boolean, embeddedUiConfig: EmbeddedUiConfig) {
+    override fun openStreamSelection(selectChapter: Boolean) {
         uiVisibilityJob?.cancel()
-        if (!uiState.value.uiMode.fullscreen) {
-            this.embeddedUiConfig = embeddedUiConfig
-        }
         updateUiMode(
             if (selectChapter) uiState.value.uiMode.getChapterSelectUiState()
             else uiState.value.uiMode.getStreamSelectUiState()
@@ -469,11 +466,10 @@ class VideoPlayerViewModelImpl @Inject constructor(
         }
     }
 
-    override fun switchToFullscreen(embeddedUiConfig: EmbeddedUiConfig) {
+    override fun switchToFullscreen() {
         uiVisibilityJob?.cancel()
         finishFastSeek()
 
-        this.embeddedUiConfig = embeddedUiConfig
         updateUiMode(UIModeState.FULLSCREEN_VIDEO)
     }
 

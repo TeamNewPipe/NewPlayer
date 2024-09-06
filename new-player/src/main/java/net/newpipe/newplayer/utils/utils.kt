@@ -90,25 +90,6 @@ fun getLocale(): Locale? {
 }
 
 @Composable
-@ReadOnlyComposable
-fun getEmbeddedUiConfig(activity: Activity): EmbeddedUiConfig {
-    val window = activity.window
-    val view = LocalView.current
-
-    val isLightStatusBar = WindowCompat.getInsetsController(
-        window,
-        view
-    ).isAppearanceLightStatusBars
-    val screenOrientation = activity.requestedOrientation
-    val defaultBrightness = getDefaultBrightness(activity)
-    return EmbeddedUiConfig(
-        systemBarInLightMode = isLightStatusBar,
-        brightness = defaultBrightness,
-        screenOrientation = screenOrientation
-    )
-}
-
-@Composable
 fun getInsets() =
     WindowInsets.systemBars.union(WindowInsets.displayCutout).union(WindowInsets.waterfall)
 

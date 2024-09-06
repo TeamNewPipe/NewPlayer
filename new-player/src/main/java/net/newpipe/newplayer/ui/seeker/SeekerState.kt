@@ -74,12 +74,24 @@ fun rememberSeekerState(): SeekerState = remember {
 data class Segment(
     val name: String,
     val start: Float,
+    val end: Float,
     val color: Color = Color.Unspecified
 ) {
     companion object {
-        val Unspecified = Segment(name = "", start = 0f)
+        val Unspecified = Segment(name = "", start = 0f, end = 0f)
     }
 }
+
+ @Immutable
+ data class ChapterSegment(
+     val name: String,
+     val start: Float,
+     val color: Color = Color.Unspecified
+ ) {
+     companion object {
+         val Unspecified = ChapterSegment(name = "", start = 0f)
+     }
+ }
 
 @Immutable
 internal data class SegmentPxs(
