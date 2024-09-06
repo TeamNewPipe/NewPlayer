@@ -30,6 +30,7 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -42,7 +43,6 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.utils.VideoSize
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.RepeatMode
@@ -194,13 +194,20 @@ class VideoPlayerViewModelImpl @Inject constructor(
             }
             viewModelScope.launch {
                 newPlayer.playlist.collect { playlist ->
-                    mutableUiState.update { it.copy(playList = playlist) }
+                    mutableUiState.update {
+                        it.copy(
+                            playList = playlist,
+                        )
+                    }
                 }
             }
             viewModelScope.launch {
                 newPlayer.currentlyPlaying.collect { playlistItem ->
                     mutableUiState.update {
-                        it.copy(currentlyPlaying = playlistItem ?: PlaylistItem.DEFAULT)
+                        it.copy(
+                            currentlyPlaying = playlistItem ?: PlaylistItem.DEFAULT,
+                            currentPlaylistItemIndex = newPlayer.currentlyPlayingPlaylistItem
+                        )
                     }
                 }
             }
@@ -261,12 +268,20 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     override fun prevStream() {
         resetHideUiDelayedJob()
-        Log.e(TAG, "imeplement prev stream")
+        newPlayer?.let { newPlayer ->
+            if (0 <= newPlayer.currentlyPlayingPlaylistItem - 1) {
+                newPlayer.currentlyPlayingPlaylistItem -= 1
+            }
+        }
     }
 
     override fun nextStream() {
         resetHideUiDelayedJob()
-        Log.e(TAG, "implement next stream")
+        newPlayer?.let { newPlayer ->
+            if (newPlayer.currentlyPlayingPlaylistItem + 1 < newPlayer.internalPlayer.mediaItemCount) {
+                newPlayer.currentlyPlayingPlaylistItem += 1
+            }
+        }
     }
 
     override fun showUi() {
@@ -427,7 +442,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
             if (selectChapter) uiState.value.uiMode.getChapterSelectUiState()
             else uiState.value.uiMode.getStreamSelectUiState()
         )
-        if(selectChapter) {
+        if (selectChapter) {
             resetProgressUpdatePeriodicallyJob()
         } else {
             resetPlaylistProgressUpdaterJob()
@@ -468,8 +483,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun streamSelected(streamId: Int) {
-        println("gurken stream selected: $streamId")
-        newPlayer?.selectPlaylistItem(streamId)
+        newPlayer?.currentlyPlayingPlaylistItem = streamId
     }
 
     override fun cycleRepeatMode() {

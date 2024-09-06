@@ -172,25 +172,7 @@ fun VideoPlayerChannelSelectUIPreview() {
             StreamSelectUI(
                 isChapterSelect = true,
                 viewModel = VideoPlayerViewModelDummy(),
-                uiState = VideoPlayerUIState.DEFAULT.copy(
-                    chapters = arrayListOf(
-                        Chapter(
-                            chapterStartInMs = 5000,
-                            chapterTitle = "First Chapter",
-                            thumbnail = null
-                        ),
-                        Chapter(
-                            chapterStartInMs = 10000,
-                            chapterTitle = "Second Chapter",
-                            thumbnail = null
-                        ),
-                        Chapter(
-                            chapterStartInMs = 20000,
-                            chapterTitle = "Third Chapter",
-                            thumbnail = null
-                        ),
-                    )
-                )
+                uiState = VideoPlayerUIState.DUMMY
             )
         }
     }
@@ -205,32 +187,6 @@ fun VideoPlayerStreamSelectUIPreview() {
                 isChapterSelect = false,
                 viewModel = VideoPlayerViewModelDummy(),
                 uiState = VideoPlayerUIState.DUMMY.copy(
-                    playList = arrayListOf(
-                        PlaylistItem(
-                            id = "6502",
-                            title = "Stream 1",
-                            creator = "The Creator",
-                            lengthInS = 6 * 60 + 5,
-                            thumbnail = null,
-                            uniqueId = 0
-                        ),
-                        PlaylistItem(
-                            id = "6502",
-                            title = "Stream 2",
-                            creator = "The Creator 2",
-                            lengthInS = 2 * 60 + 5,
-                            thumbnail = null,
-                            uniqueId = 1
-                        ),
-                        PlaylistItem(
-                            id = "6502",
-                            title = "Stream 3",
-                            creator = "The Creator 3",
-                            lengthInS = 29 * 60 + 5,
-                            thumbnail = null,
-                            uniqueId = 2
-                        )
-                    ),
                     currentlyPlaying = PlaylistItem.DUMMY.copy(uniqueId = 1)
                 )
             )

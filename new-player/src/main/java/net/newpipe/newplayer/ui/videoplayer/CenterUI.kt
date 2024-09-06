@@ -21,9 +21,15 @@
 package net.newpipe.newplayer.ui.videoplayer
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
@@ -33,6 +39,7 @@ import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -60,13 +67,22 @@ fun CenterUI(
         modifier = modifier,
     ) {
 
-        CenterControllButton(
-            buttonModifier = Modifier.size(80.dp),
-            iconModifier = Modifier.size(40.dp),
-            icon = Icons.Filled.SkipPrevious,
-            contentDescription = stringResource(R.string.widget_description_previous_stream),
-            onClick = viewModel::prevStream
-        )
+        Box(modifier = Modifier.size(80.dp)) {
+            androidx.compose.animation.AnimatedVisibility(
+                uiState.currentPlaylistItemIndex != 0,
+                enter = fadeIn(animationSpec = tween(200)),
+                exit = fadeOut(animationSpec = tween(400))
+
+            ) {
+                CenterControllButton(
+                    buttonModifier = Modifier.fillMaxSize(),
+                    iconModifier = Modifier.size(40.dp),
+                    icon = Icons.Filled.SkipPrevious,
+                    contentDescription = stringResource(R.string.widget_description_previous_stream),
+                    onClick = viewModel::prevStream
+                )
+            }
+        }
 
         CenterControllButton(
             buttonModifier = Modifier.size(80.dp),
@@ -78,14 +94,21 @@ fun CenterUI(
             ),
             onClick = if (uiState.playing) viewModel::pause else viewModel::play
         )
-
-        CenterControllButton(
-            buttonModifier = Modifier.size(80.dp),
-            iconModifier = Modifier.size(40.dp),
-            icon = Icons.Filled.SkipNext,
-            contentDescription = stringResource(R.string.widget_description_next_stream),
-            onClick = viewModel::nextStream
-        )
+        Box(modifier = Modifier.size(80.dp)) {
+            androidx.compose.animation.AnimatedVisibility(
+                uiState.currentPlaylistItemIndex < uiState.playList.size - 1,
+                enter = fadeIn(animationSpec = tween(200)),
+                exit = fadeOut(animationSpec = tween(400))
+            ) {
+                CenterControllButton(
+                    buttonModifier = Modifier.fillMaxSize(),
+                    iconModifier = Modifier.size(40.dp),
+                    icon = Icons.Filled.SkipNext,
+                    contentDescription = stringResource(R.string.widget_description_next_stream),
+                    onClick = viewModel::nextStream
+                )
+            }
+        }
     }
 }
 
@@ -124,7 +147,8 @@ fun VideoPlayerControllerUICenterUIPreview() {
                 viewModel = VideoPlayerViewModelDummy(),
                 uiState = VideoPlayerUIState.DUMMY.copy(
                     isLoading = false,
-                    playing = true
+                    playing = true,
+                    currentPlaylistItemIndex = 1
                 )
             )
         }

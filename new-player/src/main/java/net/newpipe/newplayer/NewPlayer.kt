@@ -79,6 +79,7 @@ interface NewPlayer {
 
     val playlist: StateFlow<List<PlaylistItem>>
     val currentlyPlaying: StateFlow<PlaylistItem?>
+    var currentlyPlayingPlaylistItem: Int
 
     val currentChapters: StateFlow<List<Chapter>>
 
@@ -96,7 +97,6 @@ interface NewPlayer {
     fun removePlaylistItem(index: Int)
     fun playStream(item: String, playMode: PlayMode)
     fun selectChapter(index: Int)
-    fun selectPlaylistItem(index: Int)
     fun playStream(item: String, streamVariant: String, playMode: PlayMode)
 
     data class Builder(val app: Application, val repository: MediaRepository) {
@@ -208,6 +208,15 @@ class NewPlayerImpl(
 
     private val mutableCurrentChapter = MutableStateFlow<List<Chapter>>(emptyList())
     override val currentChapters: StateFlow<List<Chapter>> = mutableCurrentChapter.asStateFlow()
+
+    override var currentlyPlayingPlaylistItem: Int
+        get() = internalPlayer.currentMediaItemIndex
+        set(value) {
+            assert(value in 0..<playlist.value.size) {
+                throw NewPlayerException("Playlist item selection out of bound: selected item index: $value, available chapters: ${playlist.value.size}")
+            }
+            internalPlayer.seekTo(value, 0)
+        }
 
     init {
         internalPlayer.addListener(object : Player.Listener {
@@ -347,13 +356,6 @@ class NewPlayerImpl(
         }
         val chapter = chapters[index]
         currentPosition = chapter.chapterStartInMs
-    }
-
-    override fun selectPlaylistItem(index: Int) {
-        assert(index in 0..<playlist.value.size) {
-            throw NewPlayerException("Playlist item selection out of bound: selected item index: $index, available chapters: ${playlist.value.size}")
-        }
-        internalPlayer.seekTo(index, 0)
     }
 
     private fun internalPlayStream(mediaItem: MediaItem, playMode: PlayMode) {
