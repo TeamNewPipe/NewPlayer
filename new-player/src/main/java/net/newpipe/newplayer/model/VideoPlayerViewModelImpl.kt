@@ -419,7 +419,6 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun openStreamSelection(selectChapter: Boolean, embeddedUiConfig: EmbeddedUiConfig) {
-        resetPlaylistProgressUpdaterJob()
         uiVisibilityJob?.cancel()
         if (!uiState.value.uiMode.fullscreen) {
             this.embeddedUiConfig = embeddedUiConfig
@@ -428,10 +427,16 @@ class VideoPlayerViewModelImpl @Inject constructor(
             if (selectChapter) uiState.value.uiMode.getChapterSelectUiState()
             else uiState.value.uiMode.getStreamSelectUiState()
         )
+        if(selectChapter) {
+            resetProgressUpdatePeriodicallyJob()
+        } else {
+            resetPlaylistProgressUpdaterJob()
+        }
     }
 
     override fun closeStreamSelection() {
         playlistProgressUpdatrJob?.cancel()
+        progressUpdaterJob?.cancel()
         updateUiMode(uiState.value.uiMode.getUiHiddenState())
     }
 
@@ -466,7 +471,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
         println("stream selected: $streamId")
     }
 
-    override fun cycleRepeatmode() {
+    override fun cycleRepeatMode() {
         newPlayer?.let {
             it.repeatMode = when (it.repeatMode) {
                 RepeatMode.DONT_REPEAT -> RepeatMode.REPEAT_ALL

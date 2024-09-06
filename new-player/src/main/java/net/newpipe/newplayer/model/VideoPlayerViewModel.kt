@@ -21,14 +21,11 @@
 package net.newpipe.newplayer.model
 
 import android.os.Bundle
-import androidx.media3.common.Player
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.NewPlayer
-import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.ui.ContentScale
-import net.newpipe.newplayer.utils.Thumbnail
 
 
 interface VideoPlayerViewModel {
@@ -61,7 +58,7 @@ interface VideoPlayerViewModel {
     fun closeStreamSelection()
     fun chapterSelected(chapter: Chapter)
     fun streamSelected(streamId: Int)
-    fun cycleRepeatmode()
+    fun cycleRepeatMode()
     fun toggleShuffle()
     fun onStorePlaylist()
     fun movePlaylistItem(from: Int, to: Int)

@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.PlaylistAdd
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.PlaylistAdd
 import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.filled.RepeatOn
 import androidx.compose.material.icons.filled.RepeatOneOn
@@ -43,8 +42,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.media3.common.Player
-import net.newpipe.newplayer.NewPlayerException
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.model.VideoPlayerUIState
@@ -79,7 +76,7 @@ fun StreamSelectTopBar(
             )
         }, actions = {
             IconButton(
-                onClick = viewModel::cycleRepeatmode
+                onClick = viewModel::cycleRepeatMode
             ) {
                 when (uiState.repeatMode) {
                     RepeatMode.DONT_REPEAT -> Icon(

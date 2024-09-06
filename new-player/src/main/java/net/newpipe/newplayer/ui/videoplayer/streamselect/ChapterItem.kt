@@ -21,14 +21,20 @@
 
 package net.newpipe.newplayer.ui.videoplayer.streamselect
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,6 +50,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import net.newpipe.newplayer.Chapter
+import net.newpipe.newplayer.NewPlayerException
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.ITEM_CORNER_SHAPE
@@ -54,6 +62,16 @@ import net.newpipe.newplayer.utils.VectorThumbnail
 import net.newpipe.newplayer.utils.getLocale
 import net.newpipe.newplayer.utils.getTimeStringFromMs
 
+fun isActiveChapter(chapterId: Int, chapters: List<Chapter>, playbackPosition: Long) : Boolean {
+    assert(0 <= chapterId && chapterId < chapters.size) {
+        throw NewPlayerException("Chapter Id out of bounds: id: $chapterId, chapters.size: ${chapters.size}")
+    }
+    val chapterStart = chapters[chapterId].chapterStartInMs
+    val chapterEnd =
+        if (chapterId + 1 < chapters.size) chapters[chapterId + 1].chapterStartInMs
+        else Long.MAX_VALUE
+    return playbackPosition in chapterStart..<chapterEnd
+}
 
 @Composable
 fun ChapterItem(
@@ -62,41 +80,56 @@ fun ChapterItem(
     thumbnail: Thumbnail?,
     chapterTitle: String,
     chapterStartInMs: Long,
-    onClicked: (Int) -> Unit
+    onClicked: (Int) -> Unit,
+    isCurrentChapter: Boolean
 ) {
     val locale = getLocale()!!
-    Row(
+    Box(
         modifier = modifier
             .height(80.dp)
             .clip(ITEM_CORNER_SHAPE)
             .clickable { onClicked(id) }
     ) {
-        val contentDescription = stringResource(R.string.chapter_thumbnail)
-        Thumbnail(
-            thumbnail = thumbnail,
-            contentDescription = contentDescription,
-            shape = ITEM_CORNER_SHAPE
-        )
-        Column(
-            modifier = Modifier
-                .padding(start = 8.dp, top = 5.dp, bottom = 5.dp)
-                .weight(1f),
-            horizontalAlignment = Alignment.Start,
+        AnimatedVisibility(
+            isCurrentChapter,
+            enter = fadeIn(animationSpec = tween(200)),
+            exit = fadeOut(animationSpec = tween(400))
         ) {
-            Text(
-                text = chapterTitle,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Text(
-                getTimeStringFromMs(chapterStartInMs, locale),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = Color.White.copy(alpha = 0.2f),
+            ) {}
         }
 
+
+
+        Row {
+            val contentDescription = stringResource(R.string.chapter_thumbnail)
+            Thumbnail(
+                thumbnail = thumbnail,
+                contentDescription = contentDescription,
+                shape = ITEM_CORNER_SHAPE
+            )
+            Column(
+                modifier = Modifier
+                    .padding(start = 8.dp, top = 5.dp, bottom = 5.dp)
+                    .weight(1f),
+                horizontalAlignment = Alignment.Start,
+            ) {
+                Text(
+                    text = chapterTitle,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    getTimeStringFromMs(chapterStartInMs, locale),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
     }
 }
 
@@ -111,7 +144,8 @@ fun ChapterItemPreview() {
                 modifier = Modifier.fillMaxSize(),
                 chapterTitle = "Chapter Title",
                 chapterStartInMs = (4 * 60 + 32) * 1000,
-                onClicked = {}
+                onClicked = {},
+                isCurrentChapter = false
             )
         }
     }

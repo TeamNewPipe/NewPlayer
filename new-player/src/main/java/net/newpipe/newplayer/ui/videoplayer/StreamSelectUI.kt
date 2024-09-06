@@ -48,6 +48,7 @@ import net.newpipe.newplayer.ui.videoplayer.streamselect.ChapterItem
 import net.newpipe.newplayer.ui.videoplayer.streamselect.ChapterSelectTopBar
 import net.newpipe.newplayer.ui.videoplayer.streamselect.StreamItem
 import net.newpipe.newplayer.ui.videoplayer.streamselect.StreamSelectTopBar
+import net.newpipe.newplayer.ui.videoplayer.streamselect.isActiveChapter
 import net.newpipe.newplayer.utils.ReorderHapticFeedbackType
 import net.newpipe.newplayer.utils.getInsets
 import net.newpipe.newplayer.utils.rememberReorderHapticFeedback
@@ -100,7 +101,12 @@ fun StreamSelectUI(
                                 thumbnail = chapter.thumbnail,
                                 onClicked = {
                                     viewModel.chapterSelected(chapter)
-                                }
+                                },
+                                isCurrentChapter = isActiveChapter(
+                                    chapterIndex,
+                                    uiState.chapters,
+                                    uiState.playbackPositionInMs
+                                )
                             )
                         }
 
@@ -139,7 +145,7 @@ fun ReorderableStreamItemsList(
         verticalArrangement = Arrangement.spacedBy(5.dp),
         state = lazyListState
     ) {
-        itemsIndexed(uiState.playList, key = {_, item -> item.uniqueId}) { index, playlistItem ->
+        itemsIndexed(uiState.playList, key = { _, item -> item.uniqueId }) { index, playlistItem ->
             ReorderableItem(
                 state = reorderableLazyListState,
                 key = playlistItem.uniqueId

@@ -92,7 +92,7 @@ open class VideoPlayerViewModelDummy : VideoPlayerViewModel {
         println("dummy impl stream selected: $streamId")
     }
 
-    override fun cycleRepeatmode() {
+    override fun cycleRepeatMode() {
         println("dummy impl")
     }
 
