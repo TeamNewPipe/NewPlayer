@@ -106,25 +106,28 @@ fun ChapterItem(
         Row {
             val contentDescription = stringResource(R.string.chapter_thumbnail)
             Thumbnail(
+                modifier = Modifier.fillMaxHeight(),
                 thumbnail = thumbnail,
                 contentDescription = contentDescription,
                 shape = ITEM_CORNER_SHAPE
             )
             Column(
                 modifier = Modifier
-                    .padding(start = 8.dp, top = 5.dp, bottom = 5.dp)
+                    .padding(6.dp)
                     .weight(1f),
                 horizontalAlignment = Alignment.Start,
             ) {
                 Text(
                     text = chapterTitle,
-                    fontSize = 18.sp,
+                    fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    maxLines = 1,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     getTimeStringFromMs(chapterStartInMs, locale),
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Light,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )

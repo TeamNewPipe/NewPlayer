@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -133,6 +134,7 @@ fun StreamItem(
             ) {
                 val contentDescription = stringResource(R.string.stream_item_thumbnail)
                 Thumbnail(
+                    modifier = Modifier.fillMaxHeight(),
                     thumbnail = playlistItem.thumbnail,
                     contentDescription = contentDescription,
                     shape = ITEM_CORNER_SHAPE
