@@ -468,7 +468,8 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun streamSelected(streamId: Int) {
-        println("stream selected: $streamId")
+        println("gurken stream selected: $streamId")
+        newPlayer?.selectPlaylistItem(streamId)
     }
 
     override fun cycleRepeatMode() {

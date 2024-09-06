@@ -152,7 +152,7 @@ fun ReorderableStreamItemsList(
             ) { isDragging ->
                 StreamItem(
                     playlistItem = playlistItem,
-                    onClicked = { viewModel.streamSelected(0) },
+                    onClicked = { viewModel.streamSelected(index) },
                     reorderableScope = this@ReorderableItem,
                     haptic = haptic,
                     onDragFinished = viewModel::onStreamItemDragFinished,

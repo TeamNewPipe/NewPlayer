@@ -96,6 +96,7 @@ interface NewPlayer {
     fun removePlaylistItem(index: Int)
     fun playStream(item: String, playMode: PlayMode)
     fun selectChapter(index: Int)
+    fun selectPlaylistItem(index: Int)
     fun playStream(item: String, streamVariant: String, playMode: PlayMode)
 
     data class Builder(val app: Application, val repository: MediaRepository) {
@@ -342,10 +343,17 @@ class NewPlayerImpl(
     override fun selectChapter(index: Int) {
         val chapters = currentChapters.value
         assert(index in 0..<chapters.size) {
-            throw NewPlayerException("Chapter selection out of bound: seleced chapter index: $index, available chapters: ${chapters.size}")
+            throw NewPlayerException("Chapter selection out of bound: selected chapter index: $index, available chapters: ${chapters.size}")
         }
         val chapter = chapters[index]
         currentPosition = chapter.chapterStartInMs
+    }
+
+    override fun selectPlaylistItem(index: Int) {
+        assert(index in 0..<playlist.value.size) {
+            throw NewPlayerException("Playlist item selection out of bound: selected item index: $index, available chapters: ${playlist.value.size}")
+        }
+        internalPlayer.seekTo(index, 0)
     }
 
     private fun internalPlayStream(mediaItem: MediaItem, playMode: PlayMode) {
