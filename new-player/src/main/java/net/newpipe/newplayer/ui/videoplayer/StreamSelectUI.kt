@@ -159,7 +159,7 @@ fun ReorderableStreamItemsList(
                     isDragging = isDragging,
                     isCurrentlyPlaying = playlistItem.uniqueId == uiState.currentlyPlaying.uniqueId,
                     onDelete = {
-                        viewModel.removePlaylistItem(index)
+                        viewModel.removePlaylistItem(playlistItem.uniqueId)
                     }
                 )
             }

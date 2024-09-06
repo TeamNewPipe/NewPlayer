@@ -108,8 +108,8 @@ open class VideoPlayerViewModelDummy : VideoPlayerViewModel {
         println("dummy impl")
     }
 
-    override fun removePlaylistItem(index: Int) {
-        println("dummy impl")
+    override fun removePlaylistItem(uniqueId: Long) {
+        println("dummy impl delete uniqueId: $uniqueId")
     }
 
     override fun onStreamItemDragFinished() {

@@ -62,7 +62,7 @@ interface VideoPlayerViewModel {
     fun toggleShuffle()
     fun onStorePlaylist()
     fun movePlaylistItem(from: Int, to: Int)
-    fun removePlaylistItem(index: Int)
+    fun removePlaylistItem(uniqueId: Long)
     fun onStreamItemDragFinished()
     fun dialogVisible(visible: Boolean)
 }

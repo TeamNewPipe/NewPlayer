@@ -543,8 +543,8 @@ class VideoPlayerViewModelImpl @Inject constructor(
         }
     }
 
-    override fun removePlaylistItem(index: Int) {
-        newPlayer?.removePlaylistItem(index)
+    override fun removePlaylistItem(uniqueId: Long) {
+        newPlayer?.removePlaylistItem(uniqueId)
     }
 
 

@@ -96,7 +96,7 @@ interface NewPlayer {
     fun pause()
     fun addToPlaylist(item: String)
     fun movePlaylistItem(fromIndex: Int, toIndex: Int)
-    fun removePlaylistItem(index: Int)
+    fun removePlaylistItem(uniqueId: Long)
     fun playStream(item: String, playMode: PlayMode)
     fun selectChapter(index: Int)
     fun playStream(item: String, streamVariant: String, playMode: PlayMode)
@@ -338,8 +338,14 @@ class NewPlayerImpl(
         internalPlayer.moveMediaItem(fromIndex, toIndex)
     }
 
-    override fun removePlaylistItem(index: Int) {
-        internalPlayer.removeMediaItem(index)
+    override fun removePlaylistItem(uniqueId: Long) {
+        for(i in 0..<internalPlayer.mediaItemCount) {
+            val id = internalPlayer.getMediaItemAt(i).mediaId.toLong()
+            if(id == uniqueId) {
+                internalPlayer.removeMediaItem(i)
+                break
+            }
+        }
     }
 
     override fun playStream(item: String, playMode: PlayMode) {
