@@ -57,6 +57,7 @@ import net.newpipe.newplayer.ui.seeker.Seeker
 import net.newpipe.newplayer.ui.seeker.SeekerColors
 import net.newpipe.newplayer.ui.seeker.Segment
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
+import net.newpipe.newplayer.utils.getEmbeddedUiConfig
 import net.newpipe.newplayer.utils.getLocale
 import net.newpipe.newplayer.utils.getTimeStringFromMs
 
@@ -86,11 +87,12 @@ fun BottomUI(
 
         Text(getTimeStringFromMs(uiState.durationInMs, getLocale() ?: locale))
 
+        val embeddedUiConfig = getEmbeddedUiConfig(LocalContext.current as Activity)
         IconButton(
             onClick = if (uiState.uiMode.fullscreen) viewModel::switchToEmbeddedView
             else {
                 { // <- head of lambda ... yea kotlin is weird
-                    viewModel.switchToFullscreen()
+                    viewModel.switchToFullscreen(embeddedUiConfig)
                 }
             }
         ) {

@@ -95,6 +95,7 @@ fun VideoPlayerUI(
 
         // Setup fullscreen
 
+
         LaunchedEffect(uiState.uiMode.fullscreen) {
             if (uiState.uiMode.fullscreen) {
                 WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
