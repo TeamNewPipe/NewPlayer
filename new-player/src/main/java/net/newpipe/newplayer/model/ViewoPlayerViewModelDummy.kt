@@ -84,8 +84,8 @@ open class VideoPlayerViewModelDummy : VideoPlayerViewModel {
         println("dummy impl")
     }
 
-    override fun chapterSelected(chapter: Chapter) {
-        println("dummp impl chapter selected: $chapter")
+    override fun chapterSelected(chapterId: Int) {
+        println("dummp impl chapter selected: $chapterId")
     }
 
     override fun streamSelected(streamId: Int) {

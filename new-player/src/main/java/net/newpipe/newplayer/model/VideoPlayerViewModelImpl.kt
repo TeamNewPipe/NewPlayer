@@ -463,8 +463,8 @@ class VideoPlayerViewModelImpl @Inject constructor(
         updateUiMode(UIModeState.FULLSCREEN_VIDEO)
     }
 
-    override fun chapterSelected(chapter: Chapter) {
-        println("gurken chapter selectd: $chapter")
+    override fun chapterSelected(chapterId: Int) {
+        newPlayer?.selectChapter(chapterId)
     }
 
     override fun streamSelected(streamId: Int) {

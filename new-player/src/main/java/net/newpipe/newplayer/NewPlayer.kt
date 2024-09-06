@@ -95,6 +95,7 @@ interface NewPlayer {
     fun movePlaylistItem(fromIndex: Int, toIndex: Int)
     fun removePlaylistItem(index: Int)
     fun playStream(item: String, playMode: PlayMode)
+    fun selectChapter(index: Int)
     fun playStream(item: String, streamVariant: String, playMode: PlayMode)
 
     data class Builder(val app: Application, val repository: MediaRepository) {
@@ -208,7 +209,6 @@ class NewPlayerImpl(
     override val currentChapters: StateFlow<List<Chapter>> = mutableCurrentChapter.asStateFlow()
 
     init {
-        println("gurken init")
         internalPlayer.addListener(object : Player.Listener {
             override fun onPlayerError(error: PlaybackException) {
                 launchJobAndCollectError {
@@ -339,6 +339,14 @@ class NewPlayerImpl(
         }
     }
 
+    override fun selectChapter(index: Int) {
+        val chapters = currentChapters.value
+        assert(index in 0..<chapters.size) {
+            throw NewPlayerException("Chapter selection out of bound: seleced chapter index: $index, available chapters: ${chapters.size}")
+        }
+        val chapter = chapters[index]
+        currentPosition = chapter.chapterStartInMs
+    }
 
     private fun internalPlayStream(mediaItem: MediaItem, playMode: PlayMode) {
         if (internalPlayer.playbackState == Player.STATE_IDLE) {

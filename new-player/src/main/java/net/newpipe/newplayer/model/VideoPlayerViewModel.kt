@@ -56,7 +56,7 @@ interface VideoPlayerViewModel {
     fun volumeChange(changeRate: Float)
     fun openStreamSelection(selectChapter: Boolean, embeddedUiConfig: EmbeddedUiConfig)
     fun closeStreamSelection()
-    fun chapterSelected(chapter: Chapter)
+    fun chapterSelected(chapterId: Int)
     fun streamSelected(streamId: Int)
     fun cycleRepeatMode()
     fun toggleShuffle()

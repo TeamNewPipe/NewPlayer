@@ -100,7 +100,7 @@ fun StreamSelectUI(
                                 chapterStartInMs = chapter.chapterStartInMs,
                                 thumbnail = chapter.thumbnail,
                                 onClicked = {
-                                    viewModel.chapterSelected(chapter)
+                                    viewModel.chapterSelected(chapterIndex)
                                 },
                                 isCurrentChapter = isActiveChapter(
                                     chapterIndex,
