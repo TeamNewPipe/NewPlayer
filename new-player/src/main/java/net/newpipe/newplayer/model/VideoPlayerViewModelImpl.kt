@@ -30,7 +30,6 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -70,7 +69,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     private var uiVisibilityJob: Job? = null
     private var progressUpdaterJob: Job? = null
-    private var playlistProgressUpdatrJob: Job? = null
+    private var playlistProgressUpdaterJob: Job? = null
 
     // this is necesary to restore the embedded view UI configuration when returning from fullscreen
     private var embeddedUiConfig: EmbeddedUiConfig? = null
@@ -328,8 +327,8 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     private fun resetPlaylistProgressUpdaterJob() {
-        playlistProgressUpdatrJob?.cancel()
-        playlistProgressUpdatrJob = viewModelScope.launch {
+        playlistProgressUpdaterJob?.cancel()
+        playlistProgressUpdaterJob = viewModelScope.launch {
             while (true) {
                 updateProgressInPlaylistOnce()
                 delay(1000)
@@ -450,7 +449,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun closeStreamSelection() {
-        playlistProgressUpdatrJob?.cancel()
+        playlistProgressUpdaterJob?.cancel()
         progressUpdaterJob?.cancel()
         updateUiMode(uiState.value.uiMode.getUiHiddenState())
     }

@@ -70,7 +70,7 @@ fun CenterUI(
         Box(modifier = Modifier.size(80.dp)) {
             androidx.compose.animation.AnimatedVisibility(
                 uiState.currentPlaylistItemIndex != 0,
-                enter = fadeIn(animationSpec = tween(200)),
+                enter = fadeIn(animationSpec = tween(400)),
                 exit = fadeOut(animationSpec = tween(400))
 
             ) {
@@ -97,7 +97,7 @@ fun CenterUI(
         Box(modifier = Modifier.size(80.dp)) {
             androidx.compose.animation.AnimatedVisibility(
                 uiState.currentPlaylistItemIndex < uiState.playList.size - 1,
-                enter = fadeIn(animationSpec = tween(200)),
+                enter = fadeIn(animationSpec = tween(400)),
                 exit = fadeOut(animationSpec = tween(400))
             ) {
                 CenterControllButton(
