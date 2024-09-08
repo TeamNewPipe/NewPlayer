@@ -84,10 +84,8 @@ internal fun chapterSegmentToPxValues(
 ): List<SegmentPxs> {
 
     val rangeSize = range.endInclusive - range.start
-    val sortedSegments = ArrayList(segments.distinct().sortedBy { it.start })
-    if(sortedSegments.isNotEmpty()) {
-        sortedSegments.removeAt(0)
-    }
+    val sortedSegments = segments.distinct().sortedBy { it.start }
+
     val segmentStartPxs = sortedSegments.map { segment ->
 
         // percent of the start of this segment in the range size

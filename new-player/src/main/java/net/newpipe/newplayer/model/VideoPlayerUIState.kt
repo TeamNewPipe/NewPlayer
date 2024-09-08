@@ -83,7 +83,7 @@ data class VideoPlayerUIState(
             isLoading = false,
             durationInMs = 12000,
             playbackPositionInPlaylistS = 5039,
-            playbackPositionInMs = 69,
+            playbackPositionInMs = 400,
             fastSeekSeconds = 10,
             soundVolume = 0.5f,
             brightness = 0.2f,

@@ -20,6 +20,7 @@
 
 package net.newpipe.newplayer.model
 
+import android.content.pm.ActivityInfo
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
@@ -31,4 +32,12 @@ data class EmbeddedUiConfig(
     val systemBarInLightMode: Boolean,
     val brightness: Float,
     val screenOrientation: Int
-) : Parcelable
+) : Parcelable {
+    companion object {
+        val DUMMY = EmbeddedUiConfig(
+            systemBarInLightMode = true,
+            brightness = -1f,
+            screenOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        )
+    }
+}

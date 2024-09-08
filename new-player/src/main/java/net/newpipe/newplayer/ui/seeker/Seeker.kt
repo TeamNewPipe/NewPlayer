@@ -388,7 +388,6 @@ private fun Track(
                 )
             }
 
-            // clear segment gaps
             for (index in chapterSegments.indices) {
                 val segment = chapterSegments[index]
                 drawDot(

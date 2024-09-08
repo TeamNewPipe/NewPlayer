@@ -47,6 +47,7 @@ import androidx.core.os.ConfigurationCompat
 import androidx.lifecycle.viewModelScope
 import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.R
+import net.newpipe.newplayer.model.EmbeddedUiConfig
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.model.VideoPlayerUIState
 import net.newpipe.newplayer.model.VideoPlayerViewModel
@@ -87,7 +88,11 @@ fun BottomUI(
 
         Text(getTimeStringFromMs(uiState.durationInMs, getLocale() ?: locale))
 
-        val embeddedUiConfig = getEmbeddedUiConfig(LocalContext.current as Activity)
+        val embeddedUiConfig = when (LocalContext.current) {
+            is Activity -> getEmbeddedUiConfig(LocalContext.current as Activity)
+            else -> EmbeddedUiConfig.DUMMY
+        }
+
         IconButton(
             onClick = if (uiState.uiMode.fullscreen) viewModel::switchToEmbeddedView
             else {
@@ -105,6 +110,7 @@ fun BottomUI(
     }
 }
 
+
 @Composable
 private fun customizedSeekerColors(): SeekerColors {
     val colors = DefaultSeekerColor(
@@ -120,18 +126,22 @@ private fun customizedSeekerColors(): SeekerColors {
 }
 
 private fun getSeekerSegmentsFromChapters(chapters: List<Chapter>, duration: Long) =
-    chapters.map { chapter ->
-        val markPosition = chapter.chapterStartInMs.toFloat() / duration.toFloat()
-        if (markPosition < 0f || 1f < markPosition) {
-            Log.e(
-                TAG,
-                "Chapter mark outside of stream duration range: chapter: ${chapter.chapterTitle}, mark in ms: ${chapter.chapterStartInMs}, vidoe duration in ms: ${duration}"
-            )
-            ChapterSegment(name = chapter.chapterTitle ?: "", start = 0f)
-        } else {
+    chapters
+        .filter { chapter ->
+            if (chapter.chapterStartInMs in 1..<duration) {
+                true
+            } else {
+                Log.e(
+                    TAG,
+                    "Chapter mark outside of stream duration range: chapter: ${chapter.chapterTitle}, mark in ms: ${chapter.chapterStartInMs}, video duration in ms: ${duration}"
+                )
+                false
+            }
+        }
+        .map { chapter ->
+            val markPosition = chapter.chapterStartInMs.toFloat() / duration.toFloat()
             ChapterSegment(name = chapter.chapterTitle ?: "", start = markPosition)
         }
-    }
 
 
 ///////////////////////////////////////////////////////////////////
@@ -148,8 +158,7 @@ fun VideoPlayerControllerBottomUIPreview() {
                 viewModel = VideoPlayerViewModelDummy(),
                 uiState = VideoPlayerUIState.DUMMY.copy(
                     uiMode = UIModeState.FULLSCREEN_VIDEO_CONTROLLER_UI,
-                    seekerPosition = 0.4f,
-                    durationInMs = 90 * 60 * 1000,
+                    seekerPosition = 0.2f,
                     playbackPositionInMs = 3 * 60 * 1000,
                     bufferedPercentage = 0.4f
                 ),
