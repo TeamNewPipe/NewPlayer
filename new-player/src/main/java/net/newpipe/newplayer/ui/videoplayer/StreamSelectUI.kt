@@ -41,8 +41,7 @@ import net.newpipe.newplayer.model.VideoPlayerUIState
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.Chapter
-import net.newpipe.newplayer.playerInternals.PlaylistItem
+import net.newpipe.newplayer.model.PlaylistItem
 import net.newpipe.newplayer.ui.STREAMSELECT_UI_BACKGROUND_COLOR
 import net.newpipe.newplayer.ui.videoplayer.streamselect.ChapterItem
 import net.newpipe.newplayer.ui.videoplayer.streamselect.ChapterSelectTopBar

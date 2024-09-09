@@ -47,7 +47,7 @@ import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.model.VideoPlayerUIState
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
-import net.newpipe.newplayer.playerInternals.getPlaylistDurationInS
+import net.newpipe.newplayer.model.getPlaylistDurationInS
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.utils.getLocale
 import net.newpipe.newplayer.utils.getTimeStringFromMs

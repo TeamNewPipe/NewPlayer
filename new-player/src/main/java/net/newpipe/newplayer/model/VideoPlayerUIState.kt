@@ -22,7 +22,6 @@ package net.newpipe.newplayer.model
 
 import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.RepeatMode
-import net.newpipe.newplayer.playerInternals.PlaylistItem
 import net.newpipe.newplayer.ui.ContentScale
 
 data class VideoPlayerUIState(

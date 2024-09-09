@@ -44,6 +44,7 @@ newplayer = "master-SNAPSHOT"
 okhttpAndroid = "5.0.0-alpha.14"
 coil = "2.7.0"
 reorderable = "2.4.0-alpha02"
+media3Session = "1.4.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -79,6 +80,7 @@ newplayer = { group = "com.github.theScrabi.NewPlayer", name = "new-player", ver
 okhttp-android = { group = "com.squareup.okhttp3", name = "okhttp-android", version.ref = "okhttpAndroid" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 reorderable = { group = "sh.calvin.reorderable", name = "reorderable", version.ref = "reorderable" }
+androidx-media3-session = { group = "androidx.media3", name = "media3-session", version.ref = "media3Session" }
 
 
 

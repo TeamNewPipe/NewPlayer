@@ -68,6 +68,7 @@ dependencies {
     implementation(libs.androidx.media3.common)
     implementation(libs.coil.compose)
     implementation(libs.reorderable)
+    implementation(libs.androidx.media3.session)
 
     ksp(libs.hilt.android.compiler)
     ksp(libs.androidx.hilt.compiler)

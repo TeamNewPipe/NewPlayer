@@ -19,9 +19,8 @@
  *
  */
 
-package net.newpipe.newplayer.playerInternals
+package net.newpipe.newplayer.model
 
-import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
@@ -29,7 +28,6 @@ import net.newpipe.newplayer.MediaRepository
 import net.newpipe.newplayer.NewPlayerException
 import net.newpipe.newplayer.utils.Thumbnail
 import kotlin.coroutines.coroutineContext
-import kotlin.random.Random
 
 data class PlaylistItem(
     val title: String,

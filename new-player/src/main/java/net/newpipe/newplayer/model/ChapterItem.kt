@@ -21,7 +21,7 @@
 
 
 
-package net.newpipe.newplayer.playerInternals
+package net.newpipe.newplayer.model
 
 import net.newpipe.newplayer.utils.Thumbnail
 
