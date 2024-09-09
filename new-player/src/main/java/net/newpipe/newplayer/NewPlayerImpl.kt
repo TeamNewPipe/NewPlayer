@@ -43,9 +43,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import net.newpipe.newplayer.model.PlaylistItem
-import net.newpipe.newplayer.model.fetchPlaylistItem
-import net.newpipe.newplayer.model.getPlaylistItemsFromExoplayer
 import net.newpipe.newplayer.service.NewPlayerService
 import kotlin.random.Random
 
@@ -116,12 +113,12 @@ class NewPlayerImpl(
     override val duration: Long
         get() = internalPlayer.duration
 
-    private val mutablePlaylist = MutableStateFlow<List<PlaylistItem>>(emptyList())
-    override val playlist: StateFlow<List<PlaylistItem>> =
+    private val mutablePlaylist = MutableStateFlow<List<MediaItem>>(emptyList())
+    override val playlist: StateFlow<List<MediaItem>> =
         mutablePlaylist.asStateFlow()
 
-    private val mutableCurrentlyPlaying = MutableStateFlow<PlaylistItem?>(null)
-    override val currentlyPlaying: StateFlow<PlaylistItem?> = mutableCurrentlyPlaying.asStateFlow()
+    private val mutableCurrentlyPlaying = MutableStateFlow<MediaItem?>(null)
+    override val currentlyPlaying: StateFlow<MediaItem?> = mutableCurrentlyPlaying.asStateFlow()
 
     private val mutableCurrentChapter = MutableStateFlow<List<Chapter>>(emptyList())
     override val currentChapters: StateFlow<List<Chapter>> = mutableCurrentChapter.asStateFlow()
@@ -157,29 +154,16 @@ class NewPlayerImpl(
             }
 
             override fun onTimelineChanged(timeline: Timeline, reason: Int) {
-                super.onTimelineChanged(timeline, reason)
-                updatePlaylistItems()
+                mutablePlaylist.update {
+                    (0..<internalPlayer.mediaItemCount).map {
+                        internalPlayer.getMediaItemAt(it)
+                    }
+                }
             }
 
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                 super.onMediaItemTransition(mediaItem, reason)
-                mediaItem?.let {
-                    val playlistItem = getPlaylistItem(mediaItem.mediaId.toLong())
-                    if (playlistItem != null) {
-                        mutableCurrentlyPlaying.update {
-                            playlistItem
-                        }
-                    } else {
-                        launchJobAndCollectError {
-                            val item = fetchPlaylistItem(
-                                uniqueId = mediaItem.mediaId.toLong(),
-                                mediaRepo = repository,
-                                idLookupTable = uniqueIdToIdLookup
-                            )
-                            mutableCurrentlyPlaying.update { item }
-                        }
-                    }
-                }
+                mutableCurrentlyPlaying.update { mediaItem }
             }
         })
 
@@ -187,7 +171,8 @@ class NewPlayerImpl(
             currentlyPlaying.collect { playing ->
                 playing?.let {
                     try {
-                        val chapters = repository.getChapters(playing.id)
+                        val chapters =
+                            repository.getChapters(uniqueIdToIdLookup[playing.mediaId.toLong()]!!)
                         mutableCurrentChapter.update { chapters }
                     } catch (e: Exception) {
                         mutableErrorFlow.emit(e)
@@ -195,35 +180,6 @@ class NewPlayerImpl(
                 }
             }
         }
-    }
-
-    private fun updatePlaylistItems() {
-        if (internalPlayer.mediaItemCount == 0) {
-            playBackMode.update {
-                PlayMode.IDLE
-            }
-        }
-        playerScope.launch {
-            val playlist =
-                getPlaylistItemsFromExoplayer(internalPlayer, repository, uniqueIdToIdLookup)
-            var playlistDuration = 0
-            for (item in playlist) {
-                playlistDuration += item.lengthInS
-            }
-
-            mutablePlaylist.update {
-                playlist
-            }
-        }
-    }
-
-    private fun getPlaylistItem(uniqueId: Long): PlaylistItem? {
-        for (item in playlist.value) {
-            if (item.uniqueId == uniqueId) {
-                return item
-            }
-        }
-        return null
     }
 
     override fun prepare() {
@@ -309,10 +265,21 @@ class NewPlayerImpl(
 
     private suspend fun toMediaItem(item: String, streamVariant: String): MediaItem {
         val dataStream = repository.getStream(item, streamVariant)
+
         val uniqueId = Random.nextLong()
         uniqueIdToIdLookup[uniqueId] = item
-        val mediaItem = MediaItem.Builder().setMediaId(uniqueId.toString()).setUri(dataStream)
-        return mediaItem.build()
+        val mediaItemBuilder = MediaItem.Builder()
+            .setMediaId(uniqueId.toString())
+            .setUri(dataStream)
+
+        try {
+            val metadata = repository.getMetaInfo(item)
+            mediaItemBuilder.setMediaMetadata(metadata)
+        } catch (e: Exception) {
+            mutableErrorFlow.emit(e)
+        }
+
+        return mediaItemBuilder.build()
     }
 
     private suspend fun toMediaItem(item: String): MediaItem {

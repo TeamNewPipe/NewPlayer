@@ -59,8 +59,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.media3.common.MediaItem
+import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
-import net.newpipe.newplayer.model.PlaylistItem
+import net.newpipe.newplayer.model.VideoPlayerUIState
 import net.newpipe.newplayer.ui.CONTROLLER_UI_BACKGROUND_COLOR
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.ITEM_CORNER_SHAPE
@@ -71,11 +73,12 @@ import net.newpipe.newplayer.utils.getLocale
 import net.newpipe.newplayer.utils.getTimeStringFromMs
 import sh.calvin.reorderable.ReorderableCollectionItemScope
 
+@androidx.annotation.OptIn(UnstableApi::class)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StreamItem(
     modifier: Modifier = Modifier,
-    playlistItem: PlaylistItem,
+    playlistItem: MediaItem,
     onClicked: (Long) -> Unit,
     onDragFinished: () -> Unit,
     onDelete: () -> Unit,
@@ -113,7 +116,7 @@ fun StreamItem(
             .fillMaxSize()
             .clip(ITEM_CORNER_SHAPE)
             .clickable {
-                onClicked(playlistItem.uniqueId)
+                onClicked(playlistItem.mediaId.toLong())
             }) {
 
             androidx.compose.animation.AnimatedVisibility(
@@ -152,7 +155,7 @@ fun StreamItem(
                     val contentDescription = stringResource(R.string.stream_item_thumbnail)
                     Thumbnail(
                         modifier = Modifier.fillMaxHeight(),
-                        thumbnail = playlistItem.thumbnail,
+                        thumbnail = playlistItem.mediaMetadata.artworkUri,
                         contentDescription = contentDescription,
                         shape = ITEM_CORNER_SHAPE
                     )
@@ -172,7 +175,7 @@ fun StreamItem(
                                 bottom = 0.5.dp
                             ),
                             text = getTimeStringFromMs(
-                                playlistItem.lengthInS * 1000L,
+                                playlistItem.mediaMetadata.durationMs ?: 0L,
                                 locale,
                                 leadingZerosForMinutes = false
                             ),
@@ -189,14 +192,14 @@ fun StreamItem(
                         .fillMaxWidth()
                 ) {
                     Text(
-                        text = playlistItem.title,
+                        text = playlistItem.mediaMetadata.title.toString(),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = playlistItem.creator,
+                        text = playlistItem.mediaMetadata.artist.toString(),
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Light,
                         maxLines = 1,
@@ -238,6 +241,7 @@ fun StreamItem(
 }
 
 
+@androidx.annotation.OptIn(UnstableApi::class)
 @Preview(device = "spec:width=1080px,height=400px,dpi=440,orientation=landscape")
 @Composable
 fun StreamItemPreview() {
@@ -245,7 +249,7 @@ fun StreamItemPreview() {
         Surface(modifier = Modifier.fillMaxSize(), color = Color.DarkGray) {
             Box(modifier = Modifier.fillMaxSize()) {
                 StreamItem(
-                    playlistItem = PlaylistItem.DUMMY,
+                    playlistItem = VideoPlayerUIState.DUMMY.currentlyPlaying!!,
                     onClicked = {},
                     reorderableScope = null,
                     haptic = null,

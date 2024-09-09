@@ -21,29 +21,14 @@
 package net.newpipe.newplayer
 
 import android.app.Application
-import android.util.Log
 import androidx.media3.common.MediaItem
-import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
-import androidx.media3.common.Timeline
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.MediaSource
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import net.newpipe.newplayer.model.PlaylistItem
-import net.newpipe.newplayer.model.fetchPlaylistItem
-import net.newpipe.newplayer.model.getPlaylistItemsFromExoplayer
 import kotlin.Exception
-import kotlin.random.Random
 
 enum class PlayMode {
     IDLE,
@@ -74,8 +59,8 @@ interface NewPlayer {
     var shuffle: Boolean
     var repeatMode: RepeatMode
 
-    val playlist: StateFlow<List<PlaylistItem>>
-    val currentlyPlaying: StateFlow<PlaylistItem?>
+    val playlist: StateFlow<List<MediaItem>>
+    val currentlyPlaying: StateFlow<MediaItem?>
     var currentlyPlayingPlaylistItem: Int
 
     val currentChapters: StateFlow<List<Chapter>>

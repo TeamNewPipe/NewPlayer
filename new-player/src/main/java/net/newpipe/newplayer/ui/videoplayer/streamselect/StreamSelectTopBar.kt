@@ -42,16 +42,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.model.VideoPlayerUIState
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
-import net.newpipe.newplayer.model.getPlaylistDurationInS
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.utils.getLocale
+import net.newpipe.newplayer.utils.getPlaylistDurationInMS
 import net.newpipe.newplayer.utils.getTimeStringFromMs
 
+@androidx.annotation.OptIn(UnstableApi::class)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StreamSelectTopBar(
@@ -64,7 +66,7 @@ fun StreamSelectTopBar(
         colors = topAppBarColors(containerColor = Color.Transparent),
         title = {
             val locale = getLocale()!!
-            val duration = getPlaylistDurationInS(uiState.playList).toLong() * 1000
+            val duration = getPlaylistDurationInMS(uiState.playList)
             val durationString = getTimeStringFromMs(timeSpanInMs = duration, locale)
             val playbackPositionString = getTimeStringFromMs(
                 timeSpanInMs = uiState.playbackPositionInPlaylistS.toLong() * 1000, locale = locale
@@ -133,6 +135,7 @@ fun StreamSelectTopBar(
 }
 
 
+@androidx.annotation.OptIn(UnstableApi::class)
 @Preview(device = "spec:width=1080px,height=150px,dpi=440,orientation=landscape")
 @Composable
 fun StreamSelectTopBarPreview() {

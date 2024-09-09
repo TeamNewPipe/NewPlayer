@@ -22,6 +22,7 @@
 package net.newpipe.newplayer.model
 
 import android.net.Uri
+import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
@@ -30,90 +31,3 @@ import net.newpipe.newplayer.NewPlayerException
 import net.newpipe.newplayer.utils.Thumbnail
 import kotlin.coroutines.coroutineContext
 
-data class PlaylistItem(
-    val title: String,
-    val creator: String,
-    val id: String,
-    val uniqueId: Long,
-    val thumbnail: Uri?,
-    val lengthInS: Int
-) {
-    companion object {
-        val DEFAULT = PlaylistItem(
-            title = "",
-            creator = "",
-            id = "",
-            uniqueId = -1L,
-            thumbnail = null,
-            lengthInS = 0
-        )
-
-        val DUMMY = PlaylistItem(
-            title = "Superawesome Video",
-            creator = "Yours truely",
-            id = "some_id",
-            uniqueId = 12345L,
-            thumbnail = null,
-            lengthInS = 420
-        )
-    }
-}
-
-suspend fun fetchPlaylistItem(
-    uniqueId: Long,
-    mediaRepo: MediaRepository,
-    idLookupTable: HashMap<Long, String>
-) : PlaylistItem {
-    val id = idLookupTable[uniqueId]
-        ?: throw NewPlayerException("Unknown uniqueId: $uniqueId, uniqueId Id mapping error. Something went wrong during datafetching.")
-    val metaInfo = mediaRepo.getMetaInfo(id)
-
-    return PlaylistItem(
-        title = metaInfo.title,
-        creator = metaInfo.channelName,
-        id = id,
-        thumbnail = metaInfo.thumbnail,
-        lengthInS = metaInfo.lengthInS,
-        uniqueId = uniqueId
-    )
-}
-
-
-suspend fun getPlaylistItemsFromExoplayer(
-    player: Player,
-    mediaRepo: MediaRepository,
-    idLookupTable: HashMap<Long, String>
-) =
-    with(CoroutineScope(coroutineContext)) {
-        (0..<player.mediaItemCount).map { index ->
-            val mediaItem = player.getMediaItemAt(index)
-            val uniqueId = mediaItem.mediaId.toLong()
-            val id = idLookupTable.get(uniqueId)
-                ?: throw NewPlayerException("Unknown uniqueId: $uniqueId, uniqueId Id mapping error. Something went wrong during datafetching.")
-            Pair(uniqueId, id)
-        }.map { item ->
-            Pair(item, async {
-                mediaRepo.getMetaInfo(item.second)
-            })
-        }.map {
-            val uniqueId = it.first.first
-            val id = it.first.second
-            val metaInfo = it.second.await()
-            PlaylistItem(
-                title = metaInfo.title,
-                creator = metaInfo.channelName,
-                id = id,
-                thumbnail = metaInfo.thumbnail,
-                lengthInS = metaInfo.lengthInS,
-                uniqueId = uniqueId
-            )
-        }
-    }
-
-fun getPlaylistDurationInS(items: List<PlaylistItem>): Int {
-    var duration = 0
-    for (item in items) {
-        duration += item.lengthInS
-    }
-    return duration
-}

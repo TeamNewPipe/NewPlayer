@@ -21,22 +21,15 @@
 package net.newpipe.newplayer
 
 import android.net.Uri
+import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
 import net.newpipe.newplayer.utils.Thumbnail
 
 data class Chapter(val chapterStartInMs: Long, val chapterTitle: String?, val thumbnail: Uri?)
 
-data class MetaInfo(
-    val title: String,
-    val channelName: String,
-    val thumbnail: Uri?,
-    val lengthInS: Int
-)
-
-
 interface MediaRepository {
 
-    suspend fun getMetaInfo(item: String): MetaInfo
+    suspend fun getMetaInfo(item: String): MediaMetadata
 
     suspend fun getAvailableStreamVariants(item: String): List<String>
     suspend fun getStream(item: String, streamSelector: String): Uri

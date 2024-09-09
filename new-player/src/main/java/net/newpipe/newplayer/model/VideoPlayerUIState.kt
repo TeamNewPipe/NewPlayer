@@ -20,10 +20,38 @@
 
 package net.newpipe.newplayer.model
 
+import android.net.Uri
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
+import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.ui.ContentScale
 
+data class GurkenItem(
+    val title: String,
+    val creator: String,
+    val id: String,
+    val uniqueId: Long,
+    val thumbnail: Uri?,
+    val lengthInS: Int
+) {
+    companion object {
+        val DEFAULT = GurkenItem(
+            title = "",
+            creator = "",
+            id = "",
+            uniqueId = -1L,
+            thumbnail = null,
+            lengthInS = 0
+        )
+
+
+    }
+}
+
+
+@UnstableApi
 data class VideoPlayerUIState(
     val uiMode: UIModeState,
     val playing: Boolean,
@@ -40,12 +68,12 @@ data class VideoPlayerUIState(
     val soundVolume: Float,
     val brightness: Float?,     // when null use system value
     val embeddedUiConfig: EmbeddedUiConfig?,
-    val playList: List<PlaylistItem>,
+    val playList: List<MediaItem>,
     val chapters: List<Chapter>,
     val shuffleEnabled: Boolean,
     val repeatMode: RepeatMode,
     val playListDurationInS: Int,
-    val currentlyPlaying: PlaylistItem,
+    val currentlyPlaying: MediaItem?,
     val currentPlaylistItemIndex: Int
 ) {
     companion object {
@@ -70,7 +98,7 @@ data class VideoPlayerUIState(
             shuffleEnabled = false,
             repeatMode = RepeatMode.DONT_REPEAT,
             playListDurationInS = 0,
-            currentlyPlaying = PlaylistItem.DEFAULT,
+            currentlyPlaying = null,
             currentPlaylistItemIndex = 0
         )
 
@@ -88,7 +116,16 @@ data class VideoPlayerUIState(
             brightness = 0.2f,
             shuffleEnabled = true,
             playListDurationInS = 5493,
-            currentlyPlaying = PlaylistItem.DUMMY,
+            currentlyPlaying = MediaItem.Builder()
+                .setUri("https://ftp.fau.de/cdn.media.ccc.de/congress/2010/mp4-h264-HQ/27c3-4159-en-reverse_engineering_mos_6502.mp4")
+                .setMediaId("0")
+                .setMediaMetadata(MediaMetadata.Builder()
+                    .setTitle("Superawesome Video")
+                    .setArtist("Yours truely")
+                    .setArtworkUri(null)
+                    .setDurationMs(4201000L)
+                    .build())
+                .build(),
             currentPlaylistItemIndex = 1,
             chapters = arrayListOf(
                 Chapter(
@@ -108,30 +145,36 @@ data class VideoPlayerUIState(
                 ),
             ),
             playList = arrayListOf(
-                PlaylistItem(
-                    id = "6502",
-                    title = "Stream 1",
-                    creator = "The Creator",
-                    lengthInS = 6 * 60 + 5,
-                    thumbnail = null,
-                    uniqueId = 0
-                ),
-                PlaylistItem(
-                    id = "6502",
-                    title = "Stream 2",
-                    creator = "The Creator 2",
-                    lengthInS = 2 * 60 + 5,
-                    thumbnail = null,
-                    uniqueId = 1
-                ),
-                PlaylistItem(
-                    id = "6502",
-                    title = "Stream 3",
-                    creator = "The Creator 3",
-                    lengthInS = 29 * 60 + 5,
-                    thumbnail = null,
-                    uniqueId = 2
-                )
+                MediaItem.Builder()
+                    .setUri("https://ftp.fau.de/cdn.media.ccc.de/congress/2010/mp4-h264-HQ/27c3-4159-en-reverse_engineering_mos_6502.mp4")
+                    .setMediaId("0")
+                    .setMediaMetadata(MediaMetadata.Builder()
+                        .setTitle("Stream 1")
+                        .setArtist("Yours truely")
+                        .setArtworkUri(null)
+                        .setDurationMs(4201000L)
+                        .build())
+                    .build(),
+                MediaItem.Builder()
+                    .setUri("https://ftp.fau.de/cdn.media.ccc.de/congress/2010/mp4-h264-HQ/27c3-4159-en-reverse_engineering_mos_6502.mp4")
+                    .setMediaId("1")
+                    .setMediaMetadata(MediaMetadata.Builder()
+                        .setTitle("Stream 2")
+                        .setArtist("Yours truely")
+                        .setArtworkUri(null)
+                        .setDurationMs(3201000L)
+                        .build())
+                    .build(),
+                MediaItem.Builder()
+                    .setUri("https://ftp.fau.de/cdn.media.ccc.de/congress/2010/mp4-h264-HQ/27c3-4159-en-reverse_engineering_mos_6502.mp4")
+                    .setMediaId("2")
+                    .setMediaMetadata(MediaMetadata.Builder()
+                        .setTitle("Stream 3")
+                        .setArtist("Yours truely")
+                        .setArtworkUri(null)
+                        .setDurationMs(2201000L)
+                        .build())
+                    .build(),
             )
         )
     }

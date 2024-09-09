@@ -27,6 +27,8 @@ import android.content.ContextWrapper
 import android.graphics.drawable.shapes.Shape
 import android.net.Uri
 import android.view.WindowManager
+import androidx.annotation.OptIn
+import androidx.compose.animation.core.withInfiniteAnimationFrameMillis
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
@@ -47,7 +49,10 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.core.os.ConfigurationCompat
 import androidx.core.view.WindowCompat
+import androidx.media3.common.MediaItem
+import androidx.media3.common.util.UnstableApi
 import coil.compose.AsyncImage
+import net.newpipe.newplayer.NewPlayerException
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.EmbeddedUiConfig
 import java.util.Locale
@@ -177,4 +182,15 @@ fun Thumbnail(
             contentDescription = contentDescription
         )
     }
+}
+
+@OptIn(UnstableApi::class)
+fun getPlaylistDurationInMS(playlist: List<MediaItem>) : Long {
+    var duration = 0L
+    for(item in playlist) {
+        val itemDuration = item.mediaMetadata.durationMs ?:
+            throw NewPlayerException("Can not calculate duration of a playlist if an item does not have a duration: MediItem in question: ${item.mediaMetadata.title}")
+        duration += itemDuration
+    }
+    return duration
 }

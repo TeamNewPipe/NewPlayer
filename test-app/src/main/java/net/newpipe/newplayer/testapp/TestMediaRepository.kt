@@ -2,11 +2,12 @@ package net.newpipe.newplayer.testapp
 
 import android.content.Context
 import android.net.Uri
+import androidx.annotation.OptIn
+import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
+import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.MediaRepository
-import net.newpipe.newplayer.MetaInfo
-import net.newpipe.newplayer.utils.Thumbnail
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -21,28 +22,35 @@ class TestMediaRepository(val context: Context) : MediaRepository {
         return client.newCall(request).execute()
     }
 
-    override suspend fun getMetaInfo(item: String) =
+    @OptIn(UnstableApi::class)
+    override suspend fun getMetaInfo(item: String): MediaMetadata =
         when (item) {
-            "6502" -> MetaInfo(
-                title = context.getString(R.string.ccc_6502_title),
-                channelName = context.getString(R.string.ccc_6502_channel),
-                thumbnail = Uri.parse(context.getString(R.string.ccc_6502_thumbnail)),
-                lengthInS = context.resources.getInteger(R.integer.ccc_6502_length)
-            )
+            "6502" -> MediaMetadata.Builder()
+                .setTitle(context.getString(R.string.ccc_6502_title))
+                .setArtist(context.getString(R.string.ccc_6502_channel))
+                .setArtworkUri(Uri.parse(context.getString(R.string.ccc_6502_thumbnail)))
+                .setDurationMs(
+                    context.resources.getInteger(R.integer.ccc_6502_length).toLong() * 1000L
+                )
+                .build()
 
-            "imu" -> MetaInfo(
-                title = context.getString(R.string.ccc_imu_title),
-                channelName = context.getString(R.string.ccc_imu_channel),
-                thumbnail = Uri.parse(context.getString(R.string.ccc_imu_thumbnail)),
-                lengthInS = context.resources.getInteger(R.integer.ccc_imu_length)
-            )
+            "imu" -> MediaMetadata.Builder()
+                .setTitle(context.getString(R.string.ccc_imu_title))
+                .setArtist(context.getString(R.string.ccc_imu_channel))
+                .setArtworkUri(Uri.parse(context.getString(R.string.ccc_imu_thumbnail)))
+                .setDurationMs(
+                    context.resources.getInteger(R.integer.ccc_imu_length).toLong() * 1000L
+                )
+                .build()
 
-            "portrait" -> MetaInfo(
-                title = context.getString(R.string.portrait_title),
-                channelName = context.getString(R.string.portrait_channel),
-                thumbnail = null,
-                lengthInS = context.resources.getInteger(R.integer.portrait_length)
-            )
+            "portrait" -> MediaMetadata.Builder()
+                .setTitle(context.getString(R.string.portrait_title))
+                .setArtist(context.getString(R.string.portrait_channel))
+                .setArtworkUri(null)
+                .setDurationMs(
+                    context.resources.getInteger(R.integer.portrait_length).toLong() * 1000L
+                )
+                .build()
 
             else -> throw Exception("Unknown stream: $item")
         }

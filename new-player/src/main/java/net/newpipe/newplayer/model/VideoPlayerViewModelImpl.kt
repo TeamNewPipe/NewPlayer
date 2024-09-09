@@ -25,12 +25,14 @@ import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import androidx.annotation.OptIn
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -44,6 +46,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.newpipe.newplayer.utils.VideoSize
 import net.newpipe.newplayer.NewPlayer
+import net.newpipe.newplayer.NewPlayerException
 import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.ui.ContentScale
 import java.util.LinkedList
@@ -144,7 +147,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
                     mutableUiState.update {
                         it.copy(playing = isPlaying, isLoading = false)
                     }
-                    if(isPlaying && uiState.value.uiMode.controllerUiVisible) {
+                    if (isPlaying && uiState.value.uiMode.controllerUiVisible) {
                         resetHideUiDelayedJob()
                     } else {
                         uiVisibilityJob?.cancel()
@@ -209,7 +212,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
                 newPlayer.currentlyPlaying.collect { playlistItem ->
                     mutableUiState.update {
                         it.copy(
-                            currentlyPlaying = playlistItem ?: PlaylistItem.DEFAULT,
+                            currentlyPlaying = playlistItem,
                             currentPlaylistItemIndex = newPlayer.currentlyPlayingPlaylistItem
                         )
                     }
@@ -243,6 +246,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
         Log.d(TAG, "viewmodel cleared")
     }
 
+    @OptIn(UnstableApi::class)
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun initUIState(instanceState: Bundle) {
 
@@ -341,18 +345,20 @@ class VideoPlayerViewModelImpl @Inject constructor(
         }
     }
 
+    @OptIn(UnstableApi::class)
     private fun updateProgressInPlaylistOnce() {
-        var progress = 0
-        val currentlyPlaying = uiState.value.currentlyPlaying.uniqueId
+        var progress = 0L
+        val currentlyPlaying = uiState.value.currentlyPlaying?.mediaId?.toLong() ?: 0L
         for (item in uiState.value.playList) {
-            if (item.uniqueId == currentlyPlaying)
+            if (item.mediaId.toLong() == currentlyPlaying)
                 break;
-            progress += item.lengthInS
+            progress += item.mediaMetadata.durationMs
+                ?: throw NewPlayerException("Media Item not containing duration. Media Item in question: ${item.mediaMetadata.title}")
         }
-        progress += ((newPlayer?.currentPosition ?: 0) / 1000).toInt()
+        progress += ((newPlayer?.currentPosition ?: 0) / 1000)
         mutableUiState.update {
             it.copy(
-                playbackPositionInPlaylistS = progress
+                playbackPositionInPlaylistS = progress.toInt()
             )
         }
     }

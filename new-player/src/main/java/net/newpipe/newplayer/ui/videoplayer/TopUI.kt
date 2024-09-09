@@ -21,6 +21,7 @@
 package net.newpipe.newplayer.ui.videoplayer
 
 import android.app.Activity
+import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -47,6 +48,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.VideoPlayerUIState
 import net.newpipe.newplayer.model.VideoPlayerViewModel
@@ -67,14 +69,14 @@ fun TopUI(
     ) {
         Column(horizontalAlignment = Alignment.Start, modifier = Modifier.weight(1F)) {
             Text(
-                uiState.currentlyPlaying.title,
+                uiState.currentlyPlaying?.mediaMetadata?.title.toString() ?: "",
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                uiState.currentlyPlaying.creator,
+                uiState.currentlyPlaying?.mediaMetadata?.artist.toString() ?: "",
                 fontSize = 12.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -131,6 +133,7 @@ fun TopUI(
 // Preview
 ///////////////////////////////////////////////////////////////////
 
+@OptIn(UnstableApi::class)
 @Preview(device = "spec:width=1080px,height=600px,dpi=440,orientation=landscape")
 @Composable
 fun VideoPlayerControllerTopUIPreview() {

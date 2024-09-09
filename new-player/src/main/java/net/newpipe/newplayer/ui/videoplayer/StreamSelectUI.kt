@@ -20,6 +20,7 @@
 
 package net.newpipe.newplayer.ui.videoplayer
 
+import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -37,11 +38,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.model.VideoPlayerUIState
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.model.PlaylistItem
 import net.newpipe.newplayer.ui.STREAMSELECT_UI_BACKGROUND_COLOR
 import net.newpipe.newplayer.ui.videoplayer.streamselect.ChapterItem
 import net.newpipe.newplayer.ui.videoplayer.streamselect.ChapterSelectTopBar
@@ -56,6 +57,7 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 
 val ITEM_CORNER_SHAPE = RoundedCornerShape(10.dp)
 
+@OptIn(UnstableApi::class)
 @Composable
 fun StreamSelectUI(
     isChapterSelect: Boolean = false,
@@ -122,6 +124,7 @@ fun StreamSelectUI(
     }
 }
 
+@OptIn(UnstableApi::class)
 @Composable
 fun ReorderableStreamItemsList(
     padding: PaddingValues,
@@ -144,10 +147,10 @@ fun ReorderableStreamItemsList(
         verticalArrangement = Arrangement.spacedBy(5.dp),
         state = lazyListState
     ) {
-        itemsIndexed(uiState.playList, key = { _, item -> item.uniqueId }) { index, playlistItem ->
+        itemsIndexed(uiState.playList, key = { _, item -> item.mediaId.toLong() }) { index, playlistItem ->
             ReorderableItem(
                 state = reorderableLazyListState,
-                key = playlistItem.uniqueId
+                key = playlistItem.mediaId.toLong()
             ) { isDragging ->
                 StreamItem(
                     playlistItem = playlistItem,
@@ -156,9 +159,9 @@ fun ReorderableStreamItemsList(
                     haptic = haptic,
                     onDragFinished = viewModel::onStreamItemDragFinished,
                     isDragging = isDragging,
-                    isCurrentlyPlaying = playlistItem.uniqueId == uiState.currentlyPlaying.uniqueId,
+                    isCurrentlyPlaying = playlistItem.mediaId.toLong() == uiState.currentlyPlaying?.mediaId?.toLong(),
                     onDelete = {
-                        viewModel.removePlaylistItem(playlistItem.uniqueId)
+                        viewModel.removePlaylistItem(playlistItem.mediaId.toLong())
                     }
                 )
             }
@@ -180,6 +183,7 @@ fun VideoPlayerChannelSelectUIPreview() {
     }
 }
 
+@OptIn(UnstableApi::class)
 @Preview(device = "id:pixel_5")
 @Composable
 fun VideoPlayerStreamSelectUIPreview() {
@@ -188,9 +192,7 @@ fun VideoPlayerStreamSelectUIPreview() {
             StreamSelectUI(
                 isChapterSelect = false,
                 viewModel = VideoPlayerViewModelDummy(),
-                uiState = VideoPlayerUIState.DUMMY.copy(
-                    currentlyPlaying = PlaylistItem.DUMMY.copy(uniqueId = 1)
-                )
+                uiState = VideoPlayerUIState.DUMMY
             )
         }
     }
