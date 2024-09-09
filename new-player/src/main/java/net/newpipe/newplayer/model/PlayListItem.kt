@@ -21,6 +21,7 @@
 
 package net.newpipe.newplayer.model
 
+import android.net.Uri
 import androidx.media3.common.Player
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
@@ -34,7 +35,7 @@ data class PlaylistItem(
     val creator: String,
     val id: String,
     val uniqueId: Long,
-    val thumbnail: Thumbnail?,
+    val thumbnail: Uri?,
     val lengthInS: Int
 ) {
     companion object {
@@ -84,7 +85,7 @@ suspend fun getPlaylistItemsFromExoplayer(
     idLookupTable: HashMap<Long, String>
 ) =
     with(CoroutineScope(coroutineContext)) {
-        (0..player.mediaItemCount - 1).map { index ->
+        (0..<player.mediaItemCount).map { index ->
             val mediaItem = player.getMediaItemAt(index)
             val uniqueId = mediaItem.mediaId.toLong()
             val id = idLookupTable.get(uniqueId)

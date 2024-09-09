@@ -25,6 +25,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.graphics.drawable.shapes.Shape
+import android.net.Uri
 import android.view.WindowManager
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.WindowInsets
@@ -152,7 +153,7 @@ fun getTimeStringFromMs(
 @Composable
 fun Thumbnail(
     modifier: Modifier = Modifier,
-    thumbnail: Thumbnail?,
+    thumbnail: Uri?,
     contentDescription: String,
     shape: androidx.compose.ui.graphics.Shape? = null
 ) {
@@ -163,31 +164,17 @@ fun Thumbnail(
             .clip(shape)
     }
 
-    when (thumbnail) {
-        is OnlineThumbnail -> AsyncImage(
+    if (thumbnail != null) {
+        AsyncImage(
             modifier = modifier,
-            model = thumbnail.url,
+            model = thumbnail,
             contentDescription = contentDescription,
         )
-
-        is BitmapThumbnail -> Image(
-            modifier = modifier,
-            bitmap = thumbnail.img,
-            contentDescription = contentDescription
-        )
-
-        is VectorThumbnail -> Image(
-            modifier = modifier,
-            imageVector = thumbnail.vec,
-            contentDescription = contentDescription
-        )
-
-        null -> Image(
+    } else {
+        Image(
             modifier = modifier,
             painter = painterResource(R.drawable.tiny_placeholder),
             contentDescription = contentDescription
         )
     }
 }
-
-

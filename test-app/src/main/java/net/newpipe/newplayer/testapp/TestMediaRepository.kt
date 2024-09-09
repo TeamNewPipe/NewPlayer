@@ -6,7 +6,6 @@ import androidx.media3.common.PlaybackException
 import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.MediaRepository
 import net.newpipe.newplayer.MetaInfo
-import net.newpipe.newplayer.utils.OnlineThumbnail
 import net.newpipe.newplayer.utils.Thumbnail
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -27,14 +26,14 @@ class TestMediaRepository(val context: Context) : MediaRepository {
             "6502" -> MetaInfo(
                 title = context.getString(R.string.ccc_6502_title),
                 channelName = context.getString(R.string.ccc_6502_channel),
-                thumbnail = OnlineThumbnail(context.getString(R.string.ccc_6502_thumbnail)),
+                thumbnail = Uri.parse(context.getString(R.string.ccc_6502_thumbnail)),
                 lengthInS = context.resources.getInteger(R.integer.ccc_6502_length)
             )
 
             "imu" -> MetaInfo(
                 title = context.getString(R.string.ccc_imu_title),
                 channelName = context.getString(R.string.ccc_imu_channel),
-                thumbnail = OnlineThumbnail(context.getString(R.string.ccc_imu_thumbnail)),
+                thumbnail = Uri.parse(context.getString(R.string.ccc_imu_thumbnail)),
                 lengthInS = context.resources.getInteger(R.integer.ccc_imu_length)
             )
 
@@ -84,7 +83,7 @@ class TestMediaRepository(val context: Context) : MediaRepository {
             }
         )
 
-    override suspend fun getPreviewThumbnails(item: String): HashMap<Long, Thumbnail>? {
+    override suspend fun getPreviewThumbnails(item: String): HashMap<Long, Uri>? {
         val templateUrl = when (item) {
             "6502" -> context.getString(R.string.ccc_6502_preview_thumbnails)
             "imu" -> context.getString(R.string.ccc_imu_preview_thumbnails)
@@ -99,11 +98,11 @@ class TestMediaRepository(val context: Context) : MediaRepository {
                 else -> throw Exception("Unknown stream: $item")
             }
 
-            var thumbMap = HashMap<Long, Thumbnail>()
+            var thumbMap = HashMap<Long, Uri>()
 
             for (i in 1..thumbCount) {
                 val timeStamp = (i - 1) * 10 * 1000
-                thumbMap.put(timeStamp.toLong(), OnlineThumbnail(String.format(templateUrl, i)))
+                thumbMap.put(timeStamp.toLong(), Uri.parse(String.format(templateUrl, i)))
             }
 
             return thumbMap
@@ -121,14 +120,14 @@ class TestMediaRepository(val context: Context) : MediaRepository {
             Chapter(
                 it.toLong(), chapterTitle = "Dummy Chapter at timestamp $it",
                 thumbnail = when (item) {
-                    "6502" -> OnlineThumbnail(
+                    "6502" -> Uri.parse(
                         String.format(
                             context.getString(R.string.ccc_6502_preview_thumbnails),
                             it / (10 * 1000)
                         )
                     )
 
-                    "imu" -> OnlineThumbnail(
+                    "imu" -> Uri.parse(
                         String.format(
                             context.getString(R.string.ccc_imu_preview_thumbnails),
                             it / (10 * 1000)

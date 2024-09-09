@@ -21,6 +21,7 @@
 
 package net.newpipe.newplayer.ui.videoplayer.streamselect
 
+import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -55,10 +56,7 @@ import net.newpipe.newplayer.NewPlayerException
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.ITEM_CORNER_SHAPE
-import net.newpipe.newplayer.utils.BitmapThumbnail
-import net.newpipe.newplayer.utils.OnlineThumbnail
 import net.newpipe.newplayer.utils.Thumbnail
-import net.newpipe.newplayer.utils.VectorThumbnail
 import net.newpipe.newplayer.utils.getLocale
 import net.newpipe.newplayer.utils.getTimeStringFromMs
 
@@ -77,7 +75,7 @@ fun isActiveChapter(chapterId: Int, chapters: List<Chapter>, playbackPosition: L
 fun ChapterItem(
     modifier: Modifier = Modifier,
     id: Int,
-    thumbnail: Thumbnail?,
+    thumbnail: Uri?,
     chapterTitle: String,
     chapterStartInMs: Long,
     onClicked: (Int) -> Unit,

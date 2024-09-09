@@ -24,12 +24,12 @@ import android.net.Uri
 import androidx.media3.common.PlaybackException
 import net.newpipe.newplayer.utils.Thumbnail
 
-data class Chapter(val chapterStartInMs: Long, val chapterTitle: String?, val thumbnail: Thumbnail?)
+data class Chapter(val chapterStartInMs: Long, val chapterTitle: String?, val thumbnail: Uri?)
 
 data class MetaInfo(
     val title: String,
     val channelName: String,
-    val thumbnail: Thumbnail?,
+    val thumbnail: Uri?,
     val lengthInS: Int
 )
 
@@ -44,7 +44,7 @@ interface MediaRepository {
     suspend fun getAvailableSubtitleVariants(item: String): List<String>
     suspend fun getSubtitle(item: String, variant: String): Uri
 
-    suspend fun getPreviewThumbnails(item: String): HashMap<Long, Thumbnail>?
+    suspend fun getPreviewThumbnails(item: String): HashMap<Long, Uri>?
     suspend fun getChapters(item: String): List<Chapter>
 
     suspend fun getTimestampLink(item: String, timestampInSeconds: Long): String
