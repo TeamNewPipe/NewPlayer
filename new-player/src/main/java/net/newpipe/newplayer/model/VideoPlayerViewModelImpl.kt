@@ -56,6 +56,7 @@ val VIDEOPLAYER_UI_STATE = "video_player_ui_state"
 private const val TAG = "VideoPlayerViewModel"
 
 
+@UnstableApi
 @HiltViewModel
 class VideoPlayerViewModelImpl @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
@@ -183,12 +184,11 @@ class VideoPlayerViewModelImpl @Inject constructor(
                     }
                 }
             })
-        }
-        newPlayer?.let { newPlayer ->
+
             viewModelScope.launch {
                 newPlayer.playBackMode.collect { newMode ->
                     val currentMode = mutableUiState.value.uiMode.toPlayMode()
-                    println("gurken mode: $currentMode newMode: $newMode")
+
                     if (currentMode != newMode) {
                         mutableUiState.update {
                             it.copy(
@@ -224,6 +224,14 @@ class VideoPlayerViewModelImpl @Inject constructor(
                         it.copy(chapters = chapters)
                     }
                 }
+            }
+
+            mutableUiState.update {
+                it.copy(
+                    playing = newPlayer.internalPlayer.isPlaying,
+                    isLoading = !newPlayer.internalPlayer.isPlaying
+                            && newPlayer.internalPlayer.isLoading
+                )
             }
         }
     }
