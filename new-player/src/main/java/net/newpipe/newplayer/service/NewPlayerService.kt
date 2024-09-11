@@ -37,7 +37,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.PlayMode
@@ -62,66 +61,70 @@ class NewPlayerService : MediaSessionService() {
 
         customCommands = buildCustomCommandList(this)
 
-        mediaSession = MediaSession.Builder(this, newPlayer.internalPlayer)
-            .setCallback(object : MediaSession.Callback {
-                override fun onConnect(
-                    session: MediaSession,
-                    controller: MediaSession.ControllerInfo
-                ): MediaSession.ConnectionResult {
-                    val connectionResult = super.onConnect(session, controller)
-                    val availableSessionCommands =
-                        connectionResult.availableSessionCommands.buildUpon()
+        if(newPlayer.exoPlayer.value != null) {
+            mediaSession = MediaSession.Builder(this, newPlayer.exoPlayer.value!!)
+                .setCallback(object : MediaSession.Callback {
+                    override fun onConnect(
+                        session: MediaSession,
+                        controller: MediaSession.ControllerInfo
+                    ): MediaSession.ConnectionResult {
+                        val connectionResult = super.onConnect(session, controller)
+                        val availableSessionCommands =
+                            connectionResult.availableSessionCommands.buildUpon()
 
-                    customCommands.forEach { command ->
-                        command.commandButton.sessionCommand?.let {
-                            availableSessionCommands.add(it)
+                        customCommands.forEach { command ->
+                            command.commandButton.sessionCommand?.let {
+                                availableSessionCommands.add(it)
+                            }
                         }
+
+                        return MediaSession.ConnectionResult.accept(
+                            availableSessionCommands.build(),
+                            connectionResult.availablePlayerCommands
+                        )
                     }
 
-                    return MediaSession.ConnectionResult.accept(
-                        availableSessionCommands.build(),
-                        connectionResult.availablePlayerCommands
-                    )
-                }
-
-                override fun onPostConnect(
-                    session: MediaSession,
-                    controller: MediaSession.ControllerInfo
-                ) {
-                    super.onPostConnect(session, controller)
-                    mediaSession.setCustomLayout(customCommands.map{it.commandButton})
-                }
-
-                override fun onCustomCommand(
-                    session: MediaSession,
-                    controller: MediaSession.ControllerInfo,
-                    customCommand: SessionCommand,
-                    args: Bundle
-                ): ListenableFuture<SessionResult> {
-                    when(customCommand.customAction) {
-                        CustomCommand.NEW_PLAYER_NOTIFICATION_COMMAND_CLOSE_PLAYBACK -> {
-                            newPlayer.release()
-                        }
-                        else -> {
-                            Log.e(TAG, "Unknown custom command: ${customCommand.customAction}")
-                            return Futures.immediateFuture(SessionResult(SessionError.ERROR_NOT_SUPPORTED))
-                        }
+                    override fun onPostConnect(
+                        session: MediaSession,
+                        controller: MediaSession.ControllerInfo
+                    ) {
+                        super.onPostConnect(session, controller)
+                        mediaSession.setCustomLayout(customCommands.map { it.commandButton })
                     }
-                    return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
-                }
 
-            })
-            .build()
+                    override fun onCustomCommand(
+                        session: MediaSession,
+                        controller: MediaSession.ControllerInfo,
+                        customCommand: SessionCommand,
+                        args: Bundle
+                    ): ListenableFuture<SessionResult> {
+                        when (customCommand.customAction) {
+                            CustomCommand.NEW_PLAYER_NOTIFICATION_COMMAND_CLOSE_PLAYBACK -> {
+                                newPlayer.release()
+                            }
+
+                            else -> {
+                                Log.e(TAG, "Unknown custom command: ${customCommand.customAction}")
+                                return Futures.immediateFuture(SessionResult(SessionError.ERROR_NOT_SUPPORTED))
+                            }
+                        }
+                        return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
+                    }
+
+                })
+                .build()
+        } else {
+            stopSelf()
+        }
 
 
         serviceScope.launch {
             newPlayer.playBackMode.collect { mode ->
-                if(mode == PlayMode.IDLE)  {
+                if (mode == PlayMode.IDLE) {
                     stopSelf()
                 }
             }
         }
-
     }
 
     override fun onDestroy() {
@@ -132,7 +135,9 @@ class NewPlayerService : MediaSessionService() {
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         // Check if the player is not ready to play or there are no items in the media queue
-        if (!newPlayer.internalPlayer.playWhenReady || newPlayer.playlist.value.size == 0) {
+        if (!(newPlayer.exoPlayer.value?.playWhenReady
+                ?: false) || newPlayer.playlist.value.size == 0
+        ) {
             // Stop the service
             stopSelf()
         }

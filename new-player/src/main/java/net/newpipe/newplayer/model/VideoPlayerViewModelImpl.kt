@@ -138,52 +138,57 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
     private fun installNewPlayer() {
         newPlayer?.let { newPlayer ->
-            val player = newPlayer.internalPlayer
-            Log.d(TAG, "Install player: ${player.videoSize.width}")
+            viewModelScope.launch {
+                newPlayer.exoPlayer.collect { player ->
 
-            player.addListener(object : Player.Listener {
-                override fun onIsPlayingChanged(isPlaying: Boolean) {
-                    super.onIsPlayingChanged(isPlaying)
-                    Log.d(TAG, "Playing state changed. Is Playing: $isPlaying")
-                    mutableUiState.update {
-                        it.copy(playing = isPlaying, isLoading = false)
-                    }
-                    if (isPlaying && uiState.value.uiMode.controllerUiVisible) {
-                        resetHideUiDelayedJob()
-                    } else {
-                        uiVisibilityJob?.cancel()
-                    }
-                }
+                    Log.d(TAG, "Install player: ${player?.videoSize?.width}")
 
-                override fun onVideoSizeChanged(videoSize: androidx.media3.common.VideoSize) {
-                    super.onVideoSizeChanged(videoSize)
-                    updateContentRatio(VideoSize.fromMedia3VideoSize(videoSize))
-                }
-
-
-                override fun onIsLoadingChanged(isLoading: Boolean) {
-                    super.onIsLoadingChanged(isLoading)
-                    if (!player.isPlaying) {
-                        mutableUiState.update {
-                            it.copy(isLoading = isLoading)
+                    player?.addListener(object : Player.Listener {
+                        override fun onIsPlayingChanged(isPlaying: Boolean) {
+                            super.onIsPlayingChanged(isPlaying)
+                            Log.d(TAG, "Playing state changed. Is Playing: $isPlaying")
+                            mutableUiState.update {
+                                it.copy(playing = isPlaying, isLoading = false)
+                            }
+                            if (isPlaying && uiState.value.uiMode.controllerUiVisible) {
+                                resetHideUiDelayedJob()
+                            } else {
+                                uiVisibilityJob?.cancel()
+                            }
                         }
-                    }
-                }
 
-                override fun onRepeatModeChanged(repeatMode: Int) {
-                    super.onRepeatModeChanged(repeatMode)
-                    mutableUiState.update {
-                        it.copy(repeatMode = newPlayer.repeatMode)
-                    }
-                }
+                        override fun onVideoSizeChanged(videoSize: androidx.media3.common.VideoSize) {
+                            super.onVideoSizeChanged(videoSize)
+                            updateContentRatio(VideoSize.fromMedia3VideoSize(videoSize))
+                        }
 
-                override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
-                    super.onShuffleModeEnabledChanged(shuffleModeEnabled)
-                    mutableUiState.update {
-                        it.copy(shuffleEnabled = newPlayer.shuffle)
-                    }
+
+                        override fun onIsLoadingChanged(isLoading: Boolean) {
+                            super.onIsLoadingChanged(isLoading)
+                            if (!player.isPlaying) {
+                                mutableUiState.update {
+                                    it.copy(isLoading = isLoading)
+                                }
+                            }
+                        }
+
+                        override fun onRepeatModeChanged(repeatMode: Int) {
+                            super.onRepeatModeChanged(repeatMode)
+                            mutableUiState.update {
+                                it.copy(repeatMode = newPlayer.repeatMode)
+                            }
+                        }
+
+                        override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
+                            super.onShuffleModeEnabledChanged(shuffleModeEnabled)
+                            mutableUiState.update {
+                                it.copy(shuffleEnabled = newPlayer.shuffle)
+                            }
+                        }
+                    })
+
                 }
-            })
+            }
 
             viewModelScope.launch {
                 newPlayer.playBackMode.collect { newMode ->
@@ -199,6 +204,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
                     }
                 }
             }
+
             viewModelScope.launch {
                 newPlayer.playlist.collect { playlist ->
                     mutableUiState.update {
@@ -228,9 +234,9 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
             mutableUiState.update {
                 it.copy(
-                    playing = newPlayer.internalPlayer.isPlaying,
-                    isLoading = !newPlayer.internalPlayer.isPlaying
-                            && newPlayer.internalPlayer.isLoading
+                    playing = newPlayer.exoPlayer.value?.isPlaying ?: false,
+                    isLoading = !(newPlayer.exoPlayer.value?.isPlaying
+                        ?: false) && newPlayer.exoPlayer.value?.isLoading ?: false
                 )
             }
         }
@@ -294,7 +300,9 @@ class VideoPlayerViewModelImpl @Inject constructor(
     override fun nextStream() {
         resetHideUiDelayedJob()
         newPlayer?.let { newPlayer ->
-            if (newPlayer.currentlyPlayingPlaylistItem + 1 < newPlayer.internalPlayer.mediaItemCount) {
+            if (newPlayer.currentlyPlayingPlaylistItem + 1 <
+                (newPlayer.exoPlayer.value?.mediaItemCount ?: 0)
+            ) {
                 newPlayer.currentlyPlayingPlaylistItem += 1
             }
         }
@@ -329,8 +337,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
     private fun updateProgressOnce() {
         val progress = newPlayer?.currentPosition ?: 0
         val duration = newPlayer?.duration ?: 1
-        val bufferedPercentage =
-            (newPlayer?.bufferedPercentage?.toFloat() ?: 0f) / 100f
+        val bufferedPercentage = (newPlayer?.bufferedPercentage?.toFloat() ?: 0f) / 100f
         val progressPercentage = progress.toFloat() / duration.toFloat()
 
         mutableUiState.update {
@@ -358,8 +365,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
         var progress = 0L
         val currentlyPlaying = uiState.value.currentlyPlaying?.mediaId?.toLong() ?: 0L
         for (item in uiState.value.playList) {
-            if (item.mediaId.toLong() == currentlyPlaying)
-                break;
+            if (item.mediaId.toLong() == currentlyPlaying) break;
             progress += item.mediaMetadata.durationMs
                 ?: throw NewPlayerException("Media Item not containing duration. Media Item in question: ${item.mediaMetadata.title}")
         }
@@ -575,7 +581,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
         }
     }
 
-    private fun getEmbeddedUiRatio() = newPlayer?.internalPlayer?.let { player ->
+    private fun getEmbeddedUiRatio() = newPlayer?.exoPlayer?.value?.let { player ->
         val videoRatio = VideoSize.fromMedia3VideoSize(player.videoSize).getRatio()
         return (if (videoRatio.isNaN()) currentContentRatio
         else videoRatio).coerceIn(minContentRatio, maxContentRatio)

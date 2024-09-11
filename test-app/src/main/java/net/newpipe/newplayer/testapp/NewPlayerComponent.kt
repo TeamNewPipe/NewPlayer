@@ -28,6 +28,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.launch
 import net.newpipe.newplayer.NewPlayer
+import net.newpipe.newplayer.NewPlayerImpl
 import javax.inject.Singleton
 
 
@@ -38,7 +39,7 @@ object NewPlayerComponent {
     @Provides
     @Singleton
     fun provideNewPlayer(app: Application) : NewPlayer {
-        val player = NewPlayer.Builder(app, TestMediaRepository(app)).build()
+        val player = NewPlayerImpl(app, TestMediaRepository(app))
         if(app is NewPlayerApp) {
             app.appScope.launch {
                 while(true) {

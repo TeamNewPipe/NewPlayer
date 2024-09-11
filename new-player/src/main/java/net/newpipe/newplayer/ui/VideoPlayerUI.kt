@@ -25,6 +25,7 @@ import android.content.pm.ActivityInfo
 import android.util.Log
 import android.view.SurfaceView
 import androidx.activity.compose.BackHandler
+import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -54,7 +55,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.media3.common.Player
-import net.newpipe.newplayer.model.EmbeddedUiConfig
+import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
@@ -66,6 +67,7 @@ import net.newpipe.newplayer.utils.setScreenBrightness
 
 private const val TAG = "VideoPlayerUI"
 
+@OptIn(UnstableApi::class)
 @Composable
 fun VideoPlayerUI(
     viewModel: VideoPlayerViewModel?,
@@ -76,6 +78,7 @@ fun VideoPlayerUI(
         VideoPlayerLoadingPlaceholder(viewModel.uiState.collectAsState().value.embeddedUiRatio)
     } else {
         val uiState by viewModel.uiState.collectAsState()
+        val exoPlayer by viewModel.newPlayer?.exoPlayer!!.collectAsState()
 
         var lifecycle by remember {
             mutableStateOf(Lifecycle.Event.ON_CREATE)
@@ -174,16 +177,21 @@ fun VideoPlayerUI(
                         .aspectRatio(uiState.embeddedUiRatio)
                 ), color = Color.Black
             ) {
-                Box(contentAlignment = Alignment.Center) {
-                    PlaySurface(
-                        player = viewModel.newPlayer?.internalPlayer,
-                        lifecycle = lifecycle,
-                        fitMode = uiState.contentFitMode,
-                        uiRatio = if (uiState.uiMode.fullscreen) screenRatio
-                        else uiState.embeddedUiRatio,
-                        contentRatio = uiState.contentRatio
-                    )
+
+                exoPlayer?.let { exoPlayer ->
+                    Box(contentAlignment = Alignment.Center) {
+                        PlaySurface(
+                            player = exoPlayer,
+                            lifecycle = lifecycle,
+                            fitMode = uiState.contentFitMode,
+                            uiRatio = if (uiState.uiMode.fullscreen) screenRatio
+                            else uiState.embeddedUiRatio,
+                            contentRatio = uiState.contentRatio
+                        )
+                    }
                 }
+
+
 
                 // the checks if VideoPlayerControllerUI should be visible or not are done by
                 // The VideoPlayerControllerUI composable itself. This is because Visibility of

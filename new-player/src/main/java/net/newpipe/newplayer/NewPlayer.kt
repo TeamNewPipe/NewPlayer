@@ -20,11 +20,8 @@
 
 package net.newpipe.newplayer
 
-import android.app.Application
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.source.MediaSource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -49,7 +46,7 @@ interface NewPlayer {
     // preferences
     val preferredStreamVariants: List<String>
 
-    val internalPlayer: Player
+    val exoPlayer: StateFlow<Player?>
     var playWhenReady: Boolean
     val duration: Long
     val bufferedPercentage: Int
@@ -81,33 +78,4 @@ interface NewPlayer {
     fun selectChapter(index: Int)
     fun playStream(item: String, streamVariant: String, playMode: PlayMode)
     fun release()
-
-    data class Builder(val app: Application, val repository: MediaRepository) {
-        private var mediaSourceFactory: MediaSource.Factory? = null
-        private var preferredStreamVariants: List<String> = emptyList()
-
-        fun setMediaSourceFactory(mediaSourceFactory: MediaSource.Factory): Builder {
-            this.mediaSourceFactory = mediaSourceFactory
-            return this
-        }
-
-        fun setPreferredStreamVariants(preferredStreamVariants: List<String>): Builder {
-            this.preferredStreamVariants = preferredStreamVariants
-            return this
-        }
-
-        fun build(): NewPlayer {
-            val exoPlayerBuilder = ExoPlayer.Builder(app)
-            mediaSourceFactory?.let {
-                exoPlayerBuilder.setMediaSourceFactory(it)
-            }
-            return NewPlayerImpl(
-                app = app,
-                internalPlayer = exoPlayerBuilder.build(),
-                repository = repository,
-                preferredStreamVariants = preferredStreamVariants,
-            )
-        }
-    }
-
 }
