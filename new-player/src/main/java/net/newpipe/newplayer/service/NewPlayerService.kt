@@ -21,32 +21,122 @@
 
 package net.newpipe.newplayer.service
 
+import android.content.Intent
+import android.os.Bundle
+import android.util.Log
+import androidx.annotation.OptIn
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
+import androidx.media3.session.SessionCommand
+import androidx.media3.session.SessionError
+import androidx.media3.session.SessionResult
+import com.google.common.util.concurrent.Futures
+import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import net.newpipe.newplayer.NewPlayer
+import net.newpipe.newplayer.PlayMode
 import javax.inject.Inject
+
+private const val TAG = "NewPlayerService"
 
 @AndroidEntryPoint
 class NewPlayerService : MediaSessionService() {
 
-    private var mediaSession: MediaSession? = null
+    private lateinit var mediaSession: MediaSession
+    private lateinit var customCommands: List<CustomCommand>
 
     @Inject
     lateinit var newPlayer: NewPlayer
 
+    private var serviceScope = CoroutineScope(Dispatchers.Main + Job())
+
+    @OptIn(UnstableApi::class)
+    override fun onCreate() {
+        super.onCreate()
+
+        customCommands = buildCustomCommandList(this)
+
+        mediaSession = MediaSession.Builder(this, newPlayer.internalPlayer)
+            .setCallback(object : MediaSession.Callback {
+                override fun onConnect(
+                    session: MediaSession,
+                    controller: MediaSession.ControllerInfo
+                ): MediaSession.ConnectionResult {
+                    val connectionResult = super.onConnect(session, controller)
+                    val availableSessionCommands =
+                        connectionResult.availableSessionCommands.buildUpon()
+
+                    customCommands.forEach { command ->
+                        command.commandButton.sessionCommand?.let {
+                            availableSessionCommands.add(it)
+                        }
+                    }
+
+                    return MediaSession.ConnectionResult.accept(
+                        availableSessionCommands.build(),
+                        connectionResult.availablePlayerCommands
+                    )
+                }
+
+                override fun onPostConnect(
+                    session: MediaSession,
+                    controller: MediaSession.ControllerInfo
+                ) {
+                    super.onPostConnect(session, controller)
+                    mediaSession.setCustomLayout(customCommands.map{it.commandButton})
+                }
+
+                override fun onCustomCommand(
+                    session: MediaSession,
+                    controller: MediaSession.ControllerInfo,
+                    customCommand: SessionCommand,
+                    args: Bundle
+                ): ListenableFuture<SessionResult> {
+                    when(customCommand.customAction) {
+                        CustomCommand.NEW_PLAYER_NOTIFICATION_COMMAND_CLOSE_PLAYBACK -> {
+                            newPlayer.release()
+                        }
+                        else -> {
+                            Log.e(TAG, "Unknown custom command: ${customCommand.customAction}")
+                            return Futures.immediateFuture(SessionResult(SessionError.ERROR_NOT_SUPPORTED))
+                        }
+                    }
+                    return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
+                }
+
+            })
+            .build()
+
+
+        serviceScope.launch {
+            newPlayer.playBackMode.collect { mode ->
+                if(mode == PlayMode.IDLE)  {
+                    stopSelf()
+                }
+            }
+        }
+
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         newPlayer.release()
-        mediaSession?.release()
-        mediaSession = null
+        mediaSession.release()
     }
 
-    override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? {
-        println("gurken get session")
-        if (mediaSession == null) {
-            mediaSession = MediaSession.Builder(this, newPlayer.internalPlayer).build()
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        // Check if the player is not ready to play or there are no items in the media queue
+        if (!newPlayer.internalPlayer.playWhenReady || newPlayer.playlist.value.size == 0) {
+            // Stop the service
+            stopSelf()
         }
-        return mediaSession
     }
+
+    override fun onGetSession(controllerInfo: MediaSession.ControllerInfo) = mediaSession
 }

@@ -52,4 +52,5 @@
     <string name="shuffle_on">Shuffle playlist enabled</string>
     <string name="shuffle_off">Shuffle playlist disabled</string>
     <string name="store_playlist">Save current playlist</string>
+    <string name="close">Close</string>
 </resources>

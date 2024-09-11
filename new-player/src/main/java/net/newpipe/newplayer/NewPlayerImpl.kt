@@ -55,6 +55,8 @@ class NewPlayerImpl(
     private val repository: MediaRepository
 ) : NewPlayer {
 
+    private var playerScope = CoroutineScope(Dispatchers.Main + Job())
+
     private var uniqueIdToIdLookup = HashMap<Long, String>()
 
     // this is used to take care of the NewPlayerService
@@ -73,8 +75,6 @@ class NewPlayerImpl(
         }
 
     override var fastSeekAmountSec: Int = 10
-
-    private var playerScope = CoroutineScope(Dispatchers.Main + Job())
 
     override var playBackMode = MutableStateFlow(PlayMode.IDLE)
 
@@ -251,7 +251,11 @@ class NewPlayerImpl(
     }
 
     override fun release() {
+        mediaController?.release()
         internalPlayer.release()
+        playBackMode.update {
+            PlayMode.IDLE
+        }
     }
 
     private fun internalPlayStream(mediaItem: MediaItem, playMode: PlayMode) {
