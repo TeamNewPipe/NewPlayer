@@ -25,6 +25,7 @@ import androidx.media3.common.Player
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import java.util.stream.Stream
 import kotlin.Exception
 
 enum class PlayMode {
@@ -45,6 +46,7 @@ enum class RepeatMode {
 interface NewPlayer {
     // preferences
     val preferredStreamVariants: List<String>
+    val preferredStreamLanguage: List<String>
 
     val exoPlayer: StateFlow<Player?>
     var playWhenReady: Boolean
@@ -76,7 +78,7 @@ interface NewPlayer {
     fun removePlaylistItem(uniqueId: Long)
     fun playStream(item: String, playMode: PlayMode)
     fun selectChapter(index: Int)
-    fun playStream(item: String, streamVariant: String, playMode: PlayMode)
+    fun playStream(item: String, streamVariant: StreamVariant, playMode: PlayMode)
     fun release()
     fun getItemLinkOfMediaItem(mediaItem: MediaItem) : String
 }

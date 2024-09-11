@@ -8,6 +8,9 @@ import androidx.media3.common.PlaybackException
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.MediaRepository
+import net.newpipe.newplayer.RepoMetaInfo
+import net.newpipe.newplayer.StreamType
+import net.newpipe.newplayer.StreamVariant
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -21,6 +24,9 @@ class TestMediaRepository(val context: Context) : MediaRepository {
             .build()
         return client.newCall(request).execute()
     }
+
+    override fun getRepoInfo() =
+        RepoMetaInfo(canHandleTimestampedLinks = true, pullsDataFromNetwrok = true)
 
     @OptIn(UnstableApi::class)
     override suspend fun getMetaInfo(item: String): MediaMetadata =
@@ -55,11 +61,37 @@ class TestMediaRepository(val context: Context) : MediaRepository {
             else -> throw Exception("Unknown stream: $item")
         }
 
-    override suspend fun getAvailableStreamVariants(item: String): List<String> =
+    override suspend fun getAvailableStreamVariants(item: String): List<StreamVariant> =
         when (item) {
-            "6502" -> listOf("576p")
-            "portrait" -> listOf("720p")
-            "imu" -> listOf("1080p", "576p")
+            "6502" -> listOf(
+                StreamVariant(
+                    streamType = StreamType.AUDIO_AND_VIDEO,
+                    language = "Deutsch",
+                    streamVariantIdentifier = "576p",
+                ),
+            )
+
+            "portrait" -> listOf(
+                StreamVariant(
+                    streamType = StreamType.AUDIO_AND_VIDEO,
+                    language = null,
+                    streamVariantIdentifier = "720p",
+                ),
+            )
+
+            "imu" -> listOf(
+                StreamVariant(
+                    streamType = StreamType.AUDIO_AND_VIDEO,
+                    language = "Deutsch",
+                    streamVariantIdentifier = "1080p",
+                ),
+                StreamVariant(
+                    streamType = StreamType.AUDIO_AND_VIDEO,
+                    language = "Deutsch",
+                    streamVariantIdentifier = "576p",
+                )
+            )
+
             else -> throw Exception("Unknown stream: $item")
         }
 
@@ -68,15 +100,15 @@ class TestMediaRepository(val context: Context) : MediaRepository {
     }
 
 
-    override suspend fun getStream(item: String, streamSelector: String) =
+    override suspend fun getStream(item: String, streamVariantSelector: StreamVariant) =
         Uri.parse(
             when (item) {
                 "6502" -> context.getString(R.string.ccc_6502_video)
                 "portrait" -> context.getString(R.string.portrait_video_example)
-                "imu" -> when (streamSelector) {
+                "imu" -> when (streamVariantSelector.streamVariantIdentifier) {
                     "1080p" -> context.getString(R.string.ccc_imu_1080_mp4)
                     "576p" -> context.getString(R.string.ccc_imu_576_mp4)
-                    else -> throw Exception("Unknown stream selector for $item: $streamSelector")
+                    else -> throw Exception("Unknown stream selector for $item: $streamVariantSelector")
                 }
 
                 else -> throw Exception("Unknown stream: $item")

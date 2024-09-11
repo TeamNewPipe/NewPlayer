@@ -27,12 +27,32 @@ import net.newpipe.newplayer.utils.Thumbnail
 
 data class Chapter(val chapterStartInMs: Long, val chapterTitle: String?, val thumbnail: Uri?)
 
+enum class StreamType {
+    VIDEO,
+    AUDIO,
+    AUDIO_AND_VIDEO,
+    DYNAMIC
+}
+
+data class StreamVariant(
+    val streamType: StreamType,
+    val language: String?,
+    val streamVariantIdentifier: String
+)
+
+data class RepoMetaInfo(
+    val canHandleTimestampedLinks: Boolean,
+    val pullsDataFromNetwrok: Boolean
+)
+
 interface MediaRepository {
+
+    fun getRepoInfo() : RepoMetaInfo
 
     suspend fun getMetaInfo(item: String): MediaMetadata
 
-    suspend fun getAvailableStreamVariants(item: String): List<String>
-    suspend fun getStream(item: String, streamSelector: String): Uri
+    suspend fun getAvailableStreamVariants(item: String): List<StreamVariant>
+    suspend fun getStream(item: String, streamVariantSelector: StreamVariant): Uri
 
     suspend fun getAvailableSubtitleVariants(item: String): List<String>
     suspend fun getSubtitle(item: String, variant: String): Uri

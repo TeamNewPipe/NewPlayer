@@ -23,11 +23,18 @@ package net.newpipe.newplayer
 import android.app.Application
 import android.content.ComponentName
 import android.util.Log
+import androidx.annotation.OptIn
+import androidx.media3.common.AudioAttributes
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.Timeline
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.MediaSource
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.MoreExecutors
@@ -50,7 +57,8 @@ private const val TAG = "NewPlayerImpl"
 class NewPlayerImpl(
     val app: Application,
     private val repository: MediaRepository,
-    override val preferredStreamVariants: List<String> = emptyList()
+    override val preferredStreamVariants: List<String> = emptyList(),
+    override val preferredStreamLanguage: List<String> = emptyList()
 ) : NewPlayer {
 
     private val mutableExoPlayer = MutableStateFlow<ExoPlayer?>(null)
@@ -134,7 +142,11 @@ class NewPlayerImpl(
         }
 
     private fun setupNewExoplayer() {
-        val newExoPlayer = ExoPlayer.Builder(app).build()
+        val newExoPlayer = ExoPlayer.Builder(app)
+            .setAudioAttributes(AudioAttributes.DEFAULT, true)
+            .setHandleAudioBecomingNoisy(true)
+            .setWakeMode(if (repository.getRepoInfo().pullsDataFromNetwrok) C.WAKE_MODE_NETWORK else C.WAKE_MODE_LOCAL)
+            .build()
         newExoPlayer.addListener(object : Player.Listener {
             override fun onPlayerError(error: PlaybackException) {
                 launchJobAndCollectError {
@@ -190,7 +202,7 @@ class NewPlayerImpl(
     }
 
     override fun prepare() {
-        if(exoPlayer.value == null) {
+        if (exoPlayer.value == null) {
             setupNewExoplayer()
         }
         exoPlayer.value?.prepare()
@@ -219,13 +231,14 @@ class NewPlayerImpl(
         exoPlayer.value?.pause()
     }
 
+    @OptIn(UnstableApi::class)
     override fun addToPlaylist(item: String) {
         if (exoPlayer.value == null) {
             prepare()
         }
         launchJobAndCollectError {
-            val mediaItem = toMediaItem(item)
-            exoPlayer.value?.addMediaItem(mediaItem)
+            val mediaSource = toMediaSource(item, playBackMode.value)
+            exoPlayer.value?.addMediaSource(mediaSource)
         }
     }
 
@@ -234,33 +247,34 @@ class NewPlayerImpl(
     }
 
     override fun removePlaylistItem(uniqueId: Long) {
-            for (i in 0..<(exoPlayer.value?.mediaItemCount ?: 0)) {
-                val id = exoPlayer.value?.getMediaItemAt(i)?.mediaId?.toLong() ?: 0
-                if (id == uniqueId) {
-                    exoPlayer.value?.removeMediaItem(i)
-                    break
-                }
+        for (i in 0..<(exoPlayer.value?.mediaItemCount ?: 0)) {
+            val id = exoPlayer.value?.getMediaItemAt(i)?.mediaId?.toLong() ?: 0
+            if (id == uniqueId) {
+                exoPlayer.value?.removeMediaItem(i)
+                break
             }
+        }
     }
 
     override fun playStream(item: String, playMode: PlayMode) {
         launchJobAndCollectError {
-            val mediaItem = toMediaItem(item)
+            val mediaItem = toMediaSource(item, playMode)
             internalPlayStream(mediaItem, playMode)
         }
     }
 
     override fun playStream(
         item: String,
-        streamVariant: String,
+        streamVariant: StreamVariant,
         playMode: PlayMode
     ) {
         launchJobAndCollectError {
-            val stream = toMediaItem(item, streamVariant)
+            val stream = toMediaSource(item, streamVariant)
             internalPlayStream(stream, playMode)
         }
     }
 
+    @OptIn(UnstableApi::class)
     override fun selectChapter(index: Int) {
         val chapters = currentChapters.value
         assert(index in 0..<chapters.size) {
@@ -287,18 +301,20 @@ class NewPlayerImpl(
         uniqueIdToIdLookup[mediaItem.mediaId.toLong()]
             ?: throw NewPlayerException("Could not find Media item with mediaId: ${mediaItem.mediaId}")
 
-    private fun internalPlayStream(mediaItem: MediaItem, playMode: PlayMode) {
+    @OptIn(UnstableApi::class)
+    private fun internalPlayStream(mediaSource: MediaSource, playMode: PlayMode) {
         if (exoPlayer.value?.playbackState == Player.STATE_IDLE || exoPlayer.value == null) {
             prepare()
         }
         this.playBackMode.update { playMode }
-        println("gurken: playervalue: ${this.exoPlayer.value}")
-        this.exoPlayer.value?.setMediaItem(mediaItem)
+
+        this.exoPlayer.value?.setMediaSource(mediaSource)
         this.exoPlayer.value?.play()
     }
 
+    @OptIn(UnstableApi::class)
     private suspend
-    fun toMediaItem(item: String, streamVariant: String): MediaItem {
+    fun toMediaSource(item: String, streamVariant: StreamVariant): MediaSource {
         val dataStream = repository.getStream(item, streamVariant)
 
         val uniqueId = Random.nextLong()
@@ -314,21 +330,25 @@ class NewPlayerImpl(
             mutableErrorFlow.emit(e)
         }
 
-        return mediaItemBuilder.build()
+        val mediaItem = mediaItemBuilder.build()
+
+        return ProgressiveMediaSource.Factory(DefaultHttpDataSource.Factory())
+            .createMediaSource(mediaItem)
     }
 
     private suspend
-    fun toMediaItem(item: String): MediaItem {
-        val availableStream = repository.getAvailableStreamVariants(item)
-        var selectedStream = availableStream[availableStream.size / 2]
+    fun toMediaSource(item: String, playMode: PlayMode): MediaSource {
+        val availableStreams = repository.getAvailableStreamVariants(item)
+        var selectedStream = availableStreams[availableStreams.size / 2]
         for (preferredStream in preferredStreamVariants) {
-            if (preferredStream in availableStream) {
-                selectedStream = preferredStream
-                break;
+            for (availableStream in availableStreams) {
+                if (preferredStream == availableStream.streamVariantIdentifier) {
+                    selectedStream = availableStream
+                }
             }
         }
 
-        return toMediaItem(item, selectedStream)
+        return toMediaSource(item, selectedStream)
     }
 
     private fun launchJobAndCollectError(task: suspend () -> Unit) =

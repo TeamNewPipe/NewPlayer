@@ -69,6 +69,7 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.reorderable)
     implementation(libs.androidx.media3.session)
+    implementation(libs.androidx.media3.exoplayer.dash)
 
     ksp(libs.hilt.android.compiler)
     ksp(libs.androidx.hilt.compiler)
