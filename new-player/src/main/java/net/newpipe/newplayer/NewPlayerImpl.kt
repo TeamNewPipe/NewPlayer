@@ -276,6 +276,9 @@ class NewPlayerImpl(
         playBackMode.update {
             PlayMode.IDLE
         }
+        mutableExoPlayer.update {
+            null
+        }
     }
 
     private fun internalPlayStream(mediaItem: MediaItem, playMode: PlayMode) {
