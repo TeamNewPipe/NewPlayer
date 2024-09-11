@@ -279,7 +279,13 @@ class NewPlayerImpl(
         mutableExoPlayer.update {
             null
         }
+        mediaController = null
+        uniqueIdToIdLookup = HashMap()
     }
+
+    override fun getItemLinkOfMediaItem(mediaItem: MediaItem) =
+        uniqueIdToIdLookup[mediaItem.mediaId.toLong()]
+            ?: throw NewPlayerException("Could not find Media item with mediaId: ${mediaItem.mediaId}")
 
     private fun internalPlayStream(mediaItem: MediaItem, playMode: PlayMode) {
         if (exoPlayer.value?.playbackState == Player.STATE_IDLE || exoPlayer.value == null) {
@@ -313,7 +319,6 @@ class NewPlayerImpl(
 
     private suspend
     fun toMediaItem(item: String): MediaItem {
-
         val availableStream = repository.getAvailableStreamVariants(item)
         var selectedStream = availableStream[availableStream.size / 2]
         for (preferredStream in preferredStreamVariants) {

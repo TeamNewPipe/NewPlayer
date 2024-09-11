@@ -78,4 +78,5 @@ interface NewPlayer {
     fun selectChapter(index: Int)
     fun playStream(item: String, streamVariant: String, playMode: PlayMode)
     fun release()
+    fun getItemLinkOfMediaItem(mediaItem: MediaItem) : String
 }

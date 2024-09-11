@@ -47,7 +47,7 @@ private const val TAG = "NewPlayerService"
 @AndroidEntryPoint
 class NewPlayerService : MediaSessionService() {
 
-    private lateinit var mediaSession: MediaSession
+    private var mediaSession: MediaSession? = null
     private lateinit var customCommands: List<CustomCommand>
 
     @Inject
@@ -89,7 +89,7 @@ class NewPlayerService : MediaSessionService() {
                         controller: MediaSession.ControllerInfo
                     ) {
                         super.onPostConnect(session, controller)
-                        mediaSession.setCustomLayout(customCommands.map { it.commandButton })
+                        mediaSession?.setCustomLayout(customCommands.map { it.commandButton })
                     }
 
                     override fun onCustomCommand(
@@ -130,7 +130,7 @@ class NewPlayerService : MediaSessionService() {
     override fun onDestroy() {
         super.onDestroy()
         newPlayer.release()
-        mediaSession.release()
+        mediaSession?.release()
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
