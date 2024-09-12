@@ -9,6 +9,7 @@ import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.MediaRepository
 import net.newpipe.newplayer.RepoMetaInfo
+import net.newpipe.newplayer.Stream
 import net.newpipe.newplayer.StreamType
 import net.newpipe.newplayer.StreamVariant
 import okhttp3.OkHttpClient
@@ -101,19 +102,33 @@ class TestMediaRepository(val context: Context) : MediaRepository {
 
 
     override suspend fun getStream(item: String, streamVariantSelector: StreamVariant) =
-        Uri.parse(
-            when (item) {
-                "6502" -> context.getString(R.string.ccc_6502_video)
-                "portrait" -> context.getString(R.string.portrait_video_example)
-                "imu" -> when (streamVariantSelector.streamVariantIdentifier) {
-                    "1080p" -> context.getString(R.string.ccc_imu_1080_mp4)
-                    "576p" -> context.getString(R.string.ccc_imu_576_mp4)
-                    else -> throw Exception("Unknown stream selector for $item: $streamVariantSelector")
-                }
+        when (item) {
+            "6502" -> Stream(
+                streamUri = Uri.parse(context.getString(R.string.ccc_6502_video)),
+                mimeType = null
+            )
 
-                else -> throw Exception("Unknown stream: $item")
+            "portrait" -> Stream(
+                streamUri = Uri.parse(context.getString(R.string.portrait_video_example)),
+                mimeType = null
+            )
+
+            "imu" -> when (streamVariantSelector.streamVariantIdentifier) {
+                "1080p" -> Stream(
+                    streamUri = Uri.parse(context.getString(R.string.ccc_imu_1080_mp4)),
+                    mimeType = null
+                )
+
+                "576p" -> Stream(
+                    streamUri = Uri.parse(context.getString(R.string.ccc_imu_576_mp4)),
+                    mimeType = null
+                )
+
+                else -> throw Exception("Unknown stream selector for $item: $streamVariantSelector")
             }
-        )
+
+            else -> throw Exception("Unknown stream: $item")
+        }
 
     override suspend fun getSubtitle(item: String, variant: String) =
         Uri.parse(

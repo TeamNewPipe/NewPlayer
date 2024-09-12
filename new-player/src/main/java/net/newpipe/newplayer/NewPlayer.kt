@@ -25,7 +25,6 @@ import androidx.media3.common.Player
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import java.util.stream.Stream
 import kotlin.Exception
 
 enum class PlayMode {
@@ -45,7 +44,8 @@ enum class RepeatMode {
 
 interface NewPlayer {
     // preferences
-    val preferredStreamVariants: List<String>
+    val preferredVideoVariants: List<String>
+    val prefearedAudioVariants: List<String>
     val preferredStreamLanguage: List<String>
 
     val exoPlayer: StateFlow<Player?>

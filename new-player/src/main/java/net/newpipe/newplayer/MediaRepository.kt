@@ -45,6 +45,11 @@ data class RepoMetaInfo(
     val pullsDataFromNetwrok: Boolean
 )
 
+data class Stream(
+    val streamUri: Uri,
+    val mimeType: String? = null
+)
+
 interface MediaRepository {
 
     fun getRepoInfo() : RepoMetaInfo
@@ -52,7 +57,7 @@ interface MediaRepository {
     suspend fun getMetaInfo(item: String): MediaMetadata
 
     suspend fun getAvailableStreamVariants(item: String): List<StreamVariant>
-    suspend fun getStream(item: String, streamVariantSelector: StreamVariant): Uri
+    suspend fun getStream(item: String, streamVariantSelector: StreamVariant): Stream
 
     suspend fun getAvailableSubtitleVariants(item: String): List<String>
     suspend fun getSubtitle(item: String, variant: String): Uri

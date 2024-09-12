@@ -32,6 +32,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.Timeline
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.datasource.HttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
@@ -50,6 +51,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.newpipe.newplayer.service.NewPlayerService
+import net.newpipe.newplayer.utils.StreamSelect
 import kotlin.random.Random
 
 private const val TAG = "NewPlayerImpl"
@@ -57,8 +59,10 @@ private const val TAG = "NewPlayerImpl"
 class NewPlayerImpl(
     val app: Application,
     private val repository: MediaRepository,
-    override val preferredStreamVariants: List<String> = emptyList(),
-    override val preferredStreamLanguage: List<String> = emptyList()
+    override val preferredVideoVariants: List<String> = emptyList(),
+    override val preferredStreamLanguage: List<String> = emptyList(),
+    override val prefearedAudioVariants: List<String> = emptyList(),
+    val httpDataSourceFactory: HttpDataSource.Factory = DefaultHttpDataSource.Factory(),
 ) : NewPlayer {
 
     private val mutableExoPlayer = MutableStateFlow<ExoPlayer?>(null)
@@ -321,7 +325,11 @@ class NewPlayerImpl(
         uniqueIdToIdLookup[uniqueId] = item
         val mediaItemBuilder = MediaItem.Builder()
             .setMediaId(uniqueId.toString())
-            .setUri(dataStream)
+            .setUri(dataStream.streamUri)
+
+        if(dataStream.mimeType != null) {
+            mediaItemBuilder.setMimeType(dataStream.mimeType)
+        }
 
         try {
             val metadata = repository.getMetaInfo(item)
@@ -332,21 +340,17 @@ class NewPlayerImpl(
 
         val mediaItem = mediaItemBuilder.build()
 
-        return ProgressiveMediaSource.Factory(DefaultHttpDataSource.Factory())
+        return ProgressiveMediaSource.Factory(httpDataSourceFactory)
             .createMediaSource(mediaItem)
     }
+
+
 
     private suspend
     fun toMediaSource(item: String, playMode: PlayMode): MediaSource {
         val availableStreams = repository.getAvailableStreamVariants(item)
-        var selectedStream = availableStreams[availableStreams.size / 2]
-        for (preferredStream in preferredStreamVariants) {
-            for (availableStream in availableStreams) {
-                if (preferredStream == availableStream.streamVariantIdentifier) {
-                    selectedStream = availableStream
-                }
-            }
-        }
+        //var selectedStream = availableStreams[availableStreams.size / 2]
+
 
         return toMediaSource(item, selectedStream)
     }
