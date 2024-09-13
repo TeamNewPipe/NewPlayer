@@ -369,10 +369,10 @@ class VideoPlayerViewModelImpl @Inject constructor(
             progress += item.mediaMetadata.durationMs
                 ?: throw NewPlayerException("Media Item not containing duration. Media Item in question: ${item.mediaMetadata.title}")
         }
-        progress += ((newPlayer?.currentPosition ?: 0) / 1000)
+        progress += (newPlayer?.currentPosition ?: 0)
         mutableUiState.update {
             it.copy(
-                playbackPositionInPlaylistS = progress.toInt()
+                playbackPositionInPlaylistMs = progress
             )
         }
     }

@@ -62,7 +62,7 @@ class NewPlayerImpl(
     private val repository: MediaRepository,
     override val preferredVideoVariants: List<String> = emptyList(),
     override val preferredStreamLanguage: List<String> = emptyList(),
-    override val prefearedAudioVariants: List<String> = emptyList(),
+    override val preferredAudioVariants: List<String> = emptyList(),
     val httpDataSourceFactory: HttpDataSource.Factory = DefaultHttpDataSource.Factory(),
 ) : NewPlayer {
 
@@ -355,7 +355,7 @@ class NewPlayerImpl(
             playMode,
             availableStreamVariants,
             preferredVideoVariants,
-            prefearedAudioVariants,
+            preferredAudioVariants,
             preferredStreamLanguage
         )
 

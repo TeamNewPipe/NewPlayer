@@ -69,7 +69,7 @@ fun StreamSelectTopBar(
             val duration = getPlaylistDurationInMS(uiState.playList)
             val durationString = getTimeStringFromMs(timeSpanInMs = duration, locale)
             val playbackPositionString = getTimeStringFromMs(
-                timeSpanInMs = uiState.playbackPositionInPlaylistS.toLong() * 1000, locale = locale
+                timeSpanInMs = uiState.playbackPositionInPlaylistMs, locale = locale
             )
             Text(
                 text = "$playbackPositionString/$durationString",

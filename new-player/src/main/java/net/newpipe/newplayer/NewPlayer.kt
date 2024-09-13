@@ -45,7 +45,7 @@ enum class RepeatMode {
 interface NewPlayer {
     // preferences
     val preferredVideoVariants: List<String>
-    val prefearedAudioVariants: List<String>
+    val preferredAudioVariants: List<String>
     val preferredStreamLanguage: List<String>
 
     val exoPlayer: StateFlow<Player?>
