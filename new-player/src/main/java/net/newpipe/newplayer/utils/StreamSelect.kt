@@ -114,6 +114,14 @@ object StreamSelect {
     private fun getNonDynamicAudioVariants(availableStreamVariants: List<StreamVariant>) =
         availableStreamVariants.filter { it.streamType == StreamType.AUDIO }
 
+    private fun hasVideoStreamVariants(availableStreamVariants: List<StreamVariant>): Boolean {
+        for (variant in availableStreamVariants) {
+            if (variant.streamType == StreamType.AUDIO_AND_VIDEO || variant.streamType == StreamType.VIDEO || variant.streamType == StreamType.DYNAMIC)
+                return true
+        }
+        return false
+    }
+
     fun selectStream(
         item: String,
         playMode: PlayMode,
@@ -122,6 +130,8 @@ object StreamSelect {
         preferredAudioIdentifier: List<String>,
         preferredLanguage: List<String>
     ): StreamSelection {
+
+        // filter for best fitting language stream variants
 
         val bestFittingLanguage = getBestLanguageFit(availableStreamVariants, preferredLanguage)
         val availableVariantsInPreferredLanguage =
@@ -133,10 +143,11 @@ object StreamSelect {
                 emptyList()
             }
 
-        if (playMode == PlayMode.FULLSCREEN_VIDEO
-            || playMode == PlayMode.EMBEDDED_VIDEO
-            || playMode == PlayMode.PIP
-        ) {
+
+        // is it a video stream or a pure audio stream?
+        if (hasVideoStreamVariants(availableStreamVariants)) {
+
+            // first: try and get a dynamic stream variant
             getDynamicStream(availableVariantsInPreferredLanguage)
                 ?: getDynamicStream(
                     availableStreamVariants
@@ -144,7 +155,9 @@ object StreamSelect {
                     return SingleSelection(it)
                 }
 
-            val bestIdentifier =
+            // second: try and get seperate audio and video stream variants
+
+            val bestVideoIdentifier =
                 getBestFittingVideoIdentifier(
                     availableVariantsInPreferredLanguage,
                     preferredVideoIdentifier
@@ -164,10 +177,10 @@ object StreamSelect {
             val videoOnlyStream =
                 getVideoOnlyVariantWithMatchingIdentifier(
                     availableVariantsInPreferredLanguage,
-                    bestIdentifier
+                    bestVideoIdentifier
                 ) ?: getVideoOnlyVariantWithMatchingIdentifier(
                     availableStreamVariants,
-                    bestIdentifier
+                    bestVideoIdentifier
                 )
 
             if (videoOnlyStream != null) {
@@ -180,20 +193,27 @@ object StreamSelect {
                     }
             }
 
-            getFirstVariantMatchingIdentifier(availableVariantsInPreferredLanguage, bestIdentifier)
-                ?: getFirstVariantMatchingIdentifier(availableStreamVariants, bestIdentifier)?.let {
+            // fourth: try to get a video and audio stream variant with the best fitting identifier
+
+            getFirstVariantMatchingIdentifier(
+                availableVariantsInPreferredLanguage,
+                bestVideoIdentifier
+            )
+                ?: getFirstVariantMatchingIdentifier(
+                    availableStreamVariants,
+                    bestVideoIdentifier
+                )?.let {
                     return SingleSelection(it)
                 }
 
+            // fifth: try and get the median video and audio stream variant
+
             return SingleSelection(run {
                 val videoVariants =
-                    getNonDynamicVideoVariants(availableVariantsInPreferredLanguage).let {
-                        if (it.isNotEmpty()) {
-                            it
-                        } else {
-                            getNonDynamicVideoVariants(availableStreamVariants)
-                        }
+                    getNonDynamicVideoVariants(availableVariantsInPreferredLanguage).ifEmpty {
+                        getNonDynamicVideoVariants(availableStreamVariants)
                     }
+
                 if (videoVariants.isNotEmpty()) {
                     return@run videoVariants[videoVariants.size / 2]
                 } else {
@@ -201,7 +221,10 @@ object StreamSelect {
                 }
             })
 
-        } else {
+        } else { /* if(hasVideoStreamVariants(availableStreamVariants)) */
+
+            // first: try to get an audio stream variant with the best fitting identifier
+
             getBestFittingAudioVariant(
                 availableVariantsInPreferredLanguage,
                 preferredAudioIdentifier
@@ -213,10 +236,12 @@ object StreamSelect {
                     return SingleSelection(it)
                 }
 
+            // second: try and get the median audio stream variant
+
             return SingleSelection(run {
                 val audioVariants =
-                    getNonDynamicAudioVariants(availableVariantsInPreferredLanguage).let{
-                        if(it.isNotEmpty()) {
+                    getNonDynamicAudioVariants(availableVariantsInPreferredLanguage).let {
+                        if (it.isNotEmpty()) {
                             it
                         } else {
                             getNonDynamicAudioVariants(availableStreamVariants)
@@ -229,7 +254,5 @@ object StreamSelect {
                 }
             })
         }
-
-
     }
 }
