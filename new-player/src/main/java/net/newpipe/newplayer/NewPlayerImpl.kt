@@ -35,6 +35,7 @@ import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.datasource.HttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.MediaSource
+import androidx.media3.exoplayer.source.MergingMediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
@@ -327,7 +328,7 @@ class NewPlayerImpl(
             .setMediaId(uniqueId.toString())
             .setUri(dataStream.streamUri)
 
-        if(dataStream.mimeType != null) {
+        if (dataStream.mimeType != null) {
             mediaItemBuilder.setMimeType(dataStream.mimeType)
         }
 
@@ -345,14 +346,35 @@ class NewPlayerImpl(
     }
 
 
-
+    @OptIn(UnstableApi::class)
     private suspend
     fun toMediaSource(item: String, playMode: PlayMode): MediaSource {
-        val availableStreams = repository.getAvailableStreamVariants(item)
-        //var selectedStream = availableStreams[availableStreams.size / 2]
+        val availableStreamVariants = repository.getAvailableStreamVariants(item)
+        val selectedStreamVariant = StreamSelect.selectStream(
+            item,
+            playMode,
+            availableStreamVariants,
+            preferredVideoVariants,
+            prefearedAudioVariants,
+            preferredStreamLanguage
+        )
 
 
-        return toMediaSource(item, selectedStream)
+        return when (selectedStreamVariant) {
+            is StreamSelect.SingleSelection -> toMediaSource(
+                item,
+                selectedStreamVariant.streamVariant
+            )
+
+            is StreamSelect.MultiSelection -> MergingMediaSource(
+                toMediaSource(
+                    item,
+                    selectedStreamVariant.videoStream
+                ), toMediaSource(item, selectedStreamVariant.audioStream)
+            )
+
+            else -> throw NewPlayerException("Unknown Stream selection type: Serious Programming error. :${selectedStreamVariant.javaClass}")
+        }
     }
 
     private fun launchJobAndCollectError(task: suspend () -> Unit) =
