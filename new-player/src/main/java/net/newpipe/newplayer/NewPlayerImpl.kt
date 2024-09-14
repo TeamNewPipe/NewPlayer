@@ -100,14 +100,14 @@ class NewPlayerImpl(
 
     override var repeatMode: RepeatMode
         get() = when (exoPlayer.value?.repeatMode) {
-            Player.REPEAT_MODE_OFF -> RepeatMode.DONT_REPEAT
+            Player.REPEAT_MODE_OFF -> RepeatMode.DO_NOT_REPEAT
             Player.REPEAT_MODE_ALL -> RepeatMode.REPEAT_ALL
             Player.REPEAT_MODE_ONE -> RepeatMode.REPEAT_ONE
             else -> throw NewPlayerException("Unknown Repeatmode option returned by ExoPlayer: ${exoPlayer.value?.repeatMode}")
         }
         set(value) {
             when (value) {
-                RepeatMode.DONT_REPEAT -> exoPlayer.value?.repeatMode = Player.REPEAT_MODE_OFF
+                RepeatMode.DO_NOT_REPEAT -> exoPlayer.value?.repeatMode = Player.REPEAT_MODE_OFF
                 RepeatMode.REPEAT_ALL -> exoPlayer.value?.repeatMode = Player.REPEAT_MODE_ALL
                 RepeatMode.REPEAT_ONE -> exoPlayer.value?.repeatMode = Player.REPEAT_MODE_ONE
             }

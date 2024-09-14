@@ -96,7 +96,7 @@ data class VideoPlayerUIState(
             playList = emptyList(),
             chapters = emptyList(),
             shuffleEnabled = false,
-            repeatMode = RepeatMode.DONT_REPEAT,
+            repeatMode = RepeatMode.DO_NOT_REPEAT,
             playListDurationInS = 0,
             currentlyPlaying = null,
             currentPlaylistItemIndex = 0

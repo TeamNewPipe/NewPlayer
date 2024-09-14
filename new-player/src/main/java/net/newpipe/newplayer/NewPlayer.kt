@@ -37,7 +37,7 @@ enum class PlayMode {
 }
 
 enum class RepeatMode {
-    DONT_REPEAT,
+    DO_NOT_REPEAT,
     REPEAT_ALL,
     REPEAT_ONE
 }

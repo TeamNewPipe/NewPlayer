@@ -44,7 +44,7 @@
     <integer name="portrait_length">23</integer>
 
     <!-- "Intel Management Engine deep dive" a talk from 36c3 -->
-    <string name ="ccc_imu_link" translatable="false">https://media.ccc.de/v/36c3-10694-intel_management_engine_deep_dive</string>
+    <string name="ccc_imu_link" translatable="false">https://media.ccc.de/v/36c3-10694-intel_management_engine_deep_dive</string>
     <string name="ccc_imu_1080_mp4" translatable="false">https://ftp.fau.de/cdn.media.ccc.de/congress/2019/h264-hd/36c3-10694-eng-deu-Intel_Management_Engine_deep_dive_hd.mp4</string>
     <string name="ccc_imu_576_mp4" translatable="false">https://ftp.fau.de/cdn.media.ccc.de/congress/2019/h264-sd/36c3-10694-eng-deu-Intel_Management_Engine_deep_dive_sd.mp4</string>
     <string name="ccc_imu_1080_webm" translatable="false">https://ftp.fau.de/cdn.media.ccc.de/congress/2019/webm-hd/36c3-10694-eng-deu-Intel_Management_Engine_deep_dive_webm-hd.webm</string>
@@ -64,4 +64,17 @@
     </integer-array>
     <string name="ccc_imu_subtitles" translatable="false">https://cdn.media.ccc.de/congress/2019/36c3-10694-eng-deu-Intel_Management_Engine_deep_dive.en.srt</string>
     <integer name="ccc_imu_length">3607</integer>
+
+
+    <!-- "Reverse Engineering the MOS 6502 CPU" a talk from 27c3 -->
+    <string name="yt_test_link" translatable="false">https://cloud.newpipe-ev.de/files/link/public/RyuyJKSUEzsHtwB</string>
+    <string name="yt_test_video_fullhd" translatable="false">https://cloud.newpipe-ev.de/remote.php/dav/public-files/RyuyJKSUEzsHtwB/fullhd.mp4</string>
+    <string name="yt_test_video_hd" translatable="false">https://cloud.newpipe-ev.de/remote.php/dav/public-files/RyuyJKSUEzsHtwB/hd.mp4</string>
+    <string name="yt_test_video_sd" translatable="false">https://cloud.newpipe-ev.de/remote.php/dav/public-files/RyuyJKSUEzsHtwB/sd.mp4</string>
+    <string name="yt_test_audio_english" translatable="false">https://cloud.newpipe-ev.de/remote.php/dav/public-files/RyuyJKSUEzsHtwB/english.m4a</string>
+    <string name="yt_test_audio_spanish" translatable="false">https://cloud.newpipe-ev.de/remote.php/dav/public-files/RyuyJKSUEzsHtwB/spanish.m4a</string>
+    <string name="yt_test_title" translatable="false">Some YT Test video</string>
+    <string name="yt_test_channel" translatable="false">A Channel on YT</string>
+    <integer name="yt_test_length">254</integer>
+
 </resources>

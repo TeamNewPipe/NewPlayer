@@ -38,7 +38,13 @@ data class StreamVariant(
     val streamType: StreamType,
     val language: String?,
     val streamVariantIdentifier: String
-)
+) {
+    override fun equals(other: Any?) =
+        other is StreamVariant
+                && other.streamType == streamType
+                && other.language == language
+                && other.streamVariantIdentifier == streamVariantIdentifier
+}
 
 data class RepoMetaInfo(
     val canHandleTimestampedLinks: Boolean,
@@ -52,7 +58,7 @@ data class Stream(
 
 interface MediaRepository {
 
-    fun getRepoInfo() : RepoMetaInfo
+    fun getRepoInfo(): RepoMetaInfo
 
     suspend fun getMetaInfo(item: String): MediaMetadata
 

@@ -81,7 +81,7 @@ fun StreamSelectTopBar(
                 onClick = viewModel::cycleRepeatMode
             ) {
                 when (uiState.repeatMode) {
-                    RepeatMode.DONT_REPEAT -> Icon(
+                    RepeatMode.DO_NOT_REPEAT -> Icon(
                         imageVector = Icons.Filled.Repeat,
                         contentDescription = stringResource(R.string.repeat_mode_no_repeat)
                     )

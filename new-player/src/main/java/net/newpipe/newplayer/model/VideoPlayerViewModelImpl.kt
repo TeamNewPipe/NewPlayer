@@ -415,6 +415,10 @@ class VideoPlayerViewModelImpl @Inject constructor(
     }
 
     override fun finishFastSeek() {
+        if (mutableUiState.value.uiMode.controllerUiVisible) {
+            resetHideUiDelayedJob()
+        }
+
         val fastSeekAmount = mutableUiState.value.fastSeekSeconds
         if (fastSeekAmount != 0) {
             Log.d(TAG, "$fastSeekAmount")
@@ -513,9 +517,9 @@ class VideoPlayerViewModelImpl @Inject constructor(
     override fun cycleRepeatMode() {
         newPlayer?.let {
             it.repeatMode = when (it.repeatMode) {
-                RepeatMode.DONT_REPEAT -> RepeatMode.REPEAT_ALL
+                RepeatMode.DO_NOT_REPEAT -> RepeatMode.REPEAT_ALL
                 RepeatMode.REPEAT_ALL -> RepeatMode.REPEAT_ONE
-                RepeatMode.REPEAT_ONE -> RepeatMode.DONT_REPEAT
+                RepeatMode.REPEAT_ONE -> RepeatMode.DO_NOT_REPEAT
             }
         }
     }
