@@ -4,29 +4,29 @@ package net.newpipe.newplayer.utils
 import net.newpipe.newplayer.NewPlayerException
 import net.newpipe.newplayer.PlayMode
 import net.newpipe.newplayer.StreamType
-import net.newpipe.newplayer.StreamVariant
+import net.newpipe.newplayer.Stream
 
 object StreamSelect {
 
     interface StreamSelection
 
     data class SingleSelection(
-        val streamVariant: StreamVariant
+        val stream: Stream
     ) : StreamSelection
 
     data class MultiSelection(
-        val videoStream: StreamVariant,
-        val audioStream: StreamVariant
+        val videoStream: Stream,
+        val audioStream: Stream
     ) : StreamSelection
 
 
     private fun getBestLanguageFit(
-        availableStreamVariants: List<StreamVariant>,
+        availableStreams: List<Stream>,
         preferredLanguages: List<String>
     ): String? {
         for (preferredLanguage in preferredLanguages) {
-            for (availableVariant in availableStreamVariants) {
-                if (availableVariant.language == preferredLanguage) {
+            for (available in availableStreams) {
+                if (available.language == preferredLanguage) {
                     return preferredLanguage
                 }
             }
@@ -34,21 +34,21 @@ object StreamSelect {
         return null
     }
 
-    private fun filterVariantsByLanguage(
-        availableStreamVariants: List<StreamVariant>,
+    private fun filtersByLanguage(
+        availableStreams: List<Stream>,
         language: String
     ) =
-        availableStreamVariants.filter { it.language == language }
+        availableStreams.filter { it.language == language }
 
     private fun getBestFittingVideoIdentifier(
-        availableStreamVariants: List<StreamVariant>,
+        availableStreams: List<Stream>,
         preferredVideoIdentifier: List<String>
     ): String? {
         for (preferredStream in preferredVideoIdentifier) {
-            for (availableVariant in availableStreamVariants) {
-                if ((availableVariant.streamType == StreamType.AUDIO_AND_VIDEO ||
-                            availableVariant.streamType == StreamType.VIDEO)
-                    && preferredStream == availableVariant.streamVariantIdentifier
+            for (available in availableStreams) {
+                if ((available.streamType == StreamType.AUDIO_AND_VIDEO ||
+                            available.streamType == StreamType.VIDEO)
+                    && preferredStream == available.identifier
                 ) {
                     return preferredStream
                 }
@@ -57,25 +57,25 @@ object StreamSelect {
         return null
     }
 
-    private fun getFirstVariantMatchingIdentifier(
-        availableStreamVariants: List<StreamVariant>,
+    private fun getFirstMatchingIdentifier(
+        availableStreams: List<Stream>,
         identifier: String
-    ): StreamVariant? {
-        for (variant in availableStreamVariants) {
-            if (variant.streamVariantIdentifier == identifier)
+    ): Stream? {
+        for (variant in availableStreams) {
+            if (variant.identifier == identifier)
                 return variant
         }
         return null
     }
 
-    private fun getBestFittingAudioVariant(
-        availableStreamVariants: List<StreamVariant>,
+    private fun getBestFittingAudio(
+        availableStreams: List<Stream>,
         preferredAudioIdentifier: List<String>
-    ): StreamVariant? {
+    ): Stream? {
         for (preferredStream in preferredAudioIdentifier) {
-            for (availableStream in availableStreamVariants) {
+            for (availableStream in availableStreams) {
                 if (availableStream.streamType == StreamType.AUDIO
-                    && preferredStream == availableStream.streamVariantIdentifier
+                    && preferredStream == availableStream.identifier
                 ) {
                     return availableStream
                 }
@@ -84,21 +84,21 @@ object StreamSelect {
         return null
     }
 
-    private fun getVideoOnlyVariantWithMatchingIdentifier(
-        availableStreamVariants: List<StreamVariant>,
+    private fun getVideoOnlyWithMatchingIdentifier(
+        availableStreams: List<Stream>,
         identifier: String
-    ): StreamVariant? {
-        for (variant in availableStreamVariants) {
+    ): Stream? {
+        for (variant in availableStreams) {
             if (variant.streamType == StreamType.VIDEO
-                && variant.streamVariantIdentifier == identifier
+                && variant.identifier == identifier
             )
                 return variant
         }
         return null
     }
 
-    private fun getDynamicStream(availableStreamVariants: List<StreamVariant>): StreamVariant? {
-        for (variant in availableStreamVariants) {
+    private fun getDynamicStream(availableStreams: List<Stream>): Stream? {
+        for (variant in availableStreams) {
             if (variant.streamType == StreamType.DYNAMIC) {
                 return variant
             }
@@ -106,16 +106,16 @@ object StreamSelect {
         return null
     }
 
-    private fun getNonDynamicVideoVariants(availableStreamVariants: List<StreamVariant>) =
-        availableStreamVariants.filter {
+    private fun getNonDynamicVideos(availableStreams: List<Stream>) =
+        availableStreams.filter {
             it.streamType == StreamType.VIDEO || it.streamType == StreamType.AUDIO_AND_VIDEO
         }
 
-    private fun getNonDynamicAudioVariants(availableStreamVariants: List<StreamVariant>) =
-        availableStreamVariants.filter { it.streamType == StreamType.AUDIO }
+    private fun getNonDynamicAudios(availableStreams: List<Stream>) =
+        availableStreams.filter { it.streamType == StreamType.AUDIO }
 
-    private fun hasVideoStreamVariants(availableStreamVariants: List<StreamVariant>): Boolean {
-        for (variant in availableStreamVariants) {
+    private fun hasVideoStreams(availableStreams: List<Stream>): Boolean {
+        for (variant in availableStreams) {
             if (variant.streamType == StreamType.AUDIO_AND_VIDEO || variant.streamType == StreamType.VIDEO || variant.streamType == StreamType.DYNAMIC)
                 return true
         }
@@ -125,7 +125,7 @@ object StreamSelect {
     fun selectStream(
         item: String,
         playMode: PlayMode,
-        availableStreamVariants: List<StreamVariant>,
+        availableStreams: List<Stream>,
         preferredVideoIdentifier: List<String>,
         preferredAudioIdentifier: List<String>,
         preferredLanguage: List<String>
@@ -133,10 +133,10 @@ object StreamSelect {
 
         // filter for best fitting language stream variants
 
-        val bestFittingLanguage = getBestLanguageFit(availableStreamVariants, preferredLanguage)
-        val availableVariantsInPreferredLanguage =
-            if (bestFittingLanguage != null) filterVariantsByLanguage(
-                availableStreamVariants,
+        val bestFittingLanguage = getBestLanguageFit(availableStreams, preferredLanguage)
+        val availablesInPreferredLanguage =
+            if (bestFittingLanguage != null) filtersByLanguage(
+                availableStreams,
                 bestFittingLanguage
             )
             else {
@@ -145,12 +145,12 @@ object StreamSelect {
 
 
         // is it a video stream or a pure audio stream?
-        if (hasVideoStreamVariants(availableStreamVariants)) {
+        if (hasVideoStreams(availableStreams)) {
 
             // first: try and get a dynamic stream variant
-            getDynamicStream(availableVariantsInPreferredLanguage)
+            getDynamicStream(availablesInPreferredLanguage)
                 ?: getDynamicStream(
-                    availableStreamVariants
+                    availableStreams
                 )?.let {
                     return SingleSelection(it)
                 }
@@ -159,35 +159,35 @@ object StreamSelect {
 
             val bestVideoIdentifier =
                 getBestFittingVideoIdentifier(
-                    availableVariantsInPreferredLanguage,
+                    availablesInPreferredLanguage,
                     preferredVideoIdentifier
                 )?.let {
-                    val videoVariants =
-                        getNonDynamicVideoVariants(availableVariantsInPreferredLanguage)
-                    videoVariants[videoVariants.size / 2].streamVariantIdentifier
+                    val videos =
+                        getNonDynamicVideos(availablesInPreferredLanguage)
+                    videos[videos.size / 2].identifier
                 } ?: getBestFittingVideoIdentifier(
-                    availableStreamVariants,
+                    availableStreams,
                     preferredVideoIdentifier
                 )
                 ?: run {
-                    val videoVariants = getNonDynamicVideoVariants(availableStreamVariants)
-                    videoVariants[videoVariants.size / 2].streamVariantIdentifier
+                    val videos = getNonDynamicVideos(availableStreams)
+                    videos[videos.size / 2].identifier
                 }
 
             val videoOnlyStream =
-                getVideoOnlyVariantWithMatchingIdentifier(
-                    availableVariantsInPreferredLanguage,
+                getVideoOnlyWithMatchingIdentifier(
+                    availablesInPreferredLanguage,
                     bestVideoIdentifier
-                ) ?: getVideoOnlyVariantWithMatchingIdentifier(
-                    availableStreamVariants,
+                ) ?: getVideoOnlyWithMatchingIdentifier(
+                    availableStreams,
                     bestVideoIdentifier
                 )
 
             if (videoOnlyStream != null) {
-                getBestFittingAudioVariant(
-                    availableVariantsInPreferredLanguage,
+                getBestFittingAudio(
+                    availablesInPreferredLanguage,
                     preferredAudioIdentifier
-                ) ?: getBestFittingAudioVariant(availableStreamVariants, preferredAudioIdentifier)
+                ) ?: getBestFittingAudio(availableStreams, preferredAudioIdentifier)
                     ?.let {
                         return MultiSelection(videoOnlyStream, it)
                     }
@@ -195,12 +195,12 @@ object StreamSelect {
 
             // fourth: try to get a video and audio stream variant with the best fitting identifier
 
-            getFirstVariantMatchingIdentifier(
-                availableVariantsInPreferredLanguage,
+            getFirstMatchingIdentifier(
+                availablesInPreferredLanguage,
                 bestVideoIdentifier
             )
-                ?: getFirstVariantMatchingIdentifier(
-                    availableStreamVariants,
+                ?: getFirstMatchingIdentifier(
+                    availableStreams,
                     bestVideoIdentifier
                 )?.let {
                     return SingleSelection(it)
@@ -209,28 +209,28 @@ object StreamSelect {
             // fifth: try and get the median video and audio stream variant
 
             return SingleSelection(run {
-                val videoVariants =
-                    getNonDynamicVideoVariants(availableVariantsInPreferredLanguage).ifEmpty {
-                        getNonDynamicVideoVariants(availableStreamVariants)
+                val videos =
+                    getNonDynamicVideos(availablesInPreferredLanguage).ifEmpty {
+                        getNonDynamicVideos(availableStreams)
                     }
 
-                if (videoVariants.isNotEmpty()) {
-                    return@run videoVariants[videoVariants.size / 2]
+                if (videos.isNotEmpty()) {
+                    return@run videos[videos.size / 2]
                 } else {
                     throw NewPlayerException("No fitting video stream could be found for stream item item: ${item}")
                 }
             })
 
-        } else { /* if(hasVideoStreamVariants(availableStreamVariants)) */
+        } else { /* if(hasVideoStreams(availableStreams)) */
 
             // first: try to get an audio stream variant with the best fitting identifier
 
-            getBestFittingAudioVariant(
-                availableVariantsInPreferredLanguage,
+            getBestFittingAudio(
+                availablesInPreferredLanguage,
                 preferredAudioIdentifier
             )
-                ?: getBestFittingAudioVariant(
-                    availableStreamVariants,
+                ?: getBestFittingAudio(
+                    availableStreams,
                     preferredAudioIdentifier
                 )?.let {
                     return SingleSelection(it)
@@ -239,16 +239,16 @@ object StreamSelect {
             // second: try and get the median audio stream variant
 
             return SingleSelection(run {
-                val audioVariants =
-                    getNonDynamicAudioVariants(availableVariantsInPreferredLanguage).let {
+                val audios =
+                    getNonDynamicAudios(availablesInPreferredLanguage).let {
                         if (it.isNotEmpty()) {
                             it
                         } else {
-                            getNonDynamicAudioVariants(availableStreamVariants)
+                            getNonDynamicAudios(availableStreams)
                         }
                     }
-                if (audioVariants.isNotEmpty()) {
-                    return@run audioVariants[audioVariants.size / 2]
+                if (audios.isNotEmpty()) {
+                    return@run audios[audios.size / 2]
                 } else {
                     throw NewPlayerException("No fitting audio stream could be found for stream item item: ${item}")
                 }

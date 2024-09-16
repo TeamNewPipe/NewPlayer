@@ -2,18 +2,14 @@ package net.newpipe.newplayer.utils
 
 import androidx.annotation.OptIn
 import androidx.media3.common.MediaItem
-import androidx.media3.common.Tracks
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.HttpDataSource
 import androidx.media3.exoplayer.dash.DashMediaSource
-import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
-import androidx.media3.exoplayer.source.MediaSource
-import androidx.media3.exoplayer.source.MergingMediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import kotlinx.coroutines.flow.MutableSharedFlow
 import net.newpipe.newplayer.MediaRepository
 import net.newpipe.newplayer.StreamType
-import net.newpipe.newplayer.StreamVariant
+import net.newpipe.newplayer.Stream
 import kotlin.random.Random
 
 class MediaSourceBuilder(
@@ -23,31 +19,30 @@ class MediaSourceBuilder(
     private val httpDataSourceFactory: HttpDataSource.Factory
 ) {
     suspend fun buildMediaSource(item: String) {
-        val availableStreamVariants = repository.getAvailableStreamVariants(item)
+        val availableStreams = repository.getStreams(item)
 
     }
 
     @OptIn(UnstableApi::class)
-    private suspend
-    fun toMediaItem(item: String, streamVariant: StreamVariant): MediaItem {
-        val dataStream = repository.getStream(item, streamVariant)
+    private
+    fun toMediaItem(item: String, stream: Stream): MediaItem {
 
         val uniqueId = Random.nextLong()
         uniqueIdToIdLookup[uniqueId] = item
         val mediaItemBuilder = MediaItem.Builder()
             .setMediaId(uniqueId.toString())
-            .setUri(dataStream.streamUri)
+            .setUri(stream.streamUri)
 
-        if (dataStream.mimeType != null) {
-            mediaItemBuilder.setMimeType(dataStream.mimeType)
+        if (stream.mimeType != null) {
+            mediaItemBuilder.setMimeType(stream.mimeType)
         }
 
         return mediaItemBuilder.build()
     }
 
     @OptIn(UnstableApi::class)
-    private fun toMediaSource(mediaItem: MediaItem, streamVariant: StreamVariant) =
-        if (streamVariant.streamType == StreamType.DYNAMIC)
+    private fun toMediaSource(mediaItem: MediaItem, stream: Stream) =
+        if (stream.streamType == StreamType.DYNAMIC)
             DashMediaSource.Factory(httpDataSourceFactory)
                 .createMediaSource(mediaItem)
         else
