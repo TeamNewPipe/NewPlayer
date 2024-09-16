@@ -23,7 +23,6 @@ package net.newpipe.newplayer
 import android.net.Uri
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
-import net.newpipe.newplayer.utils.Thumbnail
 
 data class Chapter(val chapterStartInMs: Long, val chapterTitle: String?, val thumbnail: Uri?)
 
@@ -34,16 +33,21 @@ enum class StreamType {
     DYNAMIC
 }
 
-data class StreamVariant(
+data class Stream(
+    val streamUri: Uri,
+    val identifier: String,
     val streamType: StreamType,
     val language: String?,
-    val streamVariantIdentifier: String
+    val mimeType: String? = null,
 ) {
     override fun equals(other: Any?) =
-        other is StreamVariant
+        other is Stream
+                && other.streamUri == streamUri
                 && other.streamType == streamType
                 && other.language == language
-                && other.streamVariantIdentifier == streamVariantIdentifier
+                && other.identifier == identifier
+                && other.mimeType == mimeType
+
 }
 
 data class RepoMetaInfo(
@@ -51,9 +55,9 @@ data class RepoMetaInfo(
     val pullsDataFromNetwrok: Boolean
 )
 
-data class Stream(
-    val streamUri: Uri,
-    val mimeType: String? = null
+data class Subtitle(
+    val uri: Uri,
+    val identifier: String
 )
 
 interface MediaRepository {
@@ -62,11 +66,9 @@ interface MediaRepository {
 
     suspend fun getMetaInfo(item: String): MediaMetadata
 
-    suspend fun getAvailableStreamVariants(item: String): List<StreamVariant>
-    suspend fun getStream(item: String, streamVariantSelector: StreamVariant): Stream
+    suspend fun getStreams(item: String): List<Stream>
 
-    suspend fun getAvailableSubtitleVariants(item: String): List<String>
-    suspend fun getSubtitle(item: String, variant: String): Uri
+    suspend fun getSubtitles(item: String): List<Subtitle>
 
     suspend fun getPreviewThumbnails(item: String): HashMap<Long, Uri>?
     suspend fun getChapters(item: String): List<Chapter>

@@ -25,10 +25,6 @@ class MediaSourceBuilder(
     suspend fun buildMediaSource(item: String) {
         val availableStreamVariants = repository.getAvailableStreamVariants(item)
 
-
-        val tracks: Tracks? = null
-        MergingMediaSource
-
     }
 
     @OptIn(UnstableApi::class)

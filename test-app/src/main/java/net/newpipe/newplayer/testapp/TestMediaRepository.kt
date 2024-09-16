@@ -11,7 +11,7 @@ import net.newpipe.newplayer.MediaRepository
 import net.newpipe.newplayer.RepoMetaInfo
 import net.newpipe.newplayer.Stream
 import net.newpipe.newplayer.StreamType
-import net.newpipe.newplayer.StreamVariant
+import net.newpipe.newplayer.Subtitle
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -62,81 +62,63 @@ class TestMediaRepository(val context: Context) : MediaRepository {
             else -> throw Exception("Unknown stream: $item")
         }
 
-    override suspend fun getAvailableStreamVariants(item: String): List<StreamVariant> =
+
+    override suspend fun getStreams(item: String) =
         when (item) {
             "6502" -> listOf(
-                StreamVariant(
+                Stream(
+                    streamUri = Uri.parse(context.getString(R.string.ccc_6502_video)),
+                    mimeType = null,
                     streamType = StreamType.AUDIO_AND_VIDEO,
                     language = "Deutsch",
-                    streamVariantIdentifier = "576p",
-                ),
+                    identifier = "576p",
+                )
             )
 
             "portrait" -> listOf(
-                StreamVariant(
+                Stream(
+                    streamUri = Uri.parse(context.getString(R.string.portrait_video_example)),
+                    mimeType = null,
                     streamType = StreamType.AUDIO_AND_VIDEO,
                     language = null,
-                    streamVariantIdentifier = "720p",
-                ),
+                    identifier = "720p",
+                )
             )
 
             "imu" -> listOf(
-                StreamVariant(
-                    streamType = StreamType.AUDIO_AND_VIDEO,
-                    language = "Deutsch",
-                    streamVariantIdentifier = "1080p",
-                ),
-                StreamVariant(
-                    streamType = StreamType.AUDIO_AND_VIDEO,
-                    language = "Deutsch",
-                    streamVariantIdentifier = "576p",
-                )
-            )
-
-            else -> throw Exception("Unknown stream: $item")
-        }
-
-    override suspend fun getAvailableSubtitleVariants(item: String): List<String> {
-        TODO("Not yet implemented")
-    }
-
-
-    override suspend fun getStream(item: String, streamVariantSelector: StreamVariant) =
-        when (item) {
-            "6502" -> Stream(
-                streamUri = Uri.parse(context.getString(R.string.ccc_6502_video)),
-                mimeType = null
-            )
-
-            "portrait" -> Stream(
-                streamUri = Uri.parse(context.getString(R.string.portrait_video_example)),
-                mimeType = null
-            )
-
-            "imu" -> when (streamVariantSelector.streamVariantIdentifier) {
-                "1080p" -> Stream(
+                Stream(
                     streamUri = Uri.parse(context.getString(R.string.ccc_imu_1080_mp4)),
-                    mimeType = null
-                )
+                    mimeType = null,
+                    streamType = StreamType.AUDIO_AND_VIDEO,
+                    language = "Deutsch",
+                    identifier = "1080p",
+                ),
 
-                "576p" -> Stream(
+                Stream(
                     streamUri = Uri.parse(context.getString(R.string.ccc_imu_576_mp4)),
-                    mimeType = null
+                    mimeType = null,
+                    streamType = StreamType.AUDIO_AND_VIDEO,
+                    language = "Deutsch",
+                    identifier = "576p"
                 )
+            )
 
-                else -> throw Exception("Unknown stream selector for $item: $streamVariantSelector")
-            }
-
-            else -> throw Exception("Unknown stream: $item")
+            else -> throw Exception("Unknown item: $item")
         }
 
-    override suspend fun getSubtitle(item: String, variant: String) =
-        Uri.parse(
-            when (item) {
-                "imu" -> context.getString(R.string.ccc_imu_subtitles)
-                else -> ""
-            }
-        )
+
+    override suspend fun getSubtitles(item: String) =
+        when (item) {
+            "imu" -> listOf(
+                Subtitle(
+                    Uri.parse(context.getString(R.string.ccc_imu_subtitles)),
+                    "english"
+                )
+            )
+
+            else -> emptyList()
+        }
+
 
     override suspend fun getPreviewThumbnails(item: String): HashMap<Long, Uri>? {
         val templateUrl = when (item) {
