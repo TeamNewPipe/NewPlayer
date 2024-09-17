@@ -52,6 +52,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.newpipe.newplayer.service.NewPlayerService
+import net.newpipe.newplayer.utils.MediaSourceBuilder
 import net.newpipe.newplayer.utils.StreamSelect
 import kotlin.random.Random
 
@@ -268,17 +269,6 @@ class NewPlayerImpl(
         }
     }
 
-    override fun playStream(
-        item: String,
-        streamVariant: StreamVariant,
-        playMode: PlayMode
-    ) {
-        launchJobAndCollectError {
-            val stream = toMediaSource(item, streamVariant)
-            internalPlayStream(stream, playMode)
-        }
-    }
-
     @OptIn(UnstableApi::class)
     override fun selectChapter(index: Int) {
         val chapters = currentChapters.value
@@ -317,64 +307,21 @@ class NewPlayerImpl(
         this.exoPlayer.value?.play()
     }
 
-    @OptIn(UnstableApi::class)
-    private suspend
-    fun toMediaSource(item: String, streamVariant: StreamVariant): MediaSource {
-        val dataStream = repository.getStream(item, streamVariant)
-
-        val uniqueId = Random.nextLong()
-        uniqueIdToIdLookup[uniqueId] = item
-        val mediaItemBuilder = MediaItem.Builder()
-            .setMediaId(uniqueId.toString())
-            .setUri(dataStream.streamUri)
-
-        if (dataStream.mimeType != null) {
-            mediaItemBuilder.setMimeType(dataStream.mimeType)
-        }
-
-        try {
-            val metadata = repository.getMetaInfo(item)
-            mediaItemBuilder.setMediaMetadata(metadata)
-        } catch (e: Exception) {
-            mutableErrorFlow.emit(e)
-        }
-
-        val mediaItem = mediaItemBuilder.build()
-
-        return ProgressiveMediaSource.Factory(httpDataSourceFactory)
-            .createMediaSource(mediaItem)
-    }
-
 
     @OptIn(UnstableApi::class)
     private suspend
     fun toMediaSource(item: String, playMode: PlayMode): MediaSource {
-        val availableStreamVariants = repository.getAvailableStreamVariants(item)
-        val selectedStreamVariant = StreamSelect.selectStream(
-            item,
-            playMode,
-            availableStreamVariants,
-            preferredVideoVariants,
-            preferredAudioVariants,
-            preferredStreamLanguage
+        val builder = MediaSourceBuilder(
+            repository = repository,
+            uniqueIdToIdLookup = uniqueIdToIdLookup,
+            preferredLanguage = preferredStreamLanguage,
+            preferredAudioId = preferredAudioVariants,
+            preferredVideoId = preferredVideoVariants,
+            playMode = playMode,
+            mutableErrorFlow = mutableErrorFlow,
         )
 
-
-        return when (selectedStreamVariant) {
-            is StreamSelect.SingleSelection -> toMediaSource(
-                item,
-                selectedStreamVariant.streamVariant
-            )
-
-            is StreamSelect.MultiSelection -> MergingMediaSource(
-                toMediaSource(
-                    item,
-                    selectedStreamVariant.videoStream
-                ), toMediaSource(item, selectedStreamVariant.audioStream)
-            )
-
-            else -> throw NewPlayerException("Unknown Stream selection type: Serious Programming error. :${selectedStreamVariant.javaClass}")
-        }
+        return builder.buildMediaSource(item)
     }
 
     private fun launchJobAndCollectError(task: suspend () -> Unit) =

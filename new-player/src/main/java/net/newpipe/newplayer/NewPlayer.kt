@@ -78,7 +78,6 @@ interface NewPlayer {
     fun removePlaylistItem(uniqueId: Long)
     fun playStream(item: String, playMode: PlayMode)
     fun selectChapter(index: Int)
-    fun playStream(item: String, streamVariant: StreamVariant, playMode: PlayMode)
     fun release()
     fun getItemLinkOfMediaItem(mediaItem: MediaItem) : String
 }
