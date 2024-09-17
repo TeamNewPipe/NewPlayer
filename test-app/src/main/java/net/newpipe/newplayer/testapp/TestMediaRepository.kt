@@ -59,6 +59,16 @@ class TestMediaRepository(val context: Context) : MediaRepository {
                 )
                 .build()
 
+            "yt_test" -> MediaMetadata.Builder()
+                .setTitle(context.getString(R.string.yt_test_title))
+                .setArtist(context.getString(R.string.yt_test_channel))
+                .setArtworkUri(null)
+                .setDurationMs(
+                    context.resources.getInteger(R.integer.yt_test_length).toLong() * 1000L
+                )
+                .build()
+
+
             else -> throw Exception("Unknown stream: $item")
         }
 
@@ -90,7 +100,7 @@ class TestMediaRepository(val context: Context) : MediaRepository {
                     streamUri = Uri.parse(context.getString(R.string.ccc_imu_1080_mp4)),
                     mimeType = null,
                     streamType = StreamType.AUDIO_AND_VIDEO,
-                    language = "Deutsch",
+                    language = null,
                     identifier = "1080p",
                 ),
 
@@ -98,10 +108,50 @@ class TestMediaRepository(val context: Context) : MediaRepository {
                     streamUri = Uri.parse(context.getString(R.string.ccc_imu_576_mp4)),
                     mimeType = null,
                     streamType = StreamType.AUDIO_AND_VIDEO,
-                    language = "Deutsch",
+                    language = null,
                     identifier = "576p"
                 )
             )
+
+            "yt_test" -> listOf(
+                Stream(
+                    streamUri = Uri.parse(context.getString(R.string.yt_test_video_sd)),
+                    mimeType = null,
+                    streamType = StreamType.VIDEO,
+                    language = null,
+                    identifier = "SD",
+                ),
+
+                Stream(
+                    streamUri = Uri.parse(context.getString(R.string.yt_test_video_hd)),
+                    mimeType = null,
+                    streamType = StreamType.VIDEO,
+                    language = null,
+                    identifier = "HD",
+                ),
+                Stream(
+                    streamUri = Uri.parse(context.getString(R.string.yt_test_video_fullhd)),
+                    mimeType = null,
+                    streamType = StreamType.VIDEO,
+                    language = null,
+                    identifier = "FullHD",
+                ),
+                Stream(
+                    streamUri = Uri.parse(context.getString(R.string.yt_test_audio_english)),
+                    mimeType = null,
+                    streamType = StreamType.AUDIO,
+                    language = "English",
+                    identifier = "default audio",
+                ),
+                Stream(
+                    streamUri = Uri.parse(context.getString(R.string.yt_test_audio_spanish)),
+                    mimeType = null,
+                    streamType = StreamType.AUDIO,
+                    language = "Spanish",
+                    identifier = "default audio",
+                )
+            )
+
 
             else -> throw Exception("Unknown item: $item")
         }
@@ -125,6 +175,7 @@ class TestMediaRepository(val context: Context) : MediaRepository {
             "6502" -> context.getString(R.string.ccc_6502_preview_thumbnails)
             "imu" -> context.getString(R.string.ccc_imu_preview_thumbnails)
             "portrait" -> null
+            "ty_test" -> null
             else -> throw Exception("Unknown stream: $item")
         }
 

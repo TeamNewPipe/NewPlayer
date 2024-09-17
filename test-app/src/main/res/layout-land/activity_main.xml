@@ -101,6 +101,13 @@
                 android:text="Start Portrait Stream" />
 
             <Button
+                android:id="@+id/start_yt_test_video_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Start Yt Test Video" />
+
+            <Button
                 android:id="@+id/add_6502_stream_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -123,6 +130,14 @@
                 android:layout_gravity="center"
                 android:backgroundTint="@color/material_dynamic_primary50"
                 android:text="Append Portrait Stream" />
+
+            <Button
+                android:id="@+id/add_yt_test_video_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/material_dynamic_primary50"
+                android:text="Add Yt Test Video" />
 
         </LinearLayout>
     </ScrollView>

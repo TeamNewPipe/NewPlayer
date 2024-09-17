@@ -75,6 +75,11 @@ class MainActivity : AppCompatActivity() {
             newPlayer.playStream("portrait", PlayMode.EMBEDDED_VIDEO)
         }
 
+        binding.startYtTestVideoButton.setOnClickListener {
+            newPlayer.playWhenReady = true
+            newPlayer.playStream("yt_test", PlayMode.EMBEDDED_VIDEO)
+        }
+
         binding.add6502StreamButton.setOnClickListener {
             newPlayer.addToPlaylist("6502")
         }
@@ -85,6 +90,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.addPortraitStreamButton.setOnClickListener {
             newPlayer.addToPlaylist("portrait")
+        }
+
+        binding.addYtTestVideoButton.setOnClickListener {
+            newPlayer.addToPlaylist("yt_test")
         }
 
         videoPlayerViewModel.newPlayer = newPlayer
