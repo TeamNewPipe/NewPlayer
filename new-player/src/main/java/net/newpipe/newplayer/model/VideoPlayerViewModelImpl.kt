@@ -42,6 +42,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.newpipe.newplayer.utils.VideoSize
@@ -224,10 +225,31 @@ class VideoPlayerViewModelImpl @Inject constructor(
                     }
                 }
             }
+
             viewModelScope.launch {
                 newPlayer.currentChapters.collect { chapters ->
                     mutableUiState.update {
                         it.copy(chapters = chapters)
+                    }
+                }
+            }
+
+            viewModelScope.launch {
+                newPlayer.availableStreamVariants.collect { availableVariants ->
+                    if (availableVariants != null) {
+                        mutableUiState.update {
+                            it.copy(
+                                availableStreamVariants = availableVariants.identifiers,
+                                availableLanguages = availableVariants.languages
+                            )
+                        }
+                    } else {
+                        mutableUiState.update {
+                            it.copy(
+                                availableLanguages = emptyList(),
+                                availableStreamVariants = emptyList()
+                            )
+                        }
                     }
                 }
             }

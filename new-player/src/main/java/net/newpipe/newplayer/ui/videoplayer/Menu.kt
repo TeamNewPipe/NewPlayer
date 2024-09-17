@@ -20,6 +20,7 @@
 
 package net.newpipe.newplayer.ui.videoplayer
 
+import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
@@ -51,12 +52,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.VideoPlayerUIState
 import net.newpipe.newplayer.model.VideoPlayerViewModel
 import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
+@OptIn(UnstableApi::class)
 @Composable
 fun DropDownMenu(viewModel: VideoPlayerViewModel, uiState: VideoPlayerUIState) {
     var showMainMenu: Boolean by remember { mutableStateOf(false) }

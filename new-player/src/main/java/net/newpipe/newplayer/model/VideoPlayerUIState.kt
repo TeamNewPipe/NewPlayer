@@ -74,7 +74,10 @@ data class VideoPlayerUIState(
     val repeatMode: RepeatMode,
     val playListDurationInS: Int,
     val currentlyPlaying: MediaItem?,
-    val currentPlaylistItemIndex: Int
+    val currentPlaylistItemIndex: Int,
+    val availableStreamVariants: List<String>,
+    val availableLanguages: List<String>,
+    val availableSubtitles: List<String>
 ) {
     companion object {
         val DEFAULT = VideoPlayerUIState(
@@ -99,10 +102,16 @@ data class VideoPlayerUIState(
             repeatMode = RepeatMode.DO_NOT_REPEAT,
             playListDurationInS = 0,
             currentlyPlaying = null,
-            currentPlaylistItemIndex = 0
+            currentPlaylistItemIndex = 0,
+            availableLanguages = emptyList(),
+            availableSubtitles = emptyList(),
+            availableStreamVariants = emptyList()
         )
 
         val DUMMY = DEFAULT.copy(
+            availableLanguages = listOf("German", "English", "Spanish"),
+            availableSubtitles = listOf("German", "English", "Spanish"),
+            availableStreamVariants = listOf("460p", "720p", "1080p60"),
             uiMode = UIModeState.EMBEDDED_VIDEO,
             playing = true,
             seekerPosition = 0.3f,

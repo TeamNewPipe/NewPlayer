@@ -42,6 +42,11 @@ enum class RepeatMode {
     REPEAT_ONE
 }
 
+data class StreamVariants(
+    val identifiers: List<String>,
+    val languages: List<String>
+)
+
 interface NewPlayer {
     // preferences
     val preferredVideoVariants: List<String>
@@ -63,6 +68,9 @@ interface NewPlayer {
     var currentlyPlayingPlaylistItem: Int
 
     val currentChapters: StateFlow<List<Chapter>>
+    val availableStreamVariants: StateFlow<StreamVariants?>
+    val currentlySelectedLanguage: StateFlow<String?>
+    val currentlySelectedStreamVariant: StateFlow<String?>
 
     // callbacks
 

@@ -20,35 +20,22 @@ import kotlin.random.Random
 class MediaSourceBuilder(
     private val repository: MediaRepository,
     private val uniqueIdToIdLookup: HashMap<Long, String>,
-    private val preferredLanguage: List<String>,
-    private val preferredAudioId: List<String>,
-    private val preferredVideoId: List<String>,
-    private val playMode: PlayMode,
     private val mutableErrorFlow: MutableSharedFlow<Exception>,
-    private val httpDataSourceFactory: HttpDataSource.Factory = DefaultHttpDataSource.Factory(),
+    private val httpDataSourceFactory: HttpDataSource.Factory,
 ) {
     @OptIn(UnstableApi::class)
-    suspend fun buildMediaSource(item: String): MediaSource {
-        val availableStreams = repository.getStreams(item)
-        val selectedStream = StreamSelect.selectStream(
-            item,
-            playMode,
-            availableStreams,
-            preferredAudioId,
-            preferredAudioId,
-            preferredLanguage
-        )
+    suspend fun buildMediaSource(selectedStream: StreamSelector.StreamSelection): MediaSource {
 
         val mediaSource = when (selectedStream) {
-            is StreamSelect.SingleSelection -> {
-                val mediaItem = toMediaItem(item, selectedStream.stream)
-                val mediaItemWithMetadata = addMetadata(mediaItem, item)
+            is StreamSelector.SingleSelection -> {
+                val mediaItem = toMediaItem(selectedStream.item, selectedStream.stream)
+                val mediaItemWithMetadata = addMetadata(mediaItem, selectedStream.item)
                 toMediaSource(mediaItemWithMetadata, selectedStream.stream)
             }
 
-            is StreamSelect.MultiSelection -> {
-                val mediaItems = ArrayList(selectedStream.streams.map { toMediaItem(item, it) })
-                mediaItems[0] = addMetadata(mediaItems[0], item)
+            is StreamSelector.MultiSelection -> {
+                val mediaItems = ArrayList(selectedStream.streams.map { toMediaItem(selectedStream.item, it) })
+                mediaItems[0] = addMetadata(mediaItems[0], selectedStream.item)
                 val mediaSources = mediaItems.zip(selectedStream.streams)
                     .map { toMediaSource(it.first, it.second) }
                 MergingMediaSource(
