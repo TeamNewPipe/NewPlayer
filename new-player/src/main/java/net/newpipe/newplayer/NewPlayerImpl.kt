@@ -30,6 +30,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.Timeline
+import androidx.media3.common.Tracks
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.datasource.HttpDataSource
@@ -196,10 +197,15 @@ class NewPlayerImpl(
                 if (mediaItem != null) {
                     val item = uniqueIdToIdLookup[mediaItem.mediaId.toLong()]!!
                     updateStreamVariants(item)
-                    updateStreamSelection(mediaItem)
                 } else {
                     mutableAvailableStreamVariants.update { null }
                 }
+            }
+
+            @OptIn(UnstableApi::class)
+            override fun onTracksChanged(tracks: Tracks) {
+                super.onTracksChanged(tracks)
+                updateStreamSelection()
             }
         })
         mutableExoPlayer.update {
@@ -282,7 +288,6 @@ class NewPlayerImpl(
     override fun playStream(item: String, playMode: PlayMode) {
         launchJobAndCollectError {
             val mediaSource = toMediaSource(item)
-            updateStreamSelection(mediaSource.mediaItem)
             internalPlayStream(mediaSource, playMode)
         }
         updateStreamVariants(item)
@@ -300,21 +305,44 @@ class NewPlayerImpl(
         }
     }
 
-    private fun updateStreamSelection(mediaItem: MediaItem) {
-        val selection = uniqueIdToStreamVariantSelection[mediaItem.mediaId.toLong()]
-        when (selection) {
-            is StreamSelector.SingleSelection -> {
-                if (selection.stream.streamType != StreamType.DYNAMIC) {
-                    mutableCurrentlySelectedLanguage.update { selection.stream.language }
-                    mutableCurrentlySelectedStreamVariant.update { selection.stream.identifier }
+    @OptIn(UnstableApi::class)
+    private fun updateStreamSelection() {
+        // TODO: Track and Stream selection is not working right now.
+        // TIP: If you work on this try to find a way to only do track selection.
+        // Stream selection is horrible code and must be done manually, while track selection
+        // can be offloaded to exoplayer.
+        // Now Track selection is the only way to go for DASH/HLS and Progressive Streams,
+        // but if you have a MergingMediaSource it is kind of tricky. The problem here:
+        // If you have multiple audio streams in your MergingMediaSource,
+        // and the streams are all marked to be "English" (The same language) you can only select
+        // each individual stream as stream, but when represented as track within a
+        // MergingMediaSource, you have no chance to select each individual track by language.
+        // Maybe this will change later on when ExoPlayer/Media3 is getting developed further on,
+        // or you will find another way to map each individual track to the stream it originates from.
+        currentlyPlaying.value?.let { mediaItem ->
+            val selection = uniqueIdToStreamVariantSelection[mediaItem.mediaId.toLong()]
+            when (selection) {
+                is StreamSelector.SingleSelection -> {
+                    if (selection.stream.streamType != StreamType.DYNAMIC) {
+                        mutableCurrentlySelectedLanguage.update { selection.stream.language }
+                        mutableCurrentlySelectedStreamVariant.update { selection.stream.identifier }
+                        return
+                    }
                 }
             }
 
-            /*
-            is StreamSelector.MultiSelection -> {
-                TODO("TRACKSELECTION HAS TO DO THE JOB HERE")
+            exoPlayer.value?.currentTracks?.let { tracks ->
+                println("gurken trackgroups : ${tracks.groups.size}")
+                var group_num = 0
+                for (group in tracks.groups) {
+                    println("   gurken group: ${++group_num}")
+                    for (i in 0 until group.length) {
+                        val format = group.getTrackFormat(i)
+                        format.metadata
+                        println("   gurken track $i: language: ${format.language}, labels: ${format.labels.size}, width: ${format.width} height: ${format.height}")
+                    }
+                }
             }
-             */
         }
     }
 
@@ -377,7 +405,8 @@ class NewPlayerImpl(
 
         val selection = streamSelector.selectStream(
             item,
-            availableStreams = repository.getStreams(item)
+            availableStreams = repository.getStreams(item),
+            demuxedStreamBundeling = StreamSelector.DemuxedStreamBundeling.BUNDLE_STREAMS_WITH_SAME_ID
         )
         val mediaSource = builder.buildMediaSource(selection)
         uniqueIdToStreamVariantSelection[mediaSource.mediaItem.mediaId.toLong()] = selection

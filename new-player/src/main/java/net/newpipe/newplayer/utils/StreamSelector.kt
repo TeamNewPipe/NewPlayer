@@ -66,7 +66,7 @@ class StreamSelector(
             ) ?: tryAndGetMedianVideoOnlyStream(availableStreams)?.identifier ?: ""
 
             if (demuxedStreamBundeling == DemuxedStreamBundeling.BUNDLE_STREAMS_WITH_SAME_ID) {
-                return MultiSelection(item, availableStreams.filter { it.streamType == StreamType.VIDEO || it.streamType == StreamType.AUDIO })
+                return MultiSelection(item, availableStreams.filter { it.streamType != StreamType.DYNAMIC })
             } else {
 
                 val videoOnlyStream = getVideoOnlyWithMatchingIdentifier(
