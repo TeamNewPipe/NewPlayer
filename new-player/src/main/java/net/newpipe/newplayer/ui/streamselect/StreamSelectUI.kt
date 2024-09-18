@@ -164,6 +164,7 @@ fun ReorderableStreamItemsList(
     }
 }
 
+@OptIn(UnstableApi::class)
 @Preview(device = "id:pixel_5")
 @Composable
 fun VideoPlayerChannelSelectUIPreview() {

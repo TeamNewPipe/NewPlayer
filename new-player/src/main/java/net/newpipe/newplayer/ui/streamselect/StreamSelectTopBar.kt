@@ -27,8 +27,6 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.filled.RepeatOn
 import androidx.compose.material.icons.filled.RepeatOneOn
-import androidx.compose.material.icons.filled.Shuffle
-import androidx.compose.material.icons.filled.ShuffleOn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -48,6 +46,8 @@ import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
+import net.newpipe.newplayer.ui.common.RepeatModeButton
+import net.newpipe.newplayer.ui.common.ShuffleModeButton
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.utils.getLocale
 import net.newpipe.newplayer.utils.getPlaylistDurationInMS
@@ -77,42 +77,9 @@ fun StreamSelectTopBar(
                 overflow = TextOverflow.Ellipsis
             )
         }, actions = {
-            IconButton(
-                onClick = viewModel::cycleRepeatMode
-            ) {
-                when (uiState.repeatMode) {
-                    RepeatMode.DO_NOT_REPEAT -> Icon(
-                        imageVector = Icons.Filled.Repeat,
-                        contentDescription = stringResource(R.string.repeat_mode_no_repeat)
-                    )
+            RepeatModeButton(viewModel = viewModel, uiState = uiState)
 
-                    RepeatMode.REPEAT_ALL -> Icon(
-                        imageVector = Icons.Filled.RepeatOn,
-                        contentDescription = stringResource(R.string.repeat_mode_repeat_all)
-                    )
-
-                    RepeatMode.REPEAT_ONE -> Icon(
-                        imageVector = Icons.Filled.RepeatOneOn,
-                        contentDescription = stringResource(R.string.repeat_mode_repeat_all)
-                    )
-                }
-            }
-
-            IconButton(
-                onClick = viewModel::toggleShuffle
-            ) {
-                if (uiState.shuffleEnabled) {
-                    Icon(
-                        imageVector = Icons.Filled.ShuffleOn,
-                        contentDescription = stringResource(R.string.shuffle_off)
-                    )
-                } else {
-                    Icon(
-                        imageVector = Icons.Filled.Shuffle,
-                        contentDescription = stringResource(R.string.shuffle_on)
-                    )
-                }
-            }
+            ShuffleModeButton(viewModel = viewModel, uiState = uiState)
 
             IconButton(
                 onClick = viewModel::onStorePlaylist

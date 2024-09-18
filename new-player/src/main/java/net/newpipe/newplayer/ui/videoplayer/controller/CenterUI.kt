@@ -20,6 +20,7 @@
 
 package net.newpipe.newplayer.ui.videoplayer.controller
 
+import androidx.annotation.OptIn
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -46,12 +47,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
+@OptIn(UnstableApi::class)
 @Composable
 fun CenterUI(
     modifier: Modifier = Modifier,
@@ -71,7 +74,7 @@ fun CenterUI(
                 exit = fadeOut(animationSpec = tween(400))
 
             ) {
-                CenterControllButton(
+                CenterControlButton(
                     buttonModifier = Modifier.fillMaxSize(),
                     iconModifier = Modifier.size(40.dp),
                     icon = Icons.Filled.SkipPrevious,
@@ -81,7 +84,7 @@ fun CenterUI(
             }
         }
 
-        CenterControllButton(
+        CenterControlButton(
             buttonModifier = Modifier.size(80.dp),
             iconModifier = Modifier.size(60.dp),
             icon = if (uiState.playing) Icons.Filled.Pause else Icons.Filled.PlayArrow,
@@ -97,7 +100,7 @@ fun CenterUI(
                 enter = fadeIn(animationSpec = tween(400)),
                 exit = fadeOut(animationSpec = tween(400))
             ) {
-                CenterControllButton(
+                CenterControlButton(
                     buttonModifier = Modifier.fillMaxSize(),
                     iconModifier = Modifier.size(40.dp),
                     icon = Icons.Filled.SkipNext,
@@ -109,8 +112,9 @@ fun CenterUI(
     }
 }
 
+
 @Composable
-private fun CenterControllButton(
+private fun CenterControlButton(
     buttonModifier: Modifier,
     iconModifier: Modifier,
     icon: ImageVector,

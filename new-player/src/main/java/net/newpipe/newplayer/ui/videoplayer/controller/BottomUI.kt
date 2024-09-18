@@ -21,7 +21,7 @@
 package net.newpipe.newplayer.ui.videoplayer.controller
 
 import android.app.Activity
-import android.util.Log
+import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
@@ -29,7 +29,6 @@ import androidx.compose.material.icons.filled.Fullscreen
 import androidx.compose.material.icons.filled.FullscreenExit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,17 +38,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import net.newpipe.newplayer.Chapter
+import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.EmbeddedUiConfig
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
-import net.newpipe.newplayer.ui.seeker.ChapterSegment
-import net.newpipe.newplayer.ui.seeker.DefaultSeekerColor
-import net.newpipe.newplayer.ui.seeker.Seeker
-import net.newpipe.newplayer.ui.seeker.SeekerColors
+import net.newpipe.newplayer.ui.common.NewPlayerSeeker
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.utils.getEmbeddedUiConfig
 import net.newpipe.newplayer.utils.getLocale
@@ -58,6 +54,7 @@ import net.newpipe.newplayer.utils.getTimeStringFromMs
 
 private const val TAG = "BottomUI"
 
+@OptIn(UnstableApi::class)
 @Composable
 fun BottomUI(
     modifier: Modifier, viewModel: NewPlayerViewModel, uiState: NewPlayerUIState
@@ -69,15 +66,8 @@ fun BottomUI(
     ) {
         val locale = getLocale()!!
         Text(getTimeStringFromMs(uiState.playbackPositionInMs, getLocale() ?: locale))
-        Seeker(
-            Modifier.weight(1F),
-            value = uiState.seekerPosition,
-            onValueChange = viewModel::seekPositionChanged,
-            onValueChangeFinished = viewModel::seekingFinished,
-            readAheadValue = uiState.bufferedPercentage,
-            colors = customizedSeekerColors(),
-            chapterSegments = getSeekerSegmentsFromChapters(uiState.chapters, uiState.durationInMs)
-        )
+
+        NewPlayerSeeker(modifier = Modifier.weight(1F), viewModel = viewModel, uiState = uiState)
 
         Text(getTimeStringFromMs(uiState.durationInMs, getLocale() ?: locale))
 
@@ -104,43 +94,12 @@ fun BottomUI(
 }
 
 
-@Composable
-private fun customizedSeekerColors(): SeekerColors {
-    val colors = DefaultSeekerColor(
-        progressColor = MaterialTheme.colorScheme.primary,
-        thumbColor = MaterialTheme.colorScheme.primary,
-        trackColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f),
-        readAheadColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-        disabledProgressColor = MaterialTheme.colorScheme.primary,
-        disabledThumbColor = MaterialTheme.colorScheme.primary,
-        disabledTrackColor = MaterialTheme.colorScheme.primary
-    )
-    return colors
-}
-
-private fun getSeekerSegmentsFromChapters(chapters: List<Chapter>, duration: Long) =
-    chapters
-        .filter { chapter ->
-            if (chapter.chapterStartInMs in 1..<duration) {
-                true
-            } else {
-                Log.e(
-                    TAG,
-                    "Chapter mark outside of stream duration range: chapter: ${chapter.chapterTitle}, mark in ms: ${chapter.chapterStartInMs}, video duration in ms: ${duration}"
-                )
-                false
-            }
-        }
-        .map { chapter ->
-            val markPosition = chapter.chapterStartInMs.toFloat() / duration.toFloat()
-            ChapterSegment(name = chapter.chapterTitle ?: "", start = markPosition)
-        }
-
 
 ///////////////////////////////////////////////////////////////////
 // Preview
 ///////////////////////////////////////////////////////////////////
 
+@OptIn(UnstableApi::class)
 @Preview(device = "spec:width=1080px,height=600px,dpi=440,orientation=landscape")
 @Composable
 fun VideoPlayerControllerBottomUIPreview() {
