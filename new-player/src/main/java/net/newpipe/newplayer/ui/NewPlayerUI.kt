@@ -59,6 +59,7 @@ import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
+import net.newpipe.newplayer.ui.streamselect.StreamSelectUI
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.VideoPlayerControllerUI
 import net.newpipe.newplayer.utils.LockScreenOrientation

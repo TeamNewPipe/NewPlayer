@@ -18,7 +18,7 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.ui
+package net.newpipe.newplayer.ui.streamselect
 
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Arrangement
@@ -43,11 +43,6 @@ import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.ui.streamselect.ChapterItem
-import net.newpipe.newplayer.ui.streamselect.ChapterSelectTopBar
-import net.newpipe.newplayer.ui.streamselect.StreamItem
-import net.newpipe.newplayer.ui.streamselect.StreamSelectTopBar
-import net.newpipe.newplayer.ui.streamselect.isActiveChapter
 import net.newpipe.newplayer.ui.videoplayer.STREAMSELECT_UI_BACKGROUND_COLOR
 import net.newpipe.newplayer.utils.ReorderHapticFeedbackType
 import net.newpipe.newplayer.utils.getInsets

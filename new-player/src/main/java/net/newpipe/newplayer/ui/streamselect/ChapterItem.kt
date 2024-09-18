@@ -51,7 +51,6 @@ import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.NewPlayerException
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.ui.ITEM_CORNER_SHAPE
 import net.newpipe.newplayer.utils.Thumbnail
 import net.newpipe.newplayer.utils.getLocale
 import net.newpipe.newplayer.utils.getTimeStringFromMs
