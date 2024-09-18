@@ -18,7 +18,7 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.ui.videoplayer
+package net.newpipe.newplayer.ui.videoplayer.controller
 
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Box
@@ -35,7 +35,6 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -44,8 +43,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusModifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
@@ -54,14 +51,14 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
-import net.newpipe.newplayer.model.VideoPlayerUIState
-import net.newpipe.newplayer.model.VideoPlayerViewModel
-import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
+import net.newpipe.newplayer.model.NewPlayerUIState
+import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 @OptIn(UnstableApi::class)
 @Composable
-fun DropDownMenu(viewModel: VideoPlayerViewModel, uiState: VideoPlayerUIState) {
+fun DropDownMenu(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
     var showMainMenu: Boolean by remember { mutableStateOf(false) }
 
     val pixel_density = LocalDensity.current
@@ -152,7 +149,7 @@ fun DropDownMenu(viewModel: VideoPlayerViewModel, uiState: VideoPlayerUIState) {
 fun VideoPlayerControllerDropDownPreview() {
     VideoPlayerTheme {
         Box(Modifier.fillMaxSize()) {
-            DropDownMenu(VideoPlayerViewModelDummy(), VideoPlayerUIState.DUMMY)
+            DropDownMenu(NewPlayerViewModelDummy(), NewPlayerUIState.DUMMY)
         }
     }
 }

@@ -57,10 +57,10 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.model.UIModeState
-import net.newpipe.newplayer.model.VideoPlayerViewModel
-import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
+import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.ui.videoplayer.StreamSelectUI
+import net.newpipe.newplayer.ui.videoplayer.VideoPlayerControllerUI
 import net.newpipe.newplayer.utils.LockScreenOrientation
 import net.newpipe.newplayer.utils.getDefaultBrightness
 import net.newpipe.newplayer.utils.setScreenBrightness
@@ -69,8 +69,8 @@ private const val TAG = "VideoPlayerUI"
 
 @OptIn(UnstableApi::class)
 @Composable
-fun VideoPlayerUI(
-    viewModel: VideoPlayerViewModel?,
+fun NewPlayerUI(
+    viewModel: NewPlayerViewModel?,
 ) {
     if (viewModel == null) {
         VideoPlayerLoadingPlaceholder()
@@ -276,6 +276,6 @@ fun PlaySurface(
 @Composable
 fun PlayerUIPreviewEmbeded() {
     VideoPlayerTheme {
-        VideoPlayerUI(viewModel = VideoPlayerViewModelDummy())
+        NewPlayerUI(viewModel = NewPlayerViewModelDummy())
     }
 }

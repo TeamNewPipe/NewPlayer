@@ -38,9 +38,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import net.newpipe.newplayer.model.VideoPlayerUIState
-import net.newpipe.newplayer.model.VideoPlayerViewModel
-import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
+import net.newpipe.newplayer.model.NewPlayerUIState
+import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.utils.getEmbeddedUiConfig
 
@@ -48,7 +48,7 @@ private const val TAG = "EmbeddedGestureUI"
 
 @Composable
 fun EmbeddedGestureUI(
-    modifier: Modifier = Modifier, viewModel: VideoPlayerViewModel, uiState: VideoPlayerUIState
+    modifier: Modifier = Modifier, viewModel: NewPlayerViewModel, uiState: NewPlayerUIState
 ) {
 
     var downwardMovementMode by remember {
@@ -158,7 +158,7 @@ fun EmbeddedGestureUIPreview() {
         Surface(modifier = Modifier.wrapContentSize(), color = Color.DarkGray) {
             EmbeddedGestureUI(
                 modifier = Modifier,
-                viewModel = object : VideoPlayerViewModelDummy() {
+                viewModel = object : NewPlayerViewModelDummy() {
                     override fun switchToEmbeddedView() {
                         println("switch to fullscreen")
                     }
@@ -171,7 +171,7 @@ fun EmbeddedGestureUIPreview() {
                         println("fast seek by $steps steps")
                     }
                 },
-                uiState = VideoPlayerUIState.DEFAULT,
+                uiState = NewPlayerUIState.DEFAULT,
             )
         }
     }

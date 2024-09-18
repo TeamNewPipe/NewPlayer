@@ -22,22 +22,15 @@ package net.newpipe.newplayer.testapp
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
-import androidx.media3.common.MediaItem
 import dagger.hilt.android.AndroidEntryPoint
 import net.newpipe.newplayer.ActivityBrainSlug
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.PlayMode
-import net.newpipe.newplayer.VideoPlayerView
-import net.newpipe.newplayer.model.VideoPlayerViewModel
-import net.newpipe.newplayer.model.VideoPlayerViewModelImpl
+import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.NewPlayerViewModelImpl
 import net.newpipe.newplayer.testapp.databinding.ActivityMainBinding
 import net.newpipe.newplayer.ui.ContentScale
 import javax.inject.Inject
@@ -45,7 +38,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    val videoPlayerViewModel: VideoPlayerViewModel by viewModels<VideoPlayerViewModelImpl>()
+    val newPlayerViewModel: NewPlayerViewModel by viewModels<NewPlayerViewModelImpl>()
 
     @Inject
     lateinit var newPlayer: NewPlayer
@@ -96,10 +89,10 @@ class MainActivity : AppCompatActivity() {
             newPlayer.addToPlaylist("yt_test")
         }
 
-        videoPlayerViewModel.newPlayer = newPlayer
-        videoPlayerViewModel.contentFitMode = ContentScale.FIT_INSIDE
+        newPlayerViewModel.newPlayer = newPlayer
+        newPlayerViewModel.contentFitMode = ContentScale.FIT_INSIDE
 
-        activityBrainSlug = ActivityBrainSlug(videoPlayerViewModel)
+        activityBrainSlug = ActivityBrainSlug(newPlayerViewModel)
         activityBrainSlug?.let {
             it.embeddedPlayerView = binding.embeddedPlayer
             it.addViewToHideOnFullscreen(binding.buttonsLayout as View)

@@ -18,7 +18,7 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.ui.videoplayer
+package net.newpipe.newplayer.ui.videoplayer.controller
 
 import android.app.Activity
 import androidx.annotation.OptIn
@@ -50,16 +50,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
-import net.newpipe.newplayer.model.VideoPlayerUIState
-import net.newpipe.newplayer.model.VideoPlayerViewModel
-import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
+import net.newpipe.newplayer.model.NewPlayerUIState
+import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.theme.video_player_onSurface
 import net.newpipe.newplayer.utils.getEmbeddedUiConfig
 
 @Composable
 fun TopUI(
-    modifier: Modifier, viewModel: VideoPlayerViewModel, uiState: VideoPlayerUIState
+    modifier: Modifier, viewModel: NewPlayerViewModel, uiState: NewPlayerUIState
 ) {
     val embeddedUiConfig = getEmbeddedUiConfig(activity = LocalContext.current as Activity)
     Row(
@@ -140,7 +140,7 @@ fun VideoPlayerControllerTopUIPreview() {
     VideoPlayerTheme {
         Surface(color = Color.Black) {
             TopUI(
-                modifier = Modifier, VideoPlayerViewModelDummy(), VideoPlayerUIState.DUMMY
+                modifier = Modifier, NewPlayerViewModelDummy(), NewPlayerUIState.DUMMY
             )
         }
     }

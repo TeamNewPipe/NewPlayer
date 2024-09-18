@@ -18,15 +18,13 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.ui.videoplayer
+package net.newpipe.newplayer.ui.videoplayer.controller
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -39,7 +37,6 @@ import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -50,16 +47,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import net.newpipe.newplayer.R
-import net.newpipe.newplayer.model.VideoPlayerUIState
-import net.newpipe.newplayer.model.VideoPlayerViewModel
-import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
+import net.newpipe.newplayer.model.NewPlayerUIState
+import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 @Composable
 fun CenterUI(
     modifier: Modifier = Modifier,
-    viewModel: VideoPlayerViewModel,
-    uiState: VideoPlayerUIState
+    viewModel: NewPlayerViewModel,
+    uiState: NewPlayerUIState
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -144,8 +141,8 @@ fun VideoPlayerControllerUICenterUIPreview() {
     VideoPlayerTheme {
         Surface(color = Color.Black) {
             CenterUI(
-                viewModel = VideoPlayerViewModelDummy(),
-                uiState = VideoPlayerUIState.DUMMY.copy(
+                viewModel = NewPlayerViewModelDummy(),
+                uiState = NewPlayerUIState.DUMMY.copy(
                     isLoading = false,
                     playing = true,
                     currentPlaylistItemIndex = 1

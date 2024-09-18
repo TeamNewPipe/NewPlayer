@@ -18,7 +18,7 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.ui.videoplayer.streamselect
+package net.newpipe.newplayer.ui.streamselect
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
@@ -45,9 +45,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.RepeatMode
-import net.newpipe.newplayer.model.VideoPlayerUIState
-import net.newpipe.newplayer.model.VideoPlayerViewModel
-import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
+import net.newpipe.newplayer.model.NewPlayerUIState
+import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.utils.getLocale
 import net.newpipe.newplayer.utils.getPlaylistDurationInMS
@@ -58,8 +58,8 @@ import net.newpipe.newplayer.utils.getTimeStringFromMs
 @Composable
 fun StreamSelectTopBar(
     modifier: Modifier = Modifier,
-    viewModel: VideoPlayerViewModel,
-    uiState: VideoPlayerUIState
+    viewModel: NewPlayerViewModel,
+    uiState: NewPlayerUIState
 ) {
 
     TopAppBar(modifier = modifier,
@@ -143,8 +143,8 @@ fun StreamSelectTopBarPreview() {
         Surface(modifier = Modifier.fillMaxSize(), color = Color.DarkGray) {
             StreamSelectTopBar(
                 modifier = Modifier.fillMaxSize(),
-                viewModel = VideoPlayerViewModelDummy(),
-                uiState = VideoPlayerUIState.DEFAULT
+                viewModel = NewPlayerViewModelDummy(),
+                uiState = NewPlayerUIState.DEFAULT
             )
         }
     }

@@ -23,8 +23,8 @@ package net.newpipe.newplayer.ui.videoplayer
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import net.newpipe.newplayer.model.VideoPlayerUIState
-import net.newpipe.newplayer.model.VideoPlayerViewModel
+import net.newpipe.newplayer.model.NewPlayerUIState
+import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.ui.videoplayer.gesture_ui.EmbeddedGestureUI
 import net.newpipe.newplayer.ui.videoplayer.gesture_ui.FullscreenGestureUI
 
@@ -34,7 +34,7 @@ val INDICATOR_BACKGROUND_COLOR = Color.Black.copy(alpha = 0.3f)
 
 @Composable
 fun GestureUI(
-    modifier: Modifier, viewModel: VideoPlayerViewModel, uiState: VideoPlayerUIState
+    modifier: Modifier, viewModel: NewPlayerViewModel, uiState: NewPlayerUIState
 ) {
     if (uiState.uiMode.fullscreen) {
         FullscreenGestureUI(

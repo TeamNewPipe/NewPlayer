@@ -18,22 +18,15 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.ui
+package net.newpipe.newplayer.ui.videoplayer
 
-import android.app.Activity
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.union
-import androidx.compose.foundation.layout.waterfall
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.CircularProgressIndicator
@@ -43,18 +36,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import net.newpipe.newplayer.model.VideoPlayerUIState
-import net.newpipe.newplayer.model.VideoPlayerViewModel
-import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
+import net.newpipe.newplayer.model.NewPlayerUIState
+import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.ui.videoplayer.BottomUI
-import net.newpipe.newplayer.ui.videoplayer.CenterUI
-import net.newpipe.newplayer.ui.videoplayer.TopUI
-import net.newpipe.newplayer.ui.videoplayer.GestureUI
-import net.newpipe.newplayer.utils.getDefaultBrightness
+import net.newpipe.newplayer.ui.videoplayer.controller.BottomUI
+import net.newpipe.newplayer.ui.videoplayer.controller.CenterUI
+import net.newpipe.newplayer.ui.videoplayer.controller.TopUI
 import net.newpipe.newplayer.utils.getInsets
 
 val CONTROLLER_UI_BACKGROUND_COLOR = Color(0x75000000)
@@ -62,7 +52,7 @@ val STREAMSELECT_UI_BACKGROUND_COLOR = Color(0xba000000)
 
 @Composable
 fun VideoPlayerControllerUI(
-    viewModel: VideoPlayerViewModel, uiState: VideoPlayerUIState
+    viewModel: NewPlayerViewModel, uiState: NewPlayerUIState
 ) {
 
     val insets = getInsets()
@@ -151,7 +141,7 @@ fun PreviewBackgroundSurface(
 fun VideoPlayerControllerUIPreviewEmbedded() {
     VideoPlayerTheme {
         PreviewBackgroundSurface {
-            VideoPlayerControllerUI(VideoPlayerViewModelDummy(), VideoPlayerUIState.DEFAULT)
+            VideoPlayerControllerUI(NewPlayerViewModelDummy(), NewPlayerUIState.DEFAULT)
         }
     }
 }
@@ -161,7 +151,7 @@ fun VideoPlayerControllerUIPreviewEmbedded() {
 fun VideoPlayerControllerUIPreviewLandscape() {
     VideoPlayerTheme {
         PreviewBackgroundSurface {
-            VideoPlayerControllerUI(VideoPlayerViewModelDummy(), VideoPlayerUIState.DEFAULT)
+            VideoPlayerControllerUI(NewPlayerViewModelDummy(), NewPlayerUIState.DEFAULT)
         }
     }
 }
@@ -171,7 +161,7 @@ fun VideoPlayerControllerUIPreviewLandscape() {
 fun VideoPlayerControllerUIPreviewPortrait() {
     VideoPlayerTheme {
         PreviewBackgroundSurface {
-            VideoPlayerControllerUI(VideoPlayerViewModelDummy(), VideoPlayerUIState.DEFAULT)
+            VideoPlayerControllerUI(NewPlayerViewModelDummy(), NewPlayerUIState.DEFAULT)
         }
     }
 }

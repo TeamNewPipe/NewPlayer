@@ -45,9 +45,9 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import net.newpipe.newplayer.model.UIModeState
-import net.newpipe.newplayer.model.VideoPlayerUIState
-import net.newpipe.newplayer.model.VideoPlayerViewModel
-import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
+import net.newpipe.newplayer.model.NewPlayerUIState
+import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.utils.getDefaultBrightness
 
@@ -57,7 +57,7 @@ private enum class IndicatorMode {
 
 @Composable
 fun FullscreenGestureUI(
-    modifier: Modifier = Modifier, viewModel: VideoPlayerViewModel, uiState: VideoPlayerUIState
+    modifier: Modifier = Modifier, viewModel: NewPlayerViewModel, uiState: NewPlayerUIState
 ) {
 
     var heightPx by remember {
@@ -221,11 +221,11 @@ fun FullscreenGestureUIPreview() {
     VideoPlayerTheme {
         Surface(modifier = Modifier.wrapContentSize(), color = Color.DarkGray) {
             FullscreenGestureUI(
-                modifier = Modifier, object : VideoPlayerViewModelDummy() {
+                modifier = Modifier, object : NewPlayerViewModelDummy() {
                     override fun fastSeek(steps: Int) {
                         println("fast seek by $steps steps")
                     }
-                }, VideoPlayerUIState.DEFAULT
+                }, NewPlayerUIState.DEFAULT
             )
         }
     }
@@ -255,7 +255,7 @@ fun FullscreenGestureUIPreviewInteractive() {
         Surface(modifier = Modifier.wrapContentSize(), color = Color.Gray) {
             FullscreenGestureUI(
                 modifier = Modifier,
-                object : VideoPlayerViewModelDummy() {
+                object : NewPlayerViewModelDummy() {
                     override fun hideUi() {
                         uiVisible = false
                     }
@@ -280,7 +280,7 @@ fun FullscreenGestureUIPreviewInteractive() {
                         soundVolume = (soundVolume + changeRate).coerceIn(0f, 1f)
                     }
                 },
-                uiState = VideoPlayerUIState.DEFAULT.copy(
+                uiState = NewPlayerUIState.DEFAULT.copy(
                     uiMode = if (uiVisible) UIModeState.FULLSCREEN_VIDEO_CONTROLLER_UI
                         else UIModeState.FULLSCREEN_VIDEO,
                     fastSeekSeconds = seekSeconds,

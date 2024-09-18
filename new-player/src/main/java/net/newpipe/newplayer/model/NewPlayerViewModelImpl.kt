@@ -42,7 +42,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.newpipe.newplayer.utils.VideoSize
@@ -59,13 +58,13 @@ private const val TAG = "VideoPlayerViewModel"
 
 @UnstableApi
 @HiltViewModel
-class VideoPlayerViewModelImpl @Inject constructor(
+class NewPlayerViewModelImpl @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     application: Application,
-) : AndroidViewModel(application), VideoPlayerViewModel {
+) : AndroidViewModel(application), NewPlayerViewModel {
 
     // private
-    private val mutableUiState = MutableStateFlow(VideoPlayerUIState.DEFAULT)
+    private val mutableUiState = MutableStateFlow(NewPlayerUIState.DEFAULT)
     private var currentContentRatio = 1F
 
     private var playlistItemToBeMoved: Int? = null
@@ -288,7 +287,7 @@ class VideoPlayerViewModelImpl @Inject constructor(
 
         val recoveredUiState =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) instanceState.getParcelable(
-                VIDEOPLAYER_UI_STATE, VideoPlayerUIState::class.java
+                VIDEOPLAYER_UI_STATE, NewPlayerUIState::class.java
             )
             else instanceState.getParcelable(VIDEOPLAYER_UI_STATE)
 

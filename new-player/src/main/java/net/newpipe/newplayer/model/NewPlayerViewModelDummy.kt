@@ -1,19 +1,16 @@
 package net.newpipe.newplayer.model
 
 import android.os.Bundle
-import androidx.media3.common.Player
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.NewPlayer
-import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.ui.ContentScale
 
-open class VideoPlayerViewModelDummy : VideoPlayerViewModel {
+open class NewPlayerViewModelDummy : NewPlayerViewModel {
     override var newPlayer: NewPlayer? = null
-    override val uiState = MutableStateFlow(VideoPlayerUIState.DEFAULT)
+    override val uiState = MutableStateFlow(NewPlayerUIState.DEFAULT)
     override var minContentRatio = 4F / 3F
     override var maxContentRatio = 16F / 9F
     override var contentFitMode = ContentScale.FIT_INSIDE

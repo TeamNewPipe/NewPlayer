@@ -18,7 +18,7 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.ui.videoplayer
+package net.newpipe.newplayer.ui
 
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Arrangement
@@ -39,16 +39,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
-import net.newpipe.newplayer.model.VideoPlayerUIState
-import net.newpipe.newplayer.model.VideoPlayerViewModel
-import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
+import net.newpipe.newplayer.model.NewPlayerUIState
+import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.ui.STREAMSELECT_UI_BACKGROUND_COLOR
-import net.newpipe.newplayer.ui.videoplayer.streamselect.ChapterItem
-import net.newpipe.newplayer.ui.videoplayer.streamselect.ChapterSelectTopBar
-import net.newpipe.newplayer.ui.videoplayer.streamselect.StreamItem
-import net.newpipe.newplayer.ui.videoplayer.streamselect.StreamSelectTopBar
-import net.newpipe.newplayer.ui.videoplayer.streamselect.isActiveChapter
+import net.newpipe.newplayer.ui.streamselect.ChapterItem
+import net.newpipe.newplayer.ui.streamselect.ChapterSelectTopBar
+import net.newpipe.newplayer.ui.streamselect.StreamItem
+import net.newpipe.newplayer.ui.streamselect.StreamSelectTopBar
+import net.newpipe.newplayer.ui.streamselect.isActiveChapter
+import net.newpipe.newplayer.ui.videoplayer.STREAMSELECT_UI_BACKGROUND_COLOR
 import net.newpipe.newplayer.utils.ReorderHapticFeedbackType
 import net.newpipe.newplayer.utils.getInsets
 import net.newpipe.newplayer.utils.rememberReorderHapticFeedback
@@ -61,8 +61,8 @@ val ITEM_CORNER_SHAPE = RoundedCornerShape(10.dp)
 @Composable
 fun StreamSelectUI(
     isChapterSelect: Boolean = false,
-    viewModel: VideoPlayerViewModel,
-    uiState: VideoPlayerUIState
+    viewModel: NewPlayerViewModel,
+    uiState: NewPlayerUIState
 ) {
     val insets = getInsets()
     Surface(
@@ -128,8 +128,8 @@ fun StreamSelectUI(
 @Composable
 fun ReorderableStreamItemsList(
     padding: PaddingValues,
-    viewModel: VideoPlayerViewModel,
-    uiState: VideoPlayerUIState
+    viewModel: NewPlayerViewModel,
+    uiState: NewPlayerUIState
 ) {
     val haptic = rememberReorderHapticFeedback()
 
@@ -176,8 +176,8 @@ fun VideoPlayerChannelSelectUIPreview() {
         Surface(modifier = Modifier.fillMaxSize(), color = Color.Red) {
             StreamSelectUI(
                 isChapterSelect = true,
-                viewModel = VideoPlayerViewModelDummy(),
-                uiState = VideoPlayerUIState.DUMMY
+                viewModel = NewPlayerViewModelDummy(),
+                uiState = NewPlayerUIState.DUMMY
             )
         }
     }
@@ -191,8 +191,8 @@ fun VideoPlayerStreamSelectUIPreview() {
         Surface(modifier = Modifier.fillMaxSize(), color = Color.Red) {
             StreamSelectUI(
                 isChapterSelect = false,
-                viewModel = VideoPlayerViewModelDummy(),
-                uiState = VideoPlayerUIState.DUMMY
+                viewModel = NewPlayerViewModelDummy(),
+                uiState = NewPlayerUIState.DUMMY
             )
         }
     }

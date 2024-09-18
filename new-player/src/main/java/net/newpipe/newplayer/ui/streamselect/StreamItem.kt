@@ -18,7 +18,7 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.ui.videoplayer.streamselect
+package net.newpipe.newplayer.ui.streamselect
 
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -62,10 +62,10 @@ import androidx.compose.ui.unit.sp
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
-import net.newpipe.newplayer.model.VideoPlayerUIState
-import net.newpipe.newplayer.ui.CONTROLLER_UI_BACKGROUND_COLOR
+import net.newpipe.newplayer.model.NewPlayerUIState
+import net.newpipe.newplayer.ui.videoplayer.CONTROLLER_UI_BACKGROUND_COLOR
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.ui.videoplayer.ITEM_CORNER_SHAPE
+import net.newpipe.newplayer.ui.ITEM_CORNER_SHAPE
 import net.newpipe.newplayer.utils.ReorderHapticFeedback
 import net.newpipe.newplayer.utils.ReorderHapticFeedbackType
 import net.newpipe.newplayer.utils.Thumbnail
@@ -249,7 +249,7 @@ fun StreamItemPreview() {
         Surface(modifier = Modifier.fillMaxSize(), color = Color.DarkGray) {
             Box(modifier = Modifier.fillMaxSize()) {
                 StreamItem(
-                    playlistItem = VideoPlayerUIState.DUMMY.currentlyPlaying!!,
+                    playlistItem = NewPlayerUIState.DUMMY.currentlyPlaying!!,
                     onClicked = {},
                     reorderableScope = null,
                     haptic = null,

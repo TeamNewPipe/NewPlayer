@@ -27,14 +27,14 @@ import android.widget.FrameLayout
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import dagger.hilt.android.AndroidEntryPoint
-import net.newpipe.newplayer.model.VideoPlayerViewModel
-import net.newpipe.newplayer.ui.VideoPlayerUI
+import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.ui.NewPlayerUI
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 @AndroidEntryPoint
 class VideoPlayerView : FrameLayout {
 
-    var viewModel: VideoPlayerViewModel? = null
+    var viewModel: NewPlayerViewModel? = null
         set(value) {
             field = value
             applyViewModel()
@@ -59,7 +59,7 @@ class VideoPlayerView : FrameLayout {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 VideoPlayerTheme {
-                    VideoPlayerUI(viewModel = viewModel)
+                    NewPlayerUI(viewModel = viewModel)
                 }
             }
         }

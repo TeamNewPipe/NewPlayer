@@ -18,11 +18,9 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.ui.videoplayer
+package net.newpipe.newplayer.ui.videoplayer.controller
 
 import android.app.Activity
-import android.app.LocaleConfig
-import android.icu.text.DecimalFormat
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -35,28 +33,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.os.ConfigurationCompat
-import androidx.lifecycle.viewModelScope
 import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.EmbeddedUiConfig
 import net.newpipe.newplayer.model.UIModeState
-import net.newpipe.newplayer.model.VideoPlayerUIState
-import net.newpipe.newplayer.model.VideoPlayerViewModel
-import net.newpipe.newplayer.model.VideoPlayerViewModelDummy
+import net.newpipe.newplayer.model.NewPlayerUIState
+import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.seeker.ChapterSegment
 import net.newpipe.newplayer.ui.seeker.DefaultSeekerColor
 import net.newpipe.newplayer.ui.seeker.Seeker
 import net.newpipe.newplayer.ui.seeker.SeekerColors
-import net.newpipe.newplayer.ui.seeker.Segment
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.utils.getEmbeddedUiConfig
 import net.newpipe.newplayer.utils.getLocale
@@ -67,7 +60,7 @@ private const val TAG = "BottomUI"
 
 @Composable
 fun BottomUI(
-    modifier: Modifier, viewModel: VideoPlayerViewModel, uiState: VideoPlayerUIState
+    modifier: Modifier, viewModel: NewPlayerViewModel, uiState: NewPlayerUIState
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -155,8 +148,8 @@ fun VideoPlayerControllerBottomUIPreview() {
         Surface(color = Color.Black) {
             BottomUI(
                 modifier = Modifier,
-                viewModel = VideoPlayerViewModelDummy(),
-                uiState = VideoPlayerUIState.DUMMY.copy(
+                viewModel = NewPlayerViewModelDummy(),
+                uiState = NewPlayerUIState.DUMMY.copy(
                     uiMode = UIModeState.FULLSCREEN_VIDEO_CONTROLLER_UI,
                     seekerPosition = 0.2f,
                     playbackPositionInMs = 3 * 60 * 1000,

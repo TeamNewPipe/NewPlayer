@@ -27,11 +27,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import net.newpipe.newplayer.model.VideoPlayerViewModel
+import net.newpipe.newplayer.model.NewPlayerViewModel
 
 private const val TAG = "ActivityBrainSlug"
 
-class ActivityBrainSlug(val viewModel: VideoPlayerViewModel) {
+class ActivityBrainSlug(val viewModel: NewPlayerViewModel) {
 
     val brainSlugScope = CoroutineScope(Dispatchers.Main + Job())
 

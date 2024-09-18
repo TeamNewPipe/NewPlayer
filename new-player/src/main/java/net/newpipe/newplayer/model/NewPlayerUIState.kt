@@ -28,31 +28,8 @@ import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.ui.ContentScale
 
-data class GurkenItem(
-    val title: String,
-    val creator: String,
-    val id: String,
-    val uniqueId: Long,
-    val thumbnail: Uri?,
-    val lengthInS: Int
-) {
-    companion object {
-        val DEFAULT = GurkenItem(
-            title = "",
-            creator = "",
-            id = "",
-            uniqueId = -1L,
-            thumbnail = null,
-            lengthInS = 0
-        )
-
-
-    }
-}
-
-
 @UnstableApi
-data class VideoPlayerUIState(
+data class NewPlayerUIState(
     val uiMode: UIModeState,
     val playing: Boolean,
     val contentRatio: Float,
@@ -80,7 +57,7 @@ data class VideoPlayerUIState(
     val availableSubtitles: List<String>
 ) {
     companion object {
-        val DEFAULT = VideoPlayerUIState(
+        val DEFAULT = NewPlayerUIState(
             uiMode = UIModeState.PLACEHOLDER,
             playing = false,
             contentRatio = 16 / 9f,
