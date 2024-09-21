@@ -20,6 +20,7 @@
 
 package net.newpipe.newplayer.ui.videoplayer.controller
 
+import android.app.Activity
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,6 +29,7 @@ import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.FitScreen
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Subtitles
 import androidx.compose.material.icons.filled.Translate
@@ -44,6 +46,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onPlaced
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,10 +54,13 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
+import net.newpipe.newplayer.model.EmbeddedUiConfig
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
+import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
+import net.newpipe.newplayer.utils.getEmbeddedUiConfig
 
 @OptIn(UnstableApi::class)
 @Composable
@@ -66,6 +72,11 @@ fun DropDownMenu(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
     var offsetY by remember {
         mutableStateOf(0.dp)
     }
+
+    val embeddedUiConfig = if (LocalContext.current is Activity)
+        getEmbeddedUiConfig(activity = LocalContext.current as Activity)
+    else
+        EmbeddedUiConfig.DUMMY
 
     Box {
         IconButton(onClick = {
@@ -85,7 +96,8 @@ fun DropDownMenu(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
         DropdownMenu(modifier = Modifier.align(Alignment.TopStart),
             offset = DpOffset(x = 0.dp, y = -offsetY),
             expanded = showMainMenu,
-            onDismissRequest = { showMainMenu = false
+            onDismissRequest = {
+                showMainMenu = false
                 viewModel.dialogVisible(false)
             }) {
             DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_open_in_browser)) },
@@ -104,12 +116,15 @@ fun DropDownMenu(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
                     )
                 },
                 onClick = { /*TODO*/ showMainMenu = false })
-            DropdownMenuItem(text = { Text(stringResource(R.string.mute)) }, leadingIcon = {
+            DropdownMenuItem(text = { Text(stringResource(R.string.audio_mode)) }, leadingIcon = {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Filled.VolumeUp,
-                    contentDescription = stringResource(R.string.mute)
+                    imageVector = Icons.Filled.MusicNote,
+                    contentDescription = stringResource(R.string.audio_mode)
                 )
-            }, onClick = { /*TODO*/ showMainMenu = false })
+            }, onClick = {
+                viewModel.changeUiMode(UIModeState.FULLSCREEN_AUDIO, embeddedUiConfig)
+                showMainMenu = false
+            })
             DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_fit_screen)) },
                 leadingIcon = {
                     Icon(
