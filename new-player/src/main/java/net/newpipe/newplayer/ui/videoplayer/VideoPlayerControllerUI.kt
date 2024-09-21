@@ -20,6 +20,7 @@
 
 package net.newpipe.newplayer.ui.videoplayer
 
+import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.defaultMinSize
@@ -38,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
@@ -50,6 +52,7 @@ import net.newpipe.newplayer.utils.getInsets
 val CONTROLLER_UI_BACKGROUND_COLOR = Color(0x75000000)
 val STREAMSELECT_UI_BACKGROUND_COLOR = Color(0xba000000)
 
+@OptIn(UnstableApi::class)
 @Composable
 fun VideoPlayerControllerUI(
     viewModel: NewPlayerViewModel, uiState: NewPlayerUIState
@@ -136,6 +139,7 @@ fun PreviewBackgroundSurface(
 // Preview
 ///////////////////////////////////////////////////////////////////
 
+@OptIn(UnstableApi::class)
 @Preview(device = "spec:width=1080px,height=600px,dpi=440,orientation=landscape")
 @Composable
 fun VideoPlayerControllerUIPreviewEmbedded() {
@@ -146,6 +150,7 @@ fun VideoPlayerControllerUIPreviewEmbedded() {
     }
 }
 
+@OptIn(UnstableApi::class)
 @Preview(device = "spec:width=2340px,height=1080px,dpi=440,orientation=landscape")
 @Composable
 fun VideoPlayerControllerUIPreviewLandscape() {
@@ -156,6 +161,7 @@ fun VideoPlayerControllerUIPreviewLandscape() {
     }
 }
 
+@OptIn(UnstableApi::class)
 @Preview(device = "spec:width=2340px,height=1080px,dpi=440,orientation=portrait")
 @Composable
 fun VideoPlayerControllerUIPreviewPortrait() {

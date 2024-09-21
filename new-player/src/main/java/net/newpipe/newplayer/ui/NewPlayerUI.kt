@@ -53,7 +53,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
+
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.model.UIModeState
@@ -62,6 +62,7 @@ import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.streamselect.StreamSelectUI
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.VideoPlayerControllerUI
+import net.newpipe.newplayer.ui.videoplayer.VideoPlayerUi
 import net.newpipe.newplayer.utils.LockScreenOrientation
 import net.newpipe.newplayer.utils.getDefaultBrightness
 import net.newpipe.newplayer.utils.setScreenBrightness
@@ -79,11 +80,6 @@ fun NewPlayerUI(
         VideoPlayerLoadingPlaceholder(viewModel.uiState.collectAsState().value.embeddedUiRatio)
     } else {
         val uiState by viewModel.uiState.collectAsState()
-        val exoPlayer by viewModel.newPlayer?.exoPlayer!!.collectAsState()
-
-        var lifecycle by remember {
-            mutableStateOf(Lifecycle.Event.ON_CREATE)
-        }
 
         val activity = LocalContext.current as Activity
         val view = LocalView.current
@@ -92,8 +88,6 @@ fun NewPlayerUI(
         val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
         windowInsetsController.systemBarsBehavior =
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-
-        val lifecycleOwner = LocalLifecycleOwner.current
 
         val defaultBrightness = getDefaultBrightness(activity)
 
@@ -141,24 +135,6 @@ fun NewPlayerUI(
             }
         }
 
-        // Prepare stuff for the SurfaceView to which the video will be rendered
-        DisposableEffect(lifecycleOwner) {
-            val observer = LifecycleEventObserver { _, event ->
-                lifecycle = event
-            }
-            lifecycleOwner.lifecycle.addObserver(observer)
-
-            onDispose {
-                lifecycleOwner.lifecycle.removeObserver(observer)
-            }
-        }
-
-
-        val displayMetrics = activity.resources.displayMetrics
-        val screenRatio =
-            displayMetrics.widthPixels.toFloat() / displayMetrics.heightPixels.toFloat()
-
-
         LaunchedEffect(key1 = uiState.brightness) {
             Log.d(TAG, "New Brightnes: ${uiState.brightness}")
             setScreenBrightness(
@@ -170,48 +146,7 @@ fun NewPlayerUI(
         if (uiState.uiMode == UIModeState.PLACEHOLDER) {
             VideoPlayerLoadingPlaceholder(uiState.embeddedUiRatio)
         } else {
-            Surface(
-                modifier = Modifier.then(
-                    if (uiState.uiMode.fullscreen) Modifier.fillMaxSize()
-                    else Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(uiState.embeddedUiRatio)
-                ), color = Color.Black
-            ) {
-
-                exoPlayer?.let { exoPlayer ->
-                    Box(contentAlignment = Alignment.Center) {
-                        PlaySurface(
-                            player = exoPlayer,
-                            lifecycle = lifecycle,
-                            fitMode = uiState.contentFitMode,
-                            uiRatio = if (uiState.uiMode.fullscreen) screenRatio
-                            else uiState.embeddedUiRatio,
-                            contentRatio = uiState.contentRatio
-                        )
-                    }
-                }
-
-
-
-                // the checks if VideoPlayerControllerUI should be visible or not are done by
-                // The VideoPlayerControllerUI composable itself. This is because Visibility of
-                // the controller is more complicated than just using a simple if statement.
-                VideoPlayerControllerUI(
-                    viewModel, uiState = uiState
-                )
-
-                AnimatedVisibility(visible = uiState.uiMode.isStreamSelect) {
-                    StreamSelectUI(
-                        viewModel = viewModel,
-                        uiState = uiState,
-                        isChapterSelect = false
-                    )
-                }
-                AnimatedVisibility(visible = uiState.uiMode.isChapterSelect) {
-                    StreamSelectUI(viewModel = viewModel, uiState = uiState, isChapterSelect = true)
-                }
-            }
+            VideoPlayerUi(viewModel = viewModel, uiState = uiState)
         }
     }
 }
