@@ -23,6 +23,7 @@ package net.newpipe.newplayer.ui.videoplayer.gesture_ui
 
 import android.app.Activity
 import android.util.Log
+import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,14 +39,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
+import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.utils.getEmbeddedUiConfig
 
 private const val TAG = "EmbeddedGestureUI"
 
+@OptIn(UnstableApi::class)
 @Composable
 fun EmbeddedGestureUI(
     modifier: Modifier = Modifier, viewModel: NewPlayerViewModel, uiState: NewPlayerUIState
@@ -66,7 +70,7 @@ fun EmbeddedGestureUI(
 
             // this check is there to allow a temporary move up in the downward gesture
             if (downwardMovementMode == false) {
-                viewModel.switchToFullscreen(embeddedUiConfig)
+                viewModel.changeUiMode(UIModeState.FULLSCREEN_VIDEO, embeddedUiConfig)
             } else {
                 viewModel.embeddedDraggedDown(movement.y)
             }
@@ -78,7 +82,7 @@ fun EmbeddedGestureUI(
     }
 
     val defaultOnRegularTap = {
-        if (uiState.uiMode.controllerUiVisible) {
+        if (uiState.uiMode.videoControllerUiVisible) {
             viewModel.hideUi()
         } else {
             viewModel.showUi()
@@ -151,6 +155,7 @@ fun EmbeddedGestureUI(
 }
 
 
+@OptIn(UnstableApi::class)
 @Preview(device = "spec:width=600px,height=400px,dpi=440,orientation=landscape")
 @Composable
 fun EmbeddedGestureUIPreview() {
@@ -159,10 +164,6 @@ fun EmbeddedGestureUIPreview() {
             EmbeddedGestureUI(
                 modifier = Modifier,
                 viewModel = object : NewPlayerViewModelDummy() {
-                    override fun switchToEmbeddedView() {
-                        println("switch to fullscreen")
-                    }
-
                     override fun embeddedDraggedDown(offset: Float) {
                         println("embedded view dragged down by $offset")
                     }

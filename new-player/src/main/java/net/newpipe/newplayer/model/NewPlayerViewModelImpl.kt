@@ -150,7 +150,7 @@ class NewPlayerViewModelImpl @Inject constructor(
                             mutableUiState.update {
                                 it.copy(playing = isPlaying, isLoading = false)
                             }
-                            if (isPlaying && uiState.value.uiMode.controllerUiVisible) {
+                            if (isPlaying && uiState.value.uiMode.videoControllerUiVisible) {
                                 resetHideUiDelayedJob()
                             } else {
                                 uiVisibilityJob?.cancel()
@@ -329,6 +329,41 @@ class NewPlayerViewModelImpl @Inject constructor(
         }
     }
 
+    override fun changeUiMode(newUiModeState: UIModeState, embeddedUiConfig: EmbeddedUiConfig) {
+        if (!uiState.value.uiMode.fullscreen) {
+            this.embeddedUiConfig = embeddedUiConfig
+        }
+
+        if (newUiModeState.isStreamSelect) {
+            resetPlaylistProgressUpdaterJob()
+            uiVisibilityJob?.cancel()
+        }
+
+        if (newUiModeState.isChapterSelect) {
+            resetPlaylistProgressUpdaterJob()
+            uiVisibilityJob?.cancel()
+        }
+
+        if ((uiState.value.uiMode.isStreamSelect || uiState.value.uiMode.isChapterSelect)
+            && (!newUiModeState.isStreamSelect && !newUiModeState.isChapterSelect)
+        ) {
+            playlistProgressUpdaterJob?.cancel()
+            progressUpdaterJob?.cancel()
+        }
+
+        if(uiState.value.uiMode.fullscreen && !newUiModeState.fullscreen) {
+            uiVisibilityJob?.cancel()
+            finishFastSeek()
+        }
+
+        if(!uiState.value.uiMode.fullscreen && newUiModeState.fullscreen) {
+            uiVisibilityJob?.cancel()
+            finishFastSeek()
+        }
+
+        updateUiMode(newUiModeState)
+    }
+
     override fun showUi() {
         mutableUiState.update {
             it.copy(uiMode = it.uiMode.getControllerUiVisibleState())
@@ -430,13 +465,13 @@ class NewPlayerViewModelImpl @Inject constructor(
             )
         }
 
-        if (mutableUiState.value.uiMode.controllerUiVisible) {
+        if (mutableUiState.value.uiMode.videoControllerUiVisible) {
             resetHideUiDelayedJob()
         }
     }
 
     override fun finishFastSeek() {
-        if (mutableUiState.value.uiMode.controllerUiVisible) {
+        if (mutableUiState.value.uiMode.videoControllerUiVisible) {
             resetHideUiDelayedJob()
         }
 
@@ -482,34 +517,6 @@ class NewPlayerViewModelImpl @Inject constructor(
         }
     }
 
-    override fun openStreamSelection(selectChapter: Boolean, embeddedUiConfig: EmbeddedUiConfig) {
-        uiVisibilityJob?.cancel()
-        if (!uiState.value.uiMode.fullscreen) {
-            this.embeddedUiConfig = embeddedUiConfig
-        }
-        updateUiMode(
-            if (selectChapter) uiState.value.uiMode.getChapterSelectUiState()
-            else uiState.value.uiMode.getStreamSelectUiState()
-        )
-        if (selectChapter) {
-            resetProgressUpdatePeriodicallyJob()
-        } else {
-            resetPlaylistProgressUpdaterJob()
-        }
-    }
-
-    override fun closeStreamSelection() {
-        playlistProgressUpdaterJob?.cancel()
-        progressUpdaterJob?.cancel()
-        updateUiMode(uiState.value.uiMode.getUiHiddenState())
-    }
-
-    override fun switchToEmbeddedView() {
-        uiVisibilityJob?.cancel()
-        finishFastSeek()
-        updateUiMode(UIModeState.EMBEDDED_VIDEO)
-    }
-
     override fun onBackPressed() {
         val nextMode = uiState.value.uiMode.getNextModeWhenBackPressed()
         if (nextMode != null) {
@@ -517,14 +524,6 @@ class NewPlayerViewModelImpl @Inject constructor(
         } else {
             safeTryEmit(mutableOnBackPressed, Unit)
         }
-    }
-
-    override fun switchToFullscreen(embeddedUiConfig: EmbeddedUiConfig) {
-        uiVisibilityJob?.cancel()
-        finishFastSeek()
-
-        this.embeddedUiConfig = embeddedUiConfig
-        updateUiMode(UIModeState.FULLSCREEN_VIDEO)
     }
 
     override fun chapterSelected(chapterId: Int) {

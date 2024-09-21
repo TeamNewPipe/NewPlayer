@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 @Composable
-fun VideoPlayerLoadingPlaceholder(aspectRatio: Float = 3F / 1F) {
+fun LoadingPlaceholder(aspectRatio: Float = 3F / 1F) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -63,6 +63,6 @@ fun VideoPlayerLoadingPlaceholder(aspectRatio: Float = 3F / 1F) {
 @Composable
 fun VideoPlayerLoaidingPlaceholderPreview() {
     VideoPlayerTheme {
-        VideoPlayerLoadingPlaceholder()
+        LoadingPlaceholder()
     }
 }

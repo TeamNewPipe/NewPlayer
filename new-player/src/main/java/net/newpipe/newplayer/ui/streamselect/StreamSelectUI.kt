@@ -20,6 +20,7 @@
 
 package net.newpipe.newplayer.ui.streamselect
 
+import android.app.Activity
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,15 +37,18 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
+import net.newpipe.newplayer.model.EmbeddedUiConfig
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.STREAMSELECT_UI_BACKGROUND_COLOR
 import net.newpipe.newplayer.utils.ReorderHapticFeedbackType
+import net.newpipe.newplayer.utils.getEmbeddedUiConfig
 import net.newpipe.newplayer.utils.getInsets
 import net.newpipe.newplayer.utils.rememberReorderHapticFeedback
 import sh.calvin.reorderable.ReorderableItem
@@ -60,6 +64,12 @@ fun StreamSelectUI(
     uiState: NewPlayerUIState
 ) {
     val insets = getInsets()
+
+    val embeddedUiConfig = if (LocalContext.current is Activity)
+        getEmbeddedUiConfig(activity = LocalContext.current as Activity)
+    else
+        EmbeddedUiConfig.DUMMY
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = STREAMSELECT_UI_BACKGROUND_COLOR
@@ -72,8 +82,12 @@ fun StreamSelectUI(
             topBar = {
                 if (isChapterSelect) {
                     ChapterSelectTopBar(
-                        onClose =
-                        viewModel::closeStreamSelection
+                        onClose = {
+                            viewModel.changeUiMode(
+                                uiState.uiMode.getUiHiddenState(),
+                                embeddedUiConfig
+                            )
+                        }
                     )
                 } else {
                     StreamSelectTopBar(viewModel = viewModel, uiState = uiState)
@@ -142,7 +156,9 @@ fun ReorderableStreamItemsList(
         verticalArrangement = Arrangement.spacedBy(5.dp),
         state = lazyListState
     ) {
-        itemsIndexed(uiState.playList, key = { _, item -> item.mediaId.toLong() }) { index, playlistItem ->
+        itemsIndexed(
+            uiState.playList,
+            key = { _, item -> item.mediaId.toLong() }) { index, playlistItem ->
             ReorderableItem(
                 state = reorderableLazyListState,
                 key = playlistItem.mediaId.toLong()

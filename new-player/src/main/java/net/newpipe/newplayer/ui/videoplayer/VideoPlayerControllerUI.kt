@@ -60,7 +60,7 @@ fun VideoPlayerControllerUI(
 
     val insets = getInsets()
 
-    AnimatedVisibility(uiState.uiMode.controllerUiVisible) {
+    AnimatedVisibility(uiState.uiMode.videoControllerUiVisible) {
         Surface(
             modifier = Modifier.fillMaxSize(), color = CONTROLLER_UI_BACKGROUND_COLOR
         ) {}
@@ -82,7 +82,7 @@ fun VideoPlayerControllerUI(
         }
     }
 
-    AnimatedVisibility(uiState.uiMode.controllerUiVisible) {
+    AnimatedVisibility(uiState.uiMode.videoControllerUiVisible) {
 
         AnimatedVisibility(visible = !uiState.isLoading) {
             Box(modifier = Modifier.fillMaxSize()) {

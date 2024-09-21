@@ -22,6 +22,7 @@
 package net.newpipe.newplayer.ui.videoplayer.gesture_ui
 
 import android.app.Activity
+import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -44,17 +45,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.utils.getDefaultBrightness
+import net.newpipe.newplayer.utils.getEmbeddedUiConfig
 
 private enum class IndicatorMode {
     NONE, VOLUME_INDICATOR_VISSIBLE, BRIGHTNESS_INDICATOR_VISSIBLE
 }
 
+@OptIn(UnstableApi::class)
 @Composable
 fun FullscreenGestureUI(
     modifier: Modifier = Modifier, viewModel: NewPlayerViewModel, uiState: NewPlayerUIState
@@ -69,7 +73,7 @@ fun FullscreenGestureUI(
     }
 
     val defaultOnRegularTap = {
-        if (uiState.uiMode.controllerUiVisible) {
+        if (uiState.uiMode.videoControllerUiVisible) {
             viewModel.hideUi()
         } else {
             viewModel.showUi()
@@ -79,6 +83,7 @@ fun FullscreenGestureUI(
     val activity = LocalContext.current as Activity
 
     val defaultBrightness = getDefaultBrightness(activity)
+    val embeddedUiConfig = getEmbeddedUiConfig(activity = activity)
 
     Box(modifier = modifier.onGloballyPositioned { coordinates ->
         heightPx = coordinates.size.height.toFloat()
@@ -119,7 +124,7 @@ fun FullscreenGestureUI(
                 onRegularTap = defaultOnRegularTap,
                 onMovement = { movement ->
                     if (0 < movement.y) {
-                        viewModel.switchToEmbeddedView()
+                        viewModel.changeUiMode(UIModeState.EMBEDDED_VIDEO, embeddedUiConfig)
                     }
                 },
                 onMultiTap = { count ->
@@ -215,6 +220,7 @@ fun IndicatorAnimation(modifier: Modifier, visible: Boolean, content: @Composabl
 }
 
 
+@OptIn(UnstableApi::class)
 @Preview(device = "spec:width=1080px,height=600px,dpi=440,orientation=landscape")
 @Composable
 fun FullscreenGestureUIPreview() {
@@ -231,6 +237,7 @@ fun FullscreenGestureUIPreview() {
     }
 }
 
+@OptIn(UnstableApi::class)
 @Preview(device = "spec:parent=pixel_8,orientation=landscape")
 @Composable
 fun FullscreenGestureUIPreviewInteractive() {
@@ -255,6 +262,7 @@ fun FullscreenGestureUIPreviewInteractive() {
         Surface(modifier = Modifier.wrapContentSize(), color = Color.Gray) {
             FullscreenGestureUI(
                 modifier = Modifier,
+                @OptIn(UnstableApi::class)
                 object : NewPlayerViewModelDummy() {
                     override fun hideUi() {
                         uiVisible = false

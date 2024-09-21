@@ -32,8 +32,10 @@ enum class PlayMode {
     EMBEDDED_VIDEO,
     FULLSCREEN_VIDEO,
     PIP,
-    BACKGROUND,
-    AUDIO_FOREGROUND,
+    BACKGROUND_VIDEO,
+    BACKGROUND_AUDIO,
+    FULLSCREEN_AUDIO,
+    EMBEDDED_AUDIO
 }
 
 enum class RepeatMode {

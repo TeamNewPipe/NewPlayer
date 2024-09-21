@@ -40,6 +40,7 @@ import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.EmbeddedUiConfig
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.utils.getEmbeddedUiConfig
 
 @androidx.annotation.OptIn(UnstableApi::class)
@@ -59,10 +60,7 @@ fun AudioPlayerTopBar(
             AnimatedVisibility(visible = uiState.chapters.isNotEmpty()) {
                 IconButton(
                     onClick = {
-                        viewModel.openStreamSelection(
-                            selectChapter = true,
-                            embeddedUiConfig
-                        )
+                        viewModel.changeUiMode(UIModeState.AUDIO_CHAPTER_SELECT, embeddedUiConfig)
                     },
                 ) {
                     Icon(
@@ -74,10 +72,7 @@ fun AudioPlayerTopBar(
             AnimatedVisibility(visible = 1 < uiState.playList.size) {
                 IconButton(
                     onClick = {
-                        viewModel.openStreamSelection(
-                            selectChapter = false,
-                            embeddedUiConfig
-                        )
+                        viewModel.changeUiMode(UIModeState.AUDIO_STREAM_SELECT, embeddedUiConfig)
                     },
                 ) {
                     Icon(

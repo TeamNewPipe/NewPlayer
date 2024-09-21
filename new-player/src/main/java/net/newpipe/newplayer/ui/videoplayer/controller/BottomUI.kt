@@ -77,10 +77,13 @@ fun BottomUI(
         }
 
         IconButton(
-            onClick = if (uiState.uiMode.fullscreen) viewModel::switchToEmbeddedView
-            else {
-                { // <- head of lambda ... yea kotlin is weird
-                    viewModel.switchToFullscreen(embeddedUiConfig)
+            onClick = if (uiState.uiMode.fullscreen) {
+                {
+                    viewModel.changeUiMode(UIModeState.EMBEDDED_VIDEO, embeddedUiConfig)
+                }
+            } else {
+                {
+                    viewModel.changeUiMode(UIModeState.FULLSCREEN_VIDEO, embeddedUiConfig)
                 }
             }
         ) {
@@ -92,7 +95,6 @@ fun BottomUI(
         }
     }
 }
-
 
 
 ///////////////////////////////////////////////////////////////////

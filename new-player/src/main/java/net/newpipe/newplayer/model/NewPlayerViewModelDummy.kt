@@ -1,6 +1,7 @@
 package net.newpipe.newplayer.model
 
 import android.os.Bundle
+import androidx.media3.common.util.UnstableApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -8,6 +9,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.ui.ContentScale
 
+@UnstableApi
 open class NewPlayerViewModelDummy : NewPlayerViewModel {
     override var newPlayer: NewPlayer? = null
     override val uiState = MutableStateFlow(NewPlayerUIState.DEFAULT)
@@ -25,15 +27,7 @@ open class NewPlayerViewModelDummy : NewPlayerViewModel {
         println("dummy impl")
     }
 
-    override fun switchToEmbeddedView() {
-        println("dummy impl")
-    }
-
     override fun onBackPressed() {
-        println("dummy impl")
-    }
-
-    override fun switchToFullscreen(embeddedUiConfig: EmbeddedUiConfig) {
         println("dummy impl")
     }
 
@@ -70,14 +64,6 @@ open class NewPlayerViewModelDummy : NewPlayerViewModel {
     }
 
     override fun volumeChange(changeRate: Float) {
-        println("dummy impl")
-    }
-
-    override fun openStreamSelection(selectChapter: Boolean, embeddedUiConfig: EmbeddedUiConfig) {
-        println("dummy impl")
-    }
-
-    override fun closeStreamSelection() {
         println("dummy impl")
     }
 
@@ -127,5 +113,9 @@ open class NewPlayerViewModelDummy : NewPlayerViewModel {
 
     override fun nextStream() {
         println("dummy impl")
+    }
+
+    override fun changeUiMode(newUiModeState: UIModeState, embeddedUiConfig: EmbeddedUiConfig) {
+        println("dummy uiMode change: New UI Mode State: $newUiModeState")
     }
 }

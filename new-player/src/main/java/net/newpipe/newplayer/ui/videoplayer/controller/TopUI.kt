@@ -53,6 +53,7 @@ import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
+import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.theme.video_player_onSurface
 import net.newpipe.newplayer.utils.getEmbeddedUiConfig
@@ -103,7 +104,12 @@ fun TopUI(
         }
         AnimatedVisibility(visible = uiState.chapters.isNotEmpty()) {
             IconButton(
-                onClick = { viewModel.openStreamSelection(selectChapter = true, embeddedUiConfig) },
+                onClick = {
+                    viewModel.changeUiMode(
+                        uiState.uiMode.getChapterSelectUiState(),
+                        embeddedUiConfig
+                    )
+                }
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.MenuBook,
@@ -114,8 +120,8 @@ fun TopUI(
         AnimatedVisibility(visible = 1 < uiState.playList.size) {
             IconButton(
                 onClick = {
-                    viewModel.openStreamSelection(
-                        selectChapter = false,
+                    viewModel.changeUiMode(
+                        uiState.uiMode.getStreamSelectUiState(),
                         embeddedUiConfig
                     )
                 },
