@@ -23,8 +23,11 @@ package net.newpipe.newplayer.ui.audioplayer;
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -39,11 +42,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.common.RepeatModeButton
 import net.newpipe.newplayer.ui.common.ShuffleModeButton
 
@@ -56,48 +61,58 @@ fun AudioPlaybackController(viewModel: NewPlayerViewModel, uiState: NewPlayerUIS
 
         Box(modifier = Modifier.size(80.dp), contentAlignment = Alignment.Center) {
             androidx.compose.animation.AnimatedVisibility(
-                    uiState.currentPlaylistItemIndex != 0,
-                    enter = fadeIn(animationSpec = tween(400)),
-                    exit = fadeOut(animationSpec = tween(400))
+                uiState.currentPlaylistItemIndex != 0,
+                enter = fadeIn(animationSpec = tween(400)),
+                exit = fadeOut(animationSpec = tween(400))
 
             ) {
-                IconButton(
-                        onClick = viewModel::toggleShuffle
+                Button(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .aspectRatio(1f),
+                    onClick = {},
+                    colors = lightAudioControlButtonColorScheme()
                 ) {
-                    Icon(
-                            imageVector = Icons.Filled.SkipPrevious,
-                            contentDescription = stringResource(R.string.widget_description_previous_stream)
+                    Image(
+                        modifier = Modifier.fillMaxSize(),
+                        imageVector = Icons.Filled.SkipPrevious,
+                        contentDescription = stringResource(R.string.widget_description_previous_stream)
                     )
                 }
             }
         }
 
         Button(
-                modifier = Modifier.size(80.dp),
-                onClick = if (uiState.playing) viewModel::pause else viewModel::play,
-                shape = CircleShape
+            modifier = Modifier.size(80.dp),
+            onClick = if (uiState.playing) viewModel::pause else viewModel::play,
+            shape = CircleShape
         ) {
             Icon(
-                    imageVector = if (uiState.playing) Icons.Filled.Pause else Icons.Filled.PlayArrow,
-                    contentDescription = stringResource(
-            if (uiState.playing) R.string.widget_description_pause
-            else R.string.widget_description_play
+                imageVector = if (uiState.playing) Icons.Filled.Pause else Icons.Filled.PlayArrow,
+                contentDescription = stringResource(
+                    if (uiState.playing) R.string.widget_description_pause
+                    else R.string.widget_description_play
                 )
             )
         }
 
         Box(modifier = Modifier.size(80.dp), contentAlignment = Alignment.Center) {
             androidx.compose.animation.AnimatedVisibility(
-                    uiState.currentPlaylistItemIndex < uiState.playList.size - 1,
-                    enter = fadeIn(animationSpec = tween(400)),
-                    exit = fadeOut(animationSpec = tween(400))
+                uiState.currentPlaylistItemIndex < uiState.playList.size - 1,
+                enter = fadeIn(animationSpec = tween(400)),
+                exit = fadeOut(animationSpec = tween(400))
             ) {
-                IconButton(
-                        onClick = viewModel::toggleShuffle
+                Button(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .aspectRatio(1f),
+                    onClick = {},
+                    colors = lightAudioControlButtonColorScheme()
                 ) {
-                    Icon(
-                            imageVector = Icons.Filled.SkipNext,
-                            contentDescription = stringResource(R.string.widget_description_next_stream)
+                    Image(
+                        modifier = Modifier.fillMaxSize(),
+                        imageVector = Icons.Filled.SkipNext,
+                        contentDescription = stringResource(R.string.widget_description_next_stream)
                     )
                 }
             }
@@ -105,4 +120,14 @@ fun AudioPlaybackController(viewModel: NewPlayerViewModel, uiState: NewPlayerUIS
 
         RepeatModeButton(viewModel = viewModel, uiState = uiState)
     }
+}
+
+
+@androidx.annotation.OptIn(UnstableApi::class)
+@Preview(device = "id:pixel_6")
+@Composable
+fun AudioPlayerControllerPreview() {
+//    VideoPlayerTheme {
+    AudioPlaybackController(viewModel = NewPlayerViewModelDummy(), uiState = NewPlayerUIState.DUMMY)
+//    }
 }

@@ -22,29 +22,15 @@
 package net.newpipe.newplayer.ui.audioplayer
 
 import androidx.annotation.OptIn
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Shuffle
-import androidx.compose.material.icons.filled.ShuffleOn
-import androidx.compose.material.icons.filled.SkipNext
-import androidx.compose.material.icons.filled.SkipPrevious
-import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -61,10 +47,14 @@ import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.common.NewPlayerSeeker
-import net.newpipe.newplayer.ui.common.RepeatModeButton
-import net.newpipe.newplayer.ui.common.ShuffleModeButton
 import net.newpipe.newplayer.utils.Thumbnail
 import net.newpipe.newplayer.utils.getInsets
+
+@Composable
+fun lightAudioControlButtonColorScheme() = ButtonDefaults.buttonColors().copy(
+    containerColor = MaterialTheme.colorScheme.surface,
+    contentColor = MaterialTheme.colorScheme.onSurface
+)
 
 @OptIn(UnstableApi::class)
 @Composable
@@ -73,7 +63,7 @@ fun AudioPlayerUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
     Scaffold(modifier = Modifier
         .fillMaxSize()
         .windowInsetsPadding(insets),
-        topBar = { AudioPlayerTopBar() }) { innerPadding ->
+        topBar = { AudioPlayerTopBar(viewModel = viewModel, uiState = uiState) }) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -82,35 +72,58 @@ fun AudioPlayerUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Card(
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(20.dp)
+                        .weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Thumbnail(
-                        thumbnail = uiState.currentlyPlaying?.mediaMetadata?.artworkUri,
-                        contentDescription = stringResource(
-                            id = R.string.stream_thumbnail
-                        ),
+                    Box(modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f))
+                    Box {
+                        Card(
+                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                        ) {
+                            Thumbnail(
+                                thumbnail = uiState.currentlyPlaying?.mediaMetadata?.artworkUri,
+                                contentDescription = stringResource(
+                                    id = R.string.stream_thumbnail
+                                ),
+                            )
+                        }
+                    }
+                    Box(modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f))
+                    Text(
+                        text = uiState.currentlyPlaying?.mediaMetadata?.title.toString(),
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
+                        fontSize = 6.em
                     )
+                    Text(
+                        text = uiState.currentlyPlaying?.mediaMetadata?.artist.toString(),
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
+                        fontSize = 4.em
+                    )
+
+                    Box(modifier = Modifier
+                        .fillMaxSize()
+                        .weight(0.2f))
+                    NewPlayerSeeker(viewModel = viewModel, uiState = uiState)
+                    Box(modifier = Modifier
+                        .fillMaxSize()
+                        .weight(0.2f))
+                    AudioPlaybackController(viewModel = viewModel, uiState = uiState)
+                    Box(modifier = Modifier
+                        .fillMaxSize()
+                        .weight(0.2f))
                 }
-                Text(
-                    text = uiState.currentlyPlaying?.mediaMetadata?.title.toString(),
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
-                    fontSize = 6.em
-                )
-                Text(
-                    text = uiState.currentlyPlaying?.mediaMetadata?.artist.toString(),
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
-                    fontSize = 4.em
-                )
-
-                NewPlayerSeeker(viewModel = viewModel, uiState = uiState)
-
-                AudioPlaybackController(viewModel = viewModel, uiState = uiState)
+                AudioBottomUI(viewModel, uiState)
             }
         }
     }
@@ -119,7 +132,7 @@ fun AudioPlayerUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
 @OptIn(UnstableApi::class)
 @Preview(device = "id:pixel_6")
 @Composable
-fun AudioPlayerUIPreviewEmbedded() {
+fun AudioPlayerUIPreview() {
 //    VideoPlayerTheme {
     AudioPlayerUI(viewModel = NewPlayerViewModelDummy(), uiState = NewPlayerUIState.DUMMY)
 //    }

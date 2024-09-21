@@ -57,6 +57,7 @@ import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.theme.video_player_onSurface
 import net.newpipe.newplayer.utils.getEmbeddedUiConfig
 
+@OptIn(UnstableApi::class)
 @Composable
 fun TopUI(
     modifier: Modifier, viewModel: NewPlayerViewModel, uiState: NewPlayerUIState

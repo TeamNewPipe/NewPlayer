@@ -144,6 +144,7 @@ fun DropDownMenu(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
 // Preview
 ///////////////////////////////////////////////////////////////////
 
+@OptIn(UnstableApi::class)
 @Preview(device = "spec:width=1080px,height=1080px,dpi=440,orientation=landscape")
 @Composable
 fun VideoPlayerControllerDropDownPreview() {
