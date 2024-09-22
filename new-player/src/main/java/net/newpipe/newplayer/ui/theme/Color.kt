@@ -20,12 +20,15 @@
 
 package net.newpipe.newplayer.ui.theme
 
+import androidx.annotation.OptIn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
+import net.newpipe.newplayer.ui.audioplayer.AudioPlayerUI
 import net.newpipe.newplayer.ui.videoplayer.PreviewBackgroundSurface
 import net.newpipe.newplayer.ui.videoplayer.VideoPlayerControllerUI
 
@@ -70,6 +73,7 @@ val video_player_surfaceTint = Color(0xFFFFB951)
 val video_player_outlineVariant = Color(0xFF4F4539)
 val video_player_scrim = Color(0xFF000000)
 
+@OptIn(UnstableApi::class)
 @Preview(device = "spec:width=1080px,height=600px,dpi=440,orientation=landscape")
 @Composable
 fun VideoPlayerControllerUIPreviewEmbeddedColorPreview() {
@@ -77,7 +81,31 @@ fun VideoPlayerControllerUIPreviewEmbeddedColorPreview() {
         PreviewBackgroundSurface {
             VideoPlayerControllerUI(
                 viewModel = NewPlayerViewModelDummy(),
-                uiState = NewPlayerUIState.DEFAULT.copy(
+                uiState = NewPlayerUIState.DUMMY.copy(
+                    uiMode = UIModeState.EMBEDDED_VIDEO_CONTROLLER_UI,
+                    playing = true,
+                    seekerPosition = 0.3f,
+                    isLoading = false,
+                    durationInMs = 9 * 60 * 1000,
+                    playbackPositionInMs = 6 * 60 * 1000,
+                    bufferedPercentage = 0.4f,
+                    fastSeekSeconds = 10,
+                ),
+            )
+        }
+    }
+}
+
+
+@OptIn(UnstableApi::class)
+@Preview(device = "id:pixel_6")
+@Composable
+fun AudioPlayerUIPreviewEmbeddedColorPreview() {
+    VideoPlayerTheme {
+        PreviewBackgroundSurface {
+            AudioPlayerUI(
+                viewModel = NewPlayerViewModelDummy(),
+                uiState = NewPlayerUIState.DUMMY.copy(
                     uiMode = UIModeState.EMBEDDED_VIDEO_CONTROLLER_UI,
                     playing = true,
                     seekerPosition = 0.3f,

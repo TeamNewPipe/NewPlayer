@@ -28,9 +28,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.automirrored.filled.Notes
+import androidx.compose.material.icons.filled.ArtTrack
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.LiveTv
+import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PictureInPicture
 import androidx.compose.material.icons.filled.Share
@@ -74,7 +78,7 @@ fun AudioBottomUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
                 colors = lightAudioControlButtonColorScheme()
             ) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Filled.Notes,
+                    imageVector = Icons.Filled.ArtTrack,
                     contentDescription = stringResource(
                         id = R.string.details_view_button_description
                     )
@@ -90,9 +94,17 @@ fun AudioBottomUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
             }
             Button(onClick = { /*TODO*/ }, colors = lightAudioControlButtonColorScheme()) {
                 Icon(
-                    imageVector = Icons.Filled.PictureInPicture,
+                    imageVector = Icons.AutoMirrored.Filled.MenuBook,
                     contentDescription = stringResource(
-                        id = R.string.pip_button_description
+                        id = R.string.chapter
+                    )
+                )
+            }
+            Button(onClick = { /*TODO*/ }, colors = lightAudioControlButtonColorScheme()) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.List,
+                    contentDescription = stringResource(
+                        id = R.string.widget_descriptoin_playlist_item_selection
                     )
                 )
             }
@@ -147,6 +159,14 @@ private fun Menu() {
                     )
                 },
                 onClick = { /*TODO*/ showMenu = false })
+            DropdownMenuItem(text = { Text(stringResource(R.string.pip_button_description)) }, onClick = { /*TODO*/ }, leadingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.PictureInPicture,
+                    contentDescription = stringResource(
+                        id = R.string.pip_button_description
+                    )
+                )
+            })
         }
     }
 }

@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
+import net.newpipe.newplayer.model.EmbeddedUiConfig
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
@@ -63,7 +64,12 @@ import net.newpipe.newplayer.utils.getEmbeddedUiConfig
 fun TopUI(
     modifier: Modifier, viewModel: NewPlayerViewModel, uiState: NewPlayerUIState
 ) {
-    val embeddedUiConfig = getEmbeddedUiConfig(activity = LocalContext.current as Activity)
+    val embeddedUiConfig =
+        if (LocalContext.current is Activity)
+            getEmbeddedUiConfig(activity = LocalContext.current as Activity)
+        else
+            EmbeddedUiConfig.DUMMY
+
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,

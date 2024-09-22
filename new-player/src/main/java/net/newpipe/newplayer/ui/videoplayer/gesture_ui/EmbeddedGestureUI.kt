@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.util.UnstableApi
+import net.newpipe.newplayer.model.EmbeddedUiConfig
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
@@ -59,7 +60,10 @@ fun EmbeddedGestureUI(
         mutableStateOf(false)
     }
 
-    val embeddedUiConfig = getEmbeddedUiConfig(LocalContext.current as Activity)
+    val embeddedUiConfig = if (LocalContext.current is Activity)
+        getEmbeddedUiConfig(LocalContext.current as Activity)
+    else
+        EmbeddedUiConfig.DUMMY
 
     val handleMovement = { movement: TouchedPosition ->
         Log.d(TAG, "${movement.x}:${movement.y}")
