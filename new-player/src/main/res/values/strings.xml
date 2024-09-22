@@ -29,7 +29,9 @@
     <string name="menu_item_language">Language</string>
     <string name="menu_item_playback_speed">Playback speed</string>
     <string name="widget_description_previous_stream">Previous stream</string>
+    <string name="widget_description_fast_rewind">Fast rewind</string>
     <string name="widget_description_next_stream">Next stream</string>
+    <string name="widget_description_fast_forward">Fast forward</string>
     <string name="widget_description_play">Play</string>
     <string name="widget_description_pause">Pause</string>
     <string name="widget_description_toggle_fullscreen">Toggle fullscreen</string>

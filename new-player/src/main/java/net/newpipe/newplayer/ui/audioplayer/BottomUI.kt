@@ -24,6 +24,7 @@ package net.newpipe.newplayer.ui.audioplayer
 
 import android.app.Activity
 import androidx.annotation.OptIn
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -73,7 +74,7 @@ import net.newpipe.newplayer.utils.getEmbeddedUiConfig
 @Composable
 fun AudioBottomUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
 
-    val embeddedUiConfig = if(LocalContext.current is Activity)
+    val embeddedUiConfig = if (LocalContext.current is Activity)
         getEmbeddedUiConfig(activity = LocalContext.current as Activity)
     else
         EmbeddedUiConfig.DUMMY
@@ -107,25 +108,30 @@ fun AudioBottomUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
                     )
                 )
             }
-            Button(onClick = {
-                viewModel.changeUiMode(UIModeState.AUDIO_CHAPTER_SELECT, embeddedUiConfig)
-            }, colors = lightAudioControlButtonColorScheme()) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.MenuBook,
-                    contentDescription = stringResource(
-                        id = R.string.chapter
+            androidx.compose.animation.AnimatedVisibility(visible = uiState.chapters.isNotEmpty()) {
+                Button(onClick = {
+                    viewModel.changeUiMode(UIModeState.AUDIO_CHAPTER_SELECT, embeddedUiConfig)
+                }, colors = lightAudioControlButtonColorScheme()) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.MenuBook,
+                        contentDescription = stringResource(
+                            id = R.string.chapter
+                        )
                     )
-                )
+                }
             }
-            Button(onClick = {
-                viewModel.changeUiMode(UIModeState.AUDIO_STREAM_SELECT, embeddedUiConfig)
-            }, colors = lightAudioControlButtonColorScheme()) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.List,
-                    contentDescription = stringResource(
-                        id = R.string.widget_descriptoin_playlist_item_selection
+
+            androidx.compose.animation.AnimatedVisibility(visible = 1 < uiState.playList.size) {
+                Button(onClick = {
+                    viewModel.changeUiMode(UIModeState.AUDIO_STREAM_SELECT, embeddedUiConfig)
+                }, colors = lightAudioControlButtonColorScheme()) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.List,
+                        contentDescription = stringResource(
+                            id = R.string.widget_descriptoin_playlist_item_selection
+                        )
                     )
-                )
+                }
             }
         }
         Menu()
@@ -136,7 +142,7 @@ fun AudioBottomUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
 private fun Menu() {
     var showMenu: Boolean by remember { mutableStateOf(false) }
 
-    val embeddedUiConfig = if(LocalContext.current is Activity)
+    val embeddedUiConfig = if (LocalContext.current is Activity)
         getEmbeddedUiConfig(activity = LocalContext.current as Activity)
     else
         EmbeddedUiConfig.DUMMY
@@ -183,14 +189,17 @@ private fun Menu() {
                     )
                 },
                 onClick = { /*TODO*/ showMenu = false })
-            DropdownMenuItem(text = { Text(stringResource(R.string.pip_button_description)) }, onClick = { /*TODO*/ }, leadingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.PictureInPicture,
-                    contentDescription = stringResource(
-                        id = R.string.pip_button_description
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.pip_button_description)) },
+                onClick = { /*TODO*/ },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.PictureInPicture,
+                        contentDescription = stringResource(
+                            id = R.string.pip_button_description
+                        )
                     )
-                )
-            })
+                })
         }
     }
 }

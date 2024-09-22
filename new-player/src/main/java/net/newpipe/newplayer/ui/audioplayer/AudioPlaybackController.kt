@@ -20,25 +20,27 @@
 
 package net.newpipe.newplayer.ui.audioplayer;
 
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FastForward
+import androidx.compose.material.icons.filled.FastRewind
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -51,8 +53,7 @@ import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
-import net.newpipe.newplayer.ui.common.RepeatModeButton
-import net.newpipe.newplayer.ui.common.ShuffleModeButton
+import net.newpipe.newplayer.ui.LoadingPlaceholder
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 @androidx.annotation.OptIn(UnstableApi::class)
@@ -63,12 +64,15 @@ fun AudioPlaybackController(viewModel: NewPlayerViewModel, uiState: NewPlayerUIS
         modifier = Modifier.background(MaterialTheme.colorScheme.background),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ShuffleModeButton(viewModel = viewModel, uiState = uiState)
+        //ShuffleModeButton(viewModel = viewModel, uiState = uiState)
 
-        Box(modifier = Modifier.size(80.dp), contentAlignment = Alignment.Center) {
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(1F)
+            .weight(1F), contentAlignment = Alignment.Center) {
             Button(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
                     .aspectRatio(1f),
                 onClick = viewModel::prevStream,
                 colors = lightAudioControlButtonColorScheme(),
@@ -83,25 +87,81 @@ fun AudioPlaybackController(viewModel: NewPlayerViewModel, uiState: NewPlayerUIS
             }
         }
 
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(1F)
+            .weight(1F), contentAlignment = Alignment.Center) {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f),
+                onClick = {
+                    viewModel.fastSeek(1)
+                    viewModel.finishFastSeek()
+                },
+                colors = lightAudioControlButtonColorScheme(),
+            ) {
+                Icon(
+                    modifier = Modifier.fillMaxSize(),
+                    imageVector = Icons.Filled.FastRewind,
+                    contentDescription = stringResource(R.string.widget_description_fast_rewind)
+                )
+            }
+        }
+
         Button(
             modifier = Modifier.size(80.dp),
             onClick = if (uiState.playing) viewModel::pause else viewModel::play,
             shape = CircleShape
         ) {
-            Icon(
-                modifier = Modifier.fillMaxSize(),
-                imageVector = if (uiState.playing) Icons.Filled.Pause else Icons.Filled.PlayArrow,
-                contentDescription = stringResource(
-                    if (uiState.playing) R.string.widget_description_pause
-                    else R.string.widget_description_play
+            if(uiState.isLoading) {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.fillMaxSize().aspectRatio(1F),
+                        color = MaterialTheme.colorScheme.onSurface)
+                }
+
+            } else {
+                Icon(
+                    modifier = Modifier.fillMaxSize(),
+                    imageVector = if (uiState.playing) Icons.Filled.Pause else Icons.Filled.PlayArrow,
+                    contentDescription = stringResource(
+                        if (uiState.playing) R.string.widget_description_pause
+                        else R.string.widget_description_play
+                    )
                 )
-            )
+            }
         }
 
-        Box(modifier = Modifier.size(80.dp), contentAlignment = Alignment.Center) {
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(1F)
+            .weight(1F), contentAlignment = Alignment.Center) {
             Button(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
+                    .aspectRatio(1f),
+                onClick = {
+                    viewModel.fastSeek(1)
+                    viewModel.finishFastSeek()
+                },
+                colors = lightAudioControlButtonColorScheme(),
+            ) {
+                Icon(
+                    modifier = Modifier.fillMaxSize(),
+                    imageVector = Icons.Filled.FastForward,
+                    contentDescription = stringResource(R.string.widget_description_fast_forward)
+                )
+            }
+        }
+
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(1F)
+            .weight(1F), contentAlignment = Alignment.Center) {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
                     .aspectRatio(1f),
                 onClick = viewModel::nextStream,
                 colors = lightAudioControlButtonColorScheme(),
@@ -115,7 +175,7 @@ fun AudioPlaybackController(viewModel: NewPlayerViewModel, uiState: NewPlayerUIS
             }
         }
 
-        RepeatModeButton(viewModel = viewModel, uiState = uiState)
+        //RepeatModeButton(viewModel = viewModel, uiState = uiState)
     }
 }
 
@@ -127,7 +187,7 @@ fun AudioPlayerControllerPreview() {
     VideoPlayerTheme {
         AudioPlaybackController(
             viewModel = NewPlayerViewModelDummy(),
-            uiState = NewPlayerUIState.DUMMY.copy(playList = emptyList())
+            uiState = NewPlayerUIState.DUMMY.copy(playList = emptyList(), isLoading = true)
         )
     }
 }

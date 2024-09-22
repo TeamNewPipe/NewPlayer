@@ -16,6 +16,9 @@
       <SelectionState runConfigName="VideoPlayerControllerDropDownPreview">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="AudioPlayerControllerPreview">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>
