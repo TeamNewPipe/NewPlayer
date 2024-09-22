@@ -59,30 +59,27 @@ import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 @OptIn(UnstableApi::class)
 @Composable
 fun AudioPlaybackController(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
-    Row(modifier = Modifier.background(MaterialTheme.colorScheme.background),
-        verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        modifier = Modifier.background(MaterialTheme.colorScheme.background),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         ShuffleModeButton(viewModel = viewModel, uiState = uiState)
 
         Box(modifier = Modifier.size(80.dp), contentAlignment = Alignment.Center) {
-            androidx.compose.animation.AnimatedVisibility(
-                uiState.currentPlaylistItemIndex != 0,
-                enter = fadeIn(animationSpec = tween(400)),
-                exit = fadeOut(animationSpec = tween(400))
-
+            Button(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .aspectRatio(1f),
+                onClick = viewModel::prevStream,
+                colors = lightAudioControlButtonColorScheme(),
+                enabled =
+                uiState.currentPlaylistItemIndex != 0
             ) {
-                Button(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .aspectRatio(1f),
-                    onClick = {},
-                    colors = lightAudioControlButtonColorScheme()
-                ) {
-                    Icon(
-                        modifier = Modifier.fillMaxSize(),
-                        imageVector = Icons.Filled.SkipPrevious,
-                        contentDescription = stringResource(R.string.widget_description_previous_stream)
-                    )
-                }
+                Icon(
+                    modifier = Modifier.fillMaxSize(),
+                    imageVector = Icons.Filled.SkipPrevious,
+                    contentDescription = stringResource(R.string.widget_description_previous_stream)
+                )
             }
         }
 
@@ -92,6 +89,7 @@ fun AudioPlaybackController(viewModel: NewPlayerViewModel, uiState: NewPlayerUIS
             shape = CircleShape
         ) {
             Icon(
+                modifier = Modifier.fillMaxSize(),
                 imageVector = if (uiState.playing) Icons.Filled.Pause else Icons.Filled.PlayArrow,
                 contentDescription = stringResource(
                     if (uiState.playing) R.string.widget_description_pause
@@ -101,24 +99,19 @@ fun AudioPlaybackController(viewModel: NewPlayerViewModel, uiState: NewPlayerUIS
         }
 
         Box(modifier = Modifier.size(80.dp), contentAlignment = Alignment.Center) {
-            androidx.compose.animation.AnimatedVisibility(
-                uiState.currentPlaylistItemIndex < uiState.playList.size - 1,
-                enter = fadeIn(animationSpec = tween(400)),
-                exit = fadeOut(animationSpec = tween(400))
+            Button(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .aspectRatio(1f),
+                onClick = viewModel::nextStream,
+                colors = lightAudioControlButtonColorScheme(),
+                enabled = uiState.currentPlaylistItemIndex < uiState.playList.size - 1
             ) {
-                Button(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .aspectRatio(1f),
-                    onClick = {},
-                    colors = lightAudioControlButtonColorScheme()
-                ) {
-                    Icon(
-                        modifier = Modifier.fillMaxSize(),
-                        imageVector = Icons.Filled.SkipNext,
-                        contentDescription = stringResource(R.string.widget_description_next_stream)
-                    )
-                }
+                Icon(
+                    modifier = Modifier.fillMaxSize(),
+                    imageVector = Icons.Filled.SkipNext,
+                    contentDescription = stringResource(R.string.widget_description_next_stream)
+                )
             }
         }
 
@@ -134,7 +127,7 @@ fun AudioPlayerControllerPreview() {
     VideoPlayerTheme {
         AudioPlaybackController(
             viewModel = NewPlayerViewModelDummy(),
-            uiState = NewPlayerUIState.DUMMY
+            uiState = NewPlayerUIState.DUMMY.copy(playList = emptyList())
         )
     }
 }

@@ -56,5 +56,5 @@
     <string name="stream_thumbnail">Stream Thumbnail</string>
     <string name="details_view_button_description">Switch to details view</string>
     <string name="fullscreen_button_description">Switch to fullscreen video mode</string>
-    <string name="pip_button_description">Switch to picture in picture mode</string>
+    <string name="pip_button_description">Picture in picture</string>
 </resources>

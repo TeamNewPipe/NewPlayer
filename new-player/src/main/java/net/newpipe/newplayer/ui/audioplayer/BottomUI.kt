@@ -22,6 +22,7 @@
 
 package net.newpipe.newplayer.ui.audioplayer
 
+import android.app.Activity
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -55,18 +56,27 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
+import net.newpipe.newplayer.model.EmbeddedUiConfig
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
+import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
+import net.newpipe.newplayer.utils.getEmbeddedUiConfig
 
 @OptIn(UnstableApi::class)
 @Composable
 fun AudioBottomUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
+
+    val embeddedUiConfig = if(LocalContext.current is Activity)
+        getEmbeddedUiConfig(activity = LocalContext.current as Activity)
+    else
+        EmbeddedUiConfig.DUMMY
 
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Row(
@@ -75,7 +85,9 @@ fun AudioBottomUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
                 .weight(1f), horizontalArrangement = Arrangement.SpaceAround
         ) {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    viewModel.changeUiMode(UIModeState.EMBEDDED_AUDIO, embeddedUiConfig)
+                },
                 colors = lightAudioControlButtonColorScheme()
             ) {
                 Icon(
@@ -85,7 +97,9 @@ fun AudioBottomUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
                     )
                 )
             }
-            Button(onClick = { /*TODO*/ }, colors = lightAudioControlButtonColorScheme()) {
+            Button(onClick = {
+                viewModel.changeUiMode(UIModeState.FULLSCREEN_VIDEO, embeddedUiConfig)
+            }, colors = lightAudioControlButtonColorScheme()) {
                 Icon(
                     imageVector = Icons.Filled.LiveTv,
                     contentDescription = stringResource(
@@ -93,7 +107,9 @@ fun AudioBottomUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
                     )
                 )
             }
-            Button(onClick = { /*TODO*/ }, colors = lightAudioControlButtonColorScheme()) {
+            Button(onClick = {
+                viewModel.changeUiMode(UIModeState.AUDIO_CHAPTER_SELECT, embeddedUiConfig)
+            }, colors = lightAudioControlButtonColorScheme()) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.MenuBook,
                     contentDescription = stringResource(
@@ -101,7 +117,9 @@ fun AudioBottomUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
                     )
                 )
             }
-            Button(onClick = { /*TODO*/ }, colors = lightAudioControlButtonColorScheme()) {
+            Button(onClick = {
+                viewModel.changeUiMode(UIModeState.AUDIO_STREAM_SELECT, embeddedUiConfig)
+            }, colors = lightAudioControlButtonColorScheme()) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.List,
                     contentDescription = stringResource(
@@ -117,6 +135,11 @@ fun AudioBottomUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
 @Composable
 private fun Menu() {
     var showMenu: Boolean by remember { mutableStateOf(false) }
+
+    val embeddedUiConfig = if(LocalContext.current is Activity)
+        getEmbeddedUiConfig(activity = LocalContext.current as Activity)
+    else
+        EmbeddedUiConfig.DUMMY
 
     Box {
         IconButton(onClick = {

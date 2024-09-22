@@ -141,7 +141,10 @@ fun NewPlayerUI(
             uiState.uiMode == UIModeState.EMBEDDED_VIDEO_CHAPTER_SELECT
         ) {
             VideoPlayerUi(viewModel = viewModel, uiState = uiState)
-        } else if (uiState.uiMode == UIModeState.FULLSCREEN_AUDIO) {
+        } else if (uiState.uiMode == UIModeState.FULLSCREEN_AUDIO ||
+            uiState.uiMode == UIModeState.AUDIO_STREAM_SELECT ||
+            uiState.uiMode == UIModeState.AUDIO_CHAPTER_SELECT
+        ) {
             AudioPlayerUI(viewModel = viewModel, uiState = uiState)
         } else {
             LoadingPlaceholder(uiState.embeddedUiRatio)

@@ -57,7 +57,8 @@ import net.newpipe.newplayer.utils.getInsets
 @Composable
 fun lightAudioControlButtonColorScheme() = ButtonDefaults.buttonColors().copy(
     containerColor = MaterialTheme.colorScheme.background,
-    contentColor = MaterialTheme.colorScheme.onSurface
+    contentColor = MaterialTheme.colorScheme.onSurface,
+    disabledContainerColor = MaterialTheme.colorScheme.background
 )
 
 @OptIn(UnstableApi::class)
