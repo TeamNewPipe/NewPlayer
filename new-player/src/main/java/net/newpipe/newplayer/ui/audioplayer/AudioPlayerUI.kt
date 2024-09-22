@@ -26,6 +26,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.ButtonDefaults
@@ -49,12 +50,13 @@ import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.common.NewPlayerSeeker
+import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.utils.Thumbnail
 import net.newpipe.newplayer.utils.getInsets
 
 @Composable
 fun lightAudioControlButtonColorScheme() = ButtonDefaults.buttonColors().copy(
-    containerColor = Color.Transparent,
+    containerColor = MaterialTheme.colorScheme.background,
     contentColor = MaterialTheme.colorScheme.onSurface
 )
 
@@ -62,15 +64,16 @@ fun lightAudioControlButtonColorScheme() = ButtonDefaults.buttonColors().copy(
 @Composable
 fun AudioPlayerUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
     val insets = getInsets()
-    Box(modifier = Modifier.fillMaxSize().background(color = Color.Green)) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.background)
+    ) {
         Scaffold(modifier = Modifier
             .fillMaxSize()
             .windowInsetsPadding(insets),
             topBar = {
-                AudioPlayerTopBar(
-                    viewModel = viewModel,
-                    uiState = uiState
-                )
+
             }) { innerPadding ->
             Box(
                 modifier = Modifier
@@ -98,6 +101,7 @@ fun AudioPlayerUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
                                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                             ) {
                                 Thumbnail(
+                                    modifier = Modifier.fillMaxWidth(),
                                     thumbnail = uiState.currentlyPlaying?.mediaMetadata?.artworkUri,
                                     contentDescription = stringResource(
                                         id = R.string.stream_thumbnail
@@ -142,7 +146,11 @@ fun AudioPlayerUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
                         )
                     }
                     AudioBottomUI(viewModel, uiState)
-                    Box(modifier = Modifier.fillMaxSize().weight(0.025f))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .weight(0.025f)
+                    )
                 }
             }
         }
@@ -153,7 +161,7 @@ fun AudioPlayerUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
 @Preview(device = "id:pixel_6", showSystemUi = true)
 @Composable
 fun AudioPlayerUIPreview() {
-//    VideoPlayerTheme {
-    AudioPlayerUI(viewModel = NewPlayerViewModelDummy(), uiState = NewPlayerUIState.DUMMY)
-//    }
+    VideoPlayerTheme {
+        AudioPlayerUI(viewModel = NewPlayerViewModelDummy(), uiState = NewPlayerUIState.DUMMY)
+    }
 }

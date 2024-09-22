@@ -62,6 +62,7 @@ import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
+import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 @OptIn(UnstableApi::class)
 @Composable
@@ -175,7 +176,9 @@ private fun Menu() {
 @Preview(device = "id:pixel_6")
 @Composable
 fun AudioBottomUIPreview() {
-    Box(modifier = Modifier.fillMaxWidth()) {
-        AudioBottomUI(viewModel = NewPlayerViewModelDummy(), uiState = NewPlayerUIState.DUMMY)
+    VideoPlayerTheme {
+        Box(modifier = Modifier.fillMaxWidth()) {
+            AudioBottomUI(viewModel = NewPlayerViewModelDummy(), uiState = NewPlayerUIState.DUMMY)
+        }
     }
 }

@@ -37,7 +37,7 @@ val video_player_primary = Color(0xFFE53935)
 // The color of buttons, and the LoadingCircle
 val video_player_onPrimary = Color(0xFFF8F8F8)
 
-val video_player_primaryContainer = Color(0xFF633F00)
+val video_player_primaryContainer = Color(0xFFFFFF00)
 val video_player_onPrimaryContainer = Color(0xFFFFDDB3)
 val video_player_secondary = Color(0xFFDDC2A1)
 val video_player_onSecondary = Color(0xFF3E2D16)
@@ -47,11 +47,15 @@ val video_player_tertiary = Color(0xFFB8CEA1)
 val video_player_onTertiary = Color(0xFF243515)
 val video_player_tertiaryContainer = Color(0xFF3A4C2A)
 val video_player_onTertiaryContainer = Color(0xFFD4EABB)
+
 val video_player_error = Color(0xFFFFB4AB)
 val video_player_errorContainer = Color(0xFF93000A)
 val video_player_onError = Color(0xFF690005)
 val video_player_onErrorContainer = Color(0xFFFFDAD6)
+
+// background color
 val video_player_background = Color(0xFF1F1B16)
+
 val video_player_onBackground = Color(0xFFEAE1D9)
 val video_player_surface = Color(0xFF000000)
 
