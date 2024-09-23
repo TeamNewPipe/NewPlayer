@@ -18,9 +18,8 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.ui.streamselect
+package net.newpipe.newplayer.ui.selection_ui
 
-import android.app.Activity
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,23 +31,20 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
-import net.newpipe.newplayer.model.EmbeddedUiConfig
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.ui.videoplayer.STREAMSELECT_UI_BACKGROUND_COLOR
 import net.newpipe.newplayer.utils.ReorderHapticFeedbackType
-import net.newpipe.newplayer.utils.getEmbeddedUiConfig
 import net.newpipe.newplayer.utils.getInsets
 import net.newpipe.newplayer.utils.rememberReorderHapticFeedback
 import sh.calvin.reorderable.ReorderableItem
@@ -60,7 +56,8 @@ val ITEM_CORNER_SHAPE = RoundedCornerShape(10.dp)
 @Composable
 fun StreamSelectUI(
     viewModel: NewPlayerViewModel,
-    uiState: NewPlayerUIState
+    uiState: NewPlayerUIState,
+    shownInAudioPlayer: Boolean
 ) {
     val insets = getInsets()
 
@@ -68,7 +65,10 @@ fun StreamSelectUI(
         modifier = Modifier
             .fillMaxSize()
             .windowInsetsPadding(insets),
-        containerColor = Color.Transparent,
+        containerColor = if (shownInAudioPlayer)
+            MaterialTheme.colorScheme.background
+        else
+            Color.Transparent,
         topBar = {
             StreamSelectTopBar(viewModel = viewModel, uiState = uiState)
         }
@@ -138,7 +138,8 @@ fun VideoPlayerStreamSelectUIPreview() {
         Surface(modifier = Modifier.fillMaxSize(), color = Color.Red) {
             StreamSelectUI(
                 viewModel = NewPlayerViewModelDummy(),
-                uiState = NewPlayerUIState.DUMMY
+                uiState = NewPlayerUIState.DUMMY,
+                shownInAudioPlayer = false
             )
         }
     }

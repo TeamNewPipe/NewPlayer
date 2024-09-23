@@ -18,16 +18,17 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.ui.streamselect
+package net.newpipe.newplayer.ui.selection_ui
 
 import android.app.Activity
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
- import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -47,7 +48,11 @@ import net.newpipe.newplayer.utils.getInsets
 
 @OptIn(UnstableApi::class)
 @Composable
-fun ChapterSelectUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
+fun ChapterSelectUI(
+    viewModel: NewPlayerViewModel,
+    uiState: NewPlayerUIState,
+    shownInAudioPlayer: Boolean
+) {
     val insets = getInsets()
 
     val embeddedUiConfig = if (LocalContext.current is Activity)
@@ -59,7 +64,10 @@ fun ChapterSelectUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
         modifier = Modifier
             .fillMaxSize()
             .windowInsetsPadding(insets),
-        containerColor = Color.Transparent,
+        containerColor = if (shownInAudioPlayer)
+            MaterialTheme.colorScheme.background
+        else
+            Color.Transparent,
         topBar = {
             ChapterSelectTopBar(
                 onClose = {
@@ -109,7 +117,8 @@ fun VideoPlayerChannelSelectUIPreview() {
         Surface(modifier = Modifier.fillMaxSize(), color = Color.Red) {
             ChapterSelectUI(
                 viewModel = NewPlayerViewModelDummy(),
-                uiState = NewPlayerUIState.DUMMY
+                uiState = NewPlayerUIState.DUMMY,
+                shownInAudioPlayer = false
             )
         }
     }

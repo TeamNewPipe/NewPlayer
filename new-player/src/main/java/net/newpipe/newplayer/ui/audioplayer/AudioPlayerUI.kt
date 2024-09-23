@@ -42,7 +42,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,8 +54,8 @@ import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.ui.common.NewPlayerSeeker
-import net.newpipe.newplayer.ui.streamselect.ChapterSelectUI
-import net.newpipe.newplayer.ui.streamselect.StreamSelectUI
+import net.newpipe.newplayer.ui.selection_ui.ChapterSelectUI
+import net.newpipe.newplayer.ui.selection_ui.StreamSelectUI
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.utils.Thumbnail
 import net.newpipe.newplayer.utils.getInsets
@@ -86,7 +85,7 @@ fun AudioPlayerUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
             enter = UI_ENTER_ANIMATION,
             exit = UI_EXIT_ANIMATION
         ) {
-            ChapterSelectUI(viewModel = viewModel, uiState = uiState)
+            ChapterSelectUI(viewModel = viewModel, uiState = uiState, shownInAudioPlayer = true)
         }
 
         AnimatedVisibility(
@@ -94,7 +93,7 @@ fun AudioPlayerUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
             enter = UI_ENTER_ANIMATION,
             exit = UI_EXIT_ANIMATION
         ) {
-            StreamSelectUI(viewModel = viewModel, uiState = uiState)
+            StreamSelectUI(viewModel = viewModel, uiState = uiState, shownInAudioPlayer = true)
         }
 
         AnimatedVisibility(

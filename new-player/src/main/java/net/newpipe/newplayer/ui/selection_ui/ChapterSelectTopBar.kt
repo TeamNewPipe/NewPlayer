@@ -19,7 +19,7 @@
  */
 
 
-package net.newpipe.newplayer.ui.streamselect
+package net.newpipe.newplayer.ui.selection_ui
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons

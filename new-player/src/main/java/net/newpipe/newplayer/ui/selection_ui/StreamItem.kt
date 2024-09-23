@@ -18,7 +18,7 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.ui.streamselect
+package net.newpipe.newplayer.ui.selection_ui
 
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn

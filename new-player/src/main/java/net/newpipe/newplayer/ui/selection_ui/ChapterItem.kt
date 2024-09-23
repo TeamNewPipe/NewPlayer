@@ -19,7 +19,7 @@
  */
 
 
-package net.newpipe.newplayer.ui.streamselect
+package net.newpipe.newplayer.ui.selection_ui
 
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
