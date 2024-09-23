@@ -55,6 +55,7 @@ import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.ui.common.NewPlayerSeeker
+import net.newpipe.newplayer.ui.streamselect.ChapterSelectUI
 import net.newpipe.newplayer.ui.streamselect.StreamSelectUI
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.utils.Thumbnail
@@ -85,7 +86,7 @@ fun AudioPlayerUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
             enter = UI_ENTER_ANIMATION,
             exit = UI_EXIT_ANIMATION
         ) {
-            StreamSelectUI(viewModel = viewModel, uiState = uiState, isChapterSelect = true)
+            ChapterSelectUI(viewModel = viewModel, uiState = uiState)
         }
 
         AnimatedVisibility(
@@ -93,7 +94,7 @@ fun AudioPlayerUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
             enter = UI_ENTER_ANIMATION,
             exit = UI_EXIT_ANIMATION
         ) {
-            StreamSelectUI(viewModel = viewModel, uiState = uiState, isChapterSelect = false)
+            StreamSelectUI(viewModel = viewModel, uiState = uiState)
         }
 
         AnimatedVisibility(

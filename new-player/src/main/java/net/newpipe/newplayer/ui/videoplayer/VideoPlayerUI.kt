@@ -47,6 +47,7 @@ import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.ui.PlaySurface
 import net.newpipe.newplayer.ui.streamselect.StreamSelectUI
 import androidx.lifecycle.LifecycleEventObserver
+import net.newpipe.newplayer.ui.streamselect.ChapterSelectUI
 
 @OptIn(UnstableApi::class)
 @Composable
@@ -116,7 +117,6 @@ fun VideoPlayerUi(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
                 StreamSelectUI(
                     viewModel = viewModel,
                     uiState = uiState,
-                    isChapterSelect = false
                 )
             }
         }
@@ -125,7 +125,7 @@ fun VideoPlayerUi(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
                 modifier = Modifier.fillMaxSize(),
                 color = STREAMSELECT_UI_BACKGROUND_COLOR
             ) {
-                StreamSelectUI(viewModel = viewModel, uiState = uiState, isChapterSelect = true)
+                ChapterSelectUI(viewModel = viewModel, uiState = uiState)
             }
         }
     }

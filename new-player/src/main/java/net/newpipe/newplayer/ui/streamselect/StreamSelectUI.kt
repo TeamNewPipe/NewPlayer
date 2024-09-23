@@ -59,16 +59,10 @@ val ITEM_CORNER_SHAPE = RoundedCornerShape(10.dp)
 @OptIn(UnstableApi::class)
 @Composable
 fun StreamSelectUI(
-    isChapterSelect: Boolean = false,
     viewModel: NewPlayerViewModel,
     uiState: NewPlayerUIState
 ) {
     val insets = getInsets()
-
-    val embeddedUiConfig = if (LocalContext.current is Activity)
-        getEmbeddedUiConfig(activity = LocalContext.current as Activity)
-    else
-        EmbeddedUiConfig.DUMMY
 
     Scaffold(
         modifier = Modifier
@@ -76,57 +70,17 @@ fun StreamSelectUI(
             .windowInsetsPadding(insets),
         containerColor = Color.Transparent,
         topBar = {
-            if (isChapterSelect) {
-                ChapterSelectTopBar(
-                    onClose = {
-                        viewModel.changeUiMode(
-                            uiState.uiMode.getNextModeWhenBackPressed() ?: uiState.uiMode,
-                            embeddedUiConfig
-                        )
-                    }
-                )
-            } else {
-                StreamSelectTopBar(viewModel = viewModel, uiState = uiState)
-            }
+            StreamSelectTopBar(viewModel = viewModel, uiState = uiState)
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            if (isChapterSelect) {
-                LazyColumn(
-                    modifier = Modifier
-                        .padding(start = 5.dp, end = 5.dp)
-                        .fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(5.dp),
-                ) {
-                    items(uiState.chapters.size) { chapterIndex ->
-                        val chapter = uiState.chapters[chapterIndex]
-                        ChapterItem(
-                            id = chapterIndex,
-                            chapterTitle = chapter.chapterTitle ?: "",
-                            chapterStartInMs = chapter.chapterStartInMs,
-                            thumbnail = chapter.thumbnail,
-                            onClicked = {
-                                viewModel.chapterSelected(chapterIndex)
-                            },
-                            isCurrentChapter = isActiveChapter(
-                                chapterIndex,
-                                uiState.chapters,
-                                uiState.playbackPositionInMs
-                            )
-                        )
-                    }
-
-                }
-            } else {
-                ReorderableStreamItemsList(
-                    padding = PaddingValues(start = 5.dp, end = 5.dp),
-                    viewModel = viewModel,
-                    uiState = uiState
-                )
-            }
+            ReorderableStreamItemsList(
+                padding = PaddingValues(start = 5.dp, end = 5.dp),
+                viewModel = viewModel,
+                uiState = uiState
+            )
         }
     }
-
 }
 
 @OptIn(UnstableApi::class)
@@ -179,26 +133,10 @@ fun ReorderableStreamItemsList(
 @OptIn(UnstableApi::class)
 @Preview(device = "id:pixel_5")
 @Composable
-fun VideoPlayerChannelSelectUIPreview() {
-    VideoPlayerTheme {
-        Surface(modifier = Modifier.fillMaxSize(), color = Color.Red) {
-            StreamSelectUI(
-                isChapterSelect = true,
-                viewModel = NewPlayerViewModelDummy(),
-                uiState = NewPlayerUIState.DUMMY
-            )
-        }
-    }
-}
-
-@OptIn(UnstableApi::class)
-@Preview(device = "id:pixel_5")
-@Composable
 fun VideoPlayerStreamSelectUIPreview() {
     VideoPlayerTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = Color.Red) {
             StreamSelectUI(
-                isChapterSelect = false,
                 viewModel = NewPlayerViewModelDummy(),
                 uiState = NewPlayerUIState.DUMMY
             )

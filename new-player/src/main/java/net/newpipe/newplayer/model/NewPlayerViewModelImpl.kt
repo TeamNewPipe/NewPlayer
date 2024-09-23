@@ -330,18 +330,23 @@ class NewPlayerViewModelImpl @Inject constructor(
     }
 
     override fun changeUiMode(newUiModeState: UIModeState, embeddedUiConfig: EmbeddedUiConfig) {
-        if (!uiState.value.uiMode.fullscreen) {
+        if (!uiState.value.uiMode.fullscreen && newUiModeState.fullscreen) {
             this.embeddedUiConfig = embeddedUiConfig
+        }
+
+        if(!(newUiModeState == UIModeState.EMBEDDED_VIDEO_CONTROLLER_UI ||
+            newUiModeState == UIModeState.FULLSCREEN_VIDEO_CONTROLLER_UI)) {
+            uiVisibilityJob?.cancel()
+        } else {
+            resetHideUiDelayedJob()
         }
 
         if (newUiModeState.isStreamSelect) {
             resetPlaylistProgressUpdaterJob()
-            uiVisibilityJob?.cancel()
         }
 
         if (newUiModeState.isChapterSelect) {
             resetPlaylistProgressUpdaterJob()
-            uiVisibilityJob?.cancel()
         }
 
         if ((uiState.value.uiMode.isStreamSelect || uiState.value.uiMode.isChapterSelect)
@@ -349,16 +354,6 @@ class NewPlayerViewModelImpl @Inject constructor(
         ) {
             playlistProgressUpdaterJob?.cancel()
             progressUpdaterJob?.cancel()
-        }
-
-        if(uiState.value.uiMode.fullscreen && !newUiModeState.fullscreen) {
-            uiVisibilityJob?.cancel()
-            finishFastSeek()
-        }
-
-        if(!uiState.value.uiMode.fullscreen && newUiModeState.fullscreen) {
-            uiVisibilityJob?.cancel()
-            finishFastSeek()
         }
 
         updateUiMode(newUiModeState)
@@ -373,10 +368,17 @@ class NewPlayerViewModelImpl @Inject constructor(
     }
 
     private fun resetHideUiDelayedJob() {
+        var ex:Exception? = null
+        try {
+            throw Exception()
+        } catch(e: Exception) {
+            ex = e
+        }
         uiVisibilityJob?.cancel()
         uiVisibilityJob = viewModelScope.launch {
             delay(2000)
             hideUi()
+            ex?.printStackTrace()
         }
     }
 
