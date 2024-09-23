@@ -38,6 +38,7 @@ interface NewPlayerViewModel {
     var contentFitMode: ContentScale
     val embeddedPlayerDraggedDownBy: SharedFlow<Float>
     val onBackPressed: SharedFlow<Unit>
+    var deviceInPowerSaveMode: Boolean
 
     fun initUIState(instanceState: Bundle)
     fun play()

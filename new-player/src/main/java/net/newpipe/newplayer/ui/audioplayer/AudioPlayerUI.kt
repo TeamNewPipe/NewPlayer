@@ -29,6 +29,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -59,6 +60,8 @@ import net.newpipe.newplayer.ui.selection_ui.StreamSelectUI
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.utils.Thumbnail
 import net.newpipe.newplayer.utils.getInsets
+import net.newpipe.newplayer.utils.getLocale
+import net.newpipe.newplayer.utils.getTimeStringFromMs
 
 
 private val UI_ENTER_ANIMATION = fadeIn(tween(200))
@@ -75,6 +78,9 @@ fun lightAudioControlButtonColorScheme() = ButtonDefaults.buttonColors().copy(
 @Composable
 fun AudioPlayerUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
     val insets = getInsets()
+
+    val locale = getLocale()!!
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -164,7 +170,25 @@ fun AudioPlayerUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
                                     .fillMaxSize()
                                     .weight(0.2f)
                             )
+
                             NewPlayerSeeker(viewModel = viewModel, uiState = uiState)
+
+                            Row() {
+                                Text(
+                                    getTimeStringFromMs(
+                                        uiState.playbackPositionInMs,
+                                        getLocale() ?: locale
+                                    )
+                                )
+                                Box(modifier = Modifier.fillMaxWidth().weight(1f))
+                                Text(
+                                    getTimeStringFromMs(
+                                        uiState.durationInMs,
+                                        getLocale() ?: locale
+                                    )
+                                )
+                            }
+
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()
@@ -195,6 +219,9 @@ fun AudioPlayerUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
 @Composable
 fun AudioPlayerUIPreview() {
     VideoPlayerTheme {
-        AudioPlayerUI(viewModel = NewPlayerViewModelDummy(), uiState = NewPlayerUIState.DUMMY)
+        AudioPlayerUI(
+            viewModel = NewPlayerViewModelDummy(),
+            uiState = NewPlayerUIState.DUMMY.copy(uiMode = UIModeState.FULLSCREEN_AUDIO)
+        )
     }
 }

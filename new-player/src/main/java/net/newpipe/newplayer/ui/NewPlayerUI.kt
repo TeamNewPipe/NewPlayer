@@ -22,6 +22,7 @@ package net.newpipe.newplayer.ui
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
+import android.os.Build
 import android.util.Log
 import android.view.SurfaceView
 import androidx.activity.compose.BackHandler
@@ -54,6 +55,7 @@ import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.VideoPlayerUi
 import net.newpipe.newplayer.utils.LockScreenOrientation
 import net.newpipe.newplayer.utils.getDefaultBrightness
+import net.newpipe.newplayer.utils.isInPowerSaveMode
 import net.newpipe.newplayer.utils.setScreenBrightness
 
 private const val TAG = "VideoPlayerUI"
@@ -109,6 +111,13 @@ fun NewPlayerUI(
                 windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
             } else {
                 windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val isInPowerSaveMode = isInPowerSaveMode()
+            LaunchedEffect(key1 = isInPowerSaveMode) {
+                viewModel.deviceInPowerSaveMode = isInPowerSaveMode
             }
         }
 

@@ -49,6 +49,7 @@ import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.NewPlayerException
 import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.ui.ContentScale
+import net.newpipe.newplayer.utils.isInPowerSaveMode
 import java.util.LinkedList
 
 val VIDEOPLAYER_UI_STATE = "video_player_ui_state"
@@ -135,6 +136,15 @@ class NewPlayerViewModelImpl @Inject constructor(
 
     private var mutableOnBackPressed = MutableSharedFlow<Unit>()
     override val onBackPressed: SharedFlow<Unit> = mutableOnBackPressed.asSharedFlow()
+
+    override var deviceInPowerSaveMode: Boolean = false
+        get() = field
+        set(value) {
+            field = value
+            if (progressUpdaterJob?.isActive == true) {
+                resetProgressUpdatePeriodicallyJob()
+            }
+        }
 
     private fun installNewPlayer() {
         newPlayer?.let { newPlayer ->
@@ -334,8 +344,9 @@ class NewPlayerViewModelImpl @Inject constructor(
             this.embeddedUiConfig = embeddedUiConfig
         }
 
-        if(!(newUiModeState == UIModeState.EMBEDDED_VIDEO_CONTROLLER_UI ||
-            newUiModeState == UIModeState.FULLSCREEN_VIDEO_CONTROLLER_UI)) {
+        if (!(newUiModeState == UIModeState.EMBEDDED_VIDEO_CONTROLLER_UI ||
+                    newUiModeState == UIModeState.FULLSCREEN_VIDEO_CONTROLLER_UI)
+        ) {
             uiVisibilityJob?.cancel()
         } else {
             resetHideUiDelayedJob()
@@ -368,10 +379,10 @@ class NewPlayerViewModelImpl @Inject constructor(
     }
 
     private fun resetHideUiDelayedJob() {
-        var ex:Exception? = null
+        var ex: Exception? = null
         try {
             throw Exception()
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             ex = e
         }
         uiVisibilityJob?.cancel()
@@ -387,7 +398,7 @@ class NewPlayerViewModelImpl @Inject constructor(
         progressUpdaterJob = viewModelScope.launch {
             while (true) {
                 updateProgressOnce()
-                delay(1000)
+                delay(if (deviceInPowerSaveMode) 1000 else 1000 / 30/*fps*/)
             }
         }
     }

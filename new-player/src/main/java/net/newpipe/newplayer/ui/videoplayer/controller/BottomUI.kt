@@ -23,7 +23,9 @@ package net.newpipe.newplayer.ui.videoplayer.controller
 import android.app.Activity
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Fullscreen
 import androidx.compose.material.icons.filled.FullscreenExit
@@ -38,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.EmbeddedUiConfig
@@ -67,7 +70,13 @@ fun BottomUI(
         val locale = getLocale()!!
         Text(getTimeStringFromMs(uiState.playbackPositionInMs, getLocale() ?: locale))
 
-        NewPlayerSeeker(modifier = Modifier.weight(1F), viewModel = viewModel, uiState = uiState)
+        NewPlayerSeeker(
+            modifier = Modifier
+                .weight(1F)
+                .padding(start = 4.dp, end = 4.dp),
+            viewModel = viewModel,
+            uiState = uiState
+        )
 
         Text(getTimeStringFromMs(uiState.durationInMs, getLocale() ?: locale))
 
@@ -112,7 +121,7 @@ fun VideoPlayerControllerBottomUIPreview() {
                 viewModel = NewPlayerViewModelDummy(),
                 uiState = NewPlayerUIState.DUMMY.copy(
                     uiMode = UIModeState.FULLSCREEN_VIDEO_CONTROLLER_UI,
-                    seekerPosition = 0.2f,
+                    seekerPosition = 0.0f,
                     playbackPositionInMs = 3 * 60 * 1000,
                     bufferedPercentage = 0.4f
                 ),

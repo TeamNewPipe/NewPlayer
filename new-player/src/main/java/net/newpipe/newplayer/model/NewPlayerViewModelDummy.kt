@@ -18,6 +18,7 @@ open class NewPlayerViewModelDummy : NewPlayerViewModel {
     override var contentFitMode = ContentScale.FIT_INSIDE
     override val embeddedPlayerDraggedDownBy = MutableSharedFlow<Float>().asSharedFlow()
     override val onBackPressed: SharedFlow<Unit> = MutableSharedFlow<Unit>().asSharedFlow()
+    override var deviceInPowerSaveMode: Boolean = false
 
     override fun initUIState(instanceState: Bundle) {
         println("dummy impl")
