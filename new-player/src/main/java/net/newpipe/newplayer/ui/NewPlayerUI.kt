@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.adaptive.currentWindowSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -154,7 +155,9 @@ fun NewPlayerUI(
             uiState.uiMode == UIModeState.AUDIO_STREAM_SELECT ||
             uiState.uiMode == UIModeState.AUDIO_CHAPTER_SELECT
         ) {
-            AudioPlayerUI(viewModel = viewModel, uiState = uiState)
+            val windowSize = currentWindowSize()
+            AudioPlayerUI(viewModel = viewModel, uiState = uiState,
+                isLandScape = windowSize.height < windowSize.width)
         } else {
             LoadingPlaceholder(uiState.embeddedUiRatio)
         }

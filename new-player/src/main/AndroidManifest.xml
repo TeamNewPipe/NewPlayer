@@ -4,7 +4,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <application>
+    <application
+        android:resizeableActivity="true">
         <service
             android:name=".service.NewPlayerService"
             android:foregroundServiceType="mediaPlayback"

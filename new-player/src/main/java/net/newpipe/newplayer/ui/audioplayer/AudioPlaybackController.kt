@@ -57,19 +57,24 @@ import net.newpipe.newplayer.ui.LoadingPlaceholder
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 @androidx.annotation.OptIn(UnstableApi::class)
-@OptIn(UnstableApi::class)
 @Composable
-fun AudioPlaybackController(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
+fun AudioPlaybackController(
+    modifier: Modifier = Modifier,
+    viewModel: NewPlayerViewModel,
+    uiState: NewPlayerUIState
+) {
     Row(
-        modifier = Modifier.background(MaterialTheme.colorScheme.background),
+        modifier = modifier.background(MaterialTheme.colorScheme.background),
         verticalAlignment = Alignment.CenterVertically
     ) {
         //ShuffleModeButton(viewModel = viewModel, uiState = uiState)
 
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(1F)
-            .weight(1F), contentAlignment = Alignment.Center) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1F)
+                .weight(1F), contentAlignment = Alignment.Center
+        ) {
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -87,10 +92,12 @@ fun AudioPlaybackController(viewModel: NewPlayerViewModel, uiState: NewPlayerUIS
             }
         }
 
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(1F)
-            .weight(1F), contentAlignment = Alignment.Center) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1F)
+                .weight(1F), contentAlignment = Alignment.Center
+        ) {
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -114,11 +121,14 @@ fun AudioPlaybackController(viewModel: NewPlayerViewModel, uiState: NewPlayerUIS
             onClick = if (uiState.playing) viewModel::pause else viewModel::play,
             shape = CircleShape
         ) {
-            if(uiState.isLoading) {
+            if (uiState.isLoading) {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(
-                        modifier = Modifier.fillMaxSize().aspectRatio(1F),
-                        color = MaterialTheme.colorScheme.onSurface)
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .aspectRatio(1F),
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
                 }
 
             } else {
@@ -133,10 +143,12 @@ fun AudioPlaybackController(viewModel: NewPlayerViewModel, uiState: NewPlayerUIS
             }
         }
 
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(1F)
-            .weight(1F), contentAlignment = Alignment.Center) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1F)
+                .weight(1F), contentAlignment = Alignment.Center
+        ) {
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -155,10 +167,12 @@ fun AudioPlaybackController(viewModel: NewPlayerViewModel, uiState: NewPlayerUIS
             }
         }
 
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(1F)
-            .weight(1F), contentAlignment = Alignment.Center) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1F)
+                .weight(1F), contentAlignment = Alignment.Center
+        ) {
             Button(
                 modifier = Modifier
                     .fillMaxWidth()

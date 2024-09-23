@@ -21,18 +21,22 @@
 
 package net.newpipe.newplayer.ui.audioplayer
 
+import android.icu.text.CaseMap.Title
 import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -40,9 +44,12 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -76,10 +83,8 @@ fun lightAudioControlButtonColorScheme() = ButtonDefaults.buttonColors().copy(
 
 @OptIn(UnstableApi::class)
 @Composable
-fun AudioPlayerUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
+fun AudioPlayerUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState, isLandScape: Boolean) {
     val insets = getInsets()
-
-    val locale = getLocale()!!
 
     Box(
         modifier = Modifier
@@ -113,101 +118,18 @@ fun AudioPlayerUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
                 topBar = {
 
                 }) { innerPadding ->
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(20.dp)
-                                .weight(1f),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .weight(1f)
-                            )
-                            Box {
-                                Card(
-                                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                                ) {
-                                    Thumbnail(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        thumbnail = uiState.currentlyPlaying?.mediaMetadata?.artworkUri,
-                                        contentDescription = stringResource(
-                                            id = R.string.stream_thumbnail
-                                        ),
-                                    )
-                                }
-                            }
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .weight(1f)
-                            )
-                            Text(
-                                text = uiState.currentlyPlaying?.mediaMetadata?.title.toString(),
-                                overflow = TextOverflow.Ellipsis,
-                                maxLines = 1,
-                                fontSize = 6.em
-                            )
-                            Text(
-                                text = uiState.currentlyPlaying?.mediaMetadata?.artist.toString(),
-                                overflow = TextOverflow.Ellipsis,
-                                maxLines = 1,
-                                fontSize = 4.em
-                            )
-
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .weight(0.2f)
-                            )
-
-                            NewPlayerSeeker(viewModel = viewModel, uiState = uiState)
-
-                            Row() {
-                                Text(
-                                    getTimeStringFromMs(
-                                        uiState.playbackPositionInMs,
-                                        getLocale() ?: locale
-                                    )
-                                )
-                                Box(modifier = Modifier.fillMaxWidth().weight(1f))
-                                Text(
-                                    getTimeStringFromMs(
-                                        uiState.durationInMs,
-                                        getLocale() ?: locale
-                                    )
-                                )
-                            }
-
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .weight(0.2f)
-                            )
-                            AudioPlaybackController(viewModel = viewModel, uiState = uiState)
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .weight(0.2f)
-                            )
-                        }
-                        AudioBottomUI(viewModel, uiState)
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .weight(0.025f)
-                        )
-                    }
+                if (isLandScape) {
+                    LandscapeLayout(
+                        viewModel = viewModel,
+                        uiState = uiState,
+                        innerPadding = innerPadding
+                    )
+                } else {
+                    PortraitLayout(
+                        viewModel = viewModel,
+                        uiState = uiState,
+                        innerPadding = innerPadding
+                    )
                 }
             }
         }
@@ -215,13 +137,222 @@ fun AudioPlayerUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
 }
 
 @OptIn(UnstableApi::class)
+@Composable
+private fun LandscapeLayout(
+    modifier: Modifier = Modifier,
+    viewModel: NewPlayerViewModel,
+    uiState: NewPlayerUIState,
+    innerPadding: PaddingValues
+) {
+    Row(modifier = modifier
+        .fillMaxSize()
+        .padding(20.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(1f)
+        ) {
+            CoverArt(modifier = Modifier
+                .fillMaxSize()
+                .weight(0.9f), uiState = uiState)
+
+            TitleView(modifier = Modifier
+                .fillMaxSize()
+                .weight(0.1f), uiState = uiState)
+        }
+
+        Box(modifier = Modifier.width(20.dp))
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(1f)
+        ) {
+            Column(
+                verticalArrangement = Arrangement.SpaceAround,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f)
+            ) {
+                ProgressUI(
+                    viewModel = viewModel,
+                    uiState = uiState
+                )
+                AudioPlaybackController(
+                    viewModel = viewModel,
+                    uiState = uiState
+                )
+            }
+            AudioBottomUI(viewModel, uiState)
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(0.025f)
+            )
+        }
+    }
+}
+
+@OptIn(UnstableApi::class)
+@Composable
+private fun PortraitLayout(
+    modifier: Modifier = Modifier,
+    viewModel: NewPlayerViewModel,
+    uiState: NewPlayerUIState,
+    innerPadding: PaddingValues
+) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(20.dp)
+                    .weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f)
+                )
+                CoverArt(uiState = uiState)
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(0.3f)
+                )
+
+                TitleView(uiState = uiState)
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(0.6f)
+                )
+
+                ProgressUI(viewModel = viewModel, uiState = uiState)
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(0.2f)
+                )
+                AudioPlaybackController(viewModel = viewModel, uiState = uiState)
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(0.2f)
+                )
+            }
+            AudioBottomUI(viewModel, uiState)
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(0.025f)
+            )
+        }
+    }
+}
+
+@OptIn(UnstableApi::class)
+@Composable
+private fun ProgressUI(
+    modifier: Modifier = Modifier,
+    viewModel: NewPlayerViewModel,
+    uiState: NewPlayerUIState
+) {
+    val locale = getLocale()!!
+
+    Column(modifier = modifier) {
+        NewPlayerSeeker(viewModel = viewModel, uiState = uiState)
+        Row {
+            Text(
+                getTimeStringFromMs(
+                    uiState.playbackPositionInMs,
+                    getLocale() ?: locale
+                )
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            )
+            Text(
+                getTimeStringFromMs(
+                    uiState.durationInMs,
+                    getLocale() ?: locale
+                )
+            )
+        }
+    }
+}
+
+@OptIn(UnstableApi::class)
+@Composable
+private fun TitleView(modifier: Modifier = Modifier, uiState: NewPlayerUIState) {
+    Column(modifier = modifier) {
+        Text(
+            text = uiState.currentlyPlaying?.mediaMetadata?.title.toString(),
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1,
+            fontSize = 6.em
+        )
+        Text(
+            text = uiState.currentlyPlaying?.mediaMetadata?.artist.toString(),
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1,
+            fontSize = 4.em
+        )
+    }
+}
+
+@OptIn(UnstableApi::class)
+@Composable
+private fun CoverArt(modifier: Modifier = Modifier, uiState: NewPlayerUIState) {
+    Box {
+        Card(
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        ) {
+            Thumbnail(
+                modifier = Modifier.fillMaxWidth(),
+                thumbnail = uiState.currentlyPlaying?.mediaMetadata?.artworkUri,
+                contentDescription = stringResource(
+                    id = R.string.stream_thumbnail
+                ),
+            )
+        }
+    }
+}
+
+@OptIn(UnstableApi::class)
 @Preview(device = "id:pixel_6", showSystemUi = true)
 @Composable
-fun AudioPlayerUIPreview() {
+fun AudioPlayerUIPortraitPreview() {
     VideoPlayerTheme {
         AudioPlayerUI(
             viewModel = NewPlayerViewModelDummy(),
-            uiState = NewPlayerUIState.DUMMY.copy(uiMode = UIModeState.FULLSCREEN_AUDIO)
+            uiState = NewPlayerUIState.DUMMY.copy(uiMode = UIModeState.FULLSCREEN_AUDIO),
+            isLandScape = false
+        )
+    }
+}
+
+@OptIn(UnstableApi::class)
+@Preview(device = "spec:parent=pixel_6,orientation=landscape", showSystemUi = true)
+@Composable
+fun AudioPlayerUILandscapePreview() {
+    VideoPlayerTheme {
+        AudioPlayerUI(
+            viewModel = NewPlayerViewModelDummy(),
+            uiState = NewPlayerUIState.DUMMY.copy(uiMode = UIModeState.FULLSCREEN_AUDIO),
+            isLandScape = true
         )
     }
 }

@@ -33,7 +33,6 @@
         <item>1200000</item>
         <item>1800000</item>
         <item>2400000</item>
-        <item>3600000</item>
     </integer-array>
     <integer name="ccc_6502_length">3116</integer>
 

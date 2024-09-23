@@ -104,7 +104,7 @@ fun VideoPlayerControllerUIPreviewEmbeddedColorPreview() {
 @OptIn(UnstableApi::class)
 @Preview(device = "id:pixel_6")
 @Composable
-fun AudioPlayerUIPreviewEmbeddedColorPreview() {
+fun AudioPlayerUIColorPreview() {
     VideoPlayerTheme {
         PreviewBackgroundSurface {
             AudioPlayerUI(
@@ -119,6 +119,7 @@ fun AudioPlayerUIPreviewEmbeddedColorPreview() {
                     bufferedPercentage = 0.4f,
                     fastSeekSeconds = 10,
                 ),
+                isLandScape = false
             )
         }
     }
