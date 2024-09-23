@@ -22,6 +22,10 @@
 package net.newpipe.newplayer.ui.audioplayer
 
 import androidx.annotation.OptIn
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -49,10 +53,16 @@ import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
+import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.ui.common.NewPlayerSeeker
+import net.newpipe.newplayer.ui.streamselect.StreamSelectUI
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.utils.Thumbnail
 import net.newpipe.newplayer.utils.getInsets
+
+
+private val UI_ENTER_ANIMATION = fadeIn(tween(200))
+private val UI_EXIT_ANIMATION = fadeOut(tween(200))
 
 @Composable
 fun lightAudioControlButtonColorScheme() = ButtonDefaults.buttonColors().copy(
@@ -70,88 +80,110 @@ fun AudioPlayerUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background)
     ) {
-        Scaffold(modifier = Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(insets),
-            topBar = {
+        AnimatedVisibility(
+            visible = uiState.uiMode == UIModeState.AUDIO_CHAPTER_SELECT,
+            enter = UI_ENTER_ANIMATION,
+            exit = UI_EXIT_ANIMATION
+        ) {
+            StreamSelectUI(viewModel = viewModel, uiState = uiState, isChapterSelect = true)
+        }
 
-            }) { innerPadding ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-            ) {
-                Column(
+        AnimatedVisibility(
+            visible = uiState.uiMode == UIModeState.AUDIO_STREAM_SELECT,
+            enter = UI_ENTER_ANIMATION,
+            exit = UI_EXIT_ANIMATION
+        ) {
+            StreamSelectUI(viewModel = viewModel, uiState = uiState, isChapterSelect = false)
+        }
+
+        AnimatedVisibility(
+            uiState.uiMode == UIModeState.FULLSCREEN_AUDIO,
+            enter = UI_ENTER_ANIMATION,
+            exit = UI_EXIT_ANIMATION
+        ) {
+            Scaffold(modifier = Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(insets),
+                topBar = {
+
+                }) { innerPadding ->
+                Box(
                     modifier = Modifier
                         .fillMaxSize()
+                        .padding(innerPadding)
                 ) {
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(20.dp)
-                            .weight(1f),
-                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        Box(
+                        Column(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .weight(1f)
-                        )
-                        Box {
-                            Card(
-                                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                            ) {
-                                Thumbnail(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    thumbnail = uiState.currentlyPlaying?.mediaMetadata?.artworkUri,
-                                    contentDescription = stringResource(
-                                        id = R.string.stream_thumbnail
-                                    ),
-                                )
+                                .padding(20.dp)
+                                .weight(1f),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .weight(1f)
+                            )
+                            Box {
+                                Card(
+                                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                                ) {
+                                    Thumbnail(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        thumbnail = uiState.currentlyPlaying?.mediaMetadata?.artworkUri,
+                                        contentDescription = stringResource(
+                                            id = R.string.stream_thumbnail
+                                        ),
+                                    )
+                                }
                             }
-                        }
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .weight(1f)
-                        )
-                        Text(
-                            text = uiState.currentlyPlaying?.mediaMetadata?.title.toString(),
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 1,
-                            fontSize = 6.em
-                        )
-                        Text(
-                            text = uiState.currentlyPlaying?.mediaMetadata?.artist.toString(),
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 1,
-                            fontSize = 4.em
-                        )
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .weight(1f)
+                            )
+                            Text(
+                                text = uiState.currentlyPlaying?.mediaMetadata?.title.toString(),
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 1,
+                                fontSize = 6.em
+                            )
+                            Text(
+                                text = uiState.currentlyPlaying?.mediaMetadata?.artist.toString(),
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 1,
+                                fontSize = 4.em
+                            )
 
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .weight(0.2f)
+                            )
+                            NewPlayerSeeker(viewModel = viewModel, uiState = uiState)
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .weight(0.2f)
+                            )
+                            AudioPlaybackController(viewModel = viewModel, uiState = uiState)
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .weight(0.2f)
+                            )
+                        }
+                        AudioBottomUI(viewModel, uiState)
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .weight(0.2f)
-                        )
-                        NewPlayerSeeker(viewModel = viewModel, uiState = uiState)
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .weight(0.2f)
-                        )
-                        AudioPlaybackController(viewModel = viewModel, uiState = uiState)
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .weight(0.2f)
+                                .weight(0.025f)
                         )
                     }
-                    AudioBottomUI(viewModel, uiState)
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .weight(0.025f)
-                    )
                 }
             }
         }

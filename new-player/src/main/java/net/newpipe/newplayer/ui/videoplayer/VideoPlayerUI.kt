@@ -109,15 +109,24 @@ fun VideoPlayerUi(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
         )
 
         AnimatedVisibility(visible = uiState.uiMode.isStreamSelect) {
-            StreamSelectUI(
-                viewModel = viewModel,
-                uiState = uiState,
-                isChapterSelect = false
-            )
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = STREAMSELECT_UI_BACKGROUND_COLOR
+            ) {
+                StreamSelectUI(
+                    viewModel = viewModel,
+                    uiState = uiState,
+                    isChapterSelect = false
+                )
+            }
         }
         AnimatedVisibility(visible = uiState.uiMode.isChapterSelect) {
-            StreamSelectUI(viewModel = viewModel, uiState = uiState, isChapterSelect = true)
-
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = STREAMSELECT_UI_BACKGROUND_COLOR
+            ) {
+                StreamSelectUI(viewModel = viewModel, uiState = uiState, isChapterSelect = true)
+            }
         }
     }
 }

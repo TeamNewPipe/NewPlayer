@@ -102,7 +102,10 @@ fun StreamSelectTopBar(
 
             IconButton(
                 onClick = {
-                    viewModel.changeUiMode(uiState.uiMode.getUiHiddenState(), embeddedUiConfig)
+                    viewModel.changeUiMode(
+                        uiState.uiMode.getNextModeWhenBackPressed() ?: uiState.uiMode,
+                        embeddedUiConfig
+                    )
                 }
             ) {
                 Icon(

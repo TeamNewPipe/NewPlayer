@@ -96,7 +96,7 @@ fun AudioPlaybackController(viewModel: NewPlayerViewModel, uiState: NewPlayerUIS
                     .fillMaxWidth()
                     .aspectRatio(1f),
                 onClick = {
-                    viewModel.fastSeek(1)
+                    viewModel.fastSeek(-1)
                     viewModel.finishFastSeek()
                 },
                 colors = lightAudioControlButtonColorScheme(),
