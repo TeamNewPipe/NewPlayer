@@ -108,6 +108,14 @@ fun AudioPlayerUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState, isLa
         }
 
         AnimatedVisibility(
+            visible = uiState.uiMode == UIModeState.EMBEDDED_AUDIO,
+            enter = UI_ENTER_ANIMATION,
+            exit = UI_EXIT_ANIMATION
+        ) {
+            AudioPlayerEmbeddedUI(viewModel = viewModel, uiState = uiState)
+        }
+
+        AnimatedVisibility(
             uiState.uiMode == UIModeState.FULLSCREEN_AUDIO,
             enter = UI_ENTER_ANIMATION,
             exit = UI_EXIT_ANIMATION
