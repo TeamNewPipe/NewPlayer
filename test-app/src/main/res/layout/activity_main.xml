@@ -40,14 +40,13 @@
     <LinearLayout
         android:id="@+id/embedded_player_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/buttons_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:layout_constraintVertical_weight="1">
+        app:layout_constraintVertical_bias="0.0">
 
         <net.newpipe.newplayer.VideoPlayerView
             android:id="@+id/embedded_player"
@@ -72,7 +71,9 @@
         app:layout_constraintTop_toBottomOf="@id/embedded_player_layout"
         app:layout_constraintVertical_weight="1">
 
-        <include layout="@layout/buttons"/>
+        <include
+            android:id="@+id/buttons"
+            layout="@layout/buttons"/>
 
     </ScrollView>
 

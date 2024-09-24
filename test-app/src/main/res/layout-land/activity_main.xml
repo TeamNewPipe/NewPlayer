@@ -73,7 +73,11 @@
         app:layout_constraintStart_toEndOf="@id/embedded_player_layout"
         app:layout_constraintTop_toTopOf="parent">
 
-        <include layout="@layout/buttons"/>
+        <include
+            android:id="@+id/buttons"
+            layout="@layout/buttons" />
+
+
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -26,6 +26,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.update
 import net.newpipe.newplayer.ActivityBrainSlug
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.PlayMode
@@ -53,40 +54,52 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.start6502StreamButton.setOnClickListener {
+        binding.buttons.start6502StreamButton.setOnClickListener {
             newPlayer.playWhenReady = true
             newPlayer.playStream("6502", PlayMode.EMBEDDED_VIDEO)
         }
 
-        binding.startImuStreamButton.setOnClickListener {
+        binding.buttons.startImuStreamButton.setOnClickListener {
             newPlayer.playWhenReady = true
             newPlayer.playStream("imu", PlayMode.EMBEDDED_VIDEO)
         }
 
-        binding.startPortraitStreamButton.setOnClickListener {
+        binding.buttons.startPortraitStreamButton.setOnClickListener {
             newPlayer.playWhenReady = true
             newPlayer.playStream("portrait", PlayMode.EMBEDDED_VIDEO)
         }
 
-        binding.startYtTestVideoButton.setOnClickListener {
+        binding.buttons.startYtTestVideoButton.setOnClickListener {
             newPlayer.playWhenReady = true
             newPlayer.playStream("yt_test", PlayMode.EMBEDDED_VIDEO)
         }
 
-        binding.add6502StreamButton.setOnClickListener {
+        binding.buttons.add6502StreamButton.setOnClickListener {
             newPlayer.addToPlaylist("6502")
         }
 
-        binding.addImuStreamButton.setOnClickListener {
+        binding.buttons.addImuStreamButton.setOnClickListener {
             newPlayer.addToPlaylist("imu")
         }
 
-        binding.addPortraitStreamButton.setOnClickListener {
+        binding.buttons.addPortraitStreamButton.setOnClickListener {
             newPlayer.addToPlaylist("portrait")
         }
 
-        binding.addYtTestVideoButton.setOnClickListener {
+        binding.buttons.addYtTestVideoButton.setOnClickListener {
             newPlayer.addToPlaylist("yt_test")
+        }
+
+        binding.buttons.listenModeButton.setOnClickListener {
+            newPlayer.playBackMode.update {
+                PlayMode.FULLSCREEN_AUDIO
+            }
+        }
+
+        binding.buttons.pipModeButton.setOnClickListener {
+            newPlayer.playBackMode.update {
+                PlayMode.PIP
+            }
         }
 
         newPlayerViewModel.newPlayer = newPlayer
