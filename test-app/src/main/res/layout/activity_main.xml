@@ -72,73 +72,7 @@
         app:layout_constraintTop_toBottomOf="@id/embedded_player_layout"
         app:layout_constraintVertical_weight="1">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-
-            <Button
-                android:id="@+id/start_6502_stream_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Start 6502 Stream" />
-
-            <Button
-                android:id="@+id/start_imu_stream_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Start IMU Stream" />
-
-            <Button
-                android:id="@+id/start_portrait_stream_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Start Portrait Stream" />
-
-            <Button
-                android:id="@+id/start_yt_test_video_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Start Yt Test Video" />
-
-            <Button
-                android:id="@+id/add_6502_stream_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:backgroundTint="@color/material_dynamic_primary50"
-                android:text="Append 6502 Stream" />
-
-            <Button
-                android:id="@+id/add_imu_stream_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:backgroundTint="@color/material_dynamic_primary50"
-                android:text="Append IMU Stream" />
-
-            <Button
-                android:id="@+id/add_portrait_stream_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:backgroundTint="@color/material_dynamic_primary50"
-                android:text="Append Portrait Stream" />
-
-            <Button
-                android:id="@+id/add_yt_test_video_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:backgroundTint="@color/material_dynamic_primary50"
-                android:text="Add Yt Test Video" />
-
-        </LinearLayout>
+        <include layout="@layout/buttons"/>
 
     </ScrollView>
 
