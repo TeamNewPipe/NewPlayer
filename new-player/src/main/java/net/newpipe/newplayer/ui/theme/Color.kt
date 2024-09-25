@@ -110,7 +110,7 @@ fun AudioPlayerUIColorPreview() {
             AudioPlayerUI(
                 viewModel = NewPlayerViewModelDummy(),
                 uiState = NewPlayerUIState.DUMMY.copy(
-                    uiMode = UIModeState.EMBEDDED_VIDEO_CONTROLLER_UI,
+                    uiMode = UIModeState.FULLSCREEN_AUDIO,
                     playing = true,
                     seekerPosition = 0.3f,
                     isLoading = false,

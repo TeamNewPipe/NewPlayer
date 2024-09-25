@@ -38,6 +38,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -88,7 +89,7 @@ fun AudioPlayerUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState, isLa
 
     Box(
         modifier = Modifier
-            .fillMaxSize()
+            .wrapContentSize()
             .background(color = MaterialTheme.colorScheme.background)
     ) {
         AnimatedVisibility(
@@ -361,6 +362,19 @@ fun AudioPlayerUILandscapePreview() {
             viewModel = NewPlayerViewModelDummy(),
             uiState = NewPlayerUIState.DUMMY.copy(uiMode = UIModeState.FULLSCREEN_AUDIO),
             isLandScape = true
+        )
+    }
+}
+
+@OptIn(UnstableApi::class)
+@Preview(device = "spec:parent=pixel_6,orientation=portrait", showSystemUi = true)
+@Composable
+fun AudioPlayerUIEmbeddedPreview() {
+    VideoPlayerTheme {
+        AudioPlayerUI(
+            viewModel = NewPlayerViewModelDummy(),
+            uiState = NewPlayerUIState.DUMMY.copy(uiMode = UIModeState.EMBEDDED_AUDIO),
+            isLandScape = false
         )
     }
 }

@@ -70,7 +70,7 @@ fun AudioPlayerEmbeddedUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUISta
     else
         EmbeddedUiConfig.DUMMY
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.wrapContentSize()) {
         Thumbnail(
             modifier = Modifier.fillMaxWidth(),
             thumbnail = uiState.currentlyPlaying?.mediaMetadata?.artworkUri,
@@ -139,18 +139,25 @@ fun AudioPlayerEmbeddedUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUISta
             .align(Alignment.BottomStart)
             .fillMaxWidth(),
             progress = {
-                uiState.playbackPositionInMs.toFloat() / uiState.durationInMs.toFloat()
+                val duration = if (uiState.durationInMs == 0L) {
+                    0.000000001f
+                } else {
+                    uiState.durationInMs.toFloat()
+                }
+
+                (uiState.playbackPositionInMs.toFloat() / duration)
             })
 
 
-        Surface(modifier = Modifier
-            .fillMaxSize()
-            .clickable {
-                viewModel.changeUiMode(
-                    UIModeState.FULLSCREEN_AUDIO,
-                    embeddedUiConfig = embeddedUIConfig
-                )
-            }, color = Color.Transparent
+        Surface(
+            modifier = Modifier
+                .matchParentSize()
+                .clickable {
+                    viewModel.changeUiMode(
+                        UIModeState.FULLSCREEN_AUDIO,
+                        embeddedUiConfig = embeddedUIConfig
+                    )
+                }, color = Color.Transparent
         ) {
 
         }
@@ -158,7 +165,7 @@ fun AudioPlayerEmbeddedUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUISta
 }
 
 @OptIn(UnstableApi::class)
-@Preview(device = "spec:width=1080px,height=600px,dpi=440,orientation=landscape")
+@Preview(device = "spec:width=1080px,height=1080px,dpi=440,orientation=landscape")
 @Composable
 fun AuidioPlayerEmbeddedPreview() {
     VideoPlayerTheme {
