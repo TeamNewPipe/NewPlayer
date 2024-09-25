@@ -20,6 +20,7 @@
 
 package net.newpipe.newplayer
 
+import android.app.Activity
 import android.app.Application
 import android.content.ComponentName
 import android.util.Log
@@ -59,6 +60,7 @@ private const val TAG = "NewPlayerImpl"
 
 class NewPlayerImpl(
     val app: Application,
+    override val playerActivityClass: Class<Activity>,
     private val repository: MediaRepository,
     override val preferredVideoVariants: List<String> = emptyList(),
     override val preferredStreamLanguage: List<String> = emptyList(),
@@ -69,7 +71,6 @@ class NewPlayerImpl(
         R.drawable.new_player_tiny_icon
     ),
 ) : NewPlayer {
-
     private val mutableExoPlayer = MutableStateFlow<ExoPlayer?>(null)
     override val exoPlayer = mutableExoPlayer.asStateFlow()
 

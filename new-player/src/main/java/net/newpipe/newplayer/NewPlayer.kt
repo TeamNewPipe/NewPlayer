@@ -20,6 +20,7 @@
 
 package net.newpipe.newplayer
 
+import android.app.Activity
 import androidx.core.graphics.drawable.IconCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
@@ -56,6 +57,7 @@ interface NewPlayer {
     val preferredAudioVariants: List<String>
     val preferredStreamLanguage: List<String>
     val notificationIcon: IconCompat
+    val playerActivityClass: Class<Activity>
 
     val exoPlayer: StateFlow<Player?>
     var playWhenReady: Boolean

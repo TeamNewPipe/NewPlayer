@@ -78,7 +78,8 @@ class NewPlayerService : MediaSessionService() {
                     notificationManager = getSystemService(
                         Context.NOTIFICATION_SERVICE
                     ) as NotificationManager,
-                    notificationIcon = newPlayer.notificationIcon
+                    notificationIcon = newPlayer.notificationIcon,
+                    playerActivity = newPlayer.playerActivityClass
                 )
 
                 return MediaNotification(NEW_PLAYER_MEDIA_NOTIFICATION_ID, notification)

@@ -1,8 +1,11 @@
 package net.newpipe.newplayer.service
 
+import android.app.Activity
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Intent
 import android.os.Build
 import androidx.annotation.OptIn
 import androidx.core.app.NotificationCompat
@@ -15,12 +18,15 @@ import net.newpipe.newplayer.R
 const val NEW_PLAYER_MEDIA_NOTIFICATION_ID = 17480
 const val NEW_PLAYER_MEDIA_NOTIFICATION_CHANNEL_NAME = "Player"
 
+const val NEW_PLAYER_REQUEST_CODE_OPEN_ACTIVITY = 0
+
 @OptIn(UnstableApi::class)
 fun createNewPlayerNotification(
     service: NewPlayerService,
     session: MediaSession,
     notificationManager: NotificationManager,
-    notificationIcon: IconCompat
+    notificationIcon: IconCompat,
+    playerActivity: Class<Activity>
 ): Notification {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -34,11 +40,21 @@ fun createNewPlayerNotification(
     }
 
 
+    val onNotificationClickIntent = Intent(service, playerActivity)
+    val onNotificationClickPendingIntent =
+        PendingIntent.getActivity(
+            service,
+            NEW_PLAYER_REQUEST_CODE_OPEN_ACTIVITY,
+            onNotificationClickIntent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
     val notificationBuilder =
         NotificationCompat.Builder(service, NEW_PLAYER_MEDIA_NOTIFICATION_CHANNEL_NAME)
             .setContentTitle(service.resources.getString(R.string.new_player_name))
             .setContentText(service.resources.getString(R.string.playing_in_background))
             .setStyle(MediaStyleNotificationHelper.MediaStyle(session))
+            .setContentIntent(onNotificationClickPendingIntent)
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         notificationBuilder.setSmallIcon(notificationIcon)

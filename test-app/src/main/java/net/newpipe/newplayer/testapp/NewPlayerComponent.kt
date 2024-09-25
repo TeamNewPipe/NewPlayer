@@ -20,6 +20,7 @@
 
 package net.newpipe.newplayer.testapp
 
+import android.app.Activity
 import android.app.Application
 import android.util.Log
 import androidx.core.graphics.drawable.IconCompat
@@ -40,9 +41,10 @@ object NewPlayerComponent {
     @Singleton
     fun provideNewPlayer(app: Application): NewPlayer {
         val player = NewPlayerImpl(
-            app,
-            TestMediaRepository(app),
-            notificationIcon = IconCompat.createWithResource(app, R.drawable.tinny_cools)
+            app = app,
+            repository = TestMediaRepository(app),
+            notificationIcon = IconCompat.createWithResource(app, R.drawable.tinny_cools),
+            playerActivityClass = MainActivity::class.java as Class<Activity>
         )
         if (app is NewPlayerApp) {
             app.appScope.launch {
