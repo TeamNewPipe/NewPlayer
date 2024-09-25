@@ -51,6 +51,7 @@ import net.newpipe.newplayer.PlayMode
 import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.ui.ContentScale
 import java.util.LinkedList
+import kotlin.math.abs
 
 val VIDEOPLAYER_UI_STATE = "video_player_ui_state"
 
@@ -77,6 +78,8 @@ class NewPlayerViewModelImpl @Inject constructor(
 
     // this is necesary to restore the embedded view UI configuration when returning from fullscreen
     private var embeddedUiConfig: EmbeddedUiConfig? = null
+
+    private var playbackPositionWhenFastSeekStarted = 0L
 
     private val audioManager =
         getSystemService(application.applicationContext, AudioManager::class.java)!!
@@ -352,17 +355,14 @@ class NewPlayerViewModelImpl @Inject constructor(
         }
 
         if (newUiModeState.isStreamSelect) {
-            resetPlaylistProgressUpdaterJob()
-        }
-
-        if (newUiModeState.isChapterSelect) {
-            resetPlaylistProgressUpdaterJob()
-        }
-
-        if ((uiState.value.uiMode.isStreamSelect || uiState.value.uiMode.isChapterSelect)
-            && (!newUiModeState.isStreamSelect && !newUiModeState.isChapterSelect)
-        ) {
+            startPlaylistProgressUpdaterJob()
+        } else {
             playlistProgressUpdaterJob?.cancel()
+        }
+
+        if (newUiModeState.requiresProgressUpdate) {
+            startProgressUpdatePeriodicallyJob()
+        } else {
             progressUpdaterJob?.cancel()
         }
 
@@ -423,7 +423,7 @@ class NewPlayerViewModelImpl @Inject constructor(
         }
     }
 
-    private fun resetPlaylistProgressUpdaterJob() {
+    private fun startPlaylistProgressUpdaterJob() {
         playlistProgressUpdaterJob?.cancel()
         playlistProgressUpdaterJob = viewModelScope.launch {
             while (true) {
@@ -452,15 +452,22 @@ class NewPlayerViewModelImpl @Inject constructor(
 
     override fun seekPositionChanged(newValue: Float) {
         hideUiDelayedJob?.cancel()
-        mutableUiState.update { it.copy(seekerPosition = newValue) }
-    }
-
-    override fun seekingFinished() {
-        startHideUiDelayedJob()
+        progressUpdaterJob?.cancel()
         val seekerPosition = mutableUiState.value.seekerPosition
         val seekPositionInMs = (newPlayer?.duration?.toFloat() ?: 0F) * seekerPosition
         newPlayer?.currentPosition = seekPositionInMs.toLong()
         Log.i(TAG, "Seek to Ms: $seekPositionInMs")
+        mutableUiState.update {
+            it.copy(
+                seekerPosition = newValue,
+                playbackPositionInMs = seekPositionInMs.toLong()
+            )
+        }
+    }
+
+    override fun seekingFinished() {
+        startHideUiDelayedJob()
+        startProgressUpdatePeriodicallyJob()
     }
 
     override fun embeddedDraggedDown(offset: Float) {
@@ -468,10 +475,24 @@ class NewPlayerViewModelImpl @Inject constructor(
     }
 
     override fun fastSeek(count: Int) {
+        if(abs(count) == 1) {
+            playbackPositionWhenFastSeekStarted = newPlayer?.currentPosition ?: 0
+        }
+
+        val fastSeekAmountInS = count * (newPlayer?.fastSeekAmountSec ?: 10)
         mutableUiState.update {
             it.copy(
-                fastSeekSeconds = count * (newPlayer?.fastSeekAmountSec ?: 10)
+                fastSeekSeconds = fastSeekAmountInS
             )
+        }
+
+
+        if (fastSeekAmountInS != 0) {
+            Log.d(TAG, "fast seeking seeking by $fastSeekAmountInS seconds")
+
+            newPlayer?.currentPosition =
+                playbackPositionWhenFastSeekStarted + (fastSeekAmountInS * 1000)
+
         }
 
         if (mutableUiState.value.uiMode.videoControllerUiVisible) {
@@ -483,16 +504,8 @@ class NewPlayerViewModelImpl @Inject constructor(
         if (mutableUiState.value.uiMode.videoControllerUiVisible) {
             startHideUiDelayedJob()
         }
-
-        val fastSeekAmount = mutableUiState.value.fastSeekSeconds
-        if (fastSeekAmount != 0) {
-            Log.d(TAG, "$fastSeekAmount")
-
-            newPlayer?.currentPosition =
-                (newPlayer?.currentPosition ?: 0) + (fastSeekAmount * 1000)
-            mutableUiState.update {
-                it.copy(fastSeekSeconds = 0)
-            }
+        mutableUiState.update {
+            it.copy(fastSeekSeconds = 0)
         }
     }
 
@@ -578,7 +591,7 @@ class NewPlayerViewModelImpl @Inject constructor(
                 playList = tempList
             )
         }
-        resetPlaylistProgressUpdaterJob()
+        startPlaylistProgressUpdaterJob()
     }
 
     override fun onStreamItemDragFinished() {
