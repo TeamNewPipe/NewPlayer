@@ -87,9 +87,9 @@ fun EmbeddedGestureUI(
 
     val defaultOnRegularTap = {
         if (uiState.uiMode.videoControllerUiVisible) {
-            viewModel.hideUi()
+            viewModel.changeUiMode(uiState.uiMode.getUiHiddenState(), null)
         } else {
-            viewModel.showUi()
+            viewModel.changeUiMode(uiState.uiMode.getControllerUiVisibleState(), null)
         }
     }
 
@@ -124,7 +124,7 @@ fun EmbeddedGestureUI(
                 if (count == 1) {
                     if (uiState.playing) {
                         viewModel.pause()
-                        viewModel.showUi()
+                        viewModel.changeUiMode(uiState.uiMode.getControllerUiVisibleState(), null)
                     } else {
                         viewModel.play()
                     }

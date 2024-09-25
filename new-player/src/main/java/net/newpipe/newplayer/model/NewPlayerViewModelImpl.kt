@@ -47,9 +47,9 @@ import kotlinx.coroutines.launch
 import net.newpipe.newplayer.utils.VideoSize
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.NewPlayerException
+import net.newpipe.newplayer.PlayMode
 import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.ui.ContentScale
-import net.newpipe.newplayer.utils.isInPowerSaveMode
 import java.util.LinkedList
 
 val VIDEOPLAYER_UI_STATE = "video_player_ui_state"
@@ -71,7 +71,7 @@ class NewPlayerViewModelImpl @Inject constructor(
     private var playlistItemToBeMoved: Int? = null
     private var playlistItemNewPosition: Int = 0
 
-    private var uiVisibilityJob: Job? = null
+    private var hideUiDelayedJob: Job? = null
     private var progressUpdaterJob: Job? = null
     private var playlistProgressUpdaterJob: Job? = null
 
@@ -142,7 +142,7 @@ class NewPlayerViewModelImpl @Inject constructor(
         set(value) {
             field = value
             if (progressUpdaterJob?.isActive == true) {
-                resetProgressUpdatePeriodicallyJob()
+                startProgressUpdatePeriodicallyJob()
             }
         }
 
@@ -161,9 +161,9 @@ class NewPlayerViewModelImpl @Inject constructor(
                                 it.copy(playing = isPlaying, isLoading = false)
                             }
                             if (isPlaying && uiState.value.uiMode.videoControllerUiVisible) {
-                                resetHideUiDelayedJob()
+                                startHideUiDelayedJob()
                             } else {
-                                uiVisibilityJob?.cancel()
+                                hideUiDelayedJob?.cancel()
                             }
                         }
 
@@ -205,12 +205,7 @@ class NewPlayerViewModelImpl @Inject constructor(
                     val currentMode = mutableUiState.value.uiMode.toPlayMode()
 
                     if (currentMode != newMode) {
-                        mutableUiState.update {
-                            it.copy(
-                                uiMode = UIModeState.fromPlayMode(newMode),
-                                embeddedUiConfig = embeddedUiConfig
-                            )
-                        }
+                        changeUiMode(UIModeState.fromPlayMode(newMode), embeddedUiConfig)
                     }
                 }
             }
@@ -309,18 +304,18 @@ class NewPlayerViewModelImpl @Inject constructor(
     }
 
     override fun play() {
-        hideUi()
+        changeUiMode(uiState.value.uiMode.getUiHiddenState(), null)
         newPlayer?.play()
     }
 
     override fun pause() {
-        uiVisibilityJob?.cancel()
+        hideUiDelayedJob?.cancel()
         newPlayer?.pause()
 
     }
 
     override fun prevStream() {
-        resetHideUiDelayedJob()
+        startHideUiDelayedJob()
         newPlayer?.let { newPlayer ->
             if (0 <= newPlayer.currentlyPlayingPlaylistItem - 1) {
                 newPlayer.currentlyPlayingPlaylistItem -= 1
@@ -329,7 +324,7 @@ class NewPlayerViewModelImpl @Inject constructor(
     }
 
     override fun nextStream() {
-        resetHideUiDelayedJob()
+        startHideUiDelayedJob()
         newPlayer?.let { newPlayer ->
             if (newPlayer.currentlyPlayingPlaylistItem + 1 <
                 (newPlayer.exoPlayer.value?.mediaItemCount ?: 0)
@@ -339,17 +334,21 @@ class NewPlayerViewModelImpl @Inject constructor(
         }
     }
 
-    override fun changeUiMode(newUiModeState: UIModeState, embeddedUiConfig: EmbeddedUiConfig) {
-        if (!uiState.value.uiMode.fullscreen && newUiModeState.fullscreen) {
+    override fun changeUiMode(newUiModeState: UIModeState, embeddedUiConfig: EmbeddedUiConfig?) {
+        if (newUiModeState == uiState.value.uiMode) {
+            return;
+        }
+
+        if (!uiState.value.uiMode.fullscreen && newUiModeState.fullscreen && embeddedUiConfig != null) {
             this.embeddedUiConfig = embeddedUiConfig
         }
 
         if (!(newUiModeState == UIModeState.EMBEDDED_VIDEO_CONTROLLER_UI ||
                     newUiModeState == UIModeState.FULLSCREEN_VIDEO_CONTROLLER_UI)
         ) {
-            uiVisibilityJob?.cancel()
+            hideUiDelayedJob?.cancel()
         } else {
-            resetHideUiDelayedJob()
+            startHideUiDelayedJob()
         }
 
         if (newUiModeState.isStreamSelect) {
@@ -367,33 +366,38 @@ class NewPlayerViewModelImpl @Inject constructor(
             progressUpdaterJob?.cancel()
         }
 
-        updateUiMode(newUiModeState)
+        if (uiState.value.uiMode.fullscreen && !newUiModeState.fullscreen) {
+            mutableUiState.update {
+                it.copy(uiMode = newUiModeState, embeddedUiConfig = this.embeddedUiConfig)
+            }
+        } else {
+            mutableUiState.update {
+                it.copy(uiMode = newUiModeState)
+            }
+        }
+
+        val newPlayMode = newUiModeState.toPlayMode()
+        // take the next value from the player because changeUiMode is called when the playBackMode
+        // of the player changes. If this value was taken from the viewModel instead
+        // this would lead to an endless loop. of changeMode state calling it self over and over again
+        // through the callback of the newPlayer?.playBackMode change
+        val currentPlayMode = newPlayer?.playBackMode?.value ?: PlayMode.IDLE
+        if (newPlayMode != currentPlayMode) {
+            newPlayer?.playBackMode?.update {
+                newPlayMode
+            }
+        }
     }
 
-    override fun showUi() {
-        mutableUiState.update {
-            it.copy(uiMode = it.uiMode.getControllerUiVisibleState())
-        }
-        resetHideUiDelayedJob()
-        resetProgressUpdatePeriodicallyJob()
-    }
-
-    private fun resetHideUiDelayedJob() {
-        var ex: Exception? = null
-        try {
-            throw Exception()
-        } catch (e: Exception) {
-            ex = e
-        }
-        uiVisibilityJob?.cancel()
-        uiVisibilityJob = viewModelScope.launch {
+    private fun startHideUiDelayedJob() {
+        hideUiDelayedJob?.cancel()
+        hideUiDelayedJob = viewModelScope.launch {
             delay(2000)
-            hideUi()
-            ex?.printStackTrace()
+            changeUiMode(uiState.value.uiMode.getUiHiddenState(), null)
         }
     }
 
-    private fun resetProgressUpdatePeriodicallyJob() {
+    private fun startProgressUpdatePeriodicallyJob() {
         progressUpdaterJob?.cancel()
         progressUpdaterJob = viewModelScope.launch {
             while (true) {
@@ -446,21 +450,13 @@ class NewPlayerViewModelImpl @Inject constructor(
         }
     }
 
-    override fun hideUi() {
-        progressUpdaterJob?.cancel()
-        uiVisibilityJob?.cancel()
-        mutableUiState.update {
-            it.copy(uiMode = it.uiMode.getUiHiddenState())
-        }
-    }
-
     override fun seekPositionChanged(newValue: Float) {
-        uiVisibilityJob?.cancel()
+        hideUiDelayedJob?.cancel()
         mutableUiState.update { it.copy(seekerPosition = newValue) }
     }
 
     override fun seekingFinished() {
-        resetHideUiDelayedJob()
+        startHideUiDelayedJob()
         val seekerPosition = mutableUiState.value.seekerPosition
         val seekPositionInMs = (newPlayer?.duration?.toFloat() ?: 0F) * seekerPosition
         newPlayer?.currentPosition = seekPositionInMs.toLong()
@@ -479,20 +475,21 @@ class NewPlayerViewModelImpl @Inject constructor(
         }
 
         if (mutableUiState.value.uiMode.videoControllerUiVisible) {
-            resetHideUiDelayedJob()
+            startHideUiDelayedJob()
         }
     }
 
     override fun finishFastSeek() {
         if (mutableUiState.value.uiMode.videoControllerUiVisible) {
-            resetHideUiDelayedJob()
+            startHideUiDelayedJob()
         }
 
         val fastSeekAmount = mutableUiState.value.fastSeekSeconds
         if (fastSeekAmount != 0) {
             Log.d(TAG, "$fastSeekAmount")
 
-            newPlayer?.currentPosition = (newPlayer?.currentPosition ?: 0) + (fastSeekAmount * 1000)
+            newPlayer?.currentPosition =
+                (newPlayer?.currentPosition ?: 0) + (fastSeekAmount * 1000)
             mutableUiState.update {
                 it.copy(fastSeekSeconds = 0)
             }
@@ -533,7 +530,7 @@ class NewPlayerViewModelImpl @Inject constructor(
     override fun onBackPressed() {
         val nextMode = uiState.value.uiMode.getNextModeWhenBackPressed()
         if (nextMode != null) {
-            updateUiMode(nextMode)
+            changeUiMode(nextMode, null)
         } else {
             safeTryEmit(mutableOnBackPressed, Unit)
         }
@@ -593,29 +590,14 @@ class NewPlayerViewModelImpl @Inject constructor(
 
     override fun dialogVisible(visible: Boolean) {
         if (visible) {
-            uiVisibilityJob?.cancel()
+            hideUiDelayedJob?.cancel()
         } else {
-            resetHideUiDelayedJob()
+            startHideUiDelayedJob()
         }
     }
 
     override fun removePlaylistItem(uniqueId: Long) {
         newPlayer?.removePlaylistItem(uniqueId)
-    }
-
-
-    private fun updateUiMode(newState: UIModeState) {
-        val newPlayMode = newState.toPlayMode()
-        val currentPlayMode = mutableUiState.value.uiMode.toPlayMode()
-        if (newPlayMode != currentPlayMode) {
-            newPlayer?.playBackMode?.update {
-                newPlayMode!!
-            }
-        } else {
-            mutableUiState.update {
-                it.copy(uiMode = newState)
-            }
-        }
     }
 
     private fun getEmbeddedUiRatio() = newPlayer?.exoPlayer?.value?.let { player ->

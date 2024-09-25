@@ -32,14 +32,6 @@ open class NewPlayerViewModelDummy : NewPlayerViewModel {
         println("dummy impl")
     }
 
-    override fun showUi() {
-        println("dummy impl")
-    }
-
-    override fun hideUi() {
-        println("dummy impl")
-    }
-
     override fun seekPositionChanged(newValue: Float) {
         println("dymmy seekPositionChanged: newValue: ${newValue}")
     }
@@ -116,7 +108,7 @@ open class NewPlayerViewModelDummy : NewPlayerViewModel {
         println("dummy impl")
     }
 
-    override fun changeUiMode(newUiModeState: UIModeState, embeddedUiConfig: EmbeddedUiConfig) {
+    override fun changeUiMode(newUiModeState: UIModeState, embeddedUiConfig: EmbeddedUiConfig?) {
         println("dummy uiMode change: New UI Mode State: $newUiModeState")
     }
 }

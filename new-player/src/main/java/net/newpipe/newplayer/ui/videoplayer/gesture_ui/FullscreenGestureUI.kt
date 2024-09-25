@@ -36,6 +36,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -46,6 +48,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.util.UnstableApi
+import net.newpipe.newplayer.model.EmbeddedUiConfig
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
@@ -55,7 +58,7 @@ import net.newpipe.newplayer.utils.getDefaultBrightness
 import net.newpipe.newplayer.utils.getEmbeddedUiConfig
 
 private enum class IndicatorMode {
-    NONE, VOLUME_INDICATOR_VISSIBLE, BRIGHTNESS_INDICATOR_VISSIBLE
+    NONE, VOLUME_INDICATOR_VISIBLE, BRIGHTNESS_INDICATOR_VISIBLE
 }
 
 @OptIn(UnstableApi::class)
@@ -65,7 +68,7 @@ fun FullscreenGestureUI(
 ) {
 
     var heightPx by remember {
-        mutableStateOf(0f)
+        mutableFloatStateOf(0f)
     }
 
     var indicatorMode by remember {
@@ -74,9 +77,9 @@ fun FullscreenGestureUI(
 
     val defaultOnRegularTap = {
         if (uiState.uiMode.videoControllerUiVisible) {
-            viewModel.hideUi()
+            viewModel.changeUiMode(uiState.uiMode.getUiHiddenState(), null)
         } else {
-            viewModel.showUi()
+            viewModel.changeUiMode(uiState.uiMode.getControllerUiVisibleState(), null)
         }
     }
 
@@ -100,8 +103,8 @@ fun FullscreenGestureUI(
                     indicatorMode = IndicatorMode.NONE
                 },
                 onMovement = { change ->
-                    if (indicatorMode == IndicatorMode.NONE || indicatorMode == IndicatorMode.BRIGHTNESS_INDICATOR_VISSIBLE) {
-                        indicatorMode = IndicatorMode.BRIGHTNESS_INDICATOR_VISSIBLE
+                    if (indicatorMode == IndicatorMode.NONE || indicatorMode == IndicatorMode.BRIGHTNESS_INDICATOR_VISIBLE) {
+                        indicatorMode = IndicatorMode.BRIGHTNESS_INDICATOR_VISIBLE
 
                         if (heightPx != 0f) {
                             viewModel.brightnessChange(-change.y / heightPx, defaultBrightness)
@@ -131,7 +134,7 @@ fun FullscreenGestureUI(
                     if(count == 1)  {
                         if(uiState.playing) {
                             viewModel.pause()
-                            viewModel.showUi()
+                            viewModel.changeUiMode(uiState.uiMode.getControllerUiVisibleState(), null)
                         } else {
                             viewModel.play()
                         }
@@ -145,8 +148,8 @@ fun FullscreenGestureUI(
                     indicatorMode = IndicatorMode.NONE
                 },
                 onMovement = { change ->
-                    if (indicatorMode == IndicatorMode.NONE || indicatorMode == IndicatorMode.VOLUME_INDICATOR_VISSIBLE) {
-                        indicatorMode = IndicatorMode.VOLUME_INDICATOR_VISSIBLE
+                    if (indicatorMode == IndicatorMode.NONE || indicatorMode == IndicatorMode.VOLUME_INDICATOR_VISIBLE) {
+                        indicatorMode = IndicatorMode.VOLUME_INDICATOR_VISIBLE
                         if (heightPx != 0f) {
                             viewModel.volumeChange(-change.y / heightPx)
                         }
@@ -166,14 +169,14 @@ fun FullscreenGestureUI(
 
         IndicatorAnimation(
             modifier = Modifier.align(Alignment.Center),
-            visible = indicatorMode == IndicatorMode.VOLUME_INDICATOR_VISSIBLE,
+            visible = indicatorMode == IndicatorMode.VOLUME_INDICATOR_VISIBLE,
         ) {
             VolumeCircle(volumeFraction = uiState.soundVolume)
         }
 
         IndicatorAnimation(
             modifier = Modifier.align(Alignment.Center),
-            visible = indicatorMode == IndicatorMode.BRIGHTNESS_INDICATOR_VISSIBLE,
+            visible = indicatorMode == IndicatorMode.BRIGHTNESS_INDICATOR_VISIBLE,
         ) {
             VolumeCircle(
                 volumeFraction = uiState.brightness ?: defaultBrightness,
@@ -243,15 +246,15 @@ fun FullscreenGestureUIPreview() {
 fun FullscreenGestureUIPreviewInteractive() {
 
     var seekSeconds by remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
 
     var brightnessValue by remember {
-        mutableStateOf(0f)
+        mutableFloatStateOf(0f)
     }
 
     var soundVolume by remember {
-        mutableStateOf(0f)
+        mutableFloatStateOf(0f)
     }
 
     var uiVisible by remember {
@@ -264,12 +267,12 @@ fun FullscreenGestureUIPreviewInteractive() {
                 modifier = Modifier,
                 @OptIn(UnstableApi::class)
                 object : NewPlayerViewModelDummy() {
-                    override fun hideUi() {
-                        uiVisible = false
-                    }
-
-                    override fun showUi() {
-                        uiVisible = true
+                    override fun changeUiMode(
+                        newUiModeState: UIModeState,
+                        embeddedUiConfig: EmbeddedUiConfig?
+                    ) {
+                        super.changeUiMode(newUiModeState, embeddedUiConfig)
+                        uiVisible = newUiModeState.videoControllerUiVisible
                     }
 
                     override fun fastSeek(steps: Int) {
@@ -299,7 +302,7 @@ fun FullscreenGestureUIPreviewInteractive() {
         }
 
         AnimatedVisibility(uiVisible) {
-            Text("UI is Vissible")
+            Text("UI is Visible")
         }
     }
 }
