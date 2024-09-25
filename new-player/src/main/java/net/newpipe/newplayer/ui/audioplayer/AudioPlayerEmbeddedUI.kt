@@ -126,6 +126,7 @@ fun AudioPlayerEmbeddedUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUISta
                         top = 0.5.dp,
                         bottom = 0.5.dp
                     ),
+                    color = MaterialTheme.colorScheme.onBackground,
                     text = getTimeStringFromMs(
                         uiState.durationInMs,
                         locale,

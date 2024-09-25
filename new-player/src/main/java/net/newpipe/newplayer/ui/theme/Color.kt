@@ -56,7 +56,9 @@ val video_player_onErrorContainer = Color(0xFFFFDAD6)
 // background color
 val video_player_background = Color(0xFF1F1B16)
 
+// Font color on background
 val video_player_onBackground = Color(0xFFEAE1D9)
+
 val video_player_surface = Color(0xFF000000)
 
 // The color of the Text and icons
