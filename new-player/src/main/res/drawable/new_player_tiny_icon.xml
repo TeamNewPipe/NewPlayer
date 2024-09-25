@@ -1,0 +1,26 @@
+<!-- NewPlayer
+
+    @author Jaime López
+    @author Christian Schabesberger
+
+    Copyright (C) NewPipe e.V. 2024 <info (at) jaim3.com>
+
+    NewPlayer is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    NewPlayer is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:autoMirrored="true" android:height="48dp" android:viewportHeight="12.7" android:viewportWidth="12.7" android:width="48dp">
+      
+    <path android:fillColor="#000000" android:pathData="m1.987,0.884 l9.55,5.517 -9.553,5.518zM3.642,10.045 L3.638,5.223 5.091,9.212 5.845,8.772 5.846,7.163 7.246,7.971 8.601,7.189 9.962,6.396c0,0 -3.328,-1.917 -4.991,-2.877l-0.016,1.383 0.008,1.379 -0.646,-1.752 -0.632,-1.761 -0.91,-0.525 -0.003,8.315zM5.845,6.156 L5.845,5.025 8.218,6.401 7.241,6.962z" android:strokeWidth="0.14216"/>
+    
+</vector>

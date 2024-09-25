@@ -22,6 +22,7 @@ package net.newpipe.newplayer.testapp
 
 import android.app.Application
 import android.util.Log
+import androidx.core.graphics.drawable.IconCompat
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,17 +33,20 @@ import net.newpipe.newplayer.NewPlayerImpl
 import javax.inject.Singleton
 
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 object NewPlayerComponent {
     @Provides
     @Singleton
-    fun provideNewPlayer(app: Application) : NewPlayer {
-        val player = NewPlayerImpl(app, TestMediaRepository(app))
-        if(app is NewPlayerApp) {
+    fun provideNewPlayer(app: Application): NewPlayer {
+        val player = NewPlayerImpl(
+            app,
+            TestMediaRepository(app),
+            notificationIcon = IconCompat.createWithResource(app, R.drawable.tinny_cools)
+        )
+        if (app is NewPlayerApp) {
             app.appScope.launch {
-                while(true) {
+                while (true) {
                     player.errorFlow.collect { e ->
                         Log.e("NewPlayerException", e.stackTraceToString())
                     }

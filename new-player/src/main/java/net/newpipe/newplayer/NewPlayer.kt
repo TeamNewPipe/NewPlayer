@@ -20,6 +20,7 @@
 
 package net.newpipe.newplayer
 
+import androidx.core.graphics.drawable.IconCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -54,6 +55,7 @@ interface NewPlayer {
     val preferredVideoVariants: List<String>
     val preferredAudioVariants: List<String>
     val preferredStreamLanguage: List<String>
+    val notificationIcon: IconCompat
 
     val exoPlayer: StateFlow<Player?>
     var playWhenReady: Boolean

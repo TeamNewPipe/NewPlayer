@@ -24,6 +24,7 @@ import android.app.Application
 import android.content.ComponentName
 import android.util.Log
 import androidx.annotation.OptIn
+import androidx.core.graphics.drawable.IconCompat
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
@@ -63,6 +64,10 @@ class NewPlayerImpl(
     override val preferredStreamLanguage: List<String> = emptyList(),
     override val preferredAudioVariants: List<String> = emptyList(),
     val httpDataSourceFactory: HttpDataSource.Factory = DefaultHttpDataSource.Factory(),
+    override val notificationIcon: IconCompat = IconCompat.createWithResource(
+        app,
+        R.drawable.new_player_tiny_icon
+    ),
 ) : NewPlayer {
 
     private val mutableExoPlayer = MutableStateFlow<ExoPlayer?>(null)

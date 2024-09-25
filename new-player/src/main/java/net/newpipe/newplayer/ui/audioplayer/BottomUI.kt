@@ -18,8 +18,6 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
 package net.newpipe.newplayer.ui.audioplayer
 
 import android.app.Activity

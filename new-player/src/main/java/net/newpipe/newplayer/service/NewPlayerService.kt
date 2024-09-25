@@ -21,16 +21,21 @@
 
 package net.newpipe.newplayer.service
 
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.session.CommandButton
+import androidx.media3.session.MediaNotification
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import androidx.media3.session.SessionCommand
 import androidx.media3.session.SessionError
 import androidx.media3.session.SessionResult
+import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,9 +64,41 @@ class NewPlayerService : MediaSessionService() {
     override fun onCreate() {
         super.onCreate()
 
+        setMediaNotificationProvider(object : MediaNotification.Provider {
+            override fun createNotification(
+                mediaSession: MediaSession,
+                customLayout: ImmutableList<CommandButton>,
+                actionFactory: MediaNotification.ActionFactory,
+                onNotificationChangedCallback: MediaNotification.Provider.Callback
+            ): MediaNotification {
+
+                val notification = createNewPlayerNotification(
+                    service = this@NewPlayerService,
+                    session = mediaSession,
+                    notificationManager = getSystemService(
+                        Context.NOTIFICATION_SERVICE
+                    ) as NotificationManager,
+                    notificationIcon = newPlayer.notificationIcon
+                )
+
+                return MediaNotification(NEW_PLAYER_MEDIA_NOTIFICATION_ID, notification)
+            }
+
+            override fun handleCustomCommand(
+                session: MediaSession,
+                action: String,
+                extras: Bundle
+            ): Boolean {
+                println("gurken cought custom MediaNotification action: ${action}")
+                return false
+            }
+
+        })
+
+
         customCommands = buildCustomCommandList(this)
 
-        if(newPlayer.exoPlayer.value != null) {
+        if (newPlayer.exoPlayer.value != null) {
             mediaSession = MediaSession.Builder(this, newPlayer.exoPlayer.value!!)
                 .setCallback(object : MediaSession.Callback {
                     override fun onConnect(
@@ -135,8 +172,7 @@ class NewPlayerService : MediaSessionService() {
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         // Check if the player is not ready to play or there are no items in the media queue
-        if (!(newPlayer.exoPlayer.value?.playWhenReady
-                ?: false) || newPlayer.playlist.value.size == 0
+        if (newPlayer.exoPlayer.value?.playWhenReady != true || newPlayer.playlist.value.size == 0
         ) {
             // Stop the service
             stopSelf()

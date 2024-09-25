@@ -19,6 +19,7 @@
 -->
 
 <resources>
+    <string name="new_player_name" translatable="false">NewPlayer</string>
     <string name="video_player_fullscreen_activity">NewPlayer Fullscreen</string>
     <string name="menu_item_open_in_browser">Open in browser</string>
     <string name="menu_item_share_timestamp">Share timestamp</string>
@@ -59,4 +60,5 @@
     <string name="details_view_button_description">Switch to details view</string>
     <string name="fullscreen_button_description">Switch to fullscreen video mode</string>
     <string name="pip_button_description">Picture in picture</string>
+    <string name="playing_in_background">Playing in the background…</string>
 </resources>
