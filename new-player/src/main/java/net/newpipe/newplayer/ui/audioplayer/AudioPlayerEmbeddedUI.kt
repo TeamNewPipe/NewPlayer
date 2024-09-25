@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -85,7 +86,7 @@ fun AudioPlayerEmbeddedUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUISta
         ) {
             Surface(
                 color = MaterialTheme.colorScheme.primary,
-                shape = ITEM_CORNER_SHAPE,
+                shape = RoundedCornerShape(20.dp),
                 modifier = Modifier
                     .wrapContentSize()
                     .padding(start = 10.dp, bottom = 14.dp)
@@ -114,7 +115,7 @@ fun AudioPlayerEmbeddedUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUISta
 
             Surface(
                 color = CONTROLLER_UI_BACKGROUND_COLOR,
-                shape = ITEM_CORNER_SHAPE,
+                shape = RoundedCornerShape(20.dp),
                 modifier = Modifier
                     .wrapContentSize()
                     .padding(bottom = 14.dp, end = 10.dp)
