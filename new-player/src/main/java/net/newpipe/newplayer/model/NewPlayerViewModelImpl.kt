@@ -466,6 +466,10 @@ class NewPlayerViewModelImpl @Inject constructor(
     }
 
     override fun seekingFinished() {
+        val seekerPosition = mutableUiState.value.seekerPosition
+        val seekPositionInMs = (newPlayer?.duration?.toFloat() ?: 0F) * seekerPosition
+        newPlayer?.currentPosition = seekPositionInMs.toLong()
+
         startHideUiDelayedJob()
         startProgressUpdatePeriodicallyJob()
     }
