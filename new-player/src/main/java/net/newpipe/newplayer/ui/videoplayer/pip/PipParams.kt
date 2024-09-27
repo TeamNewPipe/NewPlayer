@@ -63,6 +63,11 @@ fun getPipParams(aspectRatio: Float, sourceRectHint: Rect) =
         PictureInPictureParams.Builder()
             .setAspectRatio(convertFloatToRational(aspectRatio))
             .setSourceRectHint(sourceRectHint)
+            .also {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    it.setSeamlessResizeEnabled(true)
+                }
+            }
             .build()
     } else {
         null

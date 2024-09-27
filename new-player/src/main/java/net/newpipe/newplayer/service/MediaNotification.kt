@@ -40,7 +40,9 @@ fun createNewPlayerNotification(
     }
 
 
-    val onNotificationClickIntent = Intent(service, playerActivity)
+    val onNotificationClickIntent = Intent(service, playerActivity).apply {
+        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+    }
     val onNotificationClickPendingIntent =
         PendingIntent.getActivity(
             service,
