@@ -57,14 +57,21 @@ import net.newpipe.newplayer.ui.PlaySurface
 import net.newpipe.newplayer.ui.selection_ui.StreamSelectUI
 import androidx.lifecycle.LifecycleEventObserver
 import net.newpipe.newplayer.NewPlayerException
+import net.newpipe.newplayer.model.EmbeddedUiConfig
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.ui.selection_ui.ChapterSelectUI
 import net.newpipe.newplayer.ui.videoplayer.pip.getPipParams
 import net.newpipe.newplayer.ui.videoplayer.pip.supportsPip
+import net.newpipe.newplayer.utils.getEmbeddedUiConfig
 
 @OptIn(UnstableApi::class)
 @Composable
 fun VideoPlayerUi(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
+    val embeddedUiConfig = if (LocalContext.current is Activity)
+        getEmbeddedUiConfig(activity = LocalContext.current as Activity)
+    else
+        EmbeddedUiConfig.DUMMY
+
     val exoPlayer by viewModel.newPlayer?.exoPlayer!!.collectAsState()
 
     var lifecycle by remember {
@@ -102,6 +109,14 @@ fun VideoPlayerUi(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
                 val pipParams = getPipParams(uiState.contentRatio, videoViewBounds)
                 if (pipParams != null) {
                     activity.enterPictureInPictureMode(pipParams)
+
+                    // Yes this line means exactly what it says: When you switch to PipModeState this line
+                    // will immediately switch back to fullscreen mode. This seems hacky but is actually strait forward.
+                    // You see, Android expects the Activity to remain in the same state as it was before Pip just that there
+                    // is the Pip overlay over the Activity now. This also means that Android by default is not notifying the Activity
+                    // when leaving Pip mode. Android just enlarges the Activity and expects the Activity to just accept that it now has
+                    // more real estate on the screen but don't change it's behaviour.
+                    viewModel.changeUiMode(UIModeState.FULLSCREEN_VIDEO, embeddedUiConfig)
                 } else {
                     throw NewPlayerException("Pip params where null even though pip seemed to be supported.")
                 }
@@ -115,18 +130,18 @@ fun VideoPlayerUi(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
                 else Modifier
                     .fillMaxWidth()
                     .aspectRatio(uiState.embeddedUiRatio)
-            )
-            .onGloballyPositioned {
-                videoViewBounds = it
-                    .boundsInWindow()
-                    .toAndroidRectF()
-                    .toRect()
-            }, color = Color.Black
+            ), color = Color.Black
     ) {
 
         exoPlayer?.let { exoPlayer ->
             Box(contentAlignment = Alignment.Center) {
                 PlaySurface(
+                    modifier = Modifier.onGloballyPositioned {
+                        videoViewBounds = it
+                            .boundsInWindow()
+                            .toAndroidRectF()
+                            .toRect()
+                    },
                     player = exoPlayer,
                     lifecycle = lifecycle,
                     fitMode = uiState.contentFitMode,

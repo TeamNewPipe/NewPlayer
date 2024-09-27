@@ -20,6 +20,7 @@
             In order to enable PiP for NewPlayer, the following lines need to be added to the tag of the activity that will hold the NewPlayerUI:
 
              android:supportsPictureInPicture="true"
+             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
 
         -->
         <activity
@@ -27,6 +28,7 @@
             android:exported="true"
 
             android:supportsPictureInPicture="true"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
 
             >
             <intent-filter>

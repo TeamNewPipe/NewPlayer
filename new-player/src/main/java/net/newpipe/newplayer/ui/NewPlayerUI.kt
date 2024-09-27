@@ -27,9 +27,11 @@ import android.util.Log
 import android.view.SurfaceView
 import androidx.activity.compose.BackHandler
 import androidx.annotation.OptIn
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.adaptive.currentWindowSize
 import androidx.compose.runtime.Composable
@@ -37,6 +39,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
@@ -169,6 +172,7 @@ fun NewPlayerUI(
 
 @Composable
 fun PlaySurface(
+    modifier: Modifier,
     player: Player?,
     lifecycle: Lifecycle.Event,
     fitMode: ContentScale,
@@ -202,11 +206,13 @@ fun PlaySurface(
     ) {
      */
     Box(
-        modifier = Modifier
-            .fillMaxHeight()
+        modifier = modifier
+            .fillMaxWidth()
             .aspectRatio(contentRatio)
     ) {
-        AndroidView(factory = { context ->
+        AndroidView(
+            modifier = Modifier.fillMaxSize(),
+            factory = { context ->
             SurfaceView(context).also { view ->
                 player?.setVideoSurfaceView(view)
             }
