@@ -27,9 +27,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.FitScreen
+import androidx.compose.material.icons.filled.Headset
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.MusicNote
+import androidx.compose.material.icons.filled.PictureInPicture
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Subtitles
 import androidx.compose.material.icons.filled.Translate
@@ -60,6 +62,7 @@ import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
+import net.newpipe.newplayer.ui.videoplayer.pip.supportsPip
 import net.newpipe.newplayer.utils.getEmbeddedUiConfig
 
 @OptIn(UnstableApi::class)
@@ -118,13 +121,28 @@ fun DropDownMenu(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
                 onClick = { /*TODO*/ showMainMenu = false })
             DropdownMenuItem(text = { Text(stringResource(R.string.audio_mode)) }, leadingIcon = {
                 Icon(
-                    imageVector = Icons.Filled.MusicNote,
+                    imageVector = Icons.Filled.Headset,
                     contentDescription = stringResource(R.string.audio_mode)
                 )
             }, onClick = {
                 viewModel.changeUiMode(UIModeState.FULLSCREEN_AUDIO, embeddedUiConfig)
                 showMainMenu = false
             })
+            if (supportsPip(LocalContext.current)) {
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.pip_button_description)) },
+                    onClick = {
+                        viewModel.changeUiMode(UIModeState.PIP, embeddedUiConfig)
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Filled.PictureInPicture,
+                            contentDescription = stringResource(
+                                id = R.string.pip_button_description
+                            )
+                        )
+                    })
+            }
             DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_fit_screen)) },
                 leadingIcon = {
                     Icon(

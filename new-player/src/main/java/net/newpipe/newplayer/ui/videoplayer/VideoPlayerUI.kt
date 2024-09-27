@@ -21,7 +21,9 @@
 package net.newpipe.newplayer.ui.videoplayer
 
 import android.app.Activity
+import android.os.Build
 import androidx.annotation.OptIn
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -30,6 +32,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,9 +40,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toAndroidRect
+import androidx.compose.ui.graphics.toAndroidRectF
+import androidx.compose.ui.layout.boundsInWindow
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.core.graphics.toRect
 import androidx.lifecycle.Lifecycle
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.model.NewPlayerUIState
@@ -47,7 +56,11 @@ import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.ui.PlaySurface
 import net.newpipe.newplayer.ui.selection_ui.StreamSelectUI
 import androidx.lifecycle.LifecycleEventObserver
+import net.newpipe.newplayer.NewPlayerException
+import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.ui.selection_ui.ChapterSelectUI
+import net.newpipe.newplayer.ui.videoplayer.pip.getPipParams
+import net.newpipe.newplayer.ui.videoplayer.pip.supportsPip
 
 @OptIn(UnstableApi::class)
 @Composable
@@ -65,7 +78,11 @@ fun VideoPlayerUi(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
     val screenRatio =
         displayMetrics.widthPixels.toFloat() / displayMetrics.heightPixels.toFloat()
 
-    val lifecycleOwner = LocalLifecycleOwner.current
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+
+    var videoViewBounds by remember {
+        mutableStateOf(android.graphics.Rect())
+    }
 
     // Prepare stuff for the SurfaceView to which the video will be rendered
     DisposableEffect(lifecycleOwner) {
@@ -79,13 +96,32 @@ fun VideoPlayerUi(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
         }
     }
 
+    LaunchedEffect(uiState.uiMode == UIModeState.PIP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && supportsPip(activity))
+            if (uiState.uiMode == UIModeState.PIP) {
+                val pipParams = getPipParams(uiState.contentRatio, videoViewBounds)
+                if (pipParams != null) {
+                    activity.enterPictureInPictureMode(pipParams)
+                } else {
+                    throw NewPlayerException("Pip params where null even though pip seemed to be supported.")
+                }
+            }
+    }
+
     Surface(
-        modifier = Modifier.then(
-            if (uiState.uiMode.fullscreen) Modifier.fillMaxSize()
-            else Modifier
-                .fillMaxWidth()
-                .aspectRatio(uiState.embeddedUiRatio)
-        ), color = Color.Black
+        modifier = Modifier
+            .then(
+                if (uiState.uiMode.fullscreen) Modifier.fillMaxSize()
+                else Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(uiState.embeddedUiRatio)
+            )
+            .onGloballyPositioned {
+                videoViewBounds = it
+                    .boundsInWindow()
+                    .toAndroidRectF()
+                    .toRect()
+            }, color = Color.Black
     ) {
 
         exoPlayer?.let { exoPlayer ->
@@ -96,7 +132,7 @@ fun VideoPlayerUi(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
                     fitMode = uiState.contentFitMode,
                     uiRatio = if (uiState.uiMode.fullscreen) screenRatio
                     else uiState.embeddedUiRatio,
-                    contentRatio = uiState.contentRatio
+                    contentRatio = uiState.contentRatio,
                 )
             }
         }

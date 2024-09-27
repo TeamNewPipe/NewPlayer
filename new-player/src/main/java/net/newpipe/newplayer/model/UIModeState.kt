@@ -34,6 +34,7 @@ enum class UIModeState {
     FULLSCREEN_VIDEO_CONTROLLER_UI,
     FULLSCREEN_VIDEO_CHAPTER_SELECT,
     FULLSCREEN_VIDEO_STREAM_SELECT,
+    PIP,
 
     EMBEDDED_AUDIO,
     FULLSCREEN_AUDIO,
@@ -52,6 +53,7 @@ enum class UIModeState {
                 FULLSCREEN_AUDIO -> true
                 AUDIO_CHAPTER_SELECT -> true
                 AUDIO_STREAM_SELECT -> true
+                PIP -> true
                 else -> false
             }
 
@@ -85,6 +87,7 @@ enum class UIModeState {
         get() =
             when (this) {
                 FULLSCREEN_VIDEO -> false
+                PIP -> false
                 else -> true
             }
 
@@ -114,6 +117,7 @@ enum class UIModeState {
                 FULLSCREEN_AUDIO -> true
                 AUDIO_CHAPTER_SELECT -> false
                 AUDIO_STREAM_SELECT -> false
+                PIP -> false
             }
 
     // STATE TRANSITIONS
@@ -133,7 +137,6 @@ enum class UIModeState {
             FULLSCREEN_VIDEO_CHAPTER_SELECT -> FULLSCREEN_VIDEO
             FULLSCREEN_VIDEO_STREAM_SELECT -> FULLSCREEN_VIDEO
 
-
             EMBEDDED_VIDEO -> EMBEDDED_VIDEO
             EMBEDDED_VIDEO_CONTROLLER_UI -> EMBEDDED_VIDEO
             EMBEDDED_VIDEO_CHAPTER_SELECT -> EMBEDDED_VIDEO
@@ -149,6 +152,7 @@ enum class UIModeState {
             FULLSCREEN_VIDEO_CHAPTER_SELECT -> FULLSCREEN_VIDEO_STREAM_SELECT
             FULLSCREEN_VIDEO_CONTROLLER_UI -> FULLSCREEN_VIDEO_STREAM_SELECT
 
+
             EMBEDDED_VIDEO -> EMBEDDED_VIDEO_STREAM_SELECT
             EMBEDDED_VIDEO_CHAPTER_SELECT -> EMBEDDED_VIDEO_STREAM_SELECT
             EMBEDDED_VIDEO_CONTROLLER_UI -> EMBEDDED_VIDEO_STREAM_SELECT
@@ -156,6 +160,8 @@ enum class UIModeState {
             FULLSCREEN_AUDIO -> AUDIO_STREAM_SELECT
             EMBEDDED_AUDIO -> AUDIO_STREAM_SELECT
             AUDIO_CHAPTER_SELECT -> AUDIO_STREAM_SELECT
+
+            PIP -> EMBEDDED_VIDEO_STREAM_SELECT
 
             else -> this
         }
@@ -174,6 +180,8 @@ enum class UIModeState {
             EMBEDDED_AUDIO -> AUDIO_CHAPTER_SELECT
             AUDIO_STREAM_SELECT -> AUDIO_CHAPTER_SELECT
 
+            PIP -> EMBEDDED_VIDEO_CHAPTER_SELECT
+
             else -> this
         }
 
@@ -191,6 +199,7 @@ enum class UIModeState {
         FULLSCREEN_AUDIO -> PlayMode.FULLSCREEN_AUDIO
         AUDIO_CHAPTER_SELECT -> PlayMode.FULLSCREEN_AUDIO
         AUDIO_STREAM_SELECT -> PlayMode.FULLSCREEN_AUDIO
+        PIP -> PlayMode.PIP
     }
 
     fun getNextModeWhenBackPressed() = when (this) {
@@ -207,6 +216,7 @@ enum class UIModeState {
         FULLSCREEN_AUDIO -> EMBEDDED_AUDIO
         AUDIO_CHAPTER_SELECT -> FULLSCREEN_AUDIO
         AUDIO_STREAM_SELECT -> FULLSCREEN_AUDIO
+        PIP -> null
     }
 
     companion object {
@@ -215,7 +225,7 @@ enum class UIModeState {
                 PlayMode.IDLE -> PLACEHOLDER
                 PlayMode.EMBEDDED_VIDEO -> EMBEDDED_VIDEO
                 PlayMode.FULLSCREEN_VIDEO -> FULLSCREEN_VIDEO
-                PlayMode.PIP -> TODO()
+                PlayMode.PIP -> PIP
                 PlayMode.BACKGROUND_VIDEO -> TODO()
                 PlayMode.BACKGROUND_AUDIO -> TODO()
                 PlayMode.FULLSCREEN_AUDIO -> FULLSCREEN_AUDIO

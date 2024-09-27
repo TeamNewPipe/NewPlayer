@@ -148,7 +148,8 @@ fun NewPlayerUI(
             uiState.uiMode == UIModeState.EMBEDDED_VIDEO ||
             uiState.uiMode == UIModeState.EMBEDDED_VIDEO_CONTROLLER_UI ||
             uiState.uiMode == UIModeState.EMBEDDED_VIDEO_STREAM_SELECT ||
-            uiState.uiMode == UIModeState.EMBEDDED_VIDEO_CHAPTER_SELECT
+            uiState.uiMode == UIModeState.EMBEDDED_VIDEO_CHAPTER_SELECT ||
+            uiState.uiMode == UIModeState.PIP
         ) {
             VideoPlayerUi(viewModel = viewModel, uiState = uiState)
         } else if (uiState.uiMode == UIModeState.FULLSCREEN_AUDIO ||

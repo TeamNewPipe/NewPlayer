@@ -66,6 +66,7 @@ import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
+import net.newpipe.newplayer.ui.videoplayer.pip.supportsPip
 import net.newpipe.newplayer.utils.getEmbeddedUiConfig
 
 @OptIn(UnstableApi::class)
@@ -132,12 +133,13 @@ fun AudioBottomUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
                 }
             }
         }
-        Menu()
+        Menu(viewModel, uiState)
     }
 }
 
+@OptIn(UnstableApi::class)
 @Composable
-private fun Menu() {
+private fun Menu(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
     var showMenu: Boolean by remember { mutableStateOf(false) }
 
     val embeddedUiConfig = if (LocalContext.current is Activity)
@@ -187,17 +189,22 @@ private fun Menu() {
                     )
                 },
                 onClick = { /*TODO*/ showMenu = false })
-            DropdownMenuItem(
-                text = { Text(stringResource(R.string.pip_button_description)) },
-                onClick = { /*TODO*/ },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.PictureInPicture,
-                        contentDescription = stringResource(
-                            id = R.string.pip_button_description
+
+            if(supportsPip(LocalContext.current)) {
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.pip_button_description)) },
+                    onClick = {
+                        viewModel.changeUiMode(UIModeState.PIP, embeddedUiConfig)
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Filled.PictureInPicture,
+                            contentDescription = stringResource(
+                                id = R.string.pip_button_description
+                            )
                         )
-                    )
-                })
+                    })
+            }
         }
     }
 }
