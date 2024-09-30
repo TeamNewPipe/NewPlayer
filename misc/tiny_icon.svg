@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <!-- NewPlayer
 
     @author Jaime López
 
-    Copyright (C) Jaime López 2023 
+    Copyright (C) Jaime López 2024 
     https://jaim3.com
 
     NewPlayer is free software: you can redistribute it and/or modify
@@ -20,22 +19,24 @@
 
     You should have received a copy of the GNU General Public License
     along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
+
 -->
+
 
 <svg
    width="48"
    height="48"
-   viewBox="0 0 12.7 12.7"
+   viewBox="0 0 48 48"
    version="1.1"
-   id="svg1"
-   xml:space="preserve"
-   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25)"
+   id="svg6"
    sodipodi:docname="tiny_icon.svg"
+   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg"><sodipodi:namedview
-     id="namedview1"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview6"
      pagecolor="#ffffff"
      bordercolor="#000000"
      borderopacity="0.25"
@@ -43,22 +44,57 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:document-units="mm"
-     inkscape:zoom="11.313708"
-     inkscape:cx="4.5078059"
-     inkscape:cy="18.782525"
-     inkscape:window-width="1920"
-     inkscape:window-height="1011"
+     inkscape:zoom="10.583803"
+     inkscape:cx="6.5666376"
+     inkscape:cy="40.864327"
+     inkscape:window-width="2560"
+     inkscape:window-height="1371"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1" /><defs
-     id="defs1" /><g
-     inkscape:label="Ebene 1"
-     inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(-141.17539,-148.5)"><path
-       style="fill:#000000;fill-opacity:1;stroke-width:0.14216"
-       d="m 143.16189,149.38364 9.54978,5.51674 -9.55304,5.5176 z m 1.65533,9.16109 -0.004,-4.82158 1.45321,3.98895 0.7542,-0.44048 7.5e-4,-1.60906 1.40033,0.80812 1.35477,-0.78212 1.3612,-0.79275 c 0,0 -3.3284,-1.91731 -4.99059,-2.87738 l -0.0164,1.38316 0.008,1.37881 -0.64602,-1.75241 -0.63242,-1.76088 -0.90987,-0.5249 -0.003,8.31549 z m 2.20332,-3.88904 -1.3e-4,-1.13035 2.37317,1.37566 -0.97734,0.5613 z"
-       id="path1"
-       sodipodi:nodetypes="ccccccccccccccccccccccccc" /></g></svg>
+     inkscape:current-layer="svg6" />
+  <defs
+     id="defs1">
+    <clipPath
+       id="clippath1"
+       transform="matrix(0.23999999 0 0 -0.23999999 0 10.0799999)">
+      <path
+         d="M 0,0 H 39.697266 V 39.697266 H 0 Z"
+         style="clip-rule:evenodd;fill:none"
+         id="path1" />
+    </clipPath>
+  </defs>
+  <g
+     class="page-1"
+     transform="matrix(5.0381305,0,0,-5.0381305,0,50.784356)"
+     id="g6">
+    <g
+       transform="matrix(0.23999999,0,0,-0.23999999,0,10.08)"
+       id="g2">
+      <path
+         d="M 0,0 H 39.697266 V 39.697266 H 0 Z"
+         style="fill:none"
+         id="path2" />
+    </g>
+    <g
+       transform="matrix(0.23999999,0,0,-0.23999999,0,10.08)"
+       id="g3">
+      <path
+         d="M 0,0 H 39.697266 V 39.697266 H 0 Z"
+         style="fill:none"
+         id="path3" />
+    </g>
+    <g
+       clip-path="url(#clippath1)"
+       id="g5">
+      <g
+         transform="matrix(0.74926178,0,0,-0.74926178,-105.78077,121.34537)"
+         id="g4">
+        <path
+           d="m 151.58,153.75 -6.65401,-3.8437 c -0.19624,-0.11428 -0.40789,-0.1718 -0.63497,-0.17258 -0.35271,0 -0.65398,0.12451 -0.90378,0.37352 -0.2498,0.24901 -0.37528,0.54986 -0.37642,0.90257 v 7.6884 c -0.002,0.3622 0.12782,0.66843 0.38969,0.91867 0.24809,0.23714 0.54373,0.35663 0.88692,0.35846 0.22761,-5.9e-4 0.43979,-0.0581 0.63652,-0.17258 l 6.6571,-3.8442 c 0.42507,-0.24538 0.63761,-0.61348 0.63761,-1.10431 0,-0.49082 -0.21254,-0.85892 -0.63761,-1.1043 z m -0.85979,1.485 -0.72459,0.42195 -1.1568,0.66571 c -0.14749,0.0849 -0.29497,0.0849 -0.44244,0 l -0.67134,-0.38765 c -0.1068,-0.0608 -0.1763,-0.15051 -0.20852,-0.26912 -0.0322,-0.1186 -0.0176,-0.23115 0.0438,-0.33763 0.0614,-0.10646 0.15149,-0.17547 0.27027,-0.20701 0.11879,-0.0316 0.23126,-0.0164 0.33738,0.0456 l 0.44501,0.25605 0.99396,-0.56841 -2.414,-1.399 v 3.5226 c -7.5e-4,0.27997 -0.139,0.44426 -0.41471,0.49287 -0.27571,0.0486 -0.4618,-0.0585 -0.55825,-0.32132 l -1.27251,-3.4929 0.005,4.65069 c -7.3e-4,0.17484 -0.0779,0.30405 -0.23144,0.38765 -0.29549,0.16028 -0.65393,-0.0696 -0.65393,-0.40506 l 0.003,-6.78559 c 0,-0.28634 0.1411,-0.45373 0.4233,-0.5022 0.28221,-0.0485 0.47105,0.0623 0.56656,0.33218 l 0.57916,1.6156 0.657,1.782 -0.007,-1.4021 0.008,-0.65189 c 8.7e-4,-0.0785 0.0212,-0.15153 0.061,-0.21919 0.0398,-0.0676 0.0938,-0.12088 0.16196,-0.15976 0.0682,-0.0389 0.14149,-0.0582 0.21997,-0.058 0.0785,1.7e-4 0.15173,0.0199 0.21971,0.0591 1.22901,0.70872 2.86251,1.651 3.7607,2.1687 0.0683,0.0394 0.12222,0.0933 0.16171,0.16152 0.0395,0.0683 0.0593,0.14183 0.0594,0.22071 9e-5,0.0789 -0.0195,0.15248 -0.0588,0.22086 -0.0393,0.0684 -0.0931,0.12236 -0.16128,0.16196 z"
+           style="fill:#000000;fill-opacity:1"
+           id="path4" />
+      </g>
+    </g>
+  </g>
+</svg>
