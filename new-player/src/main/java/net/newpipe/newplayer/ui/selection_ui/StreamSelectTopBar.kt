@@ -48,10 +48,10 @@ import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.common.RepeatModeButton
 import net.newpipe.newplayer.ui.common.ShuffleModeButton
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.utils.getEmbeddedUiConfig
-import net.newpipe.newplayer.utils.getLocale
-import net.newpipe.newplayer.utils.getPlaylistDurationInMS
-import net.newpipe.newplayer.utils.getTimeStringFromMs
+import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
+import net.newpipe.newplayer.ui.common.getLocale
+import net.newpipe.newplayer.ui.common.getPlaylistDurationInMS
+import net.newpipe.newplayer.ui.common.getTimeStringFromMs
 
 @androidx.annotation.OptIn(UnstableApi::class)
 @OptIn(ExperimentalMaterial3Api::class)

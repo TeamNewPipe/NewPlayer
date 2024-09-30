@@ -47,7 +47,7 @@ import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.controller.BottomUI
 import net.newpipe.newplayer.ui.videoplayer.controller.CenterUI
 import net.newpipe.newplayer.ui.videoplayer.controller.TopUI
-import net.newpipe.newplayer.utils.getInsets
+import net.newpipe.newplayer.ui.common.getInsets
 
 val CONTROLLER_UI_BACKGROUND_COLOR = Color(0x75000000)
 val STREAMSELECT_UI_BACKGROUND_COLOR = Color(0xba000000)

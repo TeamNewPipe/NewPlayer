@@ -23,7 +23,6 @@ package net.newpipe.newplayer.ui.videoplayer
 import android.app.Activity
 import android.os.Build
 import androidx.annotation.OptIn
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -40,29 +39,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toAndroidRect
 import androidx.compose.ui.graphics.toAndroidRectF
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.core.graphics.toRect
 import androidx.lifecycle.Lifecycle
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
-import net.newpipe.newplayer.ui.PlaySurface
 import net.newpipe.newplayer.ui.selection_ui.StreamSelectUI
 import androidx.lifecycle.LifecycleEventObserver
 import net.newpipe.newplayer.NewPlayerException
 import net.newpipe.newplayer.model.EmbeddedUiConfig
-import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.ui.selection_ui.ChapterSelectUI
 import net.newpipe.newplayer.ui.videoplayer.pip.getPipParams
 import net.newpipe.newplayer.ui.videoplayer.pip.supportsPip
-import net.newpipe.newplayer.utils.getEmbeddedUiConfig
+import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
 
 @OptIn(UnstableApi::class)
 @Composable
@@ -103,23 +97,16 @@ fun VideoPlayerUi(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
         }
     }
 
-    LaunchedEffect(uiState.uiMode == UIModeState.PIP) {
+    LaunchedEffect(uiState.enteringPip) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && supportsPip(activity))
-            if (uiState.uiMode == UIModeState.PIP) {
+            if (uiState.enteringPip) {
                 val pipParams = getPipParams(uiState.contentRatio, videoViewBounds)
                 if (pipParams != null) {
                     activity.enterPictureInPictureMode(pipParams)
-
-                    // Yes this line means exactly what it says: When you switch to PipModeState this line
-                    // will immediately switch back to fullscreen mode. This seems hacky but is actually strait forward.
-                    // You see, Android expects the Activity to remain in the same state as it was before Pip just that there
-                    // is the Pip overlay over the Activity now. This also means that Android by default is not notifying the Activity
-                    // when leaving Pip mode. Android just enlarges the Activity and expects the Activity to just accept that it now has
-                    // more real estate on the screen but don't change it's behaviour.
-                    viewModel.changeUiMode(UIModeState.FULLSCREEN_VIDEO, embeddedUiConfig)
                 } else {
                     throw NewPlayerException("Pip params where null even though pip seemed to be supported.")
                 }
+                viewModel.doneEnteringPip()
             }
     }
 

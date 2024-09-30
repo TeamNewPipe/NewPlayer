@@ -21,7 +21,6 @@
 
 package net.newpipe.newplayer.ui.audioplayer
 
-import android.icu.text.CaseMap.Title
 import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -45,12 +44,9 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.material3.adaptive.currentWindowSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -66,10 +62,10 @@ import net.newpipe.newplayer.ui.common.NewPlayerSeeker
 import net.newpipe.newplayer.ui.selection_ui.ChapterSelectUI
 import net.newpipe.newplayer.ui.selection_ui.StreamSelectUI
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.utils.Thumbnail
-import net.newpipe.newplayer.utils.getInsets
-import net.newpipe.newplayer.utils.getLocale
-import net.newpipe.newplayer.utils.getTimeStringFromMs
+import net.newpipe.newplayer.ui.common.Thumbnail
+import net.newpipe.newplayer.ui.common.getInsets
+import net.newpipe.newplayer.ui.common.getLocale
+import net.newpipe.newplayer.ui.common.getTimeStringFromMs
 
 
 private val UI_ENTER_ANIMATION = fadeIn(tween(200))

@@ -43,8 +43,8 @@ import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.utils.getEmbeddedUiConfig
-import net.newpipe.newplayer.utils.getInsets
+import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
+import net.newpipe.newplayer.ui.common.getInsets
 
 @OptIn(UnstableApi::class)
 @Composable

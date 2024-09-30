@@ -29,7 +29,7 @@ plugins {
 
 android {
     namespace = "net.newpipe.newplayer.testapp"
-    compileSdk = 34
+    compileSdk = 35
 
     viewBinding {
         enable = true
@@ -49,7 +49,7 @@ android {
     defaultConfig {
         applicationId = "net.newpipe.newplayer.testapp"
         minSdk = 21
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 

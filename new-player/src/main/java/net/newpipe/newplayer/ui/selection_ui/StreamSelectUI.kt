@@ -44,9 +44,9 @@ import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.utils.ReorderHapticFeedbackType
-import net.newpipe.newplayer.utils.getInsets
-import net.newpipe.newplayer.utils.rememberReorderHapticFeedback
+import net.newpipe.newplayer.ui.common.ReorderHapticFeedbackType
+import net.newpipe.newplayer.ui.common.getInsets
+import net.newpipe.newplayer.ui.common.rememberReorderHapticFeedback
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 

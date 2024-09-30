@@ -24,32 +24,20 @@ import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.os.Build
 import android.util.Log
-import android.view.SurfaceView
 import androidx.activity.compose.BackHandler
 import androidx.annotation.OptIn
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.adaptive.currentWindowSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.lifecycle.Lifecycle
 
-import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.model.NewPlayerViewModel
@@ -57,10 +45,11 @@ import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.audioplayer.AudioPlayerUI
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.VideoPlayerUi
-import net.newpipe.newplayer.utils.LockScreenOrientation
-import net.newpipe.newplayer.utils.getDefaultBrightness
-import net.newpipe.newplayer.utils.isInPowerSaveMode
-import net.newpipe.newplayer.utils.setScreenBrightness
+import net.newpipe.newplayer.ui.common.LockScreenOrientation
+import net.newpipe.newplayer.ui.common.getDefaultBrightness
+import net.newpipe.newplayer.ui.common.isInPowerSaveMode
+import net.newpipe.newplayer.ui.common.relaunchCurrentActivity
+import net.newpipe.newplayer.ui.common.setScreenBrightness
 
 private const val TAG = "VideoPlayerUI"
 
@@ -144,88 +133,35 @@ fun NewPlayerUI(
             )
         }
 
-        if (uiState.uiMode == UIModeState.FULLSCREEN_VIDEO ||
-            uiState.uiMode == UIModeState.FULLSCREEN_VIDEO_CONTROLLER_UI ||
-            uiState.uiMode == UIModeState.FULLSCREEN_VIDEO_CHAPTER_SELECT ||
-            uiState.uiMode == UIModeState.FULLSCREEN_VIDEO_STREAM_SELECT ||
-            uiState.uiMode == UIModeState.EMBEDDED_VIDEO ||
-            uiState.uiMode == UIModeState.EMBEDDED_VIDEO_CONTROLLER_UI ||
-            uiState.uiMode == UIModeState.EMBEDDED_VIDEO_STREAM_SELECT ||
-            uiState.uiMode == UIModeState.EMBEDDED_VIDEO_CHAPTER_SELECT ||
-            uiState.uiMode == UIModeState.PIP
-        ) {
-            VideoPlayerUi(viewModel = viewModel, uiState = uiState)
-        } else if (uiState.uiMode == UIModeState.FULLSCREEN_AUDIO ||
-            uiState.uiMode == UIModeState.EMBEDDED_AUDIO ||
-            uiState.uiMode == UIModeState.AUDIO_STREAM_SELECT ||
-            uiState.uiMode == UIModeState.AUDIO_CHAPTER_SELECT
-        ) {
-            val windowSize = currentWindowSize()
-            AudioPlayerUI(viewModel = viewModel, uiState = uiState,
-                isLandScape = windowSize.height < windowSize.width)
-        } else {
-            LoadingPlaceholder(uiState.embeddedUiRatio)
+        when (uiState.uiMode) {
+
+            UIModeState.FULLSCREEN_VIDEO,
+            UIModeState.FULLSCREEN_VIDEO_CONTROLLER_UI,
+            UIModeState.FULLSCREEN_VIDEO_CHAPTER_SELECT,
+            UIModeState.FULLSCREEN_VIDEO_STREAM_SELECT,
+            UIModeState.EMBEDDED_VIDEO,
+            UIModeState.EMBEDDED_VIDEO_CONTROLLER_UI,
+            UIModeState.EMBEDDED_VIDEO_STREAM_SELECT,
+            UIModeState.EMBEDDED_VIDEO_CHAPTER_SELECT,
+            UIModeState.PIP -> {
+                VideoPlayerUi(viewModel = viewModel, uiState = uiState)
+            }
+
+            UIModeState.FULLSCREEN_AUDIO,
+            UIModeState.EMBEDDED_AUDIO,
+            UIModeState.AUDIO_STREAM_SELECT,
+            UIModeState.AUDIO_CHAPTER_SELECT -> {
+                val windowSize = currentWindowSize()
+                AudioPlayerUI(
+                    viewModel = viewModel, uiState = uiState,
+                    isLandScape = windowSize.height < windowSize.width
+                )
+            }
+
+            else -> {
+                LoadingPlaceholder(uiState.embeddedUiRatio)
+            }
         }
-
-    }
-}
-
-@Composable
-fun PlaySurface(
-    modifier: Modifier,
-    player: Player?,
-    lifecycle: Lifecycle.Event,
-    fitMode: ContentScale,
-    uiRatio: Float,
-    contentRatio: Float
-) {
-    val viewBoxModifier = Modifier
-    viewBoxModifier
-        .fillMaxWidth()
-        .aspectRatio(16F / 9F)
-
-    /*
-    Box(
-        modifier = Modifier
-            .then(
-                when (fitMode) {
-                    ContentScale.FILL -> Modifier.fillMaxSize()
-                    ContentScale.FIT_INSIDE -> Modifier
-                        .aspectRatio(contentRatio)
-                        .then(
-                            if (contentRatio < uiRatio) Modifier
-                                .fillMaxWidth() else Modifier.fillMaxHeight()
-                        )
-
-                    ContentScale.CROP -> Modifier
-                        .aspectRatio(contentRatio)
-                        .wrapContentWidth(unbounded = true)
-                        .fillMaxSize()
-                }
-            )
-    ) {
-     */
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .aspectRatio(contentRatio)
-    ) {
-        AndroidView(
-            modifier = Modifier.fillMaxSize(),
-            factory = { context ->
-            SurfaceView(context).also { view ->
-                player?.setVideoSurfaceView(view)
-            }
-        }, update = { view ->
-            when (lifecycle) {
-                Lifecycle.Event.ON_RESUME -> {
-                    player?.setVideoSurfaceView(view)
-                }
-
-                else -> Unit
-            }
-        })
-
     }
 }
 

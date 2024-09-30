@@ -98,6 +98,7 @@ enum class UIModeState {
                 FULLSCREEN_VIDEO_CONTROLLER_UI -> true
                 FULLSCREEN_VIDEO_CHAPTER_SELECT -> true
                 FULLSCREEN_VIDEO_STREAM_SELECT -> true
+                PIP -> true
                 else -> false
             }
 

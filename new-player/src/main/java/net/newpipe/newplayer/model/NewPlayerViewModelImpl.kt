@@ -21,6 +21,7 @@
 package net.newpipe.newplayer.model
 
 import android.app.Application
+import android.app.PictureInPictureUiState
 import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
@@ -366,16 +367,30 @@ class NewPlayerViewModelImpl @Inject constructor(
             progressUpdaterJob?.cancel()
         }
 
-        if (uiState.value.uiMode.fullscreen && !newUiModeState.fullscreen) {
-            mutableUiState.update {
-                it.copy(uiMode = newUiModeState, embeddedUiConfig = this.embeddedUiConfig)
+        // notify the UI itself about the change of the UIMode
+        if (newUiModeState == UIModeState.PIP) {
+            if (uiState.value.uiMode.videoControllerUiVisible) {
+                mutableUiState.update {
+                    it.copy(uiMode = uiState.value.uiMode.getUiHiddenState())
+                }
             }
-        } else {
             mutableUiState.update {
-                it.copy(uiMode = newUiModeState)
+                it.copy(enteringPip = true)
+            }
+
+        } else {
+            if (uiState.value.uiMode.fullscreen && !newUiModeState.fullscreen) {
+                mutableUiState.update {
+                    it.copy(uiMode = newUiModeState, embeddedUiConfig = this.embeddedUiConfig)
+                }
+            } else {
+                mutableUiState.update {
+                    it.copy(uiMode = newUiModeState)
+                }
             }
         }
 
+        // update play mode in NewPlayer if that value was not updated through the newPlayer object
         val newPlayMode = newUiModeState.toPlayMode()
         // take the next value from the player because changeUiMode is called when the playBackMode
         // of the player changes. If this value was taken from the viewModel instead
@@ -479,7 +494,7 @@ class NewPlayerViewModelImpl @Inject constructor(
     }
 
     override fun fastSeek(count: Int) {
-        if(abs(count) == 1) {
+        if (abs(count) == 1) {
             playbackPositionWhenFastSeekStarted = newPlayer?.currentPosition ?: 0
         }
 
@@ -611,6 +626,26 @@ class NewPlayerViewModelImpl @Inject constructor(
         } else {
             startHideUiDelayedJob()
         }
+    }
+
+    override fun doneEnteringPip() {
+        mutableUiState.update {
+            it.copy(enteringPip = false)
+        }
+    }
+
+    override fun onPictureInPictureModeChanged(isPictureInPictureMode: Boolean) {
+        if (isPictureInPictureMode) {
+            mutableUiState.update {
+                it.copy(uiMode = UIModeState.PIP)
+            }
+        } else {
+            changeUiMode(UIModeState.FULLSCREEN_VIDEO, null)
+        }
+    }
+
+    override fun onPictureInPictureUiStateChanged(pipState: PictureInPictureUiState) {
+
     }
 
     override fun removePlaylistItem(uniqueId: Long) {

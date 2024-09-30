@@ -46,7 +46,7 @@ import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.utils.getEmbeddedUiConfig
+import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
 
 private const val TAG = "EmbeddedGestureUI"
 

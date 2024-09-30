@@ -20,11 +20,16 @@
 
 package net.newpipe.newplayer.testapp
 
+import android.app.PictureInPictureUiState
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.PictureInPictureModeChangedInfo
+import androidx.core.util.Consumer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.update
 import net.newpipe.newplayer.ActivityBrainSlug
@@ -113,5 +118,26 @@ class MainActivity : AppCompatActivity() {
             it.fullscreenPlayerView = binding.fullscreenPlayer
             it.rootView = binding.root
         }
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        //// This call has to be inserted into the Activity holding the NewPlayerUI.
+        //// Without this transactions into or out of PiP mode don't work.
+        ////////////////////////////////////////////////////////////////////////////////////
+        
+        addOnPictureInPictureModeChangedListener { mode ->
+            println("gurken pip mode change isInPipMode: ${mode.isInPictureInPictureMode}")
+            newPlayerViewModel.onPictureInPictureModeChanged(mode.isInPictureInPictureMode)
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    //// This call has to be inserted into the Activity holding the NewPlayerUI.
+    //// Without this transactions into or out of PiP mode don't work.
+    ////////////////////////////////////////////////////////////////////////////////////
+
+    @RequiresApi(35)
+    override fun onPictureInPictureUiStateChanged(pipState: PictureInPictureUiState) {
+        newPlayerViewModel.onPictureInPictureUiStateChanged(pipState)
+        pipState.isTransitioningToPip()
     }
 }

@@ -22,12 +22,9 @@ package net.newpipe.newplayer.ui.audioplayer
 
 import android.app.Activity
 import androidx.annotation.OptIn
-import androidx.collection.emptyLongSet
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
@@ -52,14 +49,13 @@ import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.model.UIModeState
-import net.newpipe.newplayer.ui.selection_ui.ITEM_CORNER_SHAPE
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.CONTROLLER_UI_BACKGROUND_COLOR
 import net.newpipe.newplayer.ui.videoplayer.PreviewBackgroundSurface
-import net.newpipe.newplayer.utils.Thumbnail
-import net.newpipe.newplayer.utils.getEmbeddedUiConfig
-import net.newpipe.newplayer.utils.getLocale
-import net.newpipe.newplayer.utils.getTimeStringFromMs
+import net.newpipe.newplayer.ui.common.Thumbnail
+import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
+import net.newpipe.newplayer.ui.common.getLocale
+import net.newpipe.newplayer.ui.common.getTimeStringFromMs
 
 @OptIn(androidx.media3.common.util.UnstableApi::class)
 @Composable

@@ -18,7 +18,7 @@
  *
  */
 
-package net.newpipe.newplayer.utils
+package net.newpipe.newplayer.ui.common
 
 import android.os.Build
 import androidx.compose.runtime.Composable

@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "net.newpipe.newplayer"
-    compileSdk = 34
+    compileSdk = 35
 
     buildFeatures {
         compose = true

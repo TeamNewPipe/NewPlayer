@@ -18,12 +18,13 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.utils
+package net.newpipe.newplayer.ui.common
 
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.PowerManager
@@ -190,12 +191,25 @@ fun isInPowerSaveMode() =
 
 
 @OptIn(UnstableApi::class)
-fun getPlaylistDurationInMS(playlist: List<MediaItem>) : Long {
+fun getPlaylistDurationInMS(playlist: List<MediaItem>): Long {
     var duration = 0L
-    for(item in playlist) {
-        val itemDuration = item.mediaMetadata.durationMs ?:
-            throw NewPlayerException("Can not calculate duration of a playlist if an item does not have a duration: MediItem in question: ${item.mediaMetadata.title}")
+    for (item in playlist) {
+        val itemDuration = item.mediaMetadata.durationMs
+            ?: throw NewPlayerException("Can not calculate duration of a playlist if an item does not have a duration: MediItem in question: ${item.mediaMetadata.title}")
         duration += itemDuration
     }
     return duration
+}
+
+fun relaunchCurrentActivity(activity: Activity) {
+
+    /*
+    val intent = Intent(activity, activity.javaClass).apply {
+        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+    }
+    activity.startActivity(intent)
+
+     */
+    activity.startActivity(activity.intent)
+
 }

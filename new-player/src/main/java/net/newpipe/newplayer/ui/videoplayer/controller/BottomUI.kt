@@ -23,7 +23,6 @@ package net.newpipe.newplayer.ui.videoplayer.controller
 import android.app.Activity
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -50,9 +49,9 @@ import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.common.NewPlayerSeeker
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.utils.getEmbeddedUiConfig
-import net.newpipe.newplayer.utils.getLocale
-import net.newpipe.newplayer.utils.getTimeStringFromMs
+import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
+import net.newpipe.newplayer.ui.common.getLocale
+import net.newpipe.newplayer.ui.common.getTimeStringFromMs
 
 
 private const val TAG = "BottomUI"

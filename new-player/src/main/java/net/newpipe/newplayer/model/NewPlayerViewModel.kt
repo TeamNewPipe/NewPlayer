@@ -20,6 +20,7 @@
 
 package net.newpipe.newplayer.model
 
+import android.app.PictureInPictureUiState
 import android.os.Bundle
 import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
@@ -63,4 +64,7 @@ interface NewPlayerViewModel {
     fun removePlaylistItem(uniqueId: Long)
     fun onStreamItemDragFinished()
     fun dialogVisible(visible: Boolean)
+    fun doneEnteringPip()
+    fun onPictureInPictureModeChanged(isPictureInPictureMode: Boolean)
+    fun onPictureInPictureUiStateChanged(pipState: PictureInPictureUiState)
 }

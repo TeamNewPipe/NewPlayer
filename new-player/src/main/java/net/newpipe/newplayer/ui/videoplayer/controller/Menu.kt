@@ -25,12 +25,10 @@ import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.FitScreen
 import androidx.compose.material.icons.filled.Headset
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.PictureInPicture
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Subtitles
@@ -63,7 +61,7 @@ import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.pip.supportsPip
-import net.newpipe.newplayer.utils.getEmbeddedUiConfig
+import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
 
 @OptIn(UnstableApi::class)
 @Composable
@@ -133,6 +131,7 @@ fun DropDownMenu(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
                     text = { Text(stringResource(R.string.pip_button_description)) },
                     onClick = {
                         viewModel.changeUiMode(UIModeState.PIP, embeddedUiConfig)
+                        showMainMenu = false
                     },
                     leadingIcon = {
                         Icon(

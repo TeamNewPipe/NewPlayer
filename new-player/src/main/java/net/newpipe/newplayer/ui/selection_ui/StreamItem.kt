@@ -65,11 +65,11 @@ import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.ui.videoplayer.CONTROLLER_UI_BACKGROUND_COLOR
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.utils.ReorderHapticFeedback
-import net.newpipe.newplayer.utils.ReorderHapticFeedbackType
-import net.newpipe.newplayer.utils.Thumbnail
-import net.newpipe.newplayer.utils.getLocale
-import net.newpipe.newplayer.utils.getTimeStringFromMs
+import net.newpipe.newplayer.ui.common.ReorderHapticFeedback
+import net.newpipe.newplayer.ui.common.ReorderHapticFeedbackType
+import net.newpipe.newplayer.ui.common.Thumbnail
+import net.newpipe.newplayer.ui.common.getLocale
+import net.newpipe.newplayer.ui.common.getTimeStringFromMs
 import sh.calvin.reorderable.ReorderableCollectionItemScope
 
 @androidx.annotation.OptIn(UnstableApi::class)

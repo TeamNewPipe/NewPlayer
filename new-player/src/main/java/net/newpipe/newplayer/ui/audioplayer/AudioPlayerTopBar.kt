@@ -41,7 +41,7 @@ import net.newpipe.newplayer.model.EmbeddedUiConfig
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.UIModeState
-import net.newpipe.newplayer.utils.getEmbeddedUiConfig
+import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
 
 @androidx.annotation.OptIn(UnstableApi::class)
 @OptIn(ExperimentalMaterial3Api::class)

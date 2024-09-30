@@ -54,8 +54,8 @@ import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.utils.getDefaultBrightness
-import net.newpipe.newplayer.utils.getEmbeddedUiConfig
+import net.newpipe.newplayer.ui.common.getDefaultBrightness
+import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
 
 private enum class IndicatorMode {
     NONE, VOLUME_INDICATOR_VISIBLE, BRIGHTNESS_INDICATOR_VISIBLE

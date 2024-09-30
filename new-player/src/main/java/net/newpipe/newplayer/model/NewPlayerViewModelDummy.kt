@@ -1,5 +1,6 @@
 package net.newpipe.newplayer.model
 
+import android.app.PictureInPictureUiState
 import android.os.Bundle
 import androidx.media3.common.util.UnstableApi
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -94,6 +95,18 @@ open class NewPlayerViewModelDummy : NewPlayerViewModel {
 
     override fun dialogVisible(visible: Boolean) {
         println("dummy impl dialog visible: $visible")
+    }
+
+    override fun doneEnteringPip() {
+        println("dummy impl")
+    }
+
+    override fun onPictureInPictureModeChanged(isPictureInPictureMode: Boolean) {
+        println("dummy impl isInPictureInPictureMode: $isPictureInPictureMode")
+    }
+
+    override fun onPictureInPictureUiStateChanged(pipState: PictureInPictureUiState) {
+        println("dummy impl Pip Ui State Changed")
     }
 
     override fun pause() {

@@ -28,6 +28,7 @@ import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.ui.ContentScale
 
+
 @UnstableApi
 data class NewPlayerUIState(
     val uiMode: UIModeState,
@@ -54,7 +55,8 @@ data class NewPlayerUIState(
     val currentPlaylistItemIndex: Int,
     val availableStreamVariants: List<String>,
     val availableLanguages: List<String>,
-    val availableSubtitles: List<String>
+    val availableSubtitles: List<String>,
+    val enteringPip: Boolean
 ) {
     companion object {
         val DEFAULT = NewPlayerUIState(
@@ -82,7 +84,8 @@ data class NewPlayerUIState(
             currentPlaylistItemIndex = 0,
             availableLanguages = emptyList(),
             availableSubtitles = emptyList(),
-            availableStreamVariants = emptyList()
+            availableStreamVariants = emptyList(),
+            enteringPip = false
         )
 
         val DUMMY = DEFAULT.copy(

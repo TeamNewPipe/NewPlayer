@@ -51,9 +51,9 @@ import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.NewPlayerException
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.utils.Thumbnail
-import net.newpipe.newplayer.utils.getLocale
-import net.newpipe.newplayer.utils.getTimeStringFromMs
+import net.newpipe.newplayer.ui.common.Thumbnail
+import net.newpipe.newplayer.ui.common.getLocale
+import net.newpipe.newplayer.ui.common.getTimeStringFromMs
 
 fun isActiveChapter(chapterId: Int, chapters: List<Chapter>, playbackPosition: Long) : Boolean {
     assert(0 <= chapterId && chapterId < chapters.size) {
