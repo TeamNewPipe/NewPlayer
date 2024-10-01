@@ -152,7 +152,7 @@ fun ThumbPreviewPreview() {
                 Slider(modifier = Modifier.weight(1f), value = sliderPosition, onValueChange = {
                     sliderPosition = it
                 })
-                Text(text = "Right", modifier = Modifier.onGloballyPositioned {
+                Text(text = "Right side", modifier = Modifier.onGloballyPositioned {
                     endOffset = it.size.width
                 })
             }
