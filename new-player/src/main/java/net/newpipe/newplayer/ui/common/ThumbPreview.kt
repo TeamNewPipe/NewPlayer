@@ -22,6 +22,7 @@ package net.newpipe.newplayer.ui.common
 
 import androidx.annotation.OptIn
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,6 +35,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,6 +51,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
@@ -66,7 +69,8 @@ fun ThumbPreview(
     viewModel: NewPlayerViewModel,
     uiState: NewPlayerUIState,
     additionalStartPadding: Int = 0,
-    additionalEndPadding: Int = 0
+    additionalEndPadding: Int = 0,
+    thumbsize: Dp
 ) {
     var sliderBoxWidth by remember {
         mutableIntStateOf(-10)
@@ -77,8 +81,9 @@ fun ThumbPreview(
     }
 
     val boxPaddingPxls = with(LocalDensity.current) { (BOX_PADDING).dp.toPx() }
+    val thumbSizePxls = with(LocalDensity.current) {(thumbsize.toPx())}
 
-    val previewPosition = additionalStartPadding - boxPaddingPxls +
+    val previewPosition = additionalStartPadding - boxPaddingPxls + thumbSizePxls/2 +
             ((sliderBoxWidth - additionalEndPadding - additionalStartPadding - (3*boxPaddingPxls))
                     * uiState.seekerPosition)
 
@@ -112,12 +117,14 @@ fun ThumbPreview(
             )
         }
 
+        /*
         Surface(
             modifier = Modifier
                 .size(10.dp, 10.dp)
-                .offset { IntOffset(previewPosition.toInt(), 100) }, color = Color.Blue
+                .offset { IntOffset(previewPosition.toInt(), 200) }, color = Color.Blue
         ) {
         }
+         */
     }
 }
 
@@ -140,7 +147,8 @@ fun ThumbPreviewPreview() {
             ThumbPreview(
                 viewModel = NewPlayerViewModelDummy(), uiState = NewPlayerUIState.DUMMY.copy(
                     seekerPosition = sliderPosition
-                ), additionalStartPadding = startOffset, additionalEndPadding = endOffset
+                ), additionalStartPadding = startOffset, additionalEndPadding = endOffset,
+                20.dp // see handle width
             )
 
             Row(
@@ -152,7 +160,7 @@ fun ThumbPreviewPreview() {
                 Slider(modifier = Modifier.weight(1f), value = sliderPosition, onValueChange = {
                     sliderPosition = it
                 })
-                Text(text = "Right side", modifier = Modifier.onGloballyPositioned {
+                Text(text = "R", modifier = Modifier.onGloballyPositioned {
                     endOffset = it.size.width
                 })
             }
