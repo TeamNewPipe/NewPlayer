@@ -644,10 +644,6 @@ class NewPlayerViewModelImpl @Inject constructor(
         }
     }
 
-    override fun onPictureInPictureUiStateChanged(pipState: PictureInPictureUiState) {
-
-    }
-
     override fun removePlaylistItem(uniqueId: Long) {
         newPlayer?.removePlaylistItem(uniqueId)
     }

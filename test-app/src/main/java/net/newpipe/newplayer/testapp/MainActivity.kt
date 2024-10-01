@@ -130,14 +130,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////
-    //// This call has to be inserted into the Activity holding the NewPlayerUI.
-    //// Without this transactions into or out of PiP mode don't work.
-    ////////////////////////////////////////////////////////////////////////////////////
-
-    @RequiresApi(35)
-    override fun onPictureInPictureUiStateChanged(pipState: PictureInPictureUiState) {
-        newPlayerViewModel.onPictureInPictureUiStateChanged(pipState)
-        pipState.isTransitioningToPip()
-    }
 }

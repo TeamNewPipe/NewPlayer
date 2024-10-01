@@ -66,5 +66,4 @@ interface NewPlayerViewModel {
     fun dialogVisible(visible: Boolean)
     fun doneEnteringPip()
     fun onPictureInPictureModeChanged(isPictureInPictureMode: Boolean)
-    fun onPictureInPictureUiStateChanged(pipState: PictureInPictureUiState)
 }

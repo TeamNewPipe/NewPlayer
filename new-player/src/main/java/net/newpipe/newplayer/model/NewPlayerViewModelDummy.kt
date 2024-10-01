@@ -105,10 +105,6 @@ open class NewPlayerViewModelDummy : NewPlayerViewModel {
         println("dummy impl isInPictureInPictureMode: $isPictureInPictureMode")
     }
 
-    override fun onPictureInPictureUiStateChanged(pipState: PictureInPictureUiState) {
-        println("dummy impl Pip Ui State Changed")
-    }
-
     override fun pause() {
         println("dummy pause")
     }
