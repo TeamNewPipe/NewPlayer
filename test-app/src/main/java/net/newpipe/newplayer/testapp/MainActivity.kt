@@ -165,6 +165,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        currentOrientation = resources.configuration.orientation
     }
 
     /**
@@ -189,7 +191,6 @@ class MainActivity : AppCompatActivity() {
             } else {
                 reconfigurationPending = true
             }
-            currentOrientation = newConfig.orientation
         } else {
             reconfigurationPending = false
         }
