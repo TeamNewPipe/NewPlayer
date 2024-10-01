@@ -369,7 +369,11 @@ class NewPlayerViewModelImpl @Inject constructor(
 
         // notify the UI itself about the change of the UIMode
         if (newUiModeState == UIModeState.PIP) {
-            if (uiState.value.uiMode.videoControllerUiVisible) {
+            if(uiState.value.uiMode.inAudioMode) {
+                mutableUiState.update {
+                    it.copy(uiMode = uiState.value.uiMode.getVideoEquivalent())
+                }
+            } else if (uiState.value.uiMode.videoControllerUiVisible) {
                 mutableUiState.update {
                     it.copy(uiMode = uiState.value.uiMode.getUiHiddenState())
                 }
