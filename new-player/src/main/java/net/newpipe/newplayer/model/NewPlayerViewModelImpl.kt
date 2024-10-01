@@ -627,6 +627,10 @@ class NewPlayerViewModelImpl @Inject constructor(
     override fun dialogVisible(visible: Boolean) {
         if (visible) {
             hideUiDelayedJob?.cancel()
+            if(!uiState.value.uiMode.videoControllerUiVisible) {
+                changeUiMode(uiState.value.uiMode.getControllerUiVisibleState(), null)
+                hideUiDelayedJob?.cancel()
+            }
         } else {
             startHideUiDelayedJob()
         }

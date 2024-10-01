@@ -142,14 +142,16 @@ fun DropDownMenu(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
                         )
                     })
             }
-            DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_fit_screen)) },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.FitScreen,
-                        contentDescription = stringResource(R.string.menu_item_fit_screen)
-                    )
-                },
-                onClick = { /*TODO*/ showMainMenu = false })
+            if(uiState.uiMode.fullscreen) {
+                DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_fit_screen)) },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Filled.FitScreen,
+                            contentDescription = stringResource(R.string.menu_item_fit_screen)
+                        )
+                    },
+                    onClick = { /*TODO*/ showMainMenu = false })
+            }
             DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_sub_titles)) },
                 leadingIcon = {
                     Icon(
