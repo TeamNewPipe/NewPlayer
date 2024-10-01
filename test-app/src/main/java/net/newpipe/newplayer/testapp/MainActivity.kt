@@ -20,23 +20,25 @@
 
 package net.newpipe.newplayer.testapp
 
-import android.app.PictureInPictureUiState
-import android.os.Build
+import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
+import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.PictureInPictureModeChangedInfo
-import androidx.core.util.Consumer
+import androidx.lifecycle.coroutineScope
+import androidx.media3.common.util.UnstableApi
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import net.newpipe.newplayer.ActivityBrainSlug
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.PlayMode
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelImpl
+import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.testapp.databinding.ActivityMainBinding
 import net.newpipe.newplayer.ui.ContentScale
 import javax.inject.Inject
@@ -46,6 +48,9 @@ class MainActivity : AppCompatActivity() {
 
     val newPlayerViewModel: NewPlayerViewModel by viewModels<NewPlayerViewModelImpl>()
 
+    private var currentOrientation = -1
+    private var reconfigurationPending = false
+
     @Inject
     lateinit var newPlayer: NewPlayer
 
@@ -53,6 +58,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
 
+    @OptIn(UnstableApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -123,11 +129,69 @@ class MainActivity : AppCompatActivity() {
         //// This call has to be inserted into the Activity holding the NewPlayerUI.
         //// Without this transactions into or out of PiP mode don't work.
         ////////////////////////////////////////////////////////////////////////////////////
-        
+
         addOnPictureInPictureModeChangedListener { mode ->
             println("gurken pip mode change isInPipMode: ${mode.isInPictureInPictureMode}")
             newPlayerViewModel.onPictureInPictureModeChanged(mode.isInPictureInPictureMode)
         }
+
+
+
+        /**
+         * This callback is necessary to fix the views screen orientation.
+         * Because pip is enabled, an orientation changes will not trigger a reconfiguration of the activity.
+         * So we have to trigger a reconfiguration manually.
+         * However we want to be carefully with this, since we don't want to trigger a reconfiguration
+         * when the player is in PIP or fullscreen mode.
+         * Also we want to reconfigure the ui when returning for a fullscreen mode.
+         * Which is why we need to listen to mode changes.
+         *
+         * In a pure compose environment such reconfigurations are not necessary. Since NewPipe
+         * might not be fully Compose yet, such hacks are required.
+         */
+        lifecycle.coroutineScope.launch {
+            newPlayerViewModel.uiState.collect { uiState ->
+                if (!uiState.uiMode.fullscreen && uiState.uiMode != UIModeState.PLACEHOLDER) {
+                    if (reconfigurationPending) {
+                        startActivity(
+                            Intent(
+                                this@MainActivity,
+                                this@MainActivity.javaClass
+                            ).apply {
+                                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            })
+                        reconfigurationPending = false
+                    }
+                }
+            }
+        }
     }
 
+    /**
+     * This callback is necessary to fix the views screen orientation.
+     * Because pip is enabled, an orientation changes will not trigger a reconfiguration of the activity.
+     * So we have to trigger a reconfiguration manually.
+     * However we want to be carefully with this, since we don't want to trigger a reconfiguration
+     * when the player is in PIP or fullscreen mode.
+     * Also we want to reconfigure the ui when returning for a fullscreen mode.
+     * Which is why we need to listen to mode changes.
+     *
+     * In a pure compose environment such reconfigurations are not necessary. Since NewPipe
+     * might not be fully Compose yet, such hacks are required.
+     */
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (currentOrientation != newConfig.orientation) {
+            if (!newPlayerViewModel.uiState.value.uiMode.fullscreen) {
+                startActivity(Intent(this, this.javaClass).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                })
+            } else {
+                reconfigurationPending = true
+            }
+            currentOrientation = newConfig.orientation
+        } else {
+            reconfigurationPending = false
+        }
+    }
 }
