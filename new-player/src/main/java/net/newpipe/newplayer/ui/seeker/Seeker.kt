@@ -295,7 +295,6 @@ private fun Seeker(
             modifier = Modifier.fillMaxSize(),
             enabled = enabled,
             segments = segments,
-            chapterSegments = chapterSegments,
             colors = colors,
             widthPx = widthPx,
             valuePx = valuePx,
@@ -310,6 +309,43 @@ private fun Seeker(
             enabled = enabled,
             interactionSource = interactionSource
         )
+        ChapterDots(
+            modifier = Modifier.fillMaxSize(),
+            chapterSegments = chapterSegments,
+            widthPx = widthPx,
+            dimensions = dimensions
+        )
+    }
+}
+
+@Composable
+private fun ChapterDots(
+    modifier: Modifier,
+    chapterSegments: List<SegmentPxs>,
+    widthPx: Float,
+    dimensions: SeekerDimensions
+) {
+    val thumbRadius by dimensions.thumbRadius()
+    val trackHeight by dimensions.trackHeight()
+
+    Canvas(
+        modifier = modifier.graphicsLayer {
+            alpha = 1.0f
+        }
+    ) {
+        val isRtl = layoutDirection == LayoutDirection.Rtl
+        val left = thumbRadius.toPx()
+
+        translate(left = left) {
+            // draw chapters
+            for (index in chapterSegments.indices) {
+                val segment = chapterSegments[index]
+                drawDot(
+                    x = rtlAware(segment.startPx, widthPx, isRtl),
+                    trackHeight = trackHeight.toPx()
+                )
+            }
+        }
     }
 }
 
@@ -318,7 +354,6 @@ private fun Track(
     modifier: Modifier,
     enabled: Boolean,
     segments: List<SegmentPxs>,
-    chapterSegments: List<SegmentPxs>,
     colors: SeekerColors,
     widthPx: Float,
     valuePx: Float,
@@ -385,14 +420,6 @@ private fun Track(
                     trackColor = segmentColor,
                     trackHeight = trackHeight.toPx(),
                     blendMode = BlendMode.SrcOver,
-                )
-            }
-
-            for (index in chapterSegments.indices) {
-                val segment = chapterSegments[index]
-                drawDot(
-                    x = rtlAware(segment.startPx, widthPx, isRtl),
-                    trackHeight = trackHeight.toPx()
                 )
             }
         }
@@ -603,7 +630,7 @@ fun SeekerPreview() {
         ChapterSegment(name = "Talk 2", start = 0.9f, color = Color.Blue),
     )
     Seeker(
-        value = 0.7f,
+        value = 0.55f,
         range = 0f..1f,
         segments = segments,
         chapterSegments = chapterSegments,
