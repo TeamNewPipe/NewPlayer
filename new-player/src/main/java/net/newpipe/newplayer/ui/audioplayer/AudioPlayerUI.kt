@@ -323,7 +323,7 @@ private fun TitleView(modifier: Modifier = Modifier, uiState: NewPlayerUIState) 
 private fun CoverArt(modifier: Modifier = Modifier, uiState: NewPlayerUIState) {
     Box {
         Card(
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
         ) {
             Thumbnail(
                 modifier = Modifier.fillMaxWidth(),
