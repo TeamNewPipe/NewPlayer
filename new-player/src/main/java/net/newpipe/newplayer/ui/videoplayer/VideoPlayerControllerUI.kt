@@ -43,6 +43,7 @@ import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
+import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.controller.BottomUI
 import net.newpipe.newplayer.ui.videoplayer.controller.CenterUI
@@ -145,7 +146,11 @@ fun PreviewBackgroundSurface(
 fun VideoPlayerControllerUIPreviewEmbedded() {
     VideoPlayerTheme {
         PreviewBackgroundSurface {
-            VideoPlayerControllerUI(NewPlayerViewModelDummy(), NewPlayerUIState.DEFAULT)
+            VideoPlayerControllerUI(
+                NewPlayerViewModelDummy(), NewPlayerUIState.DUMMY.copy(
+                    uiMode = UIModeState.EMBEDDED_VIDEO_CONTROLLER_UI
+                )
+            )
         }
     }
 }
@@ -156,7 +161,11 @@ fun VideoPlayerControllerUIPreviewEmbedded() {
 fun VideoPlayerControllerUIPreviewLandscape() {
     VideoPlayerTheme {
         PreviewBackgroundSurface {
-            VideoPlayerControllerUI(NewPlayerViewModelDummy(), NewPlayerUIState.DEFAULT)
+            VideoPlayerControllerUI(
+                NewPlayerViewModelDummy(), NewPlayerUIState.DUMMY.copy(
+                    uiMode = UIModeState.FULLSCREEN_VIDEO_CONTROLLER_UI
+                )
+            )
         }
     }
 }
@@ -167,7 +176,11 @@ fun VideoPlayerControllerUIPreviewLandscape() {
 fun VideoPlayerControllerUIPreviewPortrait() {
     VideoPlayerTheme {
         PreviewBackgroundSurface {
-            VideoPlayerControllerUI(NewPlayerViewModelDummy(), NewPlayerUIState.DEFAULT)
+            VideoPlayerControllerUI(
+                NewPlayerViewModelDummy(), NewPlayerUIState.DUMMY.copy(
+                    uiMode = UIModeState.FULLSCREEN_VIDEO_CONTROLLER_UI
+                )
+            )
         }
     }
 }

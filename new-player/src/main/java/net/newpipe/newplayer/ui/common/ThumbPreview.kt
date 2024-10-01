@@ -22,7 +22,6 @@ package net.newpipe.newplayer.ui.common
 
 import androidx.annotation.OptIn
 import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,12 +30,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderDefaults
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -66,12 +62,12 @@ private const val BOX_PADDING = 4
 @OptIn(UnstableApi::class)
 @Composable
 fun ThumbPreview(
-    viewModel: NewPlayerViewModel,
     uiState: NewPlayerUIState,
+    thumbSize: Dp,
     additionalStartPadding: Int = 0,
     additionalEndPadding: Int = 0,
-    thumbsize: Dp
-) {
+
+    ) {
     var sliderBoxWidth by remember {
         mutableIntStateOf(-10)
     }
@@ -81,7 +77,7 @@ fun ThumbPreview(
     }
 
     val boxPaddingPxls = with(LocalDensity.current) { (BOX_PADDING).dp.toPx() }
-    val thumbSizePxls = with(LocalDensity.current) {(thumbsize.toPx())}
+    val thumbSizePxls = with(LocalDensity.current) {(thumbSize.toPx())}
 
     val previewPosition = additionalStartPadding - boxPaddingPxls + thumbSizePxls/2 +
             ((sliderBoxWidth - additionalEndPadding - additionalStartPadding - (3*boxPaddingPxls))
@@ -98,7 +94,6 @@ fun ThumbPreview(
     Box(
         Modifier
             .fillMaxWidth()
-            .background(Color.Red)
             .height((60 + (2 * BOX_PADDING)).dp)
             .padding(BOX_PADDING.dp)
             .onGloballyPositioned { rect ->
@@ -145,10 +140,10 @@ fun ThumbPreviewPreview() {
                 .background(Color.Green)
         ) {
             ThumbPreview(
-                viewModel = NewPlayerViewModelDummy(), uiState = NewPlayerUIState.DUMMY.copy(
+                uiState = NewPlayerUIState.DUMMY.copy(
                     seekerPosition = sliderPosition
                 ), additionalStartPadding = startOffset, additionalEndPadding = endOffset,
-                20.dp // see handle width
+                thumbSize = 20.dp // see handle width
             )
 
             Row(

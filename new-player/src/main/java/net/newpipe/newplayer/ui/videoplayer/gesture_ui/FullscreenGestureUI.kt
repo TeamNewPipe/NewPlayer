@@ -83,10 +83,17 @@ fun FullscreenGestureUI(
         }
     }
 
-    val activity = LocalContext.current as Activity
+    val defaultBrightness =
+        if (LocalContext.current is Activity)
+            getDefaultBrightness(LocalContext.current as Activity)
+        else
+            -1f
 
-    val defaultBrightness = getDefaultBrightness(activity)
-    val embeddedUiConfig = getEmbeddedUiConfig(activity = activity)
+    val embeddedUiConfig =
+        if (LocalContext.current is Activity)
+            getEmbeddedUiConfig(activity = LocalContext.current as Activity)
+        else
+            EmbeddedUiConfig.DUMMY
 
     Box(modifier = modifier.onGloballyPositioned { coordinates ->
         heightPx = coordinates.size.height.toFloat()
@@ -131,10 +138,13 @@ fun FullscreenGestureUI(
                     }
                 },
                 onMultiTap = { count ->
-                    if(count == 1)  {
-                        if(uiState.playing) {
+                    if (count == 1) {
+                        if (uiState.playing) {
                             viewModel.pause()
-                            viewModel.changeUiMode(uiState.uiMode.getControllerUiVisibleState(), null)
+                            viewModel.changeUiMode(
+                                uiState.uiMode.getControllerUiVisibleState(),
+                                null
+                            )
                         } else {
                             viewModel.play()
                         }
@@ -293,7 +303,7 @@ fun FullscreenGestureUIPreviewInteractive() {
                 },
                 uiState = NewPlayerUIState.DEFAULT.copy(
                     uiMode = if (uiVisible) UIModeState.FULLSCREEN_VIDEO_CONTROLLER_UI
-                        else UIModeState.FULLSCREEN_VIDEO,
+                    else UIModeState.FULLSCREEN_VIDEO,
                     fastSeekSeconds = seekSeconds,
                     soundVolume = soundVolume,
                     brightness = brightnessValue
