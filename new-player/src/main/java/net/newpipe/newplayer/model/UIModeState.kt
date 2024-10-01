@@ -108,15 +108,15 @@ enum class UIModeState {
                 PLACEHOLDER -> false
                 EMBEDDED_VIDEO -> false
                 EMBEDDED_VIDEO_CONTROLLER_UI -> true
-                EMBEDDED_VIDEO_CHAPTER_SELECT -> false
+                EMBEDDED_VIDEO_CHAPTER_SELECT -> true
                 EMBEDDED_VIDEO_STREAM_SELECT -> false
                 FULLSCREEN_VIDEO -> false
                 FULLSCREEN_VIDEO_CONTROLLER_UI -> true
-                FULLSCREEN_VIDEO_CHAPTER_SELECT -> false
+                FULLSCREEN_VIDEO_CHAPTER_SELECT -> true
                 FULLSCREEN_VIDEO_STREAM_SELECT -> false
                 EMBEDDED_AUDIO -> true
                 FULLSCREEN_AUDIO -> true
-                AUDIO_CHAPTER_SELECT -> false
+                AUDIO_CHAPTER_SELECT -> true
                 AUDIO_STREAM_SELECT -> false
                 PIP -> false
             }
