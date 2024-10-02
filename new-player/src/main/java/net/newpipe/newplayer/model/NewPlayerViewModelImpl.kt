@@ -484,7 +484,8 @@ class NewPlayerViewModelImpl @Inject constructor(
         mutableUiState.update {
             it.copy(
                 seekerPosition = newValue,
-                playbackPositionInMs = seekPositionInMs.toLong()
+                playbackPositionInMs = seekPositionInMs.toLong(),
+                seekPreviewVisible = true
             )
         }
     }

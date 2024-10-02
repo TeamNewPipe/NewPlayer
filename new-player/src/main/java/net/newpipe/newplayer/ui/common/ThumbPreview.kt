@@ -22,6 +22,9 @@ package net.newpipe.newplayer.ui.common
 
 import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -32,9 +35,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Slider
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -74,64 +80,81 @@ fun ThumbPreview(
         mutableIntStateOf(-10)
     }
 
+    var previewBoxWidth by remember {
+        mutableIntStateOf(-1)
+    }
+
+    val thumbSizePxls = with(LocalDensity.current) { (thumbSize.toPx()) }
+
+    val previewPosition = additionalStartPadding + thumbSizePxls / 2 +
+            ((sliderBoxWidth - additionalEndPadding - additionalStartPadding - thumbSizePxls)
+                    * uiState.seekerPosition)
+
+    val edgeCorrectedPreviewPosition =
+        if (previewPosition < (previewBoxWidth / 2))
+            0
+        else if ((sliderBoxWidth - previewBoxWidth / 2) < previewPosition)
+            sliderBoxWidth - previewBoxWidth
+        else
+            previewPosition - (previewBoxWidth / 2)
+
+
     Box(
         Modifier
             .fillMaxWidth()
             .height((60 + (2 * BOX_PADDING)).dp)
-            .padding(BOX_PADDING.dp)
             .onGloballyPositioned { rect ->
                 sliderBoxWidth = rect.size.width
             }) {
-        AnimatedVisibility(visible = uiState.seekPreviewVisible) {
-            var previewBoxWidth by remember {
-                mutableIntStateOf(-1)
-            }
-
-            val boxPaddingPxls = with(LocalDensity.current) { (BOX_PADDING).dp.toPx() }
-            val thumbSizePxls = with(LocalDensity.current) { (thumbSize.toPx()) }
-
-            val previewPosition = additionalStartPadding - boxPaddingPxls + thumbSizePxls / 2 +
-                    ((sliderBoxWidth - additionalEndPadding - additionalStartPadding - (3 * boxPaddingPxls))
-                            * uiState.seekerPosition)
-
-            val edgeCorrectedPreviewPosition =
-                if (previewPosition < (previewBoxWidth / 2))
-                    0
-                else if ((sliderBoxWidth - previewBoxWidth / 2) < previewPosition)
-                    sliderBoxWidth - previewBoxWidth
-                else
-                    previewPosition - (previewBoxWidth / 2)
-
-
-            Card(modifier = Modifier
-                .onGloballyPositioned { rect ->
-                    previewBoxWidth = rect.size.width
-                }
-                .offset { IntOffset(edgeCorrectedPreviewPosition.toInt(), 0) },
-                elevation = CardDefaults.cardElevation(BOX_PADDING.dp)
+        /* disable Animated visibility becaus its kind of janky
+        AnimatedVisibility(
+            visible = uiState.seekPreviewVisible,
+            enter = fadeIn(animationSpec = tween(200)),
+            exit = fadeOut(animationSpec = tween(400))
+        )*/
+        if (uiState.seekPreviewVisible) {
+            Box(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .onGloballyPositioned { rect ->
+                        previewBoxWidth = rect.size.width.let {
+                            /// if the box size is 0 we don't want it to be rendered offscreen
+                            if (it == 0)
+                                Int.MIN_VALUE / 2
+                            else
+                                it
+                        }
+                    }
+                    .offset { IntOffset(edgeCorrectedPreviewPosition.toInt(), 0) },
             ) {
-                Thumbnail(thumbnail = null, contentDescription = "gurken")
-                /*
-                uiState.currentSeekPreviewThumbnail?.let {
+                Card(
+                    modifier = Modifier
+                        .padding(BOX_PADDING.dp),
+                    elevation = CardDefaults.cardElevation(BOX_PADDING.dp)
+                ) {
+                    Thumbnail(thumbnail = null, contentDescription = "gurken")
+                    /*
+            uiState.currentSeekPreviewThumbnail?.let {
 
-                    Image(
-                        bitmap = it,
-                        contentDescription = stringResource(id = R.string.seek_thumb_preview)
-                    )
-                }
-
-                 */
+                Image(
+                    bitmap = it,
+                    contentDescription = stringResource(id = R.string.seek_thumb_preview)
+                )
             }
 
-            /*
-            Surface(
+             */
+                }
+            }
+        }
+
+        /*
+        Surface(
             modifier = Modifier
                 .size(10.dp, 10.dp)
                 .offset { IntOffset(previewPosition.toInt(), 200) }, color = Color.Blue
-            ) {
-            }
-            */
+        ) {
         }
+        */
     }
 }
 
@@ -153,7 +176,8 @@ fun ThumbPreviewPreview() {
         ) {
             ThumbPreview(
                 uiState = NewPlayerUIState.DUMMY.copy(
-                    seekerPosition = sliderPosition
+                    seekerPosition = sliderPosition,
+                    seekPreviewVisible = true
                 ), additionalStartPadding = startOffset, additionalEndPadding = endOffset,
                 thumbSize = 20.dp // see handle width
             )
