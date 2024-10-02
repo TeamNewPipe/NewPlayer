@@ -379,6 +379,10 @@ class NewPlayerImpl(
         uniqueIdToIdLookup[mediaItem.mediaId.toLong()]
             ?: throw NewPlayerException("Could not find Media item with mediaId: ${mediaItem.mediaId}")
 
+    override fun getItemFromMediaItem(mediaItem: MediaItem) =
+        uniqueIdToIdLookup[mediaItem.mediaId.toLong()]
+            ?: throw NewPlayerException("Could not find an item corresponding to a media item with uniqueid: ${mediaItem.mediaId}")
+
     @OptIn(UnstableApi::class)
     private fun internalPlayStream(mediaSource: MediaSource, playMode: PlayMode) {
         if (exoPlayer.value?.playbackState == Player.STATE_IDLE || exoPlayer.value == null) {

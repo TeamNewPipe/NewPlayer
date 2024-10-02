@@ -176,7 +176,7 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
         }
 
 
-    override suspend fun getPreviewThumbnails(item: String, timestampInMs: Long): Bitmap? {
+    override suspend fun getPreviewThumbnail(item: String, timestampInMs: Long): Bitmap? {
         val templateUrl = when (item) {
             "6502" -> context.getString(R.string.ccc_6502_preview_thumbnails)
             "imu" -> context.getString(R.string.ccc_imu_preview_thumbnails)

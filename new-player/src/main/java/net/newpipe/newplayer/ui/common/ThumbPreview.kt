@@ -21,6 +21,8 @@ package net.newpipe.newplayer.ui.common
  */
 
 import androidx.annotation.OptIn
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -66,30 +68,11 @@ fun ThumbPreview(
     thumbSize: Dp,
     additionalStartPadding: Int = 0,
     additionalEndPadding: Int = 0,
+) {
 
-    ) {
     var sliderBoxWidth by remember {
         mutableIntStateOf(-10)
     }
-
-    var previewBoxWidth by remember {
-        mutableIntStateOf(-1)
-    }
-
-    val boxPaddingPxls = with(LocalDensity.current) { (BOX_PADDING).dp.toPx() }
-    val thumbSizePxls = with(LocalDensity.current) {(thumbSize.toPx())}
-
-    val previewPosition = additionalStartPadding - boxPaddingPxls + thumbSizePxls/2 +
-            ((sliderBoxWidth - additionalEndPadding - additionalStartPadding - (3*boxPaddingPxls))
-                    * uiState.seekerPosition)
-
-    val edgeCorrectedPreviewPosition =
-        if (previewPosition < (previewBoxWidth / 2))
-            0
-        else if ((sliderBoxWidth - previewBoxWidth / 2) < previewPosition)
-            sliderBoxWidth - previewBoxWidth
-        else
-            previewPosition - (previewBoxWidth / 2)
 
     Box(
         Modifier
@@ -99,27 +82,56 @@ fun ThumbPreview(
             .onGloballyPositioned { rect ->
                 sliderBoxWidth = rect.size.width
             }) {
-        Card(modifier = Modifier
-            .onGloballyPositioned { rect ->
-                previewBoxWidth = rect.size.width
+        AnimatedVisibility(visible = uiState.seekPreviewVisible) {
+            var previewBoxWidth by remember {
+                mutableIntStateOf(-1)
             }
-            .offset { IntOffset(edgeCorrectedPreviewPosition.toInt(), 0) },
-            elevation = CardDefaults.cardElevation(BOX_PADDING.dp)
-        ) {
-            Thumbnail(
-                thumbnail = null,
-                contentDescription = stringResource(id = R.string.seek_thumb_preview)
-            )
-        }
 
-        /*
-        Surface(
+            val boxPaddingPxls = with(LocalDensity.current) { (BOX_PADDING).dp.toPx() }
+            val thumbSizePxls = with(LocalDensity.current) { (thumbSize.toPx()) }
+
+            val previewPosition = additionalStartPadding - boxPaddingPxls + thumbSizePxls / 2 +
+                    ((sliderBoxWidth - additionalEndPadding - additionalStartPadding - (3 * boxPaddingPxls))
+                            * uiState.seekerPosition)
+
+            val edgeCorrectedPreviewPosition =
+                if (previewPosition < (previewBoxWidth / 2))
+                    0
+                else if ((sliderBoxWidth - previewBoxWidth / 2) < previewPosition)
+                    sliderBoxWidth - previewBoxWidth
+                else
+                    previewPosition - (previewBoxWidth / 2)
+
+
+            Card(modifier = Modifier
+                .onGloballyPositioned { rect ->
+                    previewBoxWidth = rect.size.width
+                }
+                .offset { IntOffset(edgeCorrectedPreviewPosition.toInt(), 0) },
+                elevation = CardDefaults.cardElevation(BOX_PADDING.dp)
+            ) {
+                Thumbnail(thumbnail = null, contentDescription = "gurken")
+                /*
+                uiState.currentSeekPreviewThumbnail?.let {
+
+                    Image(
+                        bitmap = it,
+                        contentDescription = stringResource(id = R.string.seek_thumb_preview)
+                    )
+                }
+
+                 */
+            }
+
+            /*
+            Surface(
             modifier = Modifier
                 .size(10.dp, 10.dp)
                 .offset { IntOffset(previewPosition.toInt(), 200) }, color = Color.Blue
-        ) {
+            ) {
+            }
+            */
         }
-         */
     }
 }
 

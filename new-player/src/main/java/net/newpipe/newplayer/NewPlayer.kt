@@ -95,4 +95,5 @@ interface NewPlayer {
     fun selectChapter(index: Int)
     fun release()
     fun getItemLinkOfMediaItem(mediaItem: MediaItem) : String
+    fun getItemFromMediaItem(mediaItem: MediaItem) : String
 }

@@ -21,13 +21,13 @@
 package net.newpipe.newplayer.model
 
 import android.app.Application
-import android.app.PictureInPictureUiState
 import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.OptIn
 import androidx.annotation.RequiresApi
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
@@ -76,6 +76,7 @@ class NewPlayerViewModelImpl @Inject constructor(
     private var hideUiDelayedJob: Job? = null
     private var progressUpdaterJob: Job? = null
     private var playlistProgressUpdaterJob: Job? = null
+    private var updatePreviewThumbnailJob: Job? = null
 
     // this is necesary to restore the embedded view UI configuration when returning from fullscreen
     private var embeddedUiConfig: EmbeddedUiConfig? = null
@@ -369,7 +370,7 @@ class NewPlayerViewModelImpl @Inject constructor(
 
         // notify the UI itself about the change of the UIMode
         if (newUiModeState == UIModeState.PIP) {
-            if(uiState.value.uiMode.inAudioMode) {
+            if (uiState.value.uiMode.inAudioMode) {
                 mutableUiState.update {
                     it.copy(uiMode = uiState.value.uiMode.getVideoEquivalent())
                 }
@@ -470,12 +471,16 @@ class NewPlayerViewModelImpl @Inject constructor(
     }
 
     override fun seekPositionChanged(newValue: Float) {
+        if (uiState.value.uiMode.videoControllerUiVisible) {
+            changeUiMode(uiState.value.uiMode.getControllerUiVisibleState(), null)
+        }
         hideUiDelayedJob?.cancel()
         progressUpdaterJob?.cancel()
         val seekerPosition = mutableUiState.value.seekerPosition
         val seekPositionInMs = (newPlayer?.duration?.toFloat() ?: 0F) * seekerPosition
         newPlayer?.currentPosition = seekPositionInMs.toLong()
         Log.i(TAG, "Seek to Ms: $seekPositionInMs")
+
         mutableUiState.update {
             it.copy(
                 seekerPosition = newValue,
@@ -484,10 +489,34 @@ class NewPlayerViewModelImpl @Inject constructor(
         }
     }
 
+    private fun updateSeekPreviewThumbnail(seekPositionInMs: Long) {
+        updatePreviewThumbnailJob?.cancel()
+        mutableUiState.update {
+            it.copy(currentSeekPreviewThumbnail = null)
+        }
+        updatePreviewThumbnailJob = viewModelScope.launch {
+            val item = newPlayer?.currentlyPlaying?.value?.let {
+                newPlayer?.getItemFromMediaItem(it)
+            }
+            item?.let {
+                val bitmap = newPlayer?.repository?.getPreviewThumbnail(item, seekPositionInMs)
+                mutableUiState.update {
+                    it.copy(
+                        currentSeekPreviewThumbnail = bitmap?.asImageBitmap(),
+                        seekPreviewVisible = true
+                    )
+                }
+            }
+        }
+    }
+
     override fun seekingFinished() {
         val seekerPosition = mutableUiState.value.seekerPosition
         val seekPositionInMs = (newPlayer?.duration?.toFloat() ?: 0F) * seekerPosition
         newPlayer?.currentPosition = seekPositionInMs.toLong()
+        mutableUiState.update {
+            it.copy(seekPreviewVisible = false)
+        }
 
         startHideUiDelayedJob()
         startProgressUpdatePeriodicallyJob()
@@ -508,7 +537,6 @@ class NewPlayerViewModelImpl @Inject constructor(
                 fastSeekSeconds = fastSeekAmountInS
             )
         }
-
 
         if (fastSeekAmountInS != 0) {
             Log.d(TAG, "fast seeking seeking by $fastSeekAmountInS seconds")
@@ -627,7 +655,7 @@ class NewPlayerViewModelImpl @Inject constructor(
     override fun dialogVisible(visible: Boolean) {
         if (visible) {
             hideUiDelayedJob?.cancel()
-            if(!uiState.value.uiMode.videoControllerUiVisible) {
+            if (!uiState.value.uiMode.videoControllerUiVisible) {
                 changeUiMode(uiState.value.uiMode.getControllerUiVisibleState(), null)
                 hideUiDelayedJob?.cancel()
             }

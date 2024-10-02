@@ -20,7 +20,8 @@
 
 package net.newpipe.newplayer.model
 
-import android.net.Uri
+import android.graphics.Bitmap
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.util.UnstableApi
@@ -56,7 +57,9 @@ data class NewPlayerUIState(
     val availableStreamVariants: List<String>,
     val availableLanguages: List<String>,
     val availableSubtitles: List<String>,
-    val enteringPip: Boolean
+    val enteringPip: Boolean,
+    val currentSeekPreviewThumbnail: ImageBitmap?,
+    val seekPreviewVisible: Boolean
 ) {
     companion object {
         val DEFAULT = NewPlayerUIState(
@@ -85,7 +88,9 @@ data class NewPlayerUIState(
             availableLanguages = emptyList(),
             availableSubtitles = emptyList(),
             availableStreamVariants = emptyList(),
-            enteringPip = false
+            enteringPip = false,
+            currentSeekPreviewThumbnail = null,
+            seekPreviewVisible = false
         )
 
         val DUMMY = DEFAULT.copy(

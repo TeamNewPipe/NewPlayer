@@ -75,7 +75,7 @@ interface MediaRepository {
 
     suspend fun getSubtitles(item: String): List<Subtitle>
 
-    suspend fun getPreviewThumbnails(item: String, timestampInMs: Long): Bitmap?
+    suspend fun getPreviewThumbnail(item: String, timestampInMs: Long): Bitmap?
 
     suspend fun getChapters(item: String): List<Chapter>
 
