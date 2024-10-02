@@ -1,11 +1,15 @@
 package net.newpipe.newplayer.testapp
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import androidx.annotation.OptIn
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.util.UnstableApi
+import coil.ImageLoader
+import coil.request.ImageRequest
 import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.MediaRepository
 import net.newpipe.newplayer.RepoMetaInfo
@@ -16,8 +20,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 
-class TestMediaRepository(val context: Context) : MediaRepository {
-    val client = OkHttpClient()
+class TestMediaRepository(private val context: Context) : MediaRepository {
+    private val client = OkHttpClient()
 
     private fun get(url: String): Response {
         val request = Request.Builder()
@@ -25,6 +29,8 @@ class TestMediaRepository(val context: Context) : MediaRepository {
             .build()
         return client.newCall(request).execute()
     }
+
+    private val imageLoader = ImageLoader(context)
 
     override fun getRepoInfo() =
         RepoMetaInfo(canHandleTimestampedLinks = true, pullsDataFromNetwrok = true)
@@ -170,7 +176,7 @@ class TestMediaRepository(val context: Context) : MediaRepository {
         }
 
 
-    override suspend fun getPreviewThumbnails(item: String): HashMap<Long, Uri>? {
+    override suspend fun getPreviewThumbnails(item: String, timestampInMs: Long): Bitmap? {
         val templateUrl = when (item) {
             "6502" -> context.getString(R.string.ccc_6502_preview_thumbnails)
             "imu" -> context.getString(R.string.ccc_imu_preview_thumbnails)
@@ -186,14 +192,21 @@ class TestMediaRepository(val context: Context) : MediaRepository {
                 else -> throw Exception("Unknown stream: $item")
             }
 
-            var thumbMap = HashMap<Long, Uri>()
-
-            for (i in 1..thumbCount) {
-                val timeStamp = (i - 1) * 10 * 1000
-                thumbMap.put(timeStamp.toLong(), Uri.parse(String.format(templateUrl, i)))
+            val thumbnailTimestamp = timestampInMs / (10 * 1000)
+            if(thumbCount < thumbnailTimestamp) {
+                return null
             }
 
-            return thumbMap
+            val thumbUri = Uri.parse(String.format(templateUrl, thumbnailTimestamp))
+
+            val request = ImageRequest.Builder(context)
+                .data(thumbUri)
+                .size(Int.MAX_VALUE, Int.MAX_VALUE)
+                .build()
+
+            val result = imageLoader.execute(request).drawable
+            val bitmap = (result as BitmapDrawable).bitmap
+            return bitmap
         } else {
             return null
         }

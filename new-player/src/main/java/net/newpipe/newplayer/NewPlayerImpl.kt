@@ -61,11 +61,10 @@ private const val TAG = "NewPlayerImpl"
 class NewPlayerImpl(
     val app: Application,
     override val playerActivityClass: Class<Activity>,
-    private val repository: MediaRepository,
+    override val repository: MediaRepository,
     override val preferredVideoVariants: List<String> = emptyList(),
     override val preferredStreamLanguage: List<String> = emptyList(),
     override val preferredAudioVariants: List<String> = emptyList(),
-    val httpDataSourceFactory: HttpDataSource.Factory = DefaultHttpDataSource.Factory(),
     override val notificationIcon: IconCompat = IconCompat.createWithResource(
         app,
         R.drawable.new_player_tiny_icon
@@ -406,7 +405,7 @@ class NewPlayerImpl(
             repository = repository,
             uniqueIdToIdLookup = uniqueIdToIdLookup,
             mutableErrorFlow = mutableErrorFlow,
-            httpDataSourceFactory = httpDataSourceFactory
+            httpDataSourceFactory = repository.getHttpDataSourceFactory(item)
         )
 
         val selection = streamSelector.selectStream(

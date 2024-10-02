@@ -20,9 +20,12 @@
 
 package net.newpipe.newplayer
 
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
+import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.datasource.HttpDataSource
 
 data class Chapter(val chapterStartInMs: Long, val chapterTitle: String?, val thumbnail: Uri?)
 
@@ -64,13 +67,16 @@ interface MediaRepository {
 
     fun getRepoInfo(): RepoMetaInfo
 
+    fun getHttpDataSourceFactory(item: String): HttpDataSource.Factory = DefaultHttpDataSource.Factory()
+
     suspend fun getMetaInfo(item: String): MediaMetadata
 
     suspend fun getStreams(item: String): List<Stream>
 
     suspend fun getSubtitles(item: String): List<Subtitle>
 
-    suspend fun getPreviewThumbnails(item: String): HashMap<Long, Uri>?
+    suspend fun getPreviewThumbnails(item: String, timestampInMs: Long): Bitmap?
+
     suspend fun getChapters(item: String): List<Chapter>
 
     suspend fun getTimestampLink(item: String, timestampInSeconds: Long): String

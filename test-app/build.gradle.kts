@@ -105,6 +105,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.coil.compose)
 
     // development impl
     implementation(project(":new-player"))

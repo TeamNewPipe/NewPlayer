@@ -68,6 +68,7 @@ interface NewPlayer {
     val playBackMode: MutableStateFlow<PlayMode>
     var shuffle: Boolean
     var repeatMode: RepeatMode
+    val repository: MediaRepository
 
     val playlist: StateFlow<List<MediaItem>>
     val currentlyPlaying: StateFlow<MediaItem?>
