@@ -31,6 +31,7 @@ import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PictureInPicture
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Speed
 import androidx.compose.material.icons.filled.Subtitles
 import androidx.compose.material.icons.filled.Translate
 import androidx.compose.material3.DropdownMenu
@@ -126,6 +127,14 @@ fun DropDownMenu(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
                 viewModel.changeUiMode(UIModeState.FULLSCREEN_AUDIO, embeddedUiConfig)
                 showMainMenu = false
             })
+            DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_playback_speed)) },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Speed,
+                        contentDescription = stringResource(R.string.menu_item_playback_speed)
+                    )
+                },
+                onClick = { /*TODO*/ showMainMenu = false })
             if (supportsPip(LocalContext.current)) {
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.pip_button_description)) },
