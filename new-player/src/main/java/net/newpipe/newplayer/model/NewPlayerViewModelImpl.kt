@@ -481,6 +481,7 @@ class NewPlayerViewModelImpl @Inject constructor(
         newPlayer?.currentPosition = seekPositionInMs.toLong()
         Log.i(TAG, "Seek to Ms: $seekPositionInMs")
 
+        updateSeekPreviewThumbnail(seekPositionInMs.toLong())
         mutableUiState.update {
             it.copy(
                 seekerPosition = newValue,
@@ -491,21 +492,24 @@ class NewPlayerViewModelImpl @Inject constructor(
     }
 
     private fun updateSeekPreviewThumbnail(seekPositionInMs: Long) {
-        updatePreviewThumbnailJob?.cancel()
-        mutableUiState.update {
-            it.copy(currentSeekPreviewThumbnail = null)
-        }
-        updatePreviewThumbnailJob = viewModelScope.launch {
-            val item = newPlayer?.currentlyPlaying?.value?.let {
-                newPlayer?.getItemFromMediaItem(it)
+        if (updatePreviewThumbnailJob == null) {
+            updatePreviewThumbnailJob?.cancel()
+            mutableUiState.update {
+                it.copy(currentSeekPreviewThumbnail = null)
             }
-            item?.let {
-                val bitmap = newPlayer?.repository?.getPreviewThumbnail(item, seekPositionInMs)
-                mutableUiState.update {
-                    it.copy(
-                        currentSeekPreviewThumbnail = bitmap?.asImageBitmap(),
-                        seekPreviewVisible = true
-                    )
+
+            updatePreviewThumbnailJob = viewModelScope.launch {
+                val item = newPlayer?.currentlyPlaying?.value?.let {
+                    newPlayer?.getItemFromMediaItem(it)
+                }
+                item?.let {
+                    val bitmap = newPlayer?.repository?.getPreviewThumbnail(item, seekPositionInMs)
+                    mutableUiState.update {
+                        it.copy(
+                            currentSeekPreviewThumbnail = bitmap?.asImageBitmap(),
+                            seekPreviewVisible = true
+                        )
+                    }
                 }
             }
         }

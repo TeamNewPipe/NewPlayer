@@ -10,6 +10,8 @@ import androidx.media3.common.PlaybackException
 import androidx.media3.common.util.UnstableApi
 import coil.ImageLoader
 import coil.request.ImageRequest
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.MediaRepository
 import net.newpipe.newplayer.RepoMetaInfo
@@ -177,6 +179,11 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
 
 
     override suspend fun getPreviewThumbnail(item: String, timestampInMs: Long): Bitmap? {
+
+        /* Coil ImageLoader keeps crashing with the most obscure error I've ever seen, taking down the whole runtime. */
+        /* Due to this, the request foo here is deactivated */
+        return null
+
         val templateUrl = when (item) {
             "6502" -> context.getString(R.string.ccc_6502_preview_thumbnails)
             "imu" -> context.getString(R.string.ccc_imu_preview_thumbnails)
@@ -192,8 +199,8 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
                 else -> throw Exception("Unknown stream: $item")
             }
 
-            val thumbnailTimestamp = timestampInMs / (10 * 1000)
-            if(thumbCount < thumbnailTimestamp) {
+            val thumbnailTimestamp = (timestampInMs / (10 * 1000)) + 1
+            if (thumbCount < thumbnailTimestamp) {
                 return null
             }
 
@@ -204,8 +211,10 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
                 .size(Int.MAX_VALUE, Int.MAX_VALUE)
                 .build()
 
+            /*TODO: Shit keeps crashing so the hole thing is deactivated */
             val result = imageLoader.execute(request).drawable
-            val bitmap = (result as BitmapDrawable).bitmap
+
+            val bitmap = (result as BitmapDrawable?)?.bitmap
             return bitmap
         } else {
             return null

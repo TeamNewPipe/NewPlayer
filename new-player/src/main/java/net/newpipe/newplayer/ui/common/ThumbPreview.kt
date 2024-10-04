@@ -131,17 +131,12 @@ fun ThumbPreview(
                         .padding(BOX_PADDING.dp),
                     elevation = CardDefaults.cardElevation(BOX_PADDING.dp)
                 ) {
-                    Thumbnail(thumbnail = null, contentDescription = "gurken")
-                    /*
-            uiState.currentSeekPreviewThumbnail?.let {
-
-                Image(
-                    bitmap = it,
-                    contentDescription = stringResource(id = R.string.seek_thumb_preview)
-                )
-            }
-
-             */
+                    uiState.currentSeekPreviewThumbnail?.let {
+                        Image(
+                            bitmap = it,
+                            contentDescription = stringResource(id = R.string.seek_thumb_preview)
+                        )
+                    }
                 }
             }
         }
