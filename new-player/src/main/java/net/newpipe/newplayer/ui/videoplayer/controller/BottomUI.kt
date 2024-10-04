@@ -85,12 +85,13 @@ fun BottomUI(
 
     val seekerPaddingPx = with(LocalDensity.current) { SEEKER_PADDING.dp.toPx() }
 
-    Column(modifier = modifier){
+    Column(modifier = modifier) {
         ThumbPreview(
             uiState = uiState,
             thumbSize = SeekerDefaults.ThumbRadius * 2,
             additionalStartPadding = previewPaddingStart.toInt(),
-            additionalEndPadding = previewPaddingEnd.toInt()
+            additionalEndPadding = previewPaddingEnd.toInt(),
+            previewHeight = if (uiState.uiMode.fullscreen) 90.dp else 60.dp
         )
 
         Row(

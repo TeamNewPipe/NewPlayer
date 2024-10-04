@@ -74,17 +74,17 @@ fun ThumbPreview(
     thumbSize: Dp,
     additionalStartPadding: Int = 0,
     additionalEndPadding: Int = 0,
+    previewHeight: Dp = 60.dp
 ) {
+    val thumbSizePxls = with(LocalDensity.current) { thumbSize.toPx() }
 
     var sliderBoxWidth by remember {
-        mutableIntStateOf(-10)
+        mutableIntStateOf(-1)
     }
 
     var previewBoxWidth by remember {
         mutableIntStateOf(-1)
     }
-
-    val thumbSizePxls = with(LocalDensity.current) { (thumbSize.toPx()) }
 
     val previewPosition = additionalStartPadding + thumbSizePxls / 2 +
             ((sliderBoxWidth - additionalEndPadding - additionalStartPadding - thumbSizePxls)
@@ -98,11 +98,13 @@ fun ThumbPreview(
         else
             previewPosition - (previewBoxWidth / 2)
 
+    val glitchCorrectedPreviewPosition =
+        if (sliderBoxWidth < 0 || previewBoxWidth < 0) 999999999 else edgeCorrectedPreviewPosition
 
     Box(
         Modifier
             .fillMaxWidth()
-            .height((60 + (2 * BOX_PADDING)).dp)
+            .height((2 * BOX_PADDING).dp + previewHeight)
             .onGloballyPositioned { rect ->
                 sliderBoxWidth = rect.size.width
             }) {
@@ -117,15 +119,12 @@ fun ThumbPreview(
                 modifier = Modifier
                     .wrapContentSize()
                     .onGloballyPositioned { rect ->
-                        previewBoxWidth = rect.size.width.let {
-                            /// if the box size is 0 we don't want it to be rendered offscreen
-                            if (it == 0)
-                                Int.MIN_VALUE / 2
-                            else
-                                it
+                        val width = rect.size.width
+                        if (width != 0) {
+                            previewBoxWidth = width
                         }
                     }
-                    .offset { IntOffset(edgeCorrectedPreviewPosition.toInt(), 0) },
+                    .offset { IntOffset(glitchCorrectedPreviewPosition.toInt(), 0) },
             ) {
                 Card(
                     modifier = Modifier
