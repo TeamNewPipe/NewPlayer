@@ -225,7 +225,7 @@ private fun PortraitLayout(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .weight(1f)
+                        .weight(0.5f)
                 )
                 CoverArt(uiState = uiState)
                 Box(
@@ -239,17 +239,17 @@ private fun PortraitLayout(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .weight(0.6f)
+                        .weight(0.45f)
                 )
+                AudioPlaybackController(viewModel = viewModel, uiState = uiState)
 
-                ProgressUI(viewModel = viewModel, uiState = uiState)
 
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .weight(0.2f)
                 )
-                AudioPlaybackController(viewModel = viewModel, uiState = uiState)
+                ProgressUI(viewModel = viewModel, uiState = uiState)
                 Box(
                     modifier = Modifier
                         .fillMaxSize()

@@ -2,6 +2,7 @@ package net.newpipe.newplayer.testapp
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import androidx.annotation.OptIn
@@ -24,6 +25,7 @@ import okhttp3.Response
 
 class TestMediaRepository(private val context: Context) : MediaRepository {
     private val client = OkHttpClient()
+    private val thumbnailCache = HashMap<String, Bitmap>()
 
     private fun get(url: String): Response {
         val request = Request.Builder()
@@ -31,8 +33,6 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
             .build()
         return client.newCall(request).execute()
     }
-
-    private val imageLoader = ImageLoader(context)
 
     override fun getRepoInfo() =
         RepoMetaInfo(canHandleTimestampedLinks = true, pullsDataFromNetwrok = true)
@@ -180,10 +180,6 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
 
     override suspend fun getPreviewThumbnail(item: String, timestampInMs: Long): Bitmap? {
 
-        /* Coil ImageLoader keeps crashing with the most obscure error I've ever seen, taking down the whole runtime. */
-        /* Due to this, the request foo here is deactivated */
-        return null
-
         val templateUrl = when (item) {
             "6502" -> context.getString(R.string.ccc_6502_preview_thumbnails)
             "imu" -> context.getString(R.string.ccc_imu_preview_thumbnails)
@@ -192,33 +188,43 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
             else -> throw Exception("Unknown stream: $item")
         }
 
-        if (templateUrl != null) {
-            val thumbCount = when (item) {
-                "6502" -> 312
-                "imu" -> 361
-                else -> throw Exception("Unknown stream: $item")
-            }
+        val thumbCount = when (item) {
+            "6502" -> 312
+            "imu" -> 361
+            else -> throw Exception("Unknown stream: $item")
+        }
 
-            val thumbnailTimestamp = (timestampInMs / (10 * 1000)) + 1
-            if (thumbCount < thumbnailTimestamp) {
-                return null
-            }
-
-            val thumbUri = Uri.parse(String.format(templateUrl, thumbnailTimestamp))
-
-            val request = ImageRequest.Builder(context)
-                .data(thumbUri)
-                .size(Int.MAX_VALUE, Int.MAX_VALUE)
-                .build()
-
-            /*TODO: Shit keeps crashing so the hole thing is deactivated */
-            val result = imageLoader.execute(request).drawable
-
-            val bitmap = (result as BitmapDrawable?)?.bitmap
-            return bitmap
-        } else {
+        //val thumbnailTimestamp = (timestampInMs / (10 * 1000)) + 1
+        val thumbnailTimestamp = 20
+        if (thumbCount < thumbnailTimestamp) {
             return null
         }
+
+        if(templateUrl == null)
+            return null
+
+        val thumbUrl = String.format(templateUrl, thumbnailTimestamp)
+
+        thumbnailCache[thumbUrl]?.let {
+            return it
+        }
+
+        val bitmap = withContext(Dispatchers.IO) {
+            val request = Request.Builder().url(thumbUrl).build()
+            val response = client.newCall(request).execute()
+            try {
+                val responseBody = response.body
+                val bitmap = BitmapFactory.decodeStream(responseBody.byteStream())
+                return@withContext bitmap
+            } catch (e: Exception) {
+                return@withContext null
+            }
+        }
+        if(bitmap != null) {
+            thumbnailCache[thumbUrl] = bitmap
+        }
+
+        return bitmap
     }
 
     override suspend fun getChapters(item: String) =
