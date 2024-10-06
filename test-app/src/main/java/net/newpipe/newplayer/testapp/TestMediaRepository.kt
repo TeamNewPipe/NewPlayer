@@ -3,15 +3,16 @@ package net.newpipe.newplayer.testapp
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import androidx.annotation.OptIn
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.util.UnstableApi
-import coil.ImageLoader
-import coil.request.ImageRequest
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.MediaRepository
@@ -26,6 +27,7 @@ import okhttp3.Response
 class TestMediaRepository(private val context: Context) : MediaRepository {
     private val client = OkHttpClient()
     private val thumbnailCache = HashMap<String, Bitmap>()
+    private val testRepoScope = CoroutineScope(Dispatchers.Main + Job())
 
     private fun get(url: String): Response {
         val request = Request.Builder()
@@ -81,8 +83,12 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
         }
 
 
-    override suspend fun getStreams(item: String) =
-        when (item) {
+    override suspend fun getStreams(item: String) : List<Stream> {
+        testRepoScope.launch {
+            populateSeekPreviewThumbnailCache(item)
+        }
+
+        return when (item) {
             "6502" -> listOf(
                 Stream(
                     streamUri = Uri.parse(context.getString(R.string.ccc_6502_video)),
@@ -163,6 +169,7 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
 
             else -> throw Exception("Unknown item: $item")
         }
+    }
 
 
     override suspend fun getSubtitles(item: String) =
@@ -177,14 +184,12 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
             else -> emptyList()
         }
 
-
-    override suspend fun getPreviewThumbnail(item: String, timestampInMs: Long): Bitmap? {
-
+    private suspend fun populateSeekPreviewThumbnailCache(item: String) {
         val templateUrl = when (item) {
             "6502" -> context.getString(R.string.ccc_6502_preview_thumbnails)
             "imu" -> context.getString(R.string.ccc_imu_preview_thumbnails)
-            "portrait" -> null
-            "ty_test" -> null
+            "portrait" -> return
+            "ty_test" -> return
             else -> throw Exception("Unknown stream: $item")
         }
 
@@ -194,14 +199,49 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
             else -> throw Exception("Unknown stream: $item")
         }
 
-        //val thumbnailTimestamp = (timestampInMs / (10 * 1000)) + 1
-        val thumbnailTimestamp = 20
+        for(i in 1 .. thumbCount) {
+            val thumbUrl = String.format(templateUrl, i)
+
+            if(thumbnailCache[thumbUrl] == null) {
+                val bitmap = withContext(Dispatchers.IO) {
+                    val request = Request.Builder().url(thumbUrl).build()
+                    val response = client.newCall(request).execute()
+                    try {
+                        val responseBody = response.body
+                        val bitmap = BitmapFactory.decodeStream(responseBody.byteStream())
+                        return@withContext bitmap
+                    } catch (e: Exception) {
+                        return@withContext null
+                    }
+                }
+                if (bitmap != null) {
+                    thumbnailCache[thumbUrl] = bitmap
+                }
+            }
+        }
+    }
+
+    override suspend fun getPreviewThumbnail(item: String, timestampInMs: Long): Bitmap? {
+
+        val templateUrl = when (item) {
+            "6502" -> context.getString(R.string.ccc_6502_preview_thumbnails)
+            "imu" -> context.getString(R.string.ccc_imu_preview_thumbnails)
+            "portrait" -> return null
+            "ty_test" -> return null
+            else -> throw Exception("Unknown stream: $item")
+        }
+
+        val thumbCount = when (item) {
+            "6502" -> 312
+            "imu" -> 361
+            else -> throw Exception("Unknown stream: $item")
+        }
+
+        val thumbnailTimestamp = (timestampInMs / (10 * 1000)) + 1
+
         if (thumbCount < thumbnailTimestamp) {
             return null
         }
-
-        if(templateUrl == null)
-            return null
 
         val thumbUrl = String.format(templateUrl, thumbnailTimestamp)
 
@@ -209,22 +249,7 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
             return it
         }
 
-        val bitmap = withContext(Dispatchers.IO) {
-            val request = Request.Builder().url(thumbUrl).build()
-            val response = client.newCall(request).execute()
-            try {
-                val responseBody = response.body
-                val bitmap = BitmapFactory.decodeStream(responseBody.byteStream())
-                return@withContext bitmap
-            } catch (e: Exception) {
-                return@withContext null
-            }
-        }
-        if(bitmap != null) {
-            thumbnailCache[thumbUrl] = bitmap
-        }
-
-        return bitmap
+        return null
     }
 
     override suspend fun getChapters(item: String) =

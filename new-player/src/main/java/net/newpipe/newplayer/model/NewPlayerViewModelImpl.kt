@@ -492,24 +492,20 @@ class NewPlayerViewModelImpl @Inject constructor(
     }
 
     private fun updateSeekPreviewThumbnail(seekPositionInMs: Long) {
-        if (updatePreviewThumbnailJob == null) {
-            updatePreviewThumbnailJob?.cancel()
-            mutableUiState.update {
-                it.copy(currentSeekPreviewThumbnail = null)
-            }
+        updatePreviewThumbnailJob?.cancel()
 
-            updatePreviewThumbnailJob = viewModelScope.launch {
-                val item = newPlayer?.currentlyPlaying?.value?.let {
-                    newPlayer?.getItemFromMediaItem(it)
-                }
-                item?.let {
-                    val bitmap = newPlayer?.repository?.getPreviewThumbnail(item, seekPositionInMs)
-                    mutableUiState.update {
-                        it.copy(
-                            currentSeekPreviewThumbnail = bitmap?.asImageBitmap(),
-                            seekPreviewVisible = true
-                        )
-                    }
+        updatePreviewThumbnailJob = viewModelScope.launch {
+            val item = newPlayer?.currentlyPlaying?.value?.let {
+                newPlayer?.getItemFromMediaItem(it)
+            }
+            item?.let {
+                println("gurken get thumbnail for position: $seekPositionInMs")
+                val bitmap = newPlayer?.repository?.getPreviewThumbnail(item, seekPositionInMs)
+                mutableUiState.update {
+                    it.copy(
+                        currentSeekPreviewThumbnail = bitmap?.asImageBitmap(),
+                        seekPreviewVisible = true
+                    )
                 }
             }
         }

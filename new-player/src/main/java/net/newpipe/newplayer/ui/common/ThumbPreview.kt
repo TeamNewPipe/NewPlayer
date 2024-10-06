@@ -128,7 +128,8 @@ fun ThumbPreview(
             ) {
                 Card(
                     modifier = Modifier
-                        .padding(BOX_PADDING.dp),
+                        .padding(BOX_PADDING.dp)
+                        .fillMaxSize(),
                     elevation = CardDefaults.cardElevation(BOX_PADDING.dp)
                 ) {
                     uiState.currentSeekPreviewThumbnail?.let {
