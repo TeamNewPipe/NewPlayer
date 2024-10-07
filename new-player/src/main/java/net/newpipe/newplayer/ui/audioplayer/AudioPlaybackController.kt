@@ -39,7 +39,9 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -116,10 +118,12 @@ fun AudioPlaybackController(
             }
         }
 
-        Button(
+        ElevatedButton(
             modifier = Modifier.size(80.dp),
             onClick = if (uiState.playing) viewModel::pause else viewModel::play,
-            shape = CircleShape
+            shape = CircleShape,
+            elevation = ButtonDefaults.buttonElevation(4.dp),
+            colors = ButtonDefaults.buttonColors()
         ) {
             if (uiState.isLoading) {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -201,7 +205,7 @@ fun AudioPlayerControllerPreview() {
     VideoPlayerTheme {
         AudioPlaybackController(
             viewModel = NewPlayerViewModelDummy(),
-            uiState = NewPlayerUIState.DUMMY.copy(playList = emptyList(), isLoading = true)
+            uiState = NewPlayerUIState.DUMMY.copy(playList = emptyList(), isLoading = false)
         )
     }
 }
