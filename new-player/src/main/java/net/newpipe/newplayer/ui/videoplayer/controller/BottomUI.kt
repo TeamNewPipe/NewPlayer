@@ -89,7 +89,7 @@ fun BottomUI(
             thumbSize = SeekerDefaults.ThumbRadius * 2,
             additionalStartPaddingPxls = previewPaddingStart.toInt(),
             additionalEndPaddingPxls = previewPaddingEnd.toInt(),
-            previewHeight = if (uiState.uiMode.fullscreen) 90.dp else 60.dp
+            previewHeight = if (uiState.uiMode.fullscreen) 100.dp else 60.dp
         )
 
         Row(

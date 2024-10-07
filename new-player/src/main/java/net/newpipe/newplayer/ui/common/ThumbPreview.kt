@@ -20,21 +20,26 @@ package net.newpipe.newplayer.ui.common
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import android.graphics.BitmapFactory
 import androidx.annotation.OptIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Slider
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,13 +50,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.core.content.res.ResourcesCompat
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.NewPlayerUIState
@@ -62,6 +70,7 @@ private const val BOX_PADDING = 4
 @OptIn(UnstableApi::class)
 @Composable
 fun ThumbPreview(
+    modifier: Modifier = Modifier,
     uiState: NewPlayerUIState,
     thumbSize: Dp,
     additionalStartPaddingPxls: Int = 0,
@@ -70,34 +79,35 @@ fun ThumbPreview(
 ) {
 
     val thumbSizePxls = with(LocalDensity.current) { thumbSize.toPx() }
+    val boxPaddingPxls = with(LocalDensity.current) { BOX_PADDING.dp.toPx() }
 
     var sliderBoxWidth by remember {
         mutableIntStateOf(-1)
     }
 
-    val aspectRatio = if(uiState.currentSeekPreviewThumbnail != null) {
+    val aspectRatio = if (uiState.currentSeekPreviewThumbnail != null) {
         uiState.currentSeekPreviewThumbnail.width.toFloat() /
                 uiState.currentSeekPreviewThumbnail.height.toFloat()
     } else {
-        16f/9f
+        16f / 9f
     }
 
-    val previewBoxWidthPxls = with(LocalDensity.current) {(previewHeight * aspectRatio).toPx()}
+    val previewBoxWidthPxls = with(LocalDensity.current) { (previewHeight * aspectRatio).toPx() }
 
     val previewPosition = additionalStartPaddingPxls + thumbSizePxls / 2 +
             ((sliderBoxWidth - additionalEndPaddingPxls - additionalStartPaddingPxls - thumbSizePxls)
                     * uiState.seekerPosition)
 
     val edgeCorrectedPreviewPosition =
-        if (previewPosition < (previewBoxWidthPxls / 2))
+        if (previewPosition < (previewBoxWidthPxls / 2 + boxPaddingPxls))
             0
-        else if ((sliderBoxWidth - previewBoxWidthPxls / 2) < previewPosition)
-            sliderBoxWidth - previewBoxWidthPxls
+        else if ((sliderBoxWidth - (previewBoxWidthPxls / 2 + boxPaddingPxls)) < previewPosition)
+            sliderBoxWidth - previewBoxWidthPxls - 2 * boxPaddingPxls
         else
-            previewPosition - (previewBoxWidthPxls / 2)
+            previewPosition - (previewBoxWidthPxls / 2 + boxPaddingPxls)
 
     Box(
-        Modifier
+        modifier
             .fillMaxWidth()
             .height((2 * BOX_PADDING).dp + previewHeight)
             .onGloballyPositioned { rect ->
@@ -109,20 +119,23 @@ fun ThumbPreview(
             enter = fadeIn(animationSpec = tween(200)),
             exit = fadeOut(animationSpec = tween(400))
         )*/
-        if (uiState.seekPreviewVisible) {
-            Box(
-                modifier = Modifier
-                    .wrapContentSize()
-                    .offset { IntOffset(edgeCorrectedPreviewPosition.toInt(), 0) },
-            ) {
-                Card(
+        uiState.currentSeekPreviewThumbnail?.let {
+            if (uiState.seekPreviewVisible) {
+                Box(
                     modifier = Modifier
-                        .padding(BOX_PADDING.dp)
-                        .fillMaxSize(),
-                    elevation = CardDefaults.cardElevation(BOX_PADDING.dp)
+                        .wrapContentSize()
+                        .offset { IntOffset(edgeCorrectedPreviewPosition.toInt(), 0) },
                 ) {
-                    uiState.currentSeekPreviewThumbnail?.let {
+                    Card(
+                        modifier = Modifier
+                            .padding(BOX_PADDING.dp)
+                            .fillMaxHeight()
+                            .aspectRatio(aspectRatio),
+                        elevation = CardDefaults.cardElevation(BOX_PADDING.dp)
+                    ) {
+
                         Image(
+                            modifier = Modifier.fillMaxSize(),
                             bitmap = it,
                             contentDescription = stringResource(id = R.string.seek_thumb_preview)
                         )
@@ -139,6 +152,7 @@ fun ThumbPreview(
         ) {
         }
         */
+
     }
 }
 
@@ -152,6 +166,9 @@ fun ThumbPreviewPreview() {
     var startOffset by remember { mutableIntStateOf(0) }
     var endOffset by remember { mutableIntStateOf(0) }
 
+    val previewThumbnail =
+        BitmapFactory.decodeResource(LocalContext.current.resources, R.mipmap.thumbnail_preview)
+
     VideoPlayerTheme {
         Column(
             modifier = Modifier
@@ -161,7 +178,8 @@ fun ThumbPreviewPreview() {
             ThumbPreview(
                 uiState = NewPlayerUIState.DUMMY.copy(
                     seekerPosition = sliderPosition,
-                    seekPreviewVisible = true
+                    seekPreviewVisible = true,
+                    currentSeekPreviewThumbnail = previewThumbnail.asImageBitmap()
                 ), additionalStartPaddingPxls = startOffset, additionalEndPaddingPxls = endOffset,
                 thumbSize = 20.dp // see handle width
             )
