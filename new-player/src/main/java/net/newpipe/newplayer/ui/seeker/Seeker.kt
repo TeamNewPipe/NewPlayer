@@ -342,7 +342,8 @@ private fun ChapterDots(
                 val segment = chapterSegments[index]
                 drawDot(
                     x = rtlAware(segment.startPx, widthPx, isRtl),
-                    trackHeight = trackHeight.toPx()
+                    trackHeight = trackHeight.toPx(),
+                    color = Color.White.copy(alpha = 0.9f)
                 )
             }
         }
@@ -367,7 +368,6 @@ private fun Track(
     val thumbRadius by dimensions.thumbRadius()
     val trackHeight by dimensions.trackHeight()
     val progressHeight by dimensions.progressHeight()
-    val segmentGap by dimensions.gap()
 
     Canvas(
         modifier = modifier.graphicsLayer {
@@ -542,12 +542,13 @@ private fun DrawScope.drawGap(
 
 private fun DrawScope.drawDot(
     x: Float,
-    trackHeight: Float
+    trackHeight: Float,
+    color: Color = Color.Gray.copy(alpha = 0.9f)
 ) {
     drawCircle(
         radius = (trackHeight / 2f) * 0.8f,
         center = Offset(x = x, y = center.y),
-        color = Color.Gray.copy(alpha = 0.9f),
+        color = color,
         blendMode = BlendMode.SrcOver
     )
 }
