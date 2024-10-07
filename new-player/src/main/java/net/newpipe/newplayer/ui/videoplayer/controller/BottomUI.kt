@@ -25,6 +25,7 @@ import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Fullscreen
@@ -84,12 +85,19 @@ fun BottomUI(
     val seekerPaddingPx = with(LocalDensity.current) { SEEKER_PADDING.dp.toPx() }
 
     Column(modifier = modifier) {
+
+        val previewModifier = if (uiState.uiMode.fullscreen)
+            Modifier.offset(y = (-20).dp) /* make some space so your thumb is not in the way*/
+        else
+            Modifier.offset(y = (-10).dp)
+
         ThumbPreview(
+            modifier = previewModifier,
             uiState = uiState,
             thumbSize = SeekerDefaults.ThumbRadius * 2,
             additionalStartPaddingPxls = previewPaddingStart.toInt(),
             additionalEndPaddingPxls = previewPaddingEnd.toInt(),
-            previewHeight = if (uiState.uiMode.fullscreen) 100.dp else 60.dp
+            previewHeight = if (uiState.uiMode.fullscreen) 120.dp else 60.dp
         )
 
         Row(
