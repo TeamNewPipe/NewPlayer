@@ -203,19 +203,21 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
             val thumbUrl = String.format(templateUrl, i)
 
             if(thumbnailCache[thumbUrl] == null) {
-                val bitmap = withContext(Dispatchers.IO) {
-                    val request = Request.Builder().url(thumbUrl).build()
-                    val response = client.newCall(request).execute()
-                    try {
-                        val responseBody = response.body
-                        val bitmap = BitmapFactory.decodeStream(responseBody.byteStream())
-                        return@withContext bitmap
-                    } catch (e: Exception) {
-                        return@withContext null
+                testRepoScope.launch {
+                    val bitmap = withContext(Dispatchers.IO) {
+                        val request = Request.Builder().url(thumbUrl).build()
+                        val response = client.newCall(request).execute()
+                        try {
+                            val responseBody = response.body
+                            val bitmap = BitmapFactory.decodeStream(responseBody.byteStream())
+                            return@withContext bitmap
+                        } catch (e: Exception) {
+                            return@withContext null
+                        }
                     }
-                }
-                if (bitmap != null) {
-                    thumbnailCache[thumbUrl] = bitmap
+                    if (bitmap != null) {
+                        thumbnailCache[thumbUrl] = bitmap
+                    }
                 }
             }
         }

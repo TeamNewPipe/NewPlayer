@@ -36,7 +36,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -61,7 +60,6 @@ import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
 import net.newpipe.newplayer.ui.common.getLocale
 import net.newpipe.newplayer.ui.common.getTimeStringFromMs
-import net.newpipe.newplayer.ui.seeker.DefaultSeekerDimensions
 import net.newpipe.newplayer.ui.seeker.SeekerDefaults
 
 
@@ -89,8 +87,8 @@ fun BottomUI(
         ThumbPreview(
             uiState = uiState,
             thumbSize = SeekerDefaults.ThumbRadius * 2,
-            additionalStartPadding = previewPaddingStart.toInt(),
-            additionalEndPadding = previewPaddingEnd.toInt(),
+            additionalStartPaddingPxls = previewPaddingStart.toInt(),
+            additionalEndPaddingPxls = previewPaddingEnd.toInt(),
             previewHeight = if (uiState.uiMode.fullscreen) 90.dp else 60.dp
         )
 
