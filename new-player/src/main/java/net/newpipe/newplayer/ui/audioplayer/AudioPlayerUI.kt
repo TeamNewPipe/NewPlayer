@@ -34,19 +34,24 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -59,6 +64,7 @@ import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.ui.common.NewPlayerSeeker
+import net.newpipe.newplayer.ui.common.ThumbPreview
 import net.newpipe.newplayer.ui.selection_ui.ChapterSelectUI
 import net.newpipe.newplayer.ui.selection_ui.StreamSelectUI
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
@@ -66,6 +72,7 @@ import net.newpipe.newplayer.ui.common.Thumbnail
 import net.newpipe.newplayer.ui.common.getInsets
 import net.newpipe.newplayer.ui.common.getLocale
 import net.newpipe.newplayer.ui.common.getTimeStringFromMs
+import net.newpipe.newplayer.ui.seeker.SeekerDefaults
 
 
 private val UI_ENTER_ANIMATION = fadeIn(tween(200))
@@ -149,21 +156,27 @@ private fun LandscapeLayout(
     uiState: NewPlayerUIState,
     innerPadding: PaddingValues
 ) {
-    Row(modifier = modifier
-        .fillMaxSize()
-        .padding(20.dp)) {
+    Row(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(20.dp)
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .weight(1f)
         ) {
-            CoverArt(modifier = Modifier
-                .fillMaxSize()
-                .weight(0.9f), uiState = uiState)
+            CoverArt(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(0.9f), uiState = uiState
+            )
 
-            TitleView(modifier = Modifier
-                .fillMaxSize()
-                .weight(0.1f), uiState = uiState)
+            TitleView(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(0.1f), uiState = uiState
+            )
         }
 
         Box(modifier = Modifier.width(20.dp))
@@ -174,18 +187,32 @@ private fun LandscapeLayout(
                 .weight(1f)
         ) {
             Column(
-                verticalArrangement = Arrangement.SpaceAround,
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
             ) {
-                ProgressUI(
-                    viewModel = viewModel,
-                    uiState = uiState
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f)
                 )
                 AudioPlaybackController(
                     viewModel = viewModel,
                     uiState = uiState
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f)
+                )
+                ProgressUI(
+                    viewModel = viewModel,
+                    uiState = uiState
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f)
                 )
             }
             AudioBottomUI(viewModel, uiState)
@@ -276,6 +303,20 @@ private fun ProgressUI(
     val locale = getLocale()!!
 
     Column(modifier = modifier) {
+        Box(
+            modifier = Modifier
+                .height(0.dp)
+                .fillMaxWidth()
+                .wrapContentHeight(unbounded = true, align = Alignment.Bottom)
+        ) {
+            ThumbPreview(
+                modifier = Modifier.offset(y = (-20).dp) /* We have this offset to make space for your thumb */,
+                uiState = uiState,
+                thumbSize = SeekerDefaults.ThumbRadius * 2,
+                previewHeight = 120.dp
+            )
+        }
+
         NewPlayerSeeker(viewModel = viewModel, uiState = uiState)
         Row {
             Text(

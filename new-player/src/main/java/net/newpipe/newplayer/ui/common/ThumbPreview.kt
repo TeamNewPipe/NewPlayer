@@ -69,6 +69,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.NewPlayerUIState
+import net.newpipe.newplayer.ui.seeker.SeekerDefaults
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 private const val BOX_PADDING = 4
@@ -78,7 +79,7 @@ private const val BOX_PADDING = 4
 fun ThumbPreview(
     modifier: Modifier = Modifier,
     uiState: NewPlayerUIState,
-    thumbSize: Dp,
+    thumbSize: Dp = SeekerDefaults.ThumbRadius * 2,
     additionalStartPaddingPxls: Int = 0,
     additionalEndPaddingPxls: Int = 0,
     previewHeight: Dp = 60.dp
