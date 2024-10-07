@@ -22,6 +22,10 @@ package net.newpipe.newplayer.ui.common
 
 import android.graphics.BitmapFactory
 import androidx.annotation.OptIn
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -45,6 +49,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -54,6 +59,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -113,14 +119,20 @@ fun ThumbPreview(
             .onGloballyPositioned { rect ->
                 sliderBoxWidth = rect.size.width
             }) {
-        /* disable Animated visibility becaus its kind of janky
+
         AnimatedVisibility(
-            visible = uiState.seekPreviewVisible,
+            visible = uiState.seekPreviewVisible && uiState.currentSeekPreviewThumbnail != null,
             enter = fadeIn(animationSpec = tween(200)),
             exit = fadeOut(animationSpec = tween(400))
-        )*/
-        uiState.currentSeekPreviewThumbnail?.let {
-            if (uiState.seekPreviewVisible) {
+        ) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                var lastAvailableImage by remember {
+                    mutableStateOf(uiState.currentSeekPreviewThumbnail)
+                }
+                if (uiState.currentSeekPreviewThumbnail != null) {
+                    lastAvailableImage = uiState.currentSeekPreviewThumbnail
+                }
+
                 Box(
                     modifier = Modifier
                         .wrapContentSize()
@@ -133,18 +145,20 @@ fun ThumbPreview(
                             .aspectRatio(aspectRatio),
                         elevation = CardDefaults.cardElevation(BOX_PADDING.dp)
                     ) {
-
-                        Image(
-                            modifier = Modifier.fillMaxSize(),
-                            bitmap = it,
-                            contentDescription = stringResource(id = R.string.seek_thumb_preview)
-                        )
+                        lastAvailableImage?.let {
+                            Image(
+                                modifier = Modifier.fillMaxSize(),
+                                bitmap = it,
+                                contentDescription = stringResource(id = R.string.seek_thumb_preview)
+                            )
+                        }
                     }
                 }
             }
         }
 
-        /*
+        /* This is a little helper block that helps place the thumbnail correctly relative to the
+        thumb of the seeker. This is only there for debug reasons.
         Surface(
             modifier = Modifier
                 .size(10.dp, 10.dp)
@@ -166,8 +180,11 @@ fun ThumbPreviewPreview() {
     var startOffset by remember { mutableIntStateOf(0) }
     var endOffset by remember { mutableIntStateOf(0) }
 
+    var thumbDown by remember { mutableStateOf(false) }
+
     val previewThumbnail =
         BitmapFactory.decodeResource(LocalContext.current.resources, R.mipmap.thumbnail_preview)
+
 
     VideoPlayerTheme {
         Column(
@@ -178,7 +195,7 @@ fun ThumbPreviewPreview() {
             ThumbPreview(
                 uiState = NewPlayerUIState.DUMMY.copy(
                     seekerPosition = sliderPosition,
-                    seekPreviewVisible = true,
+                    seekPreviewVisible = thumbDown,
                     currentSeekPreviewThumbnail = previewThumbnail.asImageBitmap()
                 ), additionalStartPaddingPxls = startOffset, additionalEndPaddingPxls = endOffset,
                 thumbSize = 20.dp // see handle width
@@ -191,8 +208,9 @@ fun ThumbPreviewPreview() {
                     startOffset = it.size.width
                 })
                 Slider(modifier = Modifier.weight(1f), value = sliderPosition, onValueChange = {
+                    thumbDown = true
                     sliderPosition = it
-                })
+                }, onValueChangeFinished = { thumbDown = false })
                 Text(text = "R", modifier = Modifier.onGloballyPositioned {
                     endOffset = it.size.width
                 })

@@ -499,7 +499,6 @@ class NewPlayerViewModelImpl @Inject constructor(
                 newPlayer?.getItemFromMediaItem(it)
             }
             item?.let {
-                println("gurken get thumbnail for position: $seekPositionInMs")
                 val bitmap = newPlayer?.repository?.getPreviewThumbnail(item, seekPositionInMs)
                 mutableUiState.update {
                     it.copy(
