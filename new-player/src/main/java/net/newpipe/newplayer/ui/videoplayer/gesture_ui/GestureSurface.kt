@@ -26,6 +26,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -54,12 +56,13 @@ internal fun GestureSurface(
     onMovement: (TouchedPosition) -> Unit = {},
     content: @Composable () -> Unit = {}
 ) {
-    var moveOccured by remember {
-        mutableStateOf(false)
-    }
 
     var lastTouchedPosition by remember {
         mutableStateOf(TouchedPosition(0f, 0f))
+    }
+
+    var yMovementSum by remember {
+        mutableFloatStateOf(0f)
     }
 
     var lastFingerUpTime by remember {
@@ -73,12 +76,13 @@ internal fun GestureSurface(
 
     val defaultActionDown = { event: MotionEvent ->
         lastTouchedPosition = TouchedPosition(event.x, event.y)
-        moveOccured = false
+        yMovementSum = 0f
+
         true
     }
 
     var multitapAmount:Int by remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
 
     var cancelMultitapJob: Job? by remember {
@@ -87,7 +91,8 @@ internal fun GestureSurface(
 
     val defaultActionUp = { onMultiTap: (Int) -> Unit, onRegularTap: () -> Unit ->
         onUp()
-        if (!moveOccured) {
+
+        if (yMovementSum < 10) {
             val currentTime = System.currentTimeMillis()
             val timeSinceLastTouch = currentTime - lastFingerUpTime
             if (timeSinceLastTouch <= MULTITAB_MODE_DELAY) {
@@ -109,7 +114,7 @@ internal fun GestureSurface(
 
             lastFingerUpTime = currentTime
         }
-        moveOccured = false
+        yMovementSum = 0f
         true
     }
 
@@ -118,7 +123,8 @@ internal fun GestureSurface(
         val movement = currentTouchedPosition - lastTouchedPosition
 
         lastTouchedPosition = currentTouchedPosition
-        moveOccured = true
+
+        yMovementSum += abs(movement.y)
 
         // filter out left and right movements as these are not important for the app
         if(abs(movement.x) <= abs(movement.y)) {

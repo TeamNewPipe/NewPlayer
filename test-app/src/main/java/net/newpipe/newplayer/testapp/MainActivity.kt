@@ -46,7 +46,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    val newPlayerViewModel: NewPlayerViewModel by viewModels<NewPlayerViewModelImpl>()
+    private val newPlayerViewModel: NewPlayerViewModel by viewModels<NewPlayerViewModelImpl>()
 
     private var currentOrientation = -1
     private var reconfigurationPending = false

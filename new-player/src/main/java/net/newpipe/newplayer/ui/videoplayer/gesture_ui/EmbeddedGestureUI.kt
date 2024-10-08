@@ -89,17 +89,17 @@ internal fun EmbeddedGestureUI(
         }
     }
 
-    val handleUp = {
-        downwardMovementMode = false
-        sumOfMovement = 0f
-    }
-
     val defaultOnRegularTap = {
         if (uiState.uiMode.videoControllerUiVisible) {
             viewModel.changeUiMode(uiState.uiMode.getUiHiddenState(), null)
         } else {
             viewModel.changeUiMode(uiState.uiMode.getControllerUiVisibleState(), null)
         }
+    }
+
+    val handleUp = {
+        downwardMovementMode = false
+        sumOfMovement = 0f
     }
 
     Row(modifier = modifier) {
