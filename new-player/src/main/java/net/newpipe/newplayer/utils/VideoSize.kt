@@ -21,7 +21,7 @@
 
 package net.newpipe.newplayer.utils
 
-data class VideoSize(
+internal data class VideoSize(
     val width: Int,
     val height: Int,
     /// The width/height ratio of a single pixel

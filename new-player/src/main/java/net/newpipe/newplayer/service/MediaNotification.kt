@@ -21,7 +21,7 @@ const val NEW_PLAYER_MEDIA_NOTIFICATION_CHANNEL_NAME = "Player"
 const val NEW_PLAYER_REQUEST_CODE_OPEN_ACTIVITY = 0
 
 @OptIn(UnstableApi::class)
-fun createNewPlayerNotification(
+internal fun createNewPlayerNotification(
     service: NewPlayerService,
     session: MediaSession,
     notificationManager: NotificationManager,

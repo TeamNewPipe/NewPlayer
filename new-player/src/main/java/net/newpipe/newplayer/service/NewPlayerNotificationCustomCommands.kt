@@ -27,8 +27,7 @@ import androidx.media3.session.CommandButton
 import androidx.media3.session.SessionCommand
 import net.newpipe.newplayer.R
 
-
-data class CustomCommand(
+internal data class CustomCommand(
     val action: String,
     val commandButton: CommandButton
 ) {
@@ -37,7 +36,7 @@ data class CustomCommand(
     }
 }
 
-fun buildCustomCommandList(context: Context) = listOf(
+internal fun buildCustomCommandList(context: Context) = listOf(
     CustomCommand(
         CustomCommand.NEW_PLAYER_NOTIFICATION_COMMAND_CLOSE_PLAYBACK,
         CommandButton.Builder()

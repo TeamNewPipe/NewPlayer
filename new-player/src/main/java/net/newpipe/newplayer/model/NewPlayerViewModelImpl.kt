@@ -273,7 +273,7 @@ class NewPlayerViewModelImpl @Inject constructor(
         }
     }
 
-    fun updateContentRatio(videoSize: VideoSize) {
+    private fun updateContentRatio(videoSize: VideoSize) {
         val newRatio = videoSize.getRatio()
         val ratio = if (newRatio.isNaN()) currentContentRatio else newRatio
         currentContentRatio = ratio
@@ -285,7 +285,7 @@ class NewPlayerViewModelImpl @Inject constructor(
         }
     }
 
-    override fun onCleared() {
+    internal override fun onCleared() {
         super.onCleared()
 
         Log.d(TAG, "viewmodel cleared")

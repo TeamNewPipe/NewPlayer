@@ -50,7 +50,7 @@ import javax.inject.Inject
 private const val TAG = "NewPlayerService"
 
 @AndroidEntryPoint
-class NewPlayerService : MediaSessionService() {
+internal class NewPlayerService : MediaSessionService() {
 
     private var mediaSession: MediaSession? = null
     private lateinit var customCommands: List<CustomCommand>
