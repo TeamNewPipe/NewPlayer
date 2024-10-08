@@ -36,7 +36,7 @@ import androidx.media3.common.Player
 import net.newpipe.newplayer.ui.ContentScale
 
 @Composable
-fun PlaySurface(
+internal fun PlaySurface(
     modifier: Modifier,
     player: Player?,
     lifecycle: Lifecycle.Event,

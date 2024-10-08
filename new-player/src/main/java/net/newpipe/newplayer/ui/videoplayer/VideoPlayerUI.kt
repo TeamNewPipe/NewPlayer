@@ -60,7 +60,7 @@ import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
 
 @OptIn(UnstableApi::class)
 @Composable
-fun VideoPlayerUi(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
+internal fun VideoPlayerUi(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
     val embeddedUiConfig = if (LocalContext.current is Activity)
         getEmbeddedUiConfig(activity = LocalContext.current as Activity)
     else

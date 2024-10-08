@@ -56,7 +56,7 @@ import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 @OptIn(UnstableApi::class)
 @Composable
-fun CenterUI(
+internal fun CenterUI(
     modifier: Modifier = Modifier,
     viewModel: NewPlayerViewModel,
     uiState: NewPlayerUIState
@@ -139,9 +139,10 @@ private fun CenterControlButton(
 // Preview
 ///////////////////////////////////////////////////////////////////
 
+@OptIn(UnstableApi::class)
 @Preview(device = "spec:width=1080px,height=600px,dpi=440,orientation=landscape")
 @Composable
-fun VideoPlayerControllerUICenterUIPreview() {
+private fun VideoPlayerControllerUICenterUIPreview() {
     VideoPlayerTheme {
         Surface(color = Color.Black) {
             CenterUI(

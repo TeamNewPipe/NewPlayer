@@ -58,7 +58,7 @@ private fun convertFloatToRational(number: Float) : Rational{
     return Rational(a, b)
 }
 
-fun getPipParams(aspectRatio: Float, sourceRectHint: Rect) =
+internal fun getPipParams(aspectRatio: Float, sourceRectHint: Rect) =
     if (Build.VERSION_CODES.O <= Build.VERSION.SDK_INT) {
         PictureInPictureParams.Builder()
             .setAspectRatio(convertFloatToRational(aspectRatio))

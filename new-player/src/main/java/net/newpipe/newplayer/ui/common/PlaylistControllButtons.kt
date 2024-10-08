@@ -40,7 +40,7 @@ import net.newpipe.newplayer.model.NewPlayerViewModel
 
 @OptIn(UnstableApi::class)
 @Composable
-fun RepeatModeButton(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
+internal fun RepeatModeButton(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
     IconButton(
         onClick = viewModel::cycleRepeatMode
     ) {
@@ -65,7 +65,7 @@ fun RepeatModeButton(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
 
 @OptIn(UnstableApi::class)
 @Composable
-fun ShuffleModeButton(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
+internal fun ShuffleModeButton(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
     IconButton(
         onClick = viewModel::toggleShuffle
     ) {

@@ -64,7 +64,7 @@ import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
 
 @OptIn(UnstableApi::class)
 @Composable
-fun TopUI(
+internal fun TopUI(
     modifier: Modifier, viewModel: NewPlayerViewModel, uiState: NewPlayerUIState
 ) {
     val embeddedUiConfig =
@@ -161,7 +161,7 @@ fun TopUI(
 @OptIn(UnstableApi::class)
 @Preview(device = "spec:parent=pixel_6,orientation=landscape")
 @Composable
-fun VideoPlayerControllerTopUIPreview() {
+private fun VideoPlayerControllerTopUIPreview() {
     VideoPlayerTheme {
         Surface(color = Color.Black) {
             TopUI(

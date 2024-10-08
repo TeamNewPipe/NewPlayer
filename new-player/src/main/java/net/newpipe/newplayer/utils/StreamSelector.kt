@@ -24,31 +24,31 @@ import net.newpipe.newplayer.NewPlayerException
 import net.newpipe.newplayer.StreamType
 import net.newpipe.newplayer.Stream
 
-class StreamSelector(
+internal class StreamSelector(
     val preferredVideoIdentifier: List<String>,
     val preferredAudioIdentifier: List<String>,
     val preferredLanguage: List<String>,
 ) {
 
-    interface StreamSelection {
+    internal interface StreamSelection {
         val item: String
     }
 
-    data class SingleSelection(
+    internal data class SingleSelection(
         override val item: String,
         val stream: Stream
     ) : StreamSelection
 
-    data class MultiSelection(
+    internal data class MultiSelection(
         override val item: String,
         val streams: List<Stream>
     ) : StreamSelection
 
-    enum class DemuxedStreamBundeling {
-        DO_NOT_BUNDLE, BUNDLE_STREAMS_WITH_SAME_ID, BUNDLE_AUDIOSTREAMS_WITH_SAME_ID
+    internal enum class DemuxedStreamBundeling {
+        DO_NOT_BUNDLE, BUNDLE_STREAMS_WITH_SAME_ID, BUNDLE_AUDIO_STREAMS_WITH_SAME_ID
     }
 
-    fun selectStream(
+    internal fun selectStream(
         item: String,
         availableStreams: List<Stream>,
         demuxedStreamBundeling: DemuxedStreamBundeling = DemuxedStreamBundeling.DO_NOT_BUNDLE
@@ -95,7 +95,7 @@ class StreamSelector(
                 )
 
                 if (videoOnlyStream != null) {
-                    if (demuxedStreamBundeling == DemuxedStreamBundeling.BUNDLE_AUDIOSTREAMS_WITH_SAME_ID) {
+                    if (demuxedStreamBundeling == DemuxedStreamBundeling.BUNDLE_AUDIO_STREAMS_WITH_SAME_ID) {
                         val bestFittingAudioStreams = getBestFittingAudioStreams(availableStreams, preferredAudioIdentifier)
                             ?: listOf(availableStreams.filter { it.streamType == StreamType.AUDIO }[0])
 

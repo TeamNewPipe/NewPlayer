@@ -75,7 +75,7 @@ import sh.calvin.reorderable.ReorderableCollectionItemScope
 @androidx.annotation.OptIn(UnstableApi::class)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StreamItem(
+internal fun StreamItem(
     modifier: Modifier = Modifier,
     playlistItem: MediaItem,
     onClicked: (Long) -> Unit,
@@ -243,7 +243,7 @@ fun StreamItem(
 @androidx.annotation.OptIn(UnstableApi::class)
 @Preview(device = "spec:width=1080px,height=400px,dpi=440,orientation=landscape")
 @Composable
-fun StreamItemPreview() {
+private fun StreamItemPreview() {
     VideoPlayerTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = Color.DarkGray) {
             Box(modifier = Modifier.fillMaxSize()) {

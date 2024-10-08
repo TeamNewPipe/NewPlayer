@@ -66,7 +66,7 @@ import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
 
 @OptIn(UnstableApi::class)
 @Composable
-fun DropDownMenu(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
+internal fun DropDownMenu(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
     var showMainMenu: Boolean by remember { mutableStateOf(false) }
 
     val pixel_density = LocalDensity.current
@@ -182,7 +182,7 @@ fun DropDownMenu(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
 @OptIn(UnstableApi::class)
 @Preview(device = "spec:width=1080px,height=1080px,dpi=440,orientation=landscape")
 @Composable
-fun VideoPlayerControllerDropDownPreview() {
+private fun VideoPlayerControllerDropDownPreview() {
     VideoPlayerTheme {
         Box(Modifier.fillMaxSize()) {
             DropDownMenu(NewPlayerViewModelDummy(), NewPlayerUIState.DUMMY)

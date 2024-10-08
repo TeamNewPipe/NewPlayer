@@ -55,7 +55,7 @@ import net.newpipe.newplayer.ui.common.Thumbnail
 import net.newpipe.newplayer.ui.common.getLocale
 import net.newpipe.newplayer.ui.common.getTimeStringFromMs
 
-fun isActiveChapter(chapterId: Int, chapters: List<Chapter>, playbackPosition: Long) : Boolean {
+internal fun isActiveChapter(chapterId: Int, chapters: List<Chapter>, playbackPosition: Long) : Boolean {
     assert(0 <= chapterId && chapterId < chapters.size) {
         throw NewPlayerException("Chapter Id out of bounds: id: $chapterId, chapters.size: ${chapters.size}")
     }
@@ -67,7 +67,7 @@ fun isActiveChapter(chapterId: Int, chapters: List<Chapter>, playbackPosition: L
 }
 
 @Composable
-fun ChapterItem(
+internal fun ChapterItem(
     modifier: Modifier = Modifier,
     id: Int,
     thumbnail: Uri?,
@@ -131,7 +131,7 @@ fun ChapterItem(
 
 @Preview(device = "spec:width=1080px,height=300px,dpi=440,orientation=landscape")
 @Composable
-fun ChapterItemPreview() {
+private fun ChapterItemPreview() {
     VideoPlayerTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = Color.DarkGray) {
             ChapterItem(

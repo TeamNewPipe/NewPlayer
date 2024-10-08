@@ -55,7 +55,7 @@ private const val LINE_STROKE_WIDTH =6
 private const val CIRCLE_SIZE = 130
 
 @Composable
-fun VolumeCircle(
+internal fun VolumeCircle(
     modifier: Modifier = Modifier,
     volumeFraction: Float,
     isBrightness: Boolean = false
@@ -85,7 +85,7 @@ fun VolumeCircle(
             modifier = Modifier
                 .align(Alignment.Center)
                 .size(80.dp),
-            imageVector = (if (isBrightness) getBrightnesIcon(volumeFraction = volumeFraction)
+            imageVector = (if (isBrightness) getBrightnessIcon(volumeFraction = volumeFraction)
             else getVolumeIcon(volumeFraction = volumeFraction)),
             contentDescription = stringResource(
                 id = if (isBrightness) R.string.brightness_indicator
@@ -103,14 +103,14 @@ private fun getVolumeIcon(volumeFraction: Float) =
     else Icons.AutoMirrored.Filled.VolumeUp
 
 @Composable
-private fun getBrightnesIcon(volumeFraction: Float) =
+private fun getBrightnessIcon(volumeFraction: Float) =
     if (volumeFraction < 0.3) Icons.Filled.BrightnessLow
     else if (volumeFraction < 0.6) Icons.Filled.BrightnessMedium
     else Icons.Filled.BrightnessHigh
 
 @Preview(device = "spec:width=1080px,height=600px,dpi=440,orientation=landscape")
 @Composable
-fun VolumeCirclePreview() {
+private fun VolumeCirclePreview() {
     VideoPlayerTheme {
         Surface(color = Color.White) {
             VolumeCircle(volumeFraction = 0.3f, isBrightness = false)

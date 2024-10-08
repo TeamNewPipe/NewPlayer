@@ -36,7 +36,7 @@ val INDICATOR_BACKGROUND_COLOR = Color.Black.copy(alpha = 0.3f)
 
 @OptIn(UnstableApi::class)
 @Composable
-fun GestureUI(
+internal fun GestureUI(
     modifier: Modifier,
     viewModel: NewPlayerViewModel,
     uiState: NewPlayerUIState,

@@ -40,7 +40,7 @@ private const val TAG = "NewPlayerSeeker"
 
 @OptIn(UnstableApi::class)
 @Composable
-fun NewPlayerSeeker(
+internal fun NewPlayerSeeker(
     modifier: Modifier = Modifier,
     viewModel: NewPlayerViewModel,
     uiState: NewPlayerUIState

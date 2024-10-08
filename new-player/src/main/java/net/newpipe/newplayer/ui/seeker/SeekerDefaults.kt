@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import net.newpipe.newplayer.ui.theme.VideoPlayerColorScheme
 
-object SeekerDefaults {
+internal object SeekerDefaults {
 
     /**
      * Creates a [SeekerColors] that represents the different colors used in parts of the
@@ -120,7 +120,7 @@ object SeekerDefaults {
  * See [SeekerDefaults.seekerColors] for default implementation.
  * */
 @Stable
-interface SeekerColors {
+internal interface SeekerColors {
 
     /**
      * Represents the color used for the seeker's track, depending on [enabled].
@@ -161,7 +161,7 @@ interface SeekerColors {
  * See [SeekerDefaults.seekerDimensions] for default implementation.
  * */
 @Stable
-interface SeekerDimensions {
+internal interface SeekerDimensions {
 
     /**
      * Represents the height used for the seeker's track.

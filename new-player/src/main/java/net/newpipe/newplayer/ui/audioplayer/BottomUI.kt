@@ -65,7 +65,7 @@ import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
 
 @OptIn(UnstableApi::class)
 @Composable
-fun AudioBottomUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
+internal fun AudioBottomUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
 
     val embeddedUiConfig = if (LocalContext.current is Activity)
         getEmbeddedUiConfig(activity = LocalContext.current as Activity)
@@ -206,7 +206,7 @@ private fun Menu(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
 @OptIn(UnstableApi::class)
 @Preview(device = "id:pixel_6")
 @Composable
-fun AudioBottomUIPreview() {
+private fun AudioBottomUIPreview() {
     VideoPlayerTheme {
         Box(modifier = Modifier.fillMaxWidth()) {
             AudioBottomUI(viewModel = NewPlayerViewModelDummy(), uiState = NewPlayerUIState.DUMMY)

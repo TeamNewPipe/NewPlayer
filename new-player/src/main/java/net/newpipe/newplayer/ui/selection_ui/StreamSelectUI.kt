@@ -50,11 +50,11 @@ import net.newpipe.newplayer.ui.common.rememberReorderHapticFeedback
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
-val ITEM_CORNER_SHAPE = RoundedCornerShape(10.dp)
+internal val ITEM_CORNER_SHAPE = RoundedCornerShape(10.dp)
 
 @OptIn(UnstableApi::class)
 @Composable
-fun StreamSelectUI(
+internal fun StreamSelectUI(
     viewModel: NewPlayerViewModel,
     uiState: NewPlayerUIState,
     shownInAudioPlayer: Boolean
@@ -85,7 +85,7 @@ fun StreamSelectUI(
 
 @OptIn(UnstableApi::class)
 @Composable
-fun ReorderableStreamItemsList(
+private fun ReorderableStreamItemsList(
     padding: PaddingValues,
     viewModel: NewPlayerViewModel,
     uiState: NewPlayerUIState
@@ -133,7 +133,7 @@ fun ReorderableStreamItemsList(
 @OptIn(UnstableApi::class)
 @Preview(device = "id:pixel_5")
 @Composable
-fun VideoPlayerStreamSelectUIPreview() {
+private fun VideoPlayerStreamSelectUIPreview() {
     VideoPlayerTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = Color.Red) {
             StreamSelectUI(

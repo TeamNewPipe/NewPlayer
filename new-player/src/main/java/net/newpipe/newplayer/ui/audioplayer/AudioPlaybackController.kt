@@ -60,7 +60,7 @@ import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 @androidx.annotation.OptIn(UnstableApi::class)
 @Composable
-fun AudioPlaybackController(
+internal fun AudioPlaybackController(
     modifier: Modifier = Modifier,
     viewModel: NewPlayerViewModel,
     uiState: NewPlayerUIState
@@ -201,7 +201,7 @@ fun AudioPlaybackController(
 @androidx.annotation.OptIn(UnstableApi::class)
 @Preview(device = "id:pixel_6")
 @Composable
-fun AudioPlayerControllerPreview() {
+private fun AudioPlayerControllerPreview() {
     VideoPlayerTheme {
         AudioPlaybackController(
             viewModel = NewPlayerViewModelDummy(),

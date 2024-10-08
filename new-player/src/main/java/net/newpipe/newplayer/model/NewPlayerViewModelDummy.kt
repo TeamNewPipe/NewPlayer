@@ -11,7 +11,7 @@ import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.ui.ContentScale
 
 @UnstableApi
-open class NewPlayerViewModelDummy : NewPlayerViewModel {
+internal open class NewPlayerViewModelDummy : NewPlayerViewModel {
     override var newPlayer: NewPlayer? = null
     override val uiState = MutableStateFlow(NewPlayerUIState.DEFAULT)
     override var minContentRatio = 4F / 3F

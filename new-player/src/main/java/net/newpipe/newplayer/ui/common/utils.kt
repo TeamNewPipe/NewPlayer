@@ -57,7 +57,7 @@ import net.newpipe.newplayer.model.EmbeddedUiConfig
 import java.util.Locale
 
 @Composable
-fun LockScreenOrientation(orientation: Int) {
+internal fun LockScreenOrientation(orientation: Int) {
     val context = LocalContext.current
     LaunchedEffect(orientation) {
         val activity = context.findActivity() ?: return@LaunchedEffect
@@ -66,21 +66,21 @@ fun LockScreenOrientation(orientation: Int) {
 }
 
 @SuppressLint("NewApi")
-fun getDefaultBrightness(activity: Activity): Float {
+internal fun getDefaultBrightness(activity: Activity): Float {
     val window = activity.window
     val layout = window.attributes as WindowManager.LayoutParams
     return if (layout.screenBrightness < 0) 0.5f else layout.screenBrightness
 }
 
 @SuppressLint("NewApi")
-fun setScreenBrightness(value: Float, activity: Activity) {
+internal fun setScreenBrightness(value: Float, activity: Activity) {
     val window = activity.window
     val layout = window.attributes as WindowManager.LayoutParams
     layout.screenBrightness = value
     window.attributes = layout
 }
 
-fun Context.findActivity(): Activity? = when (this) {
+internal fun Context.findActivity(): Activity? = when (this) {
     is Activity -> this
     is ContextWrapper -> baseContext.findActivity()
     else -> null
@@ -89,14 +89,14 @@ fun Context.findActivity(): Activity? = when (this) {
 
 @Composable
 @ReadOnlyComposable
-fun getLocale(): Locale? {
+internal fun getLocale(): Locale? {
     val configuration = LocalConfiguration.current
     return ConfigurationCompat.getLocales(configuration).get(0)
 }
 
 @Composable
 @ReadOnlyComposable
-fun getEmbeddedUiConfig(activity: Activity): EmbeddedUiConfig {
+internal fun getEmbeddedUiConfig(activity: Activity): EmbeddedUiConfig {
     val window = activity.window
     val view = LocalView.current
 
@@ -114,7 +114,7 @@ fun getEmbeddedUiConfig(activity: Activity): EmbeddedUiConfig {
 }
 
 @Composable
-fun getInsets() =
+internal fun getInsets() =
     WindowInsets.systemBars.union(WindowInsets.displayCutout).union(WindowInsets.waterfall)
 
 private const val HOURS_PER_DAY = 24
@@ -127,7 +127,7 @@ private const val MILLIS_PER_DAY =
 private const val MILLIS_PER_HOUR = MINUTES_PER_HOUR * SECONDS_PER_MINUTE * MILLIS_PER_SECOND
 private const val MILLIS_PER_MINUTE = SECONDS_PER_MINUTE * MILLIS_PER_SECOND
 
-fun getTimeStringFromMs(
+internal fun getTimeStringFromMs(
     timeSpanInMs: Long,
     locale: Locale,
     leadingZerosForMinutes: Boolean = true
@@ -155,7 +155,7 @@ fun getTimeStringFromMs(
 }
 
 @Composable
-fun Thumbnail(
+internal fun Thumbnail(
     modifier: Modifier = Modifier,
     thumbnail: Uri?,
     contentDescription: String,
@@ -185,13 +185,13 @@ fun Thumbnail(
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 @Composable
-fun isInPowerSaveMode() =
+internal fun isInPowerSaveMode() =
     (LocalContext.current.getSystemService(Context.POWER_SERVICE) as PowerManager)
         .isPowerSaveMode
 
 
 @OptIn(UnstableApi::class)
-fun getPlaylistDurationInMS(playlist: List<MediaItem>): Long {
+internal fun getPlaylistDurationInMS(playlist: List<MediaItem>): Long {
     var duration = 0L
     for (item in playlist) {
         val itemDuration = item.mediaMetadata.durationMs
@@ -201,7 +201,7 @@ fun getPlaylistDurationInMS(playlist: List<MediaItem>): Long {
     return duration
 }
 
-fun relaunchCurrentActivity(activity: Activity) {
+internal fun relaunchCurrentActivity(activity: Activity) {
 
     /*
     val intent = Intent(activity, activity.javaClass).apply {

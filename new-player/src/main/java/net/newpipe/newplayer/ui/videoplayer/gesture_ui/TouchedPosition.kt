@@ -20,6 +20,6 @@
 
 package net.newpipe.newplayer.ui.videoplayer.gesture_ui
 
-data class TouchedPosition(val x: Float, val y: Float) {
+internal data class TouchedPosition(val x: Float, val y: Float) {
     operator fun minus(other: TouchedPosition) = TouchedPosition(this.x - other.x, this.y - other.y)
 }

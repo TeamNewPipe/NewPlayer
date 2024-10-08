@@ -79,7 +79,7 @@ private val UI_ENTER_ANIMATION = fadeIn(tween(200))
 private val UI_EXIT_ANIMATION = fadeOut(tween(200))
 
 @Composable
-fun lightAudioControlButtonColorScheme() = ButtonDefaults.buttonColors().copy(
+internal fun lightAudioControlButtonColorScheme() = ButtonDefaults.buttonColors().copy(
     containerColor = MaterialTheme.colorScheme.background,
     contentColor = MaterialTheme.colorScheme.onSurface,
     disabledContainerColor = MaterialTheme.colorScheme.background
@@ -87,7 +87,7 @@ fun lightAudioControlButtonColorScheme() = ButtonDefaults.buttonColors().copy(
 
 @OptIn(UnstableApi::class)
 @Composable
-fun AudioPlayerUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState, isLandScape: Boolean) {
+internal fun AudioPlayerUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState, isLandScape: Boolean) {
     val insets = getInsets()
 
     Box(
@@ -380,7 +380,7 @@ private fun CoverArt(modifier: Modifier = Modifier, uiState: NewPlayerUIState) {
 @OptIn(UnstableApi::class)
 @Preview(device = "id:pixel_6", showSystemUi = true)
 @Composable
-fun AudioPlayerUIPortraitPreview() {
+private fun AudioPlayerUIPortraitPreview() {
     VideoPlayerTheme {
         AudioPlayerUI(
             viewModel = NewPlayerViewModelDummy(),
@@ -393,7 +393,7 @@ fun AudioPlayerUIPortraitPreview() {
 @OptIn(UnstableApi::class)
 @Preview(device = "spec:parent=pixel_6,orientation=landscape", showSystemUi = true)
 @Composable
-fun AudioPlayerUILandscapePreview() {
+private fun AudioPlayerUILandscapePreview() {
     VideoPlayerTheme {
         AudioPlayerUI(
             viewModel = NewPlayerViewModelDummy(),
@@ -406,7 +406,7 @@ fun AudioPlayerUILandscapePreview() {
 @OptIn(UnstableApi::class)
 @Preview(device = "spec:parent=pixel_6,orientation=portrait", showSystemUi = true)
 @Composable
-fun AudioPlayerUIEmbeddedPreview() {
+private fun AudioPlayerUIEmbeddedPreview() {
     VideoPlayerTheme {
         AudioPlayerUI(
             viewModel = NewPlayerViewModelDummy(),

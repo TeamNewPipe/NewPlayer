@@ -70,7 +70,7 @@ private const val SEEKER_PADDING = 4
 
 @OptIn(UnstableApi::class)
 @Composable
-fun BottomUI(
+internal fun BottomUI(
     modifier: Modifier, viewModel: NewPlayerViewModel, uiState: NewPlayerUIState
 ) {
 
@@ -162,7 +162,7 @@ fun BottomUI(
 @OptIn(UnstableApi::class)
 @Preview(device = "spec:width=1080px,height=600px,dpi=440,orientation=landscape")
 @Composable
-fun VideoPlayerControllerBottomUIPreview() {
+private fun VideoPlayerControllerBottomUIPreview() {
     var sliderPosition by remember { mutableFloatStateOf(0f) }
 
     VideoPlayerTheme {

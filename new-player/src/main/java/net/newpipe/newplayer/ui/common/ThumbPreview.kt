@@ -76,7 +76,7 @@ private const val BOX_PADDING = 4
 
 @OptIn(UnstableApi::class)
 @Composable
-fun ThumbPreview(
+internal fun ThumbPreview(
     modifier: Modifier = Modifier,
     uiState: NewPlayerUIState,
     thumbSize: Dp = SeekerDefaults.ThumbRadius * 2,
@@ -175,7 +175,7 @@ fun ThumbPreview(
 @OptIn(UnstableApi::class)
 @Preview(device = "spec:width=1080px,height=600px,dpi=440")
 @Composable
-fun ThumbPreviewPreview() {
+private fun ThumbPreviewPreview() {
     var sliderPosition by remember { mutableFloatStateOf(0f) }
 
     var startOffset by remember { mutableIntStateOf(0) }

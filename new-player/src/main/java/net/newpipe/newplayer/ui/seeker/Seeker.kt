@@ -117,7 +117,7 @@ import kotlin.math.atan2
  * appearance / behavior of this Seeker in different [Interaction]s.
  * */
 @Composable
-fun Seeker(
+internal fun Seeker(
     modifier: Modifier = Modifier,
     state: SeekerState = rememberSeekerState(),
     value: Float,

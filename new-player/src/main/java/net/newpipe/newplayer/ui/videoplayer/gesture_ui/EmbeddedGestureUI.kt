@@ -52,7 +52,7 @@ private const val TAG = "EmbeddedGestureUI"
 
 @OptIn(UnstableApi::class)
 @Composable
-fun EmbeddedGestureUI(
+internal fun EmbeddedGestureUI(
     modifier: Modifier = Modifier, viewModel: NewPlayerViewModel, uiState: NewPlayerUIState
 ) {
 
@@ -162,7 +162,7 @@ fun EmbeddedGestureUI(
 @OptIn(UnstableApi::class)
 @Preview(device = "spec:width=600px,height=400px,dpi=440,orientation=landscape")
 @Composable
-fun EmbeddedGestureUIPreview() {
+private fun EmbeddedGestureUIPreview() {
     VideoPlayerTheme {
         Surface(modifier = Modifier.wrapContentSize(), color = Color.DarkGray) {
             EmbeddedGestureUI(

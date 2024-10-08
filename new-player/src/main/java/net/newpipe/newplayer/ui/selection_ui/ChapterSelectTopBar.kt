@@ -42,7 +42,7 @@ import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChapterSelectTopBar(modifier: Modifier = Modifier, onClose: () -> Unit) {
+internal fun ChapterSelectTopBar(modifier: Modifier = Modifier, onClose: () -> Unit) {
     TopAppBar(modifier = modifier,
         colors = topAppBarColors(containerColor = Color.Transparent),
         title = {
@@ -61,7 +61,7 @@ fun ChapterSelectTopBar(modifier: Modifier = Modifier, onClose: () -> Unit) {
 
 @Preview(device = "spec:width=1080px,height=150px,dpi=440,orientation=landscape")
 @Composable
-fun ChapterTopBarPreview() {
+private fun ChapterTopBarPreview() {
     VideoPlayerTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = Color.DarkGray) {
             ChapterSelectTopBar(modifier = Modifier.fillMaxSize()) {}

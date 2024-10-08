@@ -48,7 +48,7 @@ import net.newpipe.newplayer.ui.common.getInsets
 
 @OptIn(UnstableApi::class)
 @Composable
-fun ChapterSelectUI(
+internal fun ChapterSelectUI(
     viewModel: NewPlayerViewModel,
     uiState: NewPlayerUIState,
     shownInAudioPlayer: Boolean
@@ -112,7 +112,7 @@ fun ChapterSelectUI(
 @OptIn(UnstableApi::class)
 @Preview(device = "id:pixel_5")
 @Composable
-fun VideoPlayerChannelSelectUIPreview() {
+private fun VideoPlayerChannelSelectUIPreview() {
     VideoPlayerTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = Color.Red) {
             ChapterSelectUI(

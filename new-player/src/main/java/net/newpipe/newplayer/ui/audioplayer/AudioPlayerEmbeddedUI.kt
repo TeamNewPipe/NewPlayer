@@ -59,7 +59,7 @@ import net.newpipe.newplayer.ui.common.getTimeStringFromMs
 
 @OptIn(androidx.media3.common.util.UnstableApi::class)
 @Composable
-fun AudioPlayerEmbeddedUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
+internal fun AudioPlayerEmbeddedUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
     val locale = getLocale()!!
 
     val embeddedUIConfig = if (LocalContext.current is Activity)
@@ -165,7 +165,7 @@ fun AudioPlayerEmbeddedUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUISta
 @OptIn(UnstableApi::class)
 @Preview(device = "spec:width=1080px,height=1080px,dpi=440,orientation=landscape")
 @Composable
-fun AuidioPlayerEmbeddedPreview() {
+private fun AudioPlayerEmbeddedPreview() {
     VideoPlayerTheme {
         PreviewBackgroundSurface {
             AudioPlayerEmbeddedUI(

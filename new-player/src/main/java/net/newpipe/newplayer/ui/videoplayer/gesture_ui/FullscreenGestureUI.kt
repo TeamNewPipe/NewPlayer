@@ -63,7 +63,7 @@ private enum class IndicatorMode {
 
 @OptIn(UnstableApi::class)
 @Composable
-fun FullscreenGestureUI(
+internal fun FullscreenGestureUI(
     modifier: Modifier = Modifier, viewModel: NewPlayerViewModel, uiState: NewPlayerUIState,
     onVolumeIndicatorVisibilityChanged: (Boolean) -> Unit
 ) {
@@ -212,7 +212,7 @@ fun FullscreenGestureUI(
 }
 
 @Composable
-fun IndicatorAnimation(modifier: Modifier, visible: Boolean, content: @Composable () -> Unit) {
+internal fun IndicatorAnimation(modifier: Modifier, visible: Boolean, content: @Composable () -> Unit) {
     AnimatedVisibility(
         modifier = modifier,
         visible = visible,
@@ -250,7 +250,7 @@ fun IndicatorAnimation(modifier: Modifier, visible: Boolean, content: @Composabl
 @OptIn(UnstableApi::class)
 @Preview(device = "spec:width=1080px,height=600px,dpi=440,orientation=landscape")
 @Composable
-fun FullscreenGestureUIPreview() {
+private fun FullscreenGestureUIPreview() {
     VideoPlayerTheme {
         Surface(modifier = Modifier.wrapContentSize(), color = Color.DarkGray) {
             FullscreenGestureUI(
@@ -269,7 +269,7 @@ fun FullscreenGestureUIPreview() {
 @OptIn(UnstableApi::class)
 @Preview(device = "spec:parent=pixel_8,orientation=landscape")
 @Composable
-fun FullscreenGestureUIPreviewInteractive() {
+private fun FullscreenGestureUIPreviewInteractive() {
 
     var seekSeconds by remember {
         mutableIntStateOf(0)

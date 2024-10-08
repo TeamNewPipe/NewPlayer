@@ -36,7 +36,7 @@ import androidx.compose.ui.graphics.Color
  * will be created by [rememberSeekerState]
  * */
 @Stable
-class SeekerState() {
+internal class SeekerState() {
 
     /**
      * The current segment corresponding to the current seeker value.
@@ -59,7 +59,7 @@ class SeekerState() {
  * Creates a SeekerState which will be remembered across compositions.
  * */
 @Composable
-fun rememberSeekerState(): SeekerState = remember {
+internal fun rememberSeekerState(): SeekerState = remember {
     SeekerState()
 }
 
@@ -71,7 +71,7 @@ fun rememberSeekerState(): SeekerState = remember {
  * @param color the color of the segment
  * */
 @Immutable
-data class Segment(
+internal data class Segment(
     val name: String,
     val start: Float,
     val end: Float,
@@ -83,7 +83,7 @@ data class Segment(
 }
 
  @Immutable
- data class ChapterSegment(
+ internal data class ChapterSegment(
      val name: String,
      val start: Float,
      val color: Color = Color.Unspecified

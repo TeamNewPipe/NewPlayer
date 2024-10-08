@@ -169,7 +169,7 @@ fun NewPlayerUI(
 @OptIn(UnstableApi::class)
 @Preview(device = "spec:width=1080px,height=700px,dpi=440,orientation=landscape")
 @Composable
-fun PlayerUIPreviewEmbeded() {
+private fun PlayerUIPreviewEmbeded() {
     VideoPlayerTheme {
         NewPlayerUI(viewModel = NewPlayerViewModelDummy())
     }

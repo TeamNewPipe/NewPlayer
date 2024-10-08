@@ -58,14 +58,14 @@ import net.newpipe.newplayer.R
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.INDICATOR_BACKGROUND_COLOR
 
-const val SEEK_ANIMATION_DURATION_IN_MS = 300
-const val FAST_SEEK_MODE_DURATION = 500L
-const val SEEK_ANIMATION_FADE_IN = 200
-const val SEEK_ANIMATION_FADE_OUT = 500
+internal const val SEEK_ANIMATION_DURATION_IN_MS = 300
+internal const val FAST_SEEK_MODE_DURATION = 500L
+internal const val SEEK_ANIMATION_FADE_IN = 200
+internal const val SEEK_ANIMATION_FADE_OUT = 500
 
 
 @Composable
-fun FastSeekVisualFeedback(modifier: Modifier = Modifier, seconds: Int, backwards: Boolean) {
+internal fun FastSeekVisualFeedback(modifier: Modifier = Modifier, seconds: Int, backwards: Boolean) {
 
     val contentDescription = String.format(
         if (backwards) {
@@ -157,49 +157,6 @@ fun FastSeekVisualFeedback(modifier: Modifier = Modifier, seconds: Int, backward
 
 
 @Composable
-fun FadedAnimationForSeekFeedback(
-    fastSeekSeconds: Int,
-    backwards: Boolean = false,
-    content: @Composable (fastSeekSecondsToDisplay:Int) -> Unit
-) {
-
-    var lastSecondsValue by remember {
-        mutableStateOf(0)
-    }
-
-    val vissible = if (backwards) {
-        fastSeekSeconds < 0
-    } else {
-        0 < fastSeekSeconds
-    }
-
-    val disapearEmediatly = if (backwards) {
-        0 < fastSeekSeconds
-    } else {
-        fastSeekSeconds < 0
-    }
-
-    val valueToDisplay = if(vissible) {
-        lastSecondsValue = fastSeekSeconds
-        fastSeekSeconds
-    } else {
-        lastSecondsValue
-    }
-
-    if (!disapearEmediatly) {
-        AnimatedVisibility(
-            visible = vissible,
-            enter = fadeIn(animationSpec = tween(SEEK_ANIMATION_FADE_IN)),
-            exit = fadeOut(
-                animationSpec = tween(SEEK_ANIMATION_FADE_OUT)
-            )
-        ) {
-            content(valueToDisplay)
-        }
-    }
-}
-
-@Composable
 private fun SeekerIcon(backwards: Boolean, description: String, color: Color) {
     Icon(
         modifier = if (backwards) {
@@ -215,7 +172,7 @@ private fun SeekerIcon(backwards: Boolean, description: String, color: Color) {
 
 @Preview(device = "spec:width=1080px,height=600px,dpi=440,orientation=landscape")
 @Composable
-fun FastSeekVisualFeedbackPreviewBackwards() {
+private fun FastSeekVisualFeedbackPreviewBackwards() {
     VideoPlayerTheme {
         Surface(modifier = Modifier.wrapContentSize(), color = Color.Gray) {
             FastSeekVisualFeedback(seconds = 10, backwards = true)
@@ -225,7 +182,7 @@ fun FastSeekVisualFeedbackPreviewBackwards() {
 
 @Preview(device = "spec:width=1080px,height=600px,dpi=440,orientation=landscape")
 @Composable
-fun FastSeekVisualFeedbackPreview() {
+private fun FastSeekVisualFeedbackPreview() {
     VideoPlayerTheme {
         Surface(modifier = Modifier.wrapContentSize(), color = Color.Gray) {
             FastSeekVisualFeedback(seconds = 10, backwards = false)

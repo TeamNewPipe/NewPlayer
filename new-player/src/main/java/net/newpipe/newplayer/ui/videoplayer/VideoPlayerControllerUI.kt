@@ -54,12 +54,12 @@ import net.newpipe.newplayer.ui.videoplayer.controller.CenterUI
 import net.newpipe.newplayer.ui.videoplayer.controller.TopUI
 import net.newpipe.newplayer.ui.common.getInsets
 
-val CONTROLLER_UI_BACKGROUND_COLOR = Color(0x75000000)
-val STREAMSELECT_UI_BACKGROUND_COLOR = Color(0xba000000)
+internal val CONTROLLER_UI_BACKGROUND_COLOR = Color(0x75000000)
+internal val STREAMSELECT_UI_BACKGROUND_COLOR = Color(0xba000000)
 
 @OptIn(UnstableApi::class)
 @Composable
-fun VideoPlayerControllerUI(
+internal fun VideoPlayerControllerUI(
     viewModel: NewPlayerViewModel, uiState: NewPlayerUIState
 ) {
 
@@ -135,7 +135,7 @@ fun VideoPlayerControllerUI(
 ///////////////////////////////////////////////////////////////////
 
 @Composable
-fun PreviewBackgroundSurface(
+internal fun PreviewBackgroundSurface(
     content: @Composable () -> Unit
 ) {
     Surface(
@@ -152,7 +152,7 @@ fun PreviewBackgroundSurface(
 @OptIn(UnstableApi::class)
 @Preview(device = "spec:width=1080px,height=600px,dpi=440,orientation=landscape")
 @Composable
-fun VideoPlayerControllerUIPreviewEmbedded() {
+private fun VideoPlayerControllerUIPreviewEmbedded() {
     VideoPlayerTheme {
         PreviewBackgroundSurface {
             VideoPlayerControllerUI(
@@ -167,7 +167,7 @@ fun VideoPlayerControllerUIPreviewEmbedded() {
 @OptIn(UnstableApi::class)
 @Preview(device = "spec:width=2340px,height=1080px,dpi=440,orientation=landscape")
 @Composable
-fun VideoPlayerControllerUIPreviewLandscape() {
+private fun VideoPlayerControllerUIPreviewLandscape() {
     VideoPlayerTheme {
         PreviewBackgroundSurface {
             VideoPlayerControllerUI(
@@ -182,7 +182,7 @@ fun VideoPlayerControllerUIPreviewLandscape() {
 @OptIn(UnstableApi::class)
 @Preview(device = "spec:width=2340px,height=1080px,dpi=440,orientation=portrait")
 @Composable
-fun VideoPlayerControllerUIPreviewPortrait() {
+private fun VideoPlayerControllerUIPreviewPortrait() {
     VideoPlayerTheme {
         PreviewBackgroundSurface {
             VideoPlayerControllerUI(

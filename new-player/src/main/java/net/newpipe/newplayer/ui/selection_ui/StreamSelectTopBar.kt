@@ -56,7 +56,7 @@ import net.newpipe.newplayer.ui.common.getTimeStringFromMs
 @androidx.annotation.OptIn(UnstableApi::class)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StreamSelectTopBar(
+internal fun StreamSelectTopBar(
     modifier: Modifier = Modifier,
     viewModel: NewPlayerViewModel,
     uiState: NewPlayerUIState
@@ -116,7 +116,7 @@ fun StreamSelectTopBar(
 @androidx.annotation.OptIn(UnstableApi::class)
 @Preview(device = "spec:width=1080px,height=150px,dpi=440,orientation=landscape")
 @Composable
-fun StreamSelectTopBarPreview() {
+private fun StreamSelectTopBarPreview() {
     VideoPlayerTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = Color.DarkGray) {
             StreamSelectTopBar(

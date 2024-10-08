@@ -37,14 +37,14 @@ import net.newpipe.newplayer.StreamType
 import net.newpipe.newplayer.Stream
 import kotlin.random.Random
 
-class MediaSourceBuilder(
+internal class MediaSourceBuilder(
     private val repository: MediaRepository,
     private val uniqueIdToIdLookup: HashMap<Long, String>,
     private val mutableErrorFlow: MutableSharedFlow<Exception>,
     private val httpDataSourceFactory: HttpDataSource.Factory,
 ) {
     @OptIn(UnstableApi::class)
-    suspend fun buildMediaSource(selectedStream: StreamSelector.StreamSelection): MediaSource {
+    internal suspend fun buildMediaSource(selectedStream: StreamSelector.StreamSelection): MediaSource {
 
         val mediaSource = when (selectedStream) {
             is StreamSelector.SingleSelection -> {

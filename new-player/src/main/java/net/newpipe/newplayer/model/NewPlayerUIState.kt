@@ -20,7 +20,6 @@
 
 package net.newpipe.newplayer.model
 
-import android.graphics.Bitmap
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
