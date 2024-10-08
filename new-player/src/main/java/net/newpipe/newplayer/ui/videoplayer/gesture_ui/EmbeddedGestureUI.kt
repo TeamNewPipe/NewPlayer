@@ -22,7 +22,6 @@
 package net.newpipe.newplayer.ui.videoplayer.gesture_ui
 
 import android.app.Activity
-import android.util.Log
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -31,6 +30,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -60,21 +60,29 @@ internal fun EmbeddedGestureUI(
         mutableStateOf(false)
     }
 
+    var sumOfMovement by remember {
+        mutableFloatStateOf(0f)
+    }
+
     val embeddedUiConfig = if (LocalContext.current is Activity)
         getEmbeddedUiConfig(LocalContext.current as Activity)
     else
         EmbeddedUiConfig.DUMMY
 
     val handleMovement = { movement: TouchedPosition ->
-        Log.d(TAG, "${movement.x}:${movement.y}")
-        if (0 < movement.y) {
+        //Log.d(TAG, "${movement.x}:${movement.y}")
+        sumOfMovement += movement.y
+
+        if (100 < sumOfMovement) {
             viewModel.embeddedDraggedDown(movement.y)
             downwardMovementMode = true
         } else {
 
             // this check is there to allow a temporary move up in the downward gesture
-            if (downwardMovementMode == false) {
-                viewModel.changeUiMode(UIModeState.FULLSCREEN_VIDEO, embeddedUiConfig)
+            if (!downwardMovementMode) {
+                if(sumOfMovement < -100) {
+                    viewModel.changeUiMode(UIModeState.FULLSCREEN_VIDEO, embeddedUiConfig)
+                }
             } else {
                 viewModel.embeddedDraggedDown(movement.y)
             }
@@ -83,6 +91,7 @@ internal fun EmbeddedGestureUI(
 
     val handleUp = {
         downwardMovementMode = false
+        sumOfMovement = 0f
     }
 
     val defaultOnRegularTap = {

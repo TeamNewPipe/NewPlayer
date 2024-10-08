@@ -84,6 +84,10 @@ internal fun FullscreenGestureUI(
         }
     }
 
+    var sumOfCenterMovement by remember {
+        mutableFloatStateOf(0f)
+    }
+
     val defaultBrightness =
         if (LocalContext.current is Activity)
             getDefaultBrightness(LocalContext.current as Activity)
@@ -139,8 +143,10 @@ internal fun FullscreenGestureUI(
             }
             GestureSurface(modifier = Modifier.weight(1f),
                 onRegularTap = defaultOnRegularTap,
+                onUp = {sumOfCenterMovement = 0f},
                 onMovement = { movement ->
-                    if (0 < movement.y) {
+                    sumOfCenterMovement += movement.y
+                    if (100 < sumOfCenterMovement) {
                         viewModel.changeUiMode(UIModeState.EMBEDDED_VIDEO, embeddedUiConfig)
                     }
                 },
