@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
@@ -43,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -55,6 +57,7 @@ import net.newpipe.newplayer.model.EmbeddedUiConfig
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
+import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.theme.video_player_onSurface
 import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
@@ -75,17 +78,22 @@ fun TopUI(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        if(uiState.uiMode.fullscreen) {
-            Column(horizontalAlignment = Alignment.Start, modifier = Modifier.weight(1F)) {
+        if (uiState.uiMode.fullscreen) {
+            Box(modifier = Modifier.weight(1F), contentAlignment = Alignment.CenterStart) {
                 Text(
-                    uiState.currentlyPlaying?.mediaMetadata?.title.toString() ?: "",
+                    text = uiState.currentlyPlaying?.mediaMetadata?.title.toString() ?: "",
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
+                
+                val creatorOffset = with(LocalDensity.current) {
+                    14.sp.toDp()
+                }
                 Text(
-                    uiState.currentlyPlaying?.mediaMetadata?.artist.toString() ?: "",
+                    modifier = Modifier.offset(y = creatorOffset),
+                    text = uiState.currentlyPlaying?.mediaMetadata?.artist.toString() ?: "",
                     fontSize = 12.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -151,13 +159,15 @@ fun TopUI(
 ///////////////////////////////////////////////////////////////////
 
 @OptIn(UnstableApi::class)
-@Preview(device = "spec:width=1080px,height=600px,dpi=440,orientation=landscape")
+@Preview(device = "spec:parent=pixel_6,orientation=landscape")
 @Composable
 fun VideoPlayerControllerTopUIPreview() {
     VideoPlayerTheme {
         Surface(color = Color.Black) {
             TopUI(
-                modifier = Modifier, NewPlayerViewModelDummy(), NewPlayerUIState.DUMMY
+                modifier = Modifier, NewPlayerViewModelDummy(), NewPlayerUIState.DUMMY.copy(
+                    uiMode = UIModeState.FULLSCREEN_VIDEO
+                )
             )
         }
     }
