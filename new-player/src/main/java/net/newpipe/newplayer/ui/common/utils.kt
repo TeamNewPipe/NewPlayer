@@ -173,6 +173,8 @@ internal fun Thumbnail(
             modifier = modifier,
             model = thumbnail,
             contentDescription = contentDescription,
+            placeholder = painterResource(id = R.drawable.tiny_placeholder),
+            error = painterResource(id = R.drawable.tiny_placeholder)
         )
     } else {
         Image(
