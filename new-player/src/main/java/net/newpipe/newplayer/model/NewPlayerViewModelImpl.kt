@@ -285,7 +285,7 @@ class NewPlayerViewModelImpl @Inject constructor(
         }
     }
 
-    internal override fun onCleared() {
+    override fun onCleared() {
         super.onCleared()
 
         Log.d(TAG, "viewmodel cleared")
