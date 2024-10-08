@@ -87,3 +87,12 @@ Main menu
 </td>
 </tr>
 </table>
+
+### How to use NewPlayer
+
+You can use NewPlayer in you project by adding its [JitPack](https://jitpack.io/) repository to your dependencies:
+```
+implementation 'com.github.TeamNewPipe:NewPlayer:master-SNAPSHOT'
+```
+
+TODO: Documentation
