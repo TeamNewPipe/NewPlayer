@@ -13,7 +13,7 @@
 <br>
 
 ### So what is NewPlayer then?
-NewPlayer is a media framework independent of NewPipe itself. I decided to make it independent, because one of the big issues we have with the current player is that it is deeply integrated into NewPipe. Therefore, I wanted to make NewPlayer a separate module in order to enforce that the interface between NewPipe and the player is only as big as necessary. This also has the advantage that NewPlayer can be used independently of NewPipe itself, which means it can be used in other apps too.
+NewPlayer is a media framework, which is independent of NewPipe itself. I decided to make it independent, because one of the big issues we have with the current player is that it is deeply integrated into NewPipe. Therefore, I wanted to make NewPlayer a separate module in order to enforce that the interface between NewPipe and the player is only as big as necessary. This also has the advantage that NewPlayer can be used independently of NewPipe itself, which means it can be used in other apps too.
 
 ### Let me give you a Profile about NewPlayer:
 - It is a module, separate from NewPipe and can be used as an independent player framework
