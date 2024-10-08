@@ -127,14 +127,6 @@ fun DropDownMenu(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
                 viewModel.changeUiMode(UIModeState.FULLSCREEN_AUDIO, embeddedUiConfig)
                 showMainMenu = false
             })
-            DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_playback_speed)) },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Speed,
-                        contentDescription = stringResource(R.string.menu_item_playback_speed)
-                    )
-                },
-                onClick = { /*TODO*/ showMainMenu = false })
             if (supportsPip(LocalContext.current)) {
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.pip_button_description)) },

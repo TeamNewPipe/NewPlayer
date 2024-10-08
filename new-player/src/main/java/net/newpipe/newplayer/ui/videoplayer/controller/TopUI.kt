@@ -24,6 +24,7 @@ import android.app.Activity
 import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -74,20 +75,24 @@ fun TopUI(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Column(horizontalAlignment = Alignment.Start, modifier = Modifier.weight(1F)) {
-            Text(
-                uiState.currentlyPlaying?.mediaMetadata?.title.toString() ?: "",
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Bold,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Text(
-                uiState.currentlyPlaying?.mediaMetadata?.artist.toString() ?: "",
-                fontSize = 12.sp,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+        if(uiState.uiMode.fullscreen) {
+            Column(horizontalAlignment = Alignment.Start, modifier = Modifier.weight(1F)) {
+                Text(
+                    uiState.currentlyPlaying?.mediaMetadata?.title.toString() ?: "",
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    uiState.currentlyPlaying?.mediaMetadata?.artist.toString() ?: "",
+                    fontSize = 12.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        } else {
+            Box(modifier = Modifier.weight(1F))
         }
         Button(
             onClick = { /*TODO*/ },
