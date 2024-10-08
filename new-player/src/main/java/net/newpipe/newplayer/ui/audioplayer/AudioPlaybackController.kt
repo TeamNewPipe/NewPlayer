@@ -26,10 +26,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FastForward
@@ -53,16 +50,15 @@ import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.InternalNewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
-import net.newpipe.newplayer.ui.LoadingPlaceholder
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 @androidx.annotation.OptIn(UnstableApi::class)
 @Composable
 internal fun AudioPlaybackController(
     modifier: Modifier = Modifier,
-    viewModel: NewPlayerViewModel,
+    viewModel: InternalNewPlayerViewModel,
     uiState: NewPlayerUIState
 ) {
     Row(

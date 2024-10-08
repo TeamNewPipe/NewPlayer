@@ -30,7 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.Chapter
 import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.InternalNewPlayerViewModel
 import net.newpipe.newplayer.ui.seeker.ChapterSegment
 import net.newpipe.newplayer.ui.seeker.DefaultSeekerColor
 import net.newpipe.newplayer.ui.seeker.Seeker
@@ -42,7 +42,7 @@ private const val TAG = "NewPlayerSeeker"
 @Composable
 internal fun NewPlayerSeeker(
     modifier: Modifier = Modifier,
-    viewModel: NewPlayerViewModel,
+    viewModel: InternalNewPlayerViewModel,
     uiState: NewPlayerUIState
 ) {
     Seeker(

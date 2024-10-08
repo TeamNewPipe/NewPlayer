@@ -25,7 +25,6 @@ import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.offset
@@ -55,7 +54,7 @@ import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.EmbeddedUiConfig
 import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.InternalNewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
@@ -65,7 +64,7 @@ import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
 @OptIn(UnstableApi::class)
 @Composable
 internal fun TopUI(
-    modifier: Modifier, viewModel: NewPlayerViewModel, uiState: NewPlayerUIState
+    modifier: Modifier, viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState
 ) {
     val embeddedUiConfig =
         if (LocalContext.current is Activity)

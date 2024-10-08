@@ -50,7 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.InternalNewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
@@ -58,7 +58,7 @@ import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 @Composable
 internal fun CenterUI(
     modifier: Modifier = Modifier,
-    viewModel: NewPlayerViewModel,
+    viewModel: InternalNewPlayerViewModel,
     uiState: NewPlayerUIState
 ) {
     Row(

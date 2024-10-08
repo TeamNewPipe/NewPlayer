@@ -53,7 +53,7 @@ import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.EmbeddedUiConfig
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.InternalNewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.common.NewPlayerSeeker
 import net.newpipe.newplayer.ui.common.ThumbPreview
@@ -71,7 +71,7 @@ private const val SEEKER_PADDING = 4
 @OptIn(UnstableApi::class)
 @Composable
 internal fun BottomUI(
-    modifier: Modifier, viewModel: NewPlayerViewModel, uiState: NewPlayerUIState
+    modifier: Modifier, viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState
 ) {
 
     var previewPaddingStart by remember {

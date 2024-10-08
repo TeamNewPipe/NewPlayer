@@ -27,7 +27,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -46,12 +45,10 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -60,7 +57,7 @@ import androidx.compose.ui.unit.em
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.InternalNewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.ui.common.NewPlayerSeeker
@@ -87,7 +84,7 @@ internal fun lightAudioControlButtonColorScheme() = ButtonDefaults.buttonColors(
 
 @OptIn(UnstableApi::class)
 @Composable
-internal fun AudioPlayerUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState, isLandScape: Boolean) {
+internal fun AudioPlayerUI(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState, isLandScape: Boolean) {
     val insets = getInsets()
 
     Box(
@@ -152,7 +149,7 @@ internal fun AudioPlayerUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUISt
 @Composable
 private fun LandscapeLayout(
     modifier: Modifier = Modifier,
-    viewModel: NewPlayerViewModel,
+    viewModel: InternalNewPlayerViewModel,
     uiState: NewPlayerUIState,
     innerPadding: PaddingValues
 ) {
@@ -229,7 +226,7 @@ private fun LandscapeLayout(
 @Composable
 private fun PortraitLayout(
     modifier: Modifier = Modifier,
-    viewModel: NewPlayerViewModel,
+    viewModel: InternalNewPlayerViewModel,
     uiState: NewPlayerUIState,
     innerPadding: PaddingValues
 ) {
@@ -297,7 +294,7 @@ private fun PortraitLayout(
 @Composable
 private fun ProgressUI(
     modifier: Modifier = Modifier,
-    viewModel: NewPlayerViewModel,
+    viewModel: InternalNewPlayerViewModel,
     uiState: NewPlayerUIState
 ) {
     val locale = getLocale()!!

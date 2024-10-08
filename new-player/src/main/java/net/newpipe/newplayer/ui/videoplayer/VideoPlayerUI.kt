@@ -48,7 +48,7 @@ import androidx.core.graphics.toRect
 import androidx.lifecycle.Lifecycle
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.InternalNewPlayerViewModel
 import net.newpipe.newplayer.ui.selection_ui.StreamSelectUI
 import androidx.lifecycle.LifecycleEventObserver
 import net.newpipe.newplayer.NewPlayerException
@@ -60,7 +60,7 @@ import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
 
 @OptIn(UnstableApi::class)
 @Composable
-internal fun VideoPlayerUi(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
+internal fun VideoPlayerUi(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState) {
     val embeddedUiConfig = if (LocalContext.current is Activity)
         getEmbeddedUiConfig(activity = LocalContext.current as Activity)
     else

@@ -25,7 +25,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <net.newpipe.newplayer.VideoPlayerView
+    <net.newpipe.newplayer.NewPlayerView
         android:id="@+id/fullscreen_player"
         android:name="net.newpipe.newplayer.VideoPlayerFragment"
         android:layout_width="match_parent"
@@ -48,7 +48,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
 
-        <net.newpipe.newplayer.VideoPlayerView
+        <net.newpipe.newplayer.NewPlayerView
             android:id="@+id/embedded_player"
             android:name="net.newpipe.newplayer.VideoPlayerFragment"
             android:layout_width="match_parent"

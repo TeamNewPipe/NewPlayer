@@ -56,7 +56,7 @@ import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.EmbeddedUiConfig
 import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.InternalNewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
@@ -65,7 +65,7 @@ import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
 
 @OptIn(UnstableApi::class)
 @Composable
-internal fun AudioBottomUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
+internal fun AudioBottomUI(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState) {
 
     val embeddedUiConfig = if (LocalContext.current is Activity)
         getEmbeddedUiConfig(activity = LocalContext.current as Activity)
@@ -133,7 +133,7 @@ internal fun AudioBottomUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUISt
 
 @OptIn(UnstableApi::class)
 @Composable
-private fun Menu(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
+private fun Menu(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState) {
     var showMenu: Boolean by remember { mutableStateOf(false) }
 
     val embeddedUiConfig = if (LocalContext.current is Activity)

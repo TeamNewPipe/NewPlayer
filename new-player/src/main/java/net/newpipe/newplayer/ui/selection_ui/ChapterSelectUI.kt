@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.model.EmbeddedUiConfig
 import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.InternalNewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
@@ -49,7 +49,7 @@ import net.newpipe.newplayer.ui.common.getInsets
 @OptIn(UnstableApi::class)
 @Composable
 internal fun ChapterSelectUI(
-    viewModel: NewPlayerViewModel,
+    viewModel: InternalNewPlayerViewModel,
     uiState: NewPlayerUIState,
     shownInAudioPlayer: Boolean
 ) {

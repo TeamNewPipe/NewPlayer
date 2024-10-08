@@ -21,58 +21,29 @@
 package net.newpipe.newplayer
 
 import android.view.View
+import androidx.annotation.OptIn
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.media3.common.util.UnstableApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import net.newpipe.newplayer.model.InternalNewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModel
 
 private const val TAG = "ActivityBrainSlug"
 
-class ActivityBrainSlug(val viewModel: NewPlayerViewModel) {
+class ActivityBrainSlug {
+
+    private val viewModel: InternalNewPlayerViewModel
 
     val brainSlugScope = CoroutineScope(Dispatchers.Main + Job())
 
-    var rootView: View? = null
-        set(value) {
-            field = value
-            field?.let {
-                if (viewModel.uiState.value.uiMode.fullscreen) {
-                    removeSystemInsets()
-                } else {
-                    addSystemInsets()
-                }
-            }
-        }
+    @OptIn(UnstableApi::class)
+    constructor(viewModel: NewPlayerViewModel)  {
+        this.viewModel = viewModel as InternalNewPlayerViewModel
 
-    private var viewsToHideOnFullscreen: MutableList<View> = ArrayList()
-    var fullscreenPlayerView: VideoPlayerView? = null
-        set(value) {
-            field = value
-            if (viewModel.uiState.value.uiMode.fullscreen) {
-                value?.visibility = View.VISIBLE
-                field?.viewModel = viewModel
-            } else {
-                value?.visibility = View.GONE
-                field?.viewModel = null
-            }
-        }
-
-    var embeddedPlayerView: VideoPlayerView? = null
-        set(value) {
-            field = value
-            if (viewModel.uiState.value.uiMode.fullscreen) {
-                field?.viewModel = null
-                value?.visibility = View.GONE
-            } else {
-                field?.viewModel = viewModel
-                value?.visibility = View.VISIBLE
-            }
-        }
-
-    init {
         brainSlugScope.launch {
             viewModel.uiState.collect { uiState ->
                 if (uiState.uiMode.fullscreen) {
@@ -93,6 +64,45 @@ class ActivityBrainSlug(val viewModel: NewPlayerViewModel) {
             }
         }
     }
+
+
+
+    var rootView: View? = null
+        set(value) {
+            field = value
+            field?.let {
+                if (viewModel.uiState.value.uiMode.fullscreen) {
+                    removeSystemInsets()
+                } else {
+                    addSystemInsets()
+                }
+            }
+        }
+
+    private var viewsToHideOnFullscreen: MutableList<View> = ArrayList()
+    var fullscreenPlayerView: NewPlayerView? = null
+        set(value) {
+            field = value
+            if (viewModel.uiState.value.uiMode.fullscreen) {
+                value?.visibility = View.VISIBLE
+                field?.viewModel = viewModel
+            } else {
+                value?.visibility = View.GONE
+                field?.viewModel = null
+            }
+        }
+
+    var embeddedPlayerView: NewPlayerView? = null
+        set(value) {
+            field = value
+            if (viewModel.uiState.value.uiMode.fullscreen) {
+                field?.viewModel = null
+                value?.visibility = View.GONE
+            } else {
+                field?.viewModel = viewModel
+                value?.visibility = View.VISIBLE
+            }
+        }
 
     fun addViewToHideOnFullscreen(view: View) {
         viewsToHideOnFullscreen.add(view)

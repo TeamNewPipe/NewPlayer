@@ -64,7 +64,7 @@ private const val TAG = "VideoPlayerViewModel"
 class NewPlayerViewModelImpl @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     application: Application,
-) : AndroidViewModel(application), NewPlayerViewModel {
+) : AndroidViewModel(application), InternalNewPlayerViewModel {
 
     // private
     private val mutableUiState = MutableStateFlow(NewPlayerUIState.DEFAULT)

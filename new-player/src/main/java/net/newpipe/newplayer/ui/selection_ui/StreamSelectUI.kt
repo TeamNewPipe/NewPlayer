@@ -41,7 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.InternalNewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.common.ReorderHapticFeedbackType
@@ -55,7 +55,7 @@ internal val ITEM_CORNER_SHAPE = RoundedCornerShape(10.dp)
 @OptIn(UnstableApi::class)
 @Composable
 internal fun StreamSelectUI(
-    viewModel: NewPlayerViewModel,
+    viewModel: InternalNewPlayerViewModel,
     uiState: NewPlayerUIState,
     shownInAudioPlayer: Boolean
 ) {
@@ -87,7 +87,7 @@ internal fun StreamSelectUI(
 @Composable
 private fun ReorderableStreamItemsList(
     padding: PaddingValues,
-    viewModel: NewPlayerViewModel,
+    viewModel: InternalNewPlayerViewModel,
     uiState: NewPlayerUIState
 ) {
     val haptic = rememberReorderHapticFeedback()

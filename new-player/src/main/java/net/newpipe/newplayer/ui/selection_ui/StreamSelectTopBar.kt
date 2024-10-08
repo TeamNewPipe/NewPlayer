@@ -43,7 +43,7 @@ import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.EmbeddedUiConfig
 import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.InternalNewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.common.RepeatModeButton
 import net.newpipe.newplayer.ui.common.ShuffleModeButton
@@ -58,7 +58,7 @@ import net.newpipe.newplayer.ui.common.getTimeStringFromMs
 @Composable
 internal fun StreamSelectTopBar(
     modifier: Modifier = Modifier,
-    viewModel: NewPlayerViewModel,
+    viewModel: InternalNewPlayerViewModel,
     uiState: NewPlayerUIState
 ) {
 

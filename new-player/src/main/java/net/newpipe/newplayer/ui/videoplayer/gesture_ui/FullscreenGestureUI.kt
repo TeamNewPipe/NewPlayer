@@ -51,7 +51,7 @@ import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.model.EmbeddedUiConfig
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.InternalNewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.common.getDefaultBrightness
@@ -64,7 +64,7 @@ private enum class IndicatorMode {
 @OptIn(UnstableApi::class)
 @Composable
 internal fun FullscreenGestureUI(
-    modifier: Modifier = Modifier, viewModel: NewPlayerViewModel, uiState: NewPlayerUIState,
+    modifier: Modifier = Modifier, viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState,
     onVolumeIndicatorVisibilityChanged: (Boolean) -> Unit
 ) {
 

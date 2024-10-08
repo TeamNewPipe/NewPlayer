@@ -42,7 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.model.EmbeddedUiConfig
 import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.InternalNewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
@@ -53,7 +53,7 @@ private const val TAG = "EmbeddedGestureUI"
 @OptIn(UnstableApi::class)
 @Composable
 internal fun EmbeddedGestureUI(
-    modifier: Modifier = Modifier, viewModel: NewPlayerViewModel, uiState: NewPlayerUIState
+    modifier: Modifier = Modifier, viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState
 ) {
 
     var downwardMovementMode by remember {

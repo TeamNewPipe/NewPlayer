@@ -45,7 +45,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.InternalNewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
@@ -60,7 +60,7 @@ internal val STREAMSELECT_UI_BACKGROUND_COLOR = Color(0xba000000)
 @OptIn(UnstableApi::class)
 @Composable
 internal fun VideoPlayerControllerUI(
-    viewModel: NewPlayerViewModel, uiState: NewPlayerUIState
+    viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState
 ) {
 
     var volumeIndicatorVissible by remember {

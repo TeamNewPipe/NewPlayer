@@ -27,20 +27,24 @@ import android.widget.FrameLayout
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import dagger.hilt.android.AndroidEntryPoint
+import net.newpipe.newplayer.model.InternalNewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.ui.NewPlayerUI
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 @AndroidEntryPoint
-class VideoPlayerView : FrameLayout {
+class NewPlayerView : FrameLayout {
 
     var viewModel: NewPlayerViewModel? = null
         set(value) {
+            assert(viewModel is InternalNewPlayerViewModel?) {
+                throw NewPlayerException("The view model given to NewPlayerView must be of type InternalNewPlayerViewModel. This can not be implemented externally, so do not extend NewPlayerViewModel")
+            }
             field = value
             applyViewModel()
         }
 
-    val composeView:ComposeView
+    private val composeView:ComposeView
 
     @JvmOverloads
     constructor(
@@ -59,7 +63,7 @@ class VideoPlayerView : FrameLayout {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 VideoPlayerTheme {
-                    NewPlayerUI(viewModel = viewModel)
+                    NewPlayerUI(viewModel = viewModel as InternalNewPlayerViewModel?)
                 }
             }
         }

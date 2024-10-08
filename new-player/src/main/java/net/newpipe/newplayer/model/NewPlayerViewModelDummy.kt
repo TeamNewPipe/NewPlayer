@@ -1,6 +1,5 @@
 package net.newpipe.newplayer.model
 
-import android.app.PictureInPictureUiState
 import android.os.Bundle
 import androidx.media3.common.util.UnstableApi
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -11,7 +10,7 @@ import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.ui.ContentScale
 
 @UnstableApi
-internal open class NewPlayerViewModelDummy : NewPlayerViewModel {
+internal open class NewPlayerViewModelDummy : InternalNewPlayerViewModel {
     override var newPlayer: NewPlayer? = null
     override val uiState = MutableStateFlow(NewPlayerUIState.DEFAULT)
     override var minContentRatio = 4F / 3F

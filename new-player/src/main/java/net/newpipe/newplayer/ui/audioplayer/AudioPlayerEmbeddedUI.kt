@@ -46,7 +46,7 @@ import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.model.EmbeddedUiConfig
 import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.model.InternalNewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.model.UIModeState
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
@@ -59,7 +59,7 @@ import net.newpipe.newplayer.ui.common.getTimeStringFromMs
 
 @OptIn(androidx.media3.common.util.UnstableApi::class)
 @Composable
-internal fun AudioPlayerEmbeddedUI(viewModel: NewPlayerViewModel, uiState: NewPlayerUIState) {
+internal fun AudioPlayerEmbeddedUI(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState) {
     val locale = getLocale()!!
 
     val embeddedUIConfig = if (LocalContext.current is Activity)

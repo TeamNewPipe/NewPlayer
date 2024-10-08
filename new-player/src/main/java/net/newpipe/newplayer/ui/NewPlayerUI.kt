@@ -39,7 +39,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 
 import androidx.media3.common.util.UnstableApi
+import net.newpipe.newplayer.NewPlayerException
 import net.newpipe.newplayer.model.UIModeState
+import net.newpipe.newplayer.model.InternalNewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.audioplayer.AudioPlayerUI
@@ -48,7 +50,6 @@ import net.newpipe.newplayer.ui.videoplayer.VideoPlayerUi
 import net.newpipe.newplayer.ui.common.LockScreenOrientation
 import net.newpipe.newplayer.ui.common.getDefaultBrightness
 import net.newpipe.newplayer.ui.common.isInPowerSaveMode
-import net.newpipe.newplayer.ui.common.relaunchCurrentActivity
 import net.newpipe.newplayer.ui.common.setScreenBrightness
 
 private const val TAG = "VideoPlayerUI"
@@ -58,6 +59,11 @@ private const val TAG = "VideoPlayerUI"
 fun NewPlayerUI(
     viewModel: NewPlayerViewModel?,
 ) {
+    assert(viewModel is InternalNewPlayerViewModel?) {
+        throw NewPlayerException("The view model given to NewPlayerUI must be of type InternalNewPlayerViewModel. This can not be implemented externally, so do not extend NewPlayerViewModel")
+    }
+    val viewModel = viewModel as InternalNewPlayerViewModel?
+
     if (viewModel == null) {
         LoadingPlaceholder()
     } else if (viewModel.newPlayer == null) {
