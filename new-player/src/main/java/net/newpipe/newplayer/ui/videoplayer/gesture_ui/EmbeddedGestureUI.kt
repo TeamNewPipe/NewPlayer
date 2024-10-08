@@ -130,7 +130,7 @@ fun EmbeddedGestureUI(
                     }
                 }
             },
-            onMultiTapFinished = viewModel::finishFastSeek,
+            onMultiTapFinished = {},
             onMovement = handleMovement,
             onUp = handleUp
         ) {

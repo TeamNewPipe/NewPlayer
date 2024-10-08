@@ -54,7 +54,10 @@ enum class UIModeState {
                 AUDIO_CHAPTER_SELECT -> true
                 AUDIO_STREAM_SELECT -> true
                 PIP -> true
-                else -> false
+                PLACEHOLDER -> false
+                EMBEDDED_VIDEO -> false
+                EMBEDDED_VIDEO_CONTROLLER_UI -> false
+                EMBEDDED_AUDIO -> false
             }
 
     val videoControllerUiVisible: Boolean

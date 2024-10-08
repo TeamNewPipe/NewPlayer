@@ -347,13 +347,15 @@ class NewPlayerViewModelImpl @Inject constructor(
         if (!uiState.value.uiMode.fullscreen && newUiModeState.fullscreen && embeddedUiConfig != null) {
             this.embeddedUiConfig = embeddedUiConfig
         }
+        newUiModeState.fullscreen
 
-        if (!(newUiModeState == UIModeState.EMBEDDED_VIDEO_CONTROLLER_UI ||
+        if ((newUiModeState == UIModeState.EMBEDDED_VIDEO_CONTROLLER_UI ||
                     newUiModeState == UIModeState.FULLSCREEN_VIDEO_CONTROLLER_UI)
+            && (newPlayer?.exoPlayer?.value?.isPlaying == true)
         ) {
-            hideUiDelayedJob?.cancel()
-        } else {
             startHideUiDelayedJob()
+        } else {
+            hideUiDelayedJob?.cancel()
         }
 
         if (newUiModeState.isStreamSelect) {
