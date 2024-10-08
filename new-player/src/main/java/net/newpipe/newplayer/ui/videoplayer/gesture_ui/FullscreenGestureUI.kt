@@ -64,7 +64,8 @@ private enum class IndicatorMode {
 @OptIn(UnstableApi::class)
 @Composable
 fun FullscreenGestureUI(
-    modifier: Modifier = Modifier, viewModel: NewPlayerViewModel, uiState: NewPlayerUIState
+    modifier: Modifier = Modifier, viewModel: NewPlayerViewModel, uiState: NewPlayerUIState,
+    onVolumeIndicatorVisibilityChanged: (Boolean) -> Unit
 ) {
 
     var heightPx by remember {
@@ -108,9 +109,15 @@ fun FullscreenGestureUI(
                 onMultiTapFinished = viewModel::finishFastSeek,
                 onUp = {
                     indicatorMode = IndicatorMode.NONE
+                    onVolumeIndicatorVisibilityChanged(false)
                 },
                 onMovement = { change ->
-                    if (indicatorMode == IndicatorMode.NONE || indicatorMode == IndicatorMode.BRIGHTNESS_INDICATOR_VISIBLE) {
+                    if (indicatorMode == IndicatorMode.NONE)
+                        onVolumeIndicatorVisibilityChanged(true)
+
+                    if (indicatorMode == IndicatorMode.NONE
+                        || indicatorMode == IndicatorMode.BRIGHTNESS_INDICATOR_VISIBLE
+                    ) {
                         indicatorMode = IndicatorMode.BRIGHTNESS_INDICATOR_VISIBLE
 
                         if (heightPx != 0f) {
@@ -156,10 +163,17 @@ fun FullscreenGestureUI(
                 onMultiTapFinished = viewModel::finishFastSeek,
                 onUp = {
                     indicatorMode = IndicatorMode.NONE
+                    onVolumeIndicatorVisibilityChanged(false)
                 },
                 onMovement = { change ->
-                    if (indicatorMode == IndicatorMode.NONE || indicatorMode == IndicatorMode.VOLUME_INDICATOR_VISIBLE) {
+                    if (indicatorMode == IndicatorMode.NONE)
+                        onVolumeIndicatorVisibilityChanged(true)
+
+                    if (indicatorMode == IndicatorMode.NONE
+                        || indicatorMode == IndicatorMode.VOLUME_INDICATOR_VISIBLE
+                    ) {
                         indicatorMode = IndicatorMode.VOLUME_INDICATOR_VISIBLE
+
                         if (heightPx != 0f) {
                             viewModel.volumeChange(-change.y / heightPx)
                         }
@@ -244,7 +258,9 @@ fun FullscreenGestureUIPreview() {
                     override fun fastSeek(steps: Int) {
                         println("fast seek by $steps steps")
                     }
-                }, NewPlayerUIState.DEFAULT
+                },
+                uiState = NewPlayerUIState.DEFAULT,
+                onVolumeIndicatorVisibilityChanged = {}
             )
         }
     }
@@ -308,6 +324,7 @@ fun FullscreenGestureUIPreviewInteractive() {
                     soundVolume = soundVolume,
                     brightness = brightnessValue
                 ),
+                onVolumeIndicatorVisibilityChanged = {}
             )
         }
 

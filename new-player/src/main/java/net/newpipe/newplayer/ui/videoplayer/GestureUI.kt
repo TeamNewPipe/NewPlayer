@@ -20,9 +20,11 @@
 
 package net.newpipe.newplayer.ui.videoplayer
 
+import androidx.annotation.OptIn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.ui.videoplayer.gesture_ui.EmbeddedGestureUI
@@ -32,13 +34,20 @@ private const val TAG = "TouchUi"
 
 val INDICATOR_BACKGROUND_COLOR = Color.Black.copy(alpha = 0.3f)
 
+@OptIn(UnstableApi::class)
 @Composable
 fun GestureUI(
-    modifier: Modifier, viewModel: NewPlayerViewModel, uiState: NewPlayerUIState
+    modifier: Modifier,
+    viewModel: NewPlayerViewModel,
+    uiState: NewPlayerUIState,
+    onVolumeIndicatorVisibilityChanged: (Boolean) -> Unit
 ) {
     if (uiState.uiMode.fullscreen) {
         FullscreenGestureUI(
-            modifier = modifier, viewModel = viewModel, uiState = uiState
+            modifier = modifier,
+            viewModel = viewModel,
+            uiState = uiState,
+            onVolumeIndicatorVisibilityChanged = onVolumeIndicatorVisibilityChanged
         )
     } else {
         EmbeddedGestureUI(

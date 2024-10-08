@@ -34,6 +34,10 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -59,6 +63,10 @@ fun VideoPlayerControllerUI(
     viewModel: NewPlayerViewModel, uiState: NewPlayerUIState
 ) {
 
+    var volumeIndicatorVissible by remember {
+        mutableStateOf(false)
+    }
+
     val insets = getInsets()
 
     AnimatedVisibility(uiState.uiMode.videoControllerUiVisible) {
@@ -68,7 +76,8 @@ fun VideoPlayerControllerUI(
     }
 
     GestureUI(
-        modifier = Modifier.fillMaxSize(), viewModel = viewModel, uiState = uiState
+        modifier = Modifier.fillMaxSize(), viewModel = viewModel, uiState = uiState,
+        onVolumeIndicatorVisibilityChanged = {volumeIndicatorVissible = it}
     )
 
     AnimatedVisibility(uiState.isLoading) {
@@ -85,7 +94,7 @@ fun VideoPlayerControllerUI(
 
     AnimatedVisibility(uiState.uiMode.videoControllerUiVisible) {
 
-        AnimatedVisibility(visible = !uiState.isLoading) {
+        AnimatedVisibility(visible = !uiState.isLoading && !volumeIndicatorVissible) {
             Box(modifier = Modifier.fillMaxSize()) {
                 CenterUI(
                     modifier = Modifier.align(Alignment.Center),
