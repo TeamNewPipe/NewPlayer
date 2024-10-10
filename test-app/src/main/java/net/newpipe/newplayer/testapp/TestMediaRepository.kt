@@ -51,6 +51,15 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
                 )
                 .build()
 
+            "faulty" -> MediaMetadata.Builder()
+                .setTitle(context.getString(R.string.ccc_6502_title))
+                .setArtist(context.getString(R.string.ccc_6502_channel))
+                .setArtworkUri(Uri.parse(context.getString(R.string.ccc_6502_thumbnail)))
+                .setDurationMs(
+                    context.resources.getInteger(R.integer.ccc_6502_length).toLong() * 1000L
+                )
+                .build()
+
             "imu" -> MediaMetadata.Builder()
                 .setTitle(context.getString(R.string.ccc_imu_title))
                 .setArtist(context.getString(R.string.ccc_imu_channel))
@@ -92,6 +101,16 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
             "6502" -> listOf(
                 Stream(
                     streamUri = Uri.parse(context.getString(R.string.ccc_6502_video)),
+                    mimeType = null,
+                    streamType = StreamType.AUDIO_AND_VIDEO,
+                    language = "Deutsch",
+                    identifier = "576p",
+                )
+            )
+
+            "faulty" -> listOf(
+                Stream(
+                    streamUri = Uri.parse("https://kernel.org"),
                     mimeType = null,
                     streamType = StreamType.AUDIO_AND_VIDEO,
                     language = "Deutsch",
@@ -189,7 +208,8 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
             "6502" -> context.getString(R.string.ccc_6502_preview_thumbnails)
             "imu" -> context.getString(R.string.ccc_imu_preview_thumbnails)
             "portrait" -> return
-            "ty_test" -> return
+            "yt_test" -> return
+            "faulty" -> return
             else -> throw Exception("Unknown stream: $item")
         }
 
@@ -230,6 +250,7 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
             "imu" -> context.getString(R.string.ccc_imu_preview_thumbnails)
             "portrait" -> return null
             "ty_test" -> return null
+            "faulty" -> return null
             else -> throw Exception("Unknown stream: $item")
         }
 

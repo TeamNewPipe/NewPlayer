@@ -36,6 +36,7 @@ import androidx.media3.common.Tracks
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.MediaSource
+import androidx.media3.exoplayer.upstream.DefaultLoadErrorHandlingPolicy
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.MoreExecutors
@@ -54,6 +55,7 @@ import net.newpipe.newplayer.service.NewPlayerService
 import net.newpipe.newplayer.utils.ActionResponse
 import net.newpipe.newplayer.utils.MediaSourceBuilder
 import net.newpipe.newplayer.utils.NewPlayerException
+import net.newpipe.newplayer.utils.NewPlayerLoadErrorHandlingPolicy
 import net.newpipe.newplayer.utils.NoResponse
 import net.newpipe.newplayer.utils.SingleSelection
 import net.newpipe.newplayer.utils.StreamExceptionResponse
@@ -74,12 +76,13 @@ class NewPlayerImpl(
         app,
         R.drawable.new_player_tiny_icon
     ),
-    val rescudeStreamFault: suspend (
+    val rescueStreamFault: suspend (
         item: String?,
         mediaItem: MediaItem?,
-        exception: PlaybackException
+        exception: Exception,
+        repository: MediaRepository
     ) -> StreamExceptionResponse
-    = { _, _, _ -> NoResponse() }
+    = { _, _, _, _ -> NoResponse() }
 ) : NewPlayer {
     private val mutableExoPlayer = MutableStateFlow<ExoPlayer?>(null)
     override val exoPlayer = mutableExoPlayer.asStateFlow()
@@ -179,43 +182,10 @@ class NewPlayerImpl(
             .setHandleAudioBecomingNoisy(true)
             .setWakeMode(if (repository.getRepoInfo().pullsDataFromNetwrok) C.WAKE_MODE_NETWORK else C.WAKE_MODE_LOCAL)
             .build()
+
         newExoPlayer.addListener(object : Player.Listener {
             override fun onPlayerError(error: PlaybackException) {
-                newExoPlayer.pause()
-                launchJobAndCollectError {
-                    val item = newExoPlayer.currentMediaItem?.mediaId?.let {
-                        uniqueIdToIdLookup[it.toLong()]
-                    }
-                    val response = rescudeStreamFault(
-                        item,
-                        newExoPlayer.currentMediaItem,
-                        error
-                    )
-                    when (response) {
-                        is ActionResponse -> {
-                            response.action()
-                        }
-
-                        is StreamSelectionResponse -> {
-                            replaceCurrentStream(response.streamSelection)
-                        }
-
-                        is NoResponse -> {
-                            try {
-                                throw NewPlayerException(
-                                    "Playback Exception happened, but no response was send by rescueStreamFault(). You may consider to implement this function.",
-                                    error
-                                )
-                            } catch (e: Exception) {
-                                mutableErrorFlow.emit(e)
-                            }
-                        }
-
-                        else -> {
-                            throw NewPlayerException("Unknwon exception response ${response.javaClass}")
-                        }
-                    }
-                }
+                onPlayBackError(error)
             }
 
             override fun onEvents(player: Player, events: Player.Events) {
@@ -252,6 +222,45 @@ class NewPlayerImpl(
         })
         mutableExoPlayer.update {
             newExoPlayer
+        }
+    }
+
+    fun onPlayBackError(exception: Exception) {
+        exoPlayer.value?.pause()
+        launchJobAndCollectError {
+            val item = exoPlayer.value?.currentMediaItem?.mediaId?.let {
+                uniqueIdToIdLookup[it.toLong()]
+            }
+            val response = rescueStreamFault(
+                item,
+                exoPlayer.value?.currentMediaItem!!,
+                exception,
+                repository
+            )
+            when (response) {
+                is ActionResponse -> {
+                    response.action()
+                }
+
+                is StreamSelectionResponse -> {
+                    replaceCurrentStream(response.streamSelection)
+                }
+
+                is NoResponse -> {
+                    try {
+                        throw NewPlayerException(
+                            "Playback Exception happened, but no response was send by rescueStreamFault(). You may consider to implement this function.",
+                            exception
+                        )
+                    } catch (e: Exception) {
+                        mutableErrorFlow.emit(e)
+                    }
+                }
+
+                else -> {
+                    throw NewPlayerException("Unknwon exception response ${response.javaClass}")
+                }
+            }
         }
     }
 
@@ -455,7 +464,8 @@ class NewPlayerImpl(
             repository = repository,
             uniqueIdToIdLookup = uniqueIdToIdLookup,
             mutableErrorFlow = mutableErrorFlow,
-            httpDataSourceFactory = repository.getHttpDataSourceFactory(item)
+            httpDataSourceFactory = repository.getHttpDataSourceFactory(item),
+            loadErrorHandlingPolicy = NewPlayerLoadErrorHandlingPolicy(this::onPlayBackError)
         )
         val mediaSource = builder.buildMediaSource(streamSelection)
         uniqueIdToStreamVariantSelection[mediaSource.mediaItem.mediaId.toLong()] = streamSelection

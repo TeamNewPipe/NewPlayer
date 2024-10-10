@@ -28,17 +28,21 @@ import androidx.media3.exoplayer.dash.DashMediaSource
 import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.source.MergingMediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
+import androidx.media3.exoplayer.upstream.LoadErrorHandlingPolicy
 import kotlinx.coroutines.flow.MutableSharedFlow
 import net.newpipe.newplayer.MediaRepository
 import net.newpipe.newplayer.StreamType
 import net.newpipe.newplayer.Stream
 import kotlin.random.Random
 
-internal class MediaSourceBuilder(
+@OptIn(UnstableApi::class)
+internal class MediaSourceBuilder
+    (
     private val repository: MediaRepository,
     private val uniqueIdToIdLookup: HashMap<Long, String>,
     private val mutableErrorFlow: MutableSharedFlow<Exception>,
     private val httpDataSourceFactory: HttpDataSource.Factory,
+    private val loadErrorHandlingPolicy: LoadErrorHandlingPolicy
 ) {
     @OptIn(UnstableApi::class)
     internal suspend fun buildMediaSource(selectedStream: StreamSelection): MediaSource {
@@ -88,9 +92,11 @@ internal class MediaSourceBuilder(
     private fun toMediaSource(mediaItem: MediaItem, stream: Stream): MediaSource =
         if (stream.streamType == StreamType.DYNAMIC)
             DashMediaSource.Factory(httpDataSourceFactory)
+                .setLoadErrorHandlingPolicy(loadErrorHandlingPolicy)
                 .createMediaSource(mediaItem)
         else
             ProgressiveMediaSource.Factory(httpDataSourceFactory)
+                .setLoadErrorHandlingPolicy(loadErrorHandlingPolicy)
                 .createMediaSource(mediaItem)
 
 

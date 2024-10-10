@@ -102,6 +102,10 @@ class MainActivity : AppCompatActivity() {
             newPlayer.addToPlaylist("yt_test")
         }
 
+        binding.buttons.addFaultyStream.setOnClickListener {
+            newPlayer.addToPlaylist("faulty")
+        }
+
         binding.buttons.listenModeButton.setOnClickListener {
             newPlayer.playBackMode.update {
                 PlayMode.FULLSCREEN_AUDIO

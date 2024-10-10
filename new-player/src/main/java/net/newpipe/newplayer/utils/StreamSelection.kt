@@ -26,12 +26,12 @@ interface StreamSelection {
     val item: String
 }
 
-internal data class SingleSelection(
+data class SingleSelection(
     override val item: String,
     val stream: Stream
 ) : StreamSelection
 
-internal data class MultiSelection(
+data class MultiSelection(
     override val item: String,
     val streams: List<Stream>
 ) : StreamSelection
