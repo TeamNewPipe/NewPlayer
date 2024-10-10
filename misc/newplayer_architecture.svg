@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="190.12515mm"
+   height="65.394676mm"
+   viewBox="0 0 190.12515 65.394676"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25)"
+   sodipodi:docname="newplayer_architecture.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.76032331"
+     inkscape:cx="286.06252"
+     inkscape:cy="-190.05073"
+     inkscape:window-width="2560"
+     inkscape:window-height="1371"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g22" />
+  <defs
+     id="defs1">
+    <marker
+       style="overflow:visible"
+       id="marker17"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Wide arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         style="fill:none;stroke:context-stroke;stroke-width:1;stroke-linecap:butt"
+         d="M 3,-3 0,0 3,3"
+         transform="rotate(180,0.125,0)"
+         sodipodi:nodetypes="ccc"
+         id="path17" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="ArrowWide"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Wide arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         style="fill:none;stroke:context-stroke;stroke-width:1;stroke-linecap:butt"
+         d="M 3,-3 0,0 3,3"
+         transform="rotate(180,0.125,0)"
+         sodipodi:nodetypes="ccc"
+         id="path1" />
+    </marker>
+  </defs>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-7.2123955,-96.561458)">
+    <g
+       id="g2">
+      <g
+         id="g22"
+         transform="translate(0,-4.7625002)">
+        <g
+           id="g24">
+          <g
+             id="g4"
+             transform="translate(-4.1630436,12.170834)">
+            <g
+               id="g3">
+              <rect
+                 style="fill:#00ffff;stroke:#181818;stroke-width:0.264583"
+                 id="rect2"
+                 width="38.810482"
+                 height="14.410788"
+                 x="13.095232"
+                 y="119.06565" />
+            </g>
+            <text
+               xml:space="preserve"
+               style="font-weight:bold;font-size:3.88056px;font-family:'Fira Mono';-inkscape-font-specification:'Fira Mono Bold';vector-effect:non-scaling-stroke;fill:#000000;fill-opacity:1;stroke:#181818;stroke-width:0.264583;-inkscape-stroke:hairline"
+               x="17.343931"
+               y="127.23455"
+               id="text1"><tspan
+                 sodipodi:role="line"
+                 id="tspan1"
+                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+                 x="17.343931"
+                 y="127.23455">YourBusinesLogic</tspan></text>
+          </g>
+          <g
+             id="g4-0"
+             transform="translate(156.79453,10.977051)">
+            <g
+               id="g3-7">
+              <rect
+                 style="fill:#00ffff;stroke:#181818;stroke-width:0.264583"
+                 id="rect2-8"
+                 width="22.366695"
+                 height="15.736862"
+                 x="13.095232"
+                 y="119.06565" />
+            </g>
+            <text
+               xml:space="preserve"
+               style="font-weight:bold;font-size:3.88056px;font-family:'Fira Mono';-inkscape-font-specification:'Fira Mono Bold';vector-effect:non-scaling-stroke;fill:#000000;fill-opacity:1;stroke:#181818;stroke-width:0.264583;-inkscape-stroke:hairline"
+               x="18.381947"
+               y="128.30212"
+               id="text1-6"><tspan
+                 sodipodi:role="line"
+                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+                 x="18.381947"
+                 y="128.30212"
+                 id="tspan10">YourUI</tspan></text>
+          </g>
+          <rect
+             style="fill:#00ffff;stroke:#181818;stroke-width:0.264583"
+             id="rect2-5"
+             width="41.985485"
+             height="14.410789"
+             x="7.344687"
+             y="96.859116"
+             transform="translate(0,4.7625002)" />
+          <text
+             xml:space="preserve"
+             style="font-weight:bold;font-size:3.88056px;font-family:'Fira Mono';-inkscape-font-specification:'Fira Mono Bold';vector-effect:non-scaling-stroke;fill:#000000;fill-opacity:1;stroke:#181818;stroke-width:0.264583;-inkscape-stroke:hairline"
+             x="9.672657"
+             y="105.07255"
+             id="text1-0"
+             transform="translate(0,4.7625002)"><tspan
+               sodipodi:role="line"
+               id="tspan1-3"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+               x="9.672657"
+               y="105.07255">YourMediaRepository</tspan></text>
+          <g
+             id="g8"
+             transform="translate(56.021907,-17.465652)">
+            <g
+               id="g3-4-3"
+               transform="translate(-4.306021,-0.04453081)"
+               style="fill:#00ff00">
+              <rect
+                 style="fill:#00ff00;stroke:#181818;stroke-width:0.264583"
+                 id="rect2-5-2"
+                 width="24.121912"
+                 height="14.54308"
+                 x="13.095232"
+                 y="119.06565" />
+            </g>
+            <text
+               xml:space="preserve"
+               style="font-weight:bold;font-size:3.88056px;font-family:'Fira Mono';-inkscape-font-specification:'Fira Mono Bold';vector-effect:non-scaling-stroke;fill:#000000;fill-opacity:1;stroke:#181818;stroke-width:0.264583;-inkscape-stroke:hairline"
+               x="11.389407"
+               y="127.23455"
+               id="text1-0-0"><tspan
+                 sodipodi:role="line"
+                 id="tspan1-3-6"
+                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+                 x="11.389407"
+                 y="127.23455">NewPlayer</tspan></text>
+          </g>
+          <g
+             id="g8-4"
+             transform="translate(90.816605,-17.399506)">
+            <g
+               id="g9"
+               transform="translate(5.8208336)">
+              <g
+                 id="g3-4-3-7"
+                 transform="translate(-5.318698,-0.20989555)"
+                 style="fill:#00ff00">
+                <rect
+                   style="fill:#00ff00;stroke:#181818;stroke-width:0.264583"
+                   id="rect2-5-2-6"
+                   width="45.046047"
+                   height="14.741518"
+                   x="13.095232"
+                   y="119.06565" />
+              </g>
+              <text
+                 xml:space="preserve"
+                 style="font-weight:bold;font-size:3.88056px;font-family:'Fira Mono';-inkscape-font-specification:'Fira Mono Bold';vector-effect:non-scaling-stroke;fill:#000000;fill-opacity:1;stroke:#181818;stroke-width:0.264583;-inkscape-stroke:hairline"
+                 x="11.389407"
+                 y="127.23455"
+                 id="text1-0-0-5"><tspan
+                   sodipodi:role="line"
+                   id="tspan1-3-6-6"
+                   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+                   x="11.389407"
+                   y="127.23455">NewPlayerViewModel</tspan></text>
+            </g>
+          </g>
+          <g
+             id="g8-4-4"
+             transform="translate(152.42867,-17.399506)">
+            <g
+               id="g9-5"
+               transform="translate(5.8208336)">
+              <g
+                 id="g10">
+                <g
+                   id="g3-4-3-7-2"
+                   transform="translate(-6.4037711,-0.00572961)"
+                   style="fill:#00ff00">
+                  <rect
+                     style="fill:#00ff00;stroke:#181818;stroke-width:0.264583"
+                     id="rect2-5-2-6-5"
+                     width="32.26429"
+                     height="14.333186"
+                     x="13.095232"
+                     y="119.06565" />
+                </g>
+                <text
+                   xml:space="preserve"
+                   style="font-weight:bold;font-size:3.88056px;font-family:'Fira Mono';-inkscape-font-specification:'Fira Mono Bold';vector-effect:non-scaling-stroke;fill:#000000;fill-opacity:1;stroke:#181818;stroke-width:0.264583;-inkscape-stroke:hairline"
+                   x="11.389407"
+                   y="127.23455"
+                   id="text1-0-0-5-4"><tspan
+                     sodipodi:role="line"
+                     id="tspan1-3-6-6-7"
+                     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+                     x="11.389407"
+                     y="127.23455">NewPlayerUI</tspan></text>
+              </g>
+            </g>
+          </g>
+          <path
+             style="fill:none;fill-opacity:1;stroke:#181818;stroke-width:0.264583;stroke-opacity:1;marker-start:url(#marker17);marker-end:url(#ArrowWide)"
+             d="M 47.742673,133.67938 64.811115,104.06451"
+             id="path11"
+             transform="translate(0,4.7625002)" />
+          <path
+             style="fill:none;fill-opacity:1;stroke:#181818;stroke-width:0.264583;stroke-opacity:1;marker-start:url(#marker17);marker-end:url(#ArrowWide)"
+             d="M 49.330173,104.06451 H 64.811115"
+             id="path12"
+             transform="translate(0,4.7625002)" />
+          <path
+             style="fill:none;fill-opacity:1;stroke:#181818;stroke-width:0.264583;stroke-opacity:1;marker-start:url(#marker17);marker-end:url(#ArrowWide)"
+             d="M 47.742673,133.67938 169.88976,133.14863"
+             id="path18"
+             transform="translate(0,4.7625002)" />
+          <path
+             style="fill:none;fill-opacity:1;stroke:#181818;stroke-width:0.264583;stroke-opacity:1;marker-start:url(#marker17);marker-end:url(#ArrowWide)"
+             d="m 149.46002,104.06451 20.42974,29.08412"
+             id="path19"
+             transform="translate(0,4.7625002)" />
+          <path
+             style="fill:none;fill-opacity:1;stroke:#181818;stroke-width:0.264583;stroke-opacity:1;marker-start:url(#marker17);marker-end:url(#ArrowWide)"
+             d="M 88.933027,104.06451 H 104.41397"
+             id="path20"
+             transform="translate(0,4.7625002)" />
+          <path
+             style="fill:none;fill-opacity:1;stroke:#181818;stroke-width:0.264583;stroke-opacity:1;marker-start:url(#marker17);marker-end:url(#ArrowWide)"
+             d="m 149.46002,104.06451 h 15.48094"
+             id="path21"
+             transform="translate(0,4.7625002)" />
+          <g
+             id="g23"
+             transform="translate(0,-6.3500009)">
+            <rect
+               style="fill:#00ffff;fill-opacity:1;stroke:#181818;stroke-width:0.264583;stroke-opacity:1"
+               id="rect21-1"
+               width="4"
+               height="4"
+               x="20.902037"
+               y="168.93634" />
+            <text
+               xml:space="preserve"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';fill:#00ffff;fill-opacity:1;stroke:#181818;stroke-width:0.264583;stroke-opacity:1"
+               x="28.299534"
+               y="171.94438"
+               id="text21"><tspan
+                 sodipodi:role="line"
+                 id="tspan21"
+                 style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+                 x="28.299534"
+                 y="171.94438">Thigs you need to implement</tspan></text>
+          </g>
+          <rect
+             style="fill:#00ff00;fill-opacity:1;stroke:#181818;stroke-width:0.264583;stroke-opacity:1"
+             id="rect21"
+             width="4"
+             height="4"
+             x="20.902037"
+             y="154.01434" />
+          <text
+             xml:space="preserve"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+             x="27.960363"
+             y="157.03281"
+             id="text22"><tspan
+               sodipodi:role="line"
+               id="tspan22"
+               style="stroke-width:0.264583"
+               x="27.960363"
+               y="157.03281">Parts of NewPlayer</tspan></text>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

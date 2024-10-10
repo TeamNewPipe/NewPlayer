@@ -24,6 +24,7 @@ NewPlayer is a media framework independent of NewPipe itself. I decided to make 
 - The UI uses [Material You](https://m3.material.io/blog/announcing-material-you) theming
 - It follows an [MVVM](https://www.geeksforgeeks.org/mvvm-model-view-viewmodel-architecture-pattern-in-android/) architecture
 - It is GPLv3 licensed
+- It uses [Hilt](https://developer.android.com/training/dependency-injection/hilt-android) dependency injection
 
 ### How does NewPlayer look like?
 <table>
@@ -87,6 +88,14 @@ Main menu
 </td>
 </tr>
 </table>
+
+### How does NewPlayer work
+
+NewPlayer uses [MVVM](https://www.geeksforgeeks.org/mvvm-model-view-viewmodel-architecture-pattern-in-android/) architecture design pattern.
+
+![Immage showing NewPlayer's architecture](/misc/newplayer_architecture.svg)
+
+TODO: Documentation
 
 ### How to use NewPlayer
 
