@@ -227,6 +227,7 @@ class NewPlayerImpl(
 
     fun onPlayBackError(exception: Exception) {
         exoPlayer.value?.pause()
+
         launchJobAndCollectError {
             val item = exoPlayer.value?.currentMediaItem?.mediaId?.let {
                 uniqueIdToIdLookup[it.toLong()]
@@ -477,22 +478,20 @@ class NewPlayerImpl(
      * This can be used to replace a faulty stream or change to a stream with a different language/quality.
      */
     @OptIn(UnstableApi::class)
-    private fun replaceCurrentStream(stream: StreamSelection) {
-        if (exoPlayer.value?.playbackState == Player.STATE_IDLE) {
-            return
-        }
-        this.exoPlayer.value?.pause()
+    private suspend fun replaceCurrentStream(stream: StreamSelection) {
         val currentPosition = this.currentPosition
         val currentlyPlayingPlaylistItem = this.currentlyPlayingPlaylistItem
         val item = uniqueIdToIdLookup[this.currentlyPlaying.value?.mediaId?.toLong()]!!
 
-        launchJobAndCollectError {
-            val mediaSource = toMediaSource(stream, item)
-            this.exoPlayer.value?.removeMediaItem(currentlyPlayingPlaylistItem)
-            this.exoPlayer.value?.addMediaSource(currentlyPlayingPlaylistItem, mediaSource)
-            this.exoPlayer.value?.seekTo(currentPosition)
-            this.exoPlayer.value?.play()
+        val mediaSource = toMediaSource(stream, item)
+        this.exoPlayer.value?.removeMediaItem(currentlyPlayingPlaylistItem)
+        this.exoPlayer.value?.addMediaSource(currentlyPlayingPlaylistItem, mediaSource)
+        if (this.exoPlayer.value?.playbackState == Player.STATE_IDLE) {
+            prepare()
         }
+        this.currentlyPlayingPlaylistItem = currentlyPlayingPlaylistItem
+        this.exoPlayer.value?.seekTo(currentPosition)
+        this.exoPlayer.value?.play()
     }
 
     private fun launchJobAndCollectError(task: suspend () -> Unit) =
