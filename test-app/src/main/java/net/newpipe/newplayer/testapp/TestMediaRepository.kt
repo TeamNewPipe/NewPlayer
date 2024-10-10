@@ -288,9 +288,4 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
             "imu" -> "${context.getString(R.string.ccc_imu_link)}#t=$timestampInSeconds"
             else -> ""
         }
-
-
-    override suspend fun tryAndRescueError(item: String?, exception: PlaybackException): Uri? {
-        TODO("Not yet implemented")
-    }
 }

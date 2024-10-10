@@ -47,7 +47,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.newpipe.newplayer.utils.VideoSize
 import net.newpipe.newplayer.NewPlayer
-import net.newpipe.newplayer.NewPlayerException
+import net.newpipe.newplayer.utils.NewPlayerException
 import net.newpipe.newplayer.PlayMode
 import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.ui.ContentScale

@@ -22,6 +22,7 @@ package net.newpipe.newplayer
 
 import android.graphics.Bitmap
 import android.net.Uri
+import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
 import androidx.media3.datasource.DefaultHttpDataSource
@@ -80,6 +81,4 @@ interface MediaRepository {
     suspend fun getChapters(item: String): List<Chapter>
 
     suspend fun getTimestampLink(item: String, timestampInSeconds: Long): String
-
-    suspend fun tryAndRescueError(item: String?, exception: PlaybackException): Uri?
 }

@@ -18,9 +18,15 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer
+package net.newpipe.newplayer.utils;
 
-class NewPlayerException : Exception {
-    constructor(message: String) : super(message)
-    constructor(message: String, cause: Throwable) : super(message, cause)
-}
+import net.newpipe.newplayer.NewPlayer
+
+interface StreamExceptionResponse
+
+data class ActionResponse(val action: () -> Unit) : StreamExceptionResponse
+
+data class StreamSelectionResponse(val streamSelection: StreamSelection) :
+    StreamExceptionResponse
+
+class NoResponse : StreamExceptionResponse

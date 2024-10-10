@@ -31,6 +31,7 @@ import net.newpipe.newplayer.model.InternalNewPlayerViewModel
 import net.newpipe.newplayer.model.NewPlayerViewModel
 import net.newpipe.newplayer.ui.NewPlayerUI
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
+import net.newpipe.newplayer.utils.NewPlayerException
 
 @AndroidEntryPoint
 class NewPlayerView : FrameLayout {

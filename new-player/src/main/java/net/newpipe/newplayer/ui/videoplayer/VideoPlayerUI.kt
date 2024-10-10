@@ -51,7 +51,7 @@ import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.InternalNewPlayerViewModel
 import net.newpipe.newplayer.ui.selection_ui.StreamSelectUI
 import androidx.lifecycle.LifecycleEventObserver
-import net.newpipe.newplayer.NewPlayerException
+import net.newpipe.newplayer.utils.NewPlayerException
 import net.newpipe.newplayer.model.EmbeddedUiConfig
 import net.newpipe.newplayer.ui.selection_ui.ChapterSelectUI
 import net.newpipe.newplayer.ui.videoplayer.pip.getPipParams

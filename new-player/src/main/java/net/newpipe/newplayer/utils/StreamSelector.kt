@@ -20,7 +20,6 @@
 
 package net.newpipe.newplayer.utils
 
-import net.newpipe.newplayer.NewPlayerException
 import net.newpipe.newplayer.StreamType
 import net.newpipe.newplayer.Stream
 
@@ -29,21 +28,6 @@ internal class StreamSelector(
     val preferredAudioIdentifier: List<String>,
     val preferredLanguage: List<String>,
 ) {
-
-    internal interface StreamSelection {
-        val item: String
-    }
-
-    internal data class SingleSelection(
-        override val item: String,
-        val stream: Stream
-    ) : StreamSelection
-
-    internal data class MultiSelection(
-        override val item: String,
-        val streams: List<Stream>
-    ) : StreamSelection
-
     internal enum class DemuxedStreamBundeling {
         DO_NOT_BUNDLE, BUNDLE_STREAMS_WITH_SAME_ID, BUNDLE_AUDIO_STREAMS_WITH_SAME_ID
     }

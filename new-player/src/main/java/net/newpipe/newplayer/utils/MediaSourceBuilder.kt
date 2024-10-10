@@ -23,7 +23,6 @@ package net.newpipe.newplayer.utils
 import androidx.annotation.OptIn
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.datasource.HttpDataSource
 import androidx.media3.exoplayer.dash.DashMediaSource
 import androidx.media3.exoplayer.source.MediaSource
@@ -31,8 +30,6 @@ import androidx.media3.exoplayer.source.MergingMediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import kotlinx.coroutines.flow.MutableSharedFlow
 import net.newpipe.newplayer.MediaRepository
-import net.newpipe.newplayer.NewPlayerException
-import net.newpipe.newplayer.PlayMode
 import net.newpipe.newplayer.StreamType
 import net.newpipe.newplayer.Stream
 import kotlin.random.Random
@@ -44,16 +41,16 @@ internal class MediaSourceBuilder(
     private val httpDataSourceFactory: HttpDataSource.Factory,
 ) {
     @OptIn(UnstableApi::class)
-    internal suspend fun buildMediaSource(selectedStream: StreamSelector.StreamSelection): MediaSource {
+    internal suspend fun buildMediaSource(selectedStream: StreamSelection): MediaSource {
 
         val mediaSource = when (selectedStream) {
-            is StreamSelector.SingleSelection -> {
+            is SingleSelection -> {
                 val mediaItem = toMediaItem(selectedStream.item, selectedStream.stream)
                 val mediaItemWithMetadata = addMetadata(mediaItem, selectedStream.item)
                 toMediaSource(mediaItemWithMetadata, selectedStream.stream)
             }
 
-            is StreamSelector.MultiSelection -> {
+            is MultiSelection -> {
                 val mediaItems = ArrayList(selectedStream.streams.map { toMediaItem(selectedStream.item, it) })
                 mediaItems[0] = addMetadata(mediaItems[0], selectedStream.item)
                 val mediaSources = mediaItems.zip(selectedStream.streams)
