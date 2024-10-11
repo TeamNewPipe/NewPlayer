@@ -26,7 +26,10 @@ internal data class VideoSize(
     val height: Int,
     /// The width/height ratio of a single pixel
     val pixelWidthHeightRatio: Float
-) {
+) : Comparable<VideoSize> {
+
+    override fun compareTo(other: VideoSize) = width * height - other.width * other.height
+
     override fun equals(other: Any?) =
         when (other) {
             is VideoSize ->

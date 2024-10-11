@@ -23,25 +23,45 @@ package net.newpipe.newplayer.utils
 import android.net.Uri
 
 data class Stream(
+    val item: String,
     val streamUri: Uri,
-    val identifier: String,
-    val streamInfo: StreamInfo,
-    val languages: List<LanguageIdentifier>,
+    val streamTracks: List<StreamTrack>,
     val mimeType: String? = null,
+    val isDashOrHls: Boolean = false
 ) {
+
+    val languages: List<LanguageIdentifier>
+        get() = streamTracks.filterIsInstance<AudioStreamTrack>().mapNotNull { it.language }
+
+    val hasAudioTracks: Boolean
+        get() {
+            streamTracks.forEach { if (it is AudioStreamTrack) return true }
+            return false
+        }
+
+    val hasVideoTracks: Boolean
+        get() {
+            streamTracks.forEach { if (it is VideoStreamTrack) return true }
+            return false
+        }
+
+
+    val videoStreamTracks: List<VideoStreamTrack>
+        get() = streamTracks.filterIsInstance<VideoStreamTrack>()
+
+    val audioStreamTrack: List<AudioStreamTrack>
+        get() = streamTracks.filterIsInstance<AudioStreamTrack>()
+
     override fun equals(other: Any?) =
         other is Stream
-                && other.streamUri == streamUri
-                && other.streamInfo == streamInfo
-                && other.identifier == identifier
-                && other.mimeType == mimeType
-                && run {
-            for (language in languages) {
-                if (!other.languages.contains(language)) {
-                    return@run false
-                }
-            }
-            true
-        }
+                && other.hashCode() == this.hashCode()
+
+    override fun hashCode(): Int {
+        var result = item.hashCode()
+        result = 31 * result + streamUri.hashCode()
+        result = 31 * result + streamTracks.hashCode()
+        result = 31 * result + (mimeType?.hashCode() ?: 0)
+        return result
+    }
 
 }

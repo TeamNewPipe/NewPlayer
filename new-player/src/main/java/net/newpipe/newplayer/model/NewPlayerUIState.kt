@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.util.UnstableApi
-import net.newpipe.newplayer.Chapter
+import net.newpipe.newplayer.utils.Chapter
 import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.ui.ContentScale
 

@@ -28,7 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.media3.common.util.UnstableApi
-import net.newpipe.newplayer.Chapter
+import net.newpipe.newplayer.utils.Chapter
 import net.newpipe.newplayer.model.NewPlayerUIState
 import net.newpipe.newplayer.model.InternalNewPlayerViewModel
 import net.newpipe.newplayer.ui.seeker.ChapterSegment

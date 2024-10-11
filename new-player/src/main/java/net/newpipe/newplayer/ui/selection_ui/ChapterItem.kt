@@ -47,7 +47,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import net.newpipe.newplayer.Chapter
+import net.newpipe.newplayer.utils.Chapter
 import net.newpipe.newplayer.utils.NewPlayerException
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme

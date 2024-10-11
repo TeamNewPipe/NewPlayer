@@ -20,18 +20,22 @@
 
 package net.newpipe.newplayer.utils
 
-import net.newpipe.newplayer.Stream
+import net.newpipe.newplayer.utils.Stream
 
 interface StreamSelection {
     val item: String
 }
 
 data class SingleSelection(
-    override val item: String,
     val stream: Stream
-) : StreamSelection
+) : StreamSelection {
+    override val item: String
+        get() = stream.item
+}
 
 data class MultiSelection(
-    override val item: String,
     val streams: List<Stream>
-) : StreamSelection
+) : StreamSelection {
+    override val item: String
+        get() = streams[0].item
+}

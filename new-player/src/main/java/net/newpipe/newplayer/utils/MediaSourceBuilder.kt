@@ -28,52 +28,55 @@ import androidx.media3.exoplayer.dash.DashMediaSource
 import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.source.MergingMediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
-import androidx.media3.exoplayer.upstream.LoadErrorHandlingPolicy
 import kotlinx.coroutines.flow.MutableSharedFlow
 import net.newpipe.newplayer.MediaRepository
-import kotlin.random.Random
 
 @OptIn(UnstableApi::class)
 internal class MediaSourceBuilder
     (
     private val repository: MediaRepository,
-    private val uniqueIdToIdLookup: HashMap<Long, String>,
     private val mutableErrorFlow: MutableSharedFlow<Exception>,
     private val httpDataSourceFactory: HttpDataSource.Factory,
 ) {
     @OptIn(UnstableApi::class)
-    internal suspend fun buildMediaSource(selectedStream: StreamSelection): MediaSource {
-
-        val mediaSource = when (selectedStream) {
+    internal suspend fun buildMediaSource(
+        streamSelection: StreamSelection,
+        uniqueId: Long
+    ): MediaSource {
+        when (streamSelection) {
             is SingleSelection -> {
-                val mediaItem = toMediaItem(selectedStream.item, selectedStream.stream)
-                val mediaItemWithMetadata = addMetadata(mediaItem, selectedStream.item)
-                toMediaSource(mediaItemWithMetadata, selectedStream.stream)
+                val mediaItem = toMediaItem(streamSelection.item, streamSelection.stream, uniqueId)
+                val mediaItemWithMetadata = addMetadata(mediaItem, streamSelection.item)
+                return toMediaSource(mediaItemWithMetadata, streamSelection.stream)
             }
 
             is MultiSelection -> {
-                val mediaItems = ArrayList(selectedStream.streams.map { toMediaItem(selectedStream.item, it) })
-                mediaItems[0] = addMetadata(mediaItems[0], selectedStream.item)
-                val mediaSources = mediaItems.zip(selectedStream.streams)
+                val mediaItems = ArrayList(streamSelection.streams.map {
+                    toMediaItem(
+                        streamSelection.item,
+                        it,
+                        uniqueId
+                    )
+                })
+                mediaItems[0] = addMetadata(mediaItems[0], streamSelection.item)
+                val mediaSources = mediaItems.zip(streamSelection.streams)
                     .map { toMediaSource(it.first, it.second) }
-                MergingMediaSource(
+                return MergingMediaSource(
                     true, true,
                     *mediaSources.toTypedArray()
                 )
             }
 
-            else -> throw NewPlayerException("Unknown stream selection class: ${selectedStream.javaClass}")
+            else -> {
+                throw NewPlayerException("Unknown stream selection class: ${streamSelection.javaClass}")
+            }
         }
-
-        return mediaSource
     }
 
     @OptIn(UnstableApi::class)
     private
-    fun toMediaItem(item: String, stream: Stream): MediaItem {
+    fun toMediaItem(item: String, stream: Stream, uniqueId: Long): MediaItem {
 
-        val uniqueId = Random.nextLong()
-        uniqueIdToIdLookup[uniqueId] = item
         val mediaItemBuilder = MediaItem.Builder()
             .setMediaId(uniqueId.toString())
             .setUri(stream.streamUri)
@@ -88,7 +91,7 @@ internal class MediaSourceBuilder
 
     @OptIn(UnstableApi::class)
     private fun toMediaSource(mediaItem: MediaItem, stream: Stream): MediaSource =
-        if (stream.streamType == StreamType.DYNAMIC)
+        if (stream.isDashOrHls)
             DashMediaSource.Factory(httpDataSourceFactory)
                 .createMediaSource(mediaItem)
         else

@@ -52,14 +52,17 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.newpipe.newplayer.service.NewPlayerService
 import net.newpipe.newplayer.utils.ActionResponse
+import net.newpipe.newplayer.utils.Chapter
+import net.newpipe.newplayer.utils.LanguageIdentifier
 import net.newpipe.newplayer.utils.MediaSourceBuilder
 import net.newpipe.newplayer.utils.NewPlayerException
 import net.newpipe.newplayer.utils.NoResponse
-import net.newpipe.newplayer.utils.SingleSelection
+import net.newpipe.newplayer.utils.Stream
 import net.newpipe.newplayer.utils.StreamExceptionResponse
 import net.newpipe.newplayer.utils.StreamSelection
 import net.newpipe.newplayer.utils.StreamSelectionResponse
 import net.newpipe.newplayer.utils.StreamSelector
+import kotlin.random.Random
 
 private const val TAG = "NewPlayerImpl"
 
@@ -67,9 +70,6 @@ class NewPlayerImpl(
     val app: Application,
     override val playerActivityClass: Class<Activity>,
     override val repository: MediaRepository,
-    override val preferredVideoVariants: List<String> = emptyList(),
-    override val preferredStreamLanguage: List<String> = emptyList(),
-    override val preferredAudioVariants: List<String> = emptyList(),
     override val notificationIcon: IconCompat = IconCompat.createWithResource(
         app,
         R.drawable.new_player_tiny_icon
@@ -85,10 +85,12 @@ class NewPlayerImpl(
     private val mutableExoPlayer = MutableStateFlow<ExoPlayer?>(null)
     override val exoPlayer = mutableExoPlayer.asStateFlow()
 
+
+    override var preferredStreamLanguages: List<LanguageIdentifier> = emptyList()
+
     private var playerScope = CoroutineScope(Dispatchers.Main + Job())
 
-    private var uniqueIdToIdLookup = HashMap<Long, String>()
-    private var uniqueIdToStreamVariantSelection = HashMap<Long, StreamSelection>()
+    private var uniqueIdToStreamSelectionLookup = HashMap<Long, StreamSelection>()
 
     // this is used to take care of the NewPlayerService
     private var mediaController: MediaController? = null
@@ -154,14 +156,6 @@ class NewPlayerImpl(
     private val mutableCurrentChapter = MutableStateFlow<List<Chapter>>(emptyList())
     override val currentChapters: StateFlow<List<Chapter>> = mutableCurrentChapter.asStateFlow()
 
-    private val mutableCurrentlySelectedLanguage = MutableStateFlow<String?>(null)
-    override val currentlySelectedLanguage = mutableCurrentlySelectedLanguage.asStateFlow()
-
-    private val mutableCurrentlySelectedStreamVariant = MutableStateFlow<String?>(null)
-    override val currentlySelectedStreamVariant =
-        mutableCurrentlySelectedStreamVariant.asStateFlow()
-
-
     override var currentlyPlayingPlaylistItem: Int
         get() = exoPlayer.value?.currentMediaItemIndex ?: -1
         set(value) {
@@ -171,8 +165,11 @@ class NewPlayerImpl(
             exoPlayer.value?.seekTo(value, 0)
         }
 
-    private var mutableAvailableStreamVariants = MutableStateFlow<StreamVariants?>(null)
-    override val availableStreamVariants = mutableAvailableStreamVariants.asStateFlow()
+    private var mutableCurrentlyAvailableStreams = MutableStateFlow<List<Stream>>(emptyList())
+    override val currentlyAvailableStreams = mutableCurrentlyAvailableStreams.asStateFlow()
+
+    private var mutableCurrentlyPlayingStream = MutableStateFlow<Stream?>(null)
+    override val currentlyPlayingStream = mutableCurrentlyPlayingStream.asStateFlow()
 
     private fun setupNewExoplayer() {
         val newExoPlayer = ExoPlayer.Builder(app)
@@ -205,10 +202,16 @@ class NewPlayerImpl(
                 super.onMediaItemTransition(mediaItem, reason)
                 mutableCurrentlyPlaying.update { mediaItem }
                 if (mediaItem != null) {
-                    val item = uniqueIdToIdLookup[mediaItem.mediaId.toLong()]!!
-                    updateStreamVariants(item)
+                    val streamSelection =
+                        uniqueIdToStreamSelectionLookup[mediaItem.mediaId.toLong()]!!
+                    launchJobAndCollectError {
+                        mutableCurrentlyAvailableStreams.update {
+                            repository.getStreams(streamSelection.item)
+                        }
+                    }
                 } else {
-                    mutableAvailableStreamVariants.update { null }
+                    mutableCurrentlyAvailableStreams.update { emptyList() }
+                    mutableCurrentlyPlayingStream.update { null }
                 }
             }
 
@@ -227,11 +230,11 @@ class NewPlayerImpl(
         exoPlayer.value?.pause()
 
         launchJobAndCollectError {
-            val item = exoPlayer.value?.currentMediaItem?.mediaId?.let {
-                uniqueIdToIdLookup[it.toLong()]
+            val stream = exoPlayer.value?.currentMediaItem?.mediaId?.let {
+                uniqueIdToStreamSelectionLookup[it.toLong()]
             }
             val response = rescueStreamFault(
-                item,
+                stream?.item,
                 exoPlayer.value?.currentMediaItem!!,
                 exception,
                 repository
@@ -269,7 +272,9 @@ class NewPlayerImpl(
                 playing?.let {
                     try {
                         val chapters =
-                            repository.getChapters(uniqueIdToIdLookup[playing.mediaId.toLong()]!!)
+                            repository.getChapters(
+                                uniqueIdToStreamSelectionLookup[playing.mediaId.toLong()]!!.item
+                            )
                         mutableCurrentChapter.update { chapters }
                     } catch (e: Exception) {
                         mutableErrorFlow.emit(e)
@@ -337,49 +342,19 @@ class NewPlayerImpl(
     @OptIn(UnstableApi::class)
     override fun playStream(item: String, playMode: PlayMode) {
         launchJobAndCollectError {
+            mutableCurrentlyAvailableStreams.update {
+                repository.getStreams(item)
+            }
+
             val mediaSource = toMediaSource(item)
             internalPlayStream(mediaSource, playMode)
         }
-        updateStreamVariants(item)
     }
 
-
-    private fun updateStreamVariants(item: String) {
-        launchJobAndCollectError {
-            val streams = repository.getStreams(item)
-            mutableAvailableStreamVariants.update {
-                StreamVariants(
-                    identifiers = streams.map { it.identifier },
-                    languages = streams.mapNotNull { it.language }
-                )
-            }
-        }
-    }
 
     @OptIn(UnstableApi::class)
     private fun updateStreamSelection() {
-        // TODO: Track and Stream selection is not working right now.
-        // TIP: If you work on this try to find a way to only do track selection.
-        // Stream selection is horrible code and must be done manually, while track selection
-        // can be offloaded to exoplayer.
-        // Now Track selection is the only way to go for DASH/HLS and Progressive Streams,
-        // but if you have a MergingMediaSource it is kind of tricky. The problem here:
-        // If you have multiple audio streams in your MergingMediaSource,
-        // and the streams are all marked to be "English" (The same language) you can only select
-        // each individual stream as stream, but when represented as track within a
-        // MergingMediaSource, you have no chance to select each individual track by language.
-        // Maybe this will change later on when ExoPlayer/Media3 is getting developed further on,
-        // or you will find another way to map each individual track to the stream it originates from.
         currentlyPlaying.value?.let { mediaItem ->
-            when (val selection = uniqueIdToStreamVariantSelection[mediaItem.mediaId.toLong()]) {
-                is SingleSelection -> {
-                    if (selection.stream.streamType != StreamType.DYNAMIC) {
-                        mutableCurrentlySelectedLanguage.update { selection.stream.language }
-                        mutableCurrentlySelectedStreamVariant.update { selection.stream.identifier }
-                        return
-                    }
-                }
-            }
 
             exoPlayer.value?.currentTracks?.let { tracks ->
                 println("gurken trackgroups : ${tracks.groups.size}")
@@ -416,16 +391,13 @@ class NewPlayerImpl(
             null
         }
         mediaController = null
-        mutableAvailableStreamVariants.update { null }
-        uniqueIdToIdLookup = HashMap()
+        mutableCurrentlyAvailableStreams.update { emptyList() }
+        mutableCurrentlyPlayingStream.update { null }
+        uniqueIdToStreamSelectionLookup = HashMap()
     }
 
-    override fun getItemLinkOfMediaItem(mediaItem: MediaItem) =
-        uniqueIdToIdLookup[mediaItem.mediaId.toLong()]
-            ?: throw NewPlayerException("Could not find Media item with mediaId: ${mediaItem.mediaId}")
-
     override fun getItemFromMediaItem(mediaItem: MediaItem) =
-        uniqueIdToIdLookup[mediaItem.mediaId.toLong()]
+        uniqueIdToStreamSelectionLookup[mediaItem.mediaId.toLong()]?.item
             ?: throw NewPlayerException("Could not find an item corresponding to a media item with uniqueid: ${mediaItem.mediaId}")
 
 
@@ -444,15 +416,12 @@ class NewPlayerImpl(
     private suspend
     fun toMediaSource(item: String): MediaSource {
         val streamSelector = StreamSelector(
-            preferredVideoIdentifier = preferredVideoVariants,
-            preferredAudioIdentifier = preferredAudioVariants,
-            preferredLanguage = preferredStreamLanguage
+            preferredLanguages = preferredStreamLanguages
         )
 
         val selection = streamSelector.selectStream(
             item,
             availableStreams = repository.getStreams(item),
-            demuxedStreamBundeling = StreamSelector.DemuxedStreamBundeling.BUNDLE_STREAMS_WITH_SAME_ID
         )
         return toMediaSource(selection, item)
     }
@@ -461,12 +430,14 @@ class NewPlayerImpl(
     private suspend fun toMediaSource(streamSelection: StreamSelection, item: String): MediaSource {
         val builder = MediaSourceBuilder(
             repository = repository,
-            uniqueIdToIdLookup = uniqueIdToIdLookup,
             mutableErrorFlow = mutableErrorFlow,
             httpDataSourceFactory = repository.getHttpDataSourceFactory(item),
         )
-        val mediaSource = builder.buildMediaSource(streamSelection)
-        uniqueIdToStreamVariantSelection[mediaSource.mediaItem.mediaId.toLong()] = streamSelection
+
+        val uniqueId = Random.nextLong()
+
+        uniqueIdToStreamSelectionLookup[uniqueId] = streamSelection
+        val mediaSource = builder.buildMediaSource(streamSelection, uniqueId)
         return mediaSource
     }
 
@@ -475,12 +446,13 @@ class NewPlayerImpl(
      * This can be used to replace a faulty stream or change to a stream with a different language/quality.
      */
     @OptIn(UnstableApi::class)
-    private suspend fun replaceCurrentStream(stream: StreamSelection) {
+    private suspend fun replaceCurrentStream(streamSelection: StreamSelection) {
         val currentPosition = this.currentPosition
         val currentlyPlayingPlaylistItem = this.currentlyPlayingPlaylistItem
-        val item = uniqueIdToIdLookup[this.currentlyPlaying.value?.mediaId?.toLong()]!!
+        val item =
+            uniqueIdToStreamSelectionLookup[this.currentlyPlaying.value?.mediaId?.toLong()]!!.item
 
-        val mediaSource = toMediaSource(stream, item)
+        val mediaSource = toMediaSource(streamSelection, item)
         this.exoPlayer.value?.removeMediaItem(currentlyPlayingPlaylistItem)
         this.exoPlayer.value?.addMediaSource(currentlyPlayingPlaylistItem, mediaSource)
         if (this.exoPlayer.value?.playbackState == Player.STATE_IDLE) {

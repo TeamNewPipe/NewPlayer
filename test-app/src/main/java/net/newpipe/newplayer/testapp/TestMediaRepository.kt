@@ -12,12 +12,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import net.newpipe.newplayer.Chapter
+import net.newpipe.newplayer.utils.Chapter
 import net.newpipe.newplayer.MediaRepository
 import net.newpipe.newplayer.RepoMetaInfo
-import net.newpipe.newplayer.Stream
-import net.newpipe.newplayer.StreamType
-import net.newpipe.newplayer.Subtitle
+import net.newpipe.newplayer.utils.AudioStreamTrack
+import net.newpipe.newplayer.utils.LanguageIdentifier
+import net.newpipe.newplayer.utils.Stream
+import net.newpipe.newplayer.utils.Subtitle
+import net.newpipe.newplayer.utils.VideoStreamTrack
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -90,7 +92,7 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
         }
 
 
-    override suspend fun getStreams(item: String) : List<Stream> {
+    override suspend fun getStreams(item: String): List<Stream> {
         testRepoScope.launch {
             populateSeekPreviewThumbnailCache(item)
         }
@@ -98,88 +100,193 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
         return when (item) {
             "6502" -> listOf(
                 Stream(
+                    item = "6502",
                     streamUri = Uri.parse(context.getString(R.string.ccc_6502_video)),
                     mimeType = null,
-                    streamType = StreamType.AUDIO_AND_VIDEO,
-                    language = "Deutsch",
-                    identifier = "576p",
+                    streamTracks = listOf(
+                        AudioStreamTrack(
+                            bitrate = 480000,
+                            fileFormat = "MPEG4",
+                            language = LanguageIdentifier.EN
+                        ),
+                        VideoStreamTrack(
+                            width = 1024,
+                            height = 576,
+                            frameRate = 25,
+                            fileFormat = "MPEG4"
+                        )
+                    )
                 )
             )
 
             "faulty" -> listOf(
                 Stream(
+                    item = "faulty",
                     streamUri = Uri.parse("https://kernel.org"),
                     mimeType = null,
-                    streamType = StreamType.AUDIO_AND_VIDEO,
-                    language = "Deutsch",
-                    identifier = "576p",
+                    streamTracks = listOf(
+                        AudioStreamTrack(
+                            bitrate = 480000,
+                            fileFormat = "MP4A",
+                            language = LanguageIdentifier.EN
+                        ),
+                        VideoStreamTrack(
+                            width = 1024,
+                            height = 576,
+                            frameRate = 25,
+                            fileFormat = "MPEG4"
+                        )
+                    )
                 )
             )
 
             "portrait" -> listOf(
                 Stream(
+                    item = "portrait",
                     streamUri = Uri.parse(context.getString(R.string.portrait_video_example)),
                     mimeType = null,
-                    streamType = StreamType.AUDIO_AND_VIDEO,
-                    language = null,
-                    identifier = "720p",
+                    streamTracks = listOf(
+                        VideoStreamTrack(
+                            width = 720,
+                            height = 1280,
+                            frameRate = 30,
+                            fileFormat = "MPEG4"
+                        ),
+                    AudioStreamTrack(
+                        bitrate = 125000,
+                        fileFormat = "MP4A"
+                    )
                 )
+            )
             )
 
             "imu" -> listOf(
                 Stream(
+                    item = "imu",
                     streamUri = Uri.parse(context.getString(R.string.ccc_imu_1080_mp4)),
                     mimeType = null,
-                    streamType = StreamType.AUDIO_AND_VIDEO,
-                    language = null,
-                    identifier = "1080p",
+                    streamTracks = listOf(
+                        VideoStreamTrack(
+                            fileFormat = "MPEG4",
+                            width = 1920,
+                            height = 1080,
+                            frameRate = 25
+                        ),
+                        VideoStreamTrack(
+                            fileFormat = "MPEG4",
+                            width = 1920,
+                            height = 1080,
+                            frameRate = 25
+                        ),
+                        AudioStreamTrack(
+                            bitrate = 128000,
+                            fileFormat = "MP4A",
+                            language = LanguageIdentifier.EN
+                        ),
+                        AudioStreamTrack(
+                            bitrate = 127000,
+                            fileFormat = "MP4A",
+                            language = LanguageIdentifier.DE
+                        )
+                    )
                 ),
 
                 Stream(
+                    item = "imu",
                     streamUri = Uri.parse(context.getString(R.string.ccc_imu_576_mp4)),
                     mimeType = null,
-                    streamType = StreamType.AUDIO_AND_VIDEO,
-                    language = null,
-                    identifier = "576p"
+                    streamTracks = listOf(
+                        VideoStreamTrack(
+                            fileFormat = "MPEG4",
+                            width = 720,
+                            height = 576,
+                            frameRate = 25
+                        ),
+                        VideoStreamTrack(
+                            fileFormat = "MPEG4",
+                            width = 720,
+                            height = 576,
+                            frameRate = 25
+                        ),
+                        AudioStreamTrack(
+                            bitrate = 128000,
+                            fileFormat = "MP4A",
+                            language = LanguageIdentifier.EN
+                        ),
+                        AudioStreamTrack(
+                            bitrate = 127000,
+                            fileFormat = "MP4A",
+                            language = LanguageIdentifier.DE
+                        )
+
+                    )
                 )
             )
 
             "yt_test" -> listOf(
                 Stream(
+                    item = "yt_test",
                     streamUri = Uri.parse(context.getString(R.string.yt_test_video_sd)),
                     mimeType = null,
-                    streamType = StreamType.VIDEO,
-                    language = null,
-                    identifier = "SD",
+                    streamTracks = listOf(
+                        VideoStreamTrack(
+                            width = 854,
+                            height = 428,
+                            frameRate = 30,
+                            fileFormat = "MPEG4"
+                        )
+                    )
                 ),
 
                 Stream(
+                    item = "yt_test",
                     streamUri = Uri.parse(context.getString(R.string.yt_test_video_hd)),
                     mimeType = null,
-                    streamType = StreamType.VIDEO,
-                    language = null,
-                    identifier = "HD",
+                    streamTracks = listOf(
+                        VideoStreamTrack(
+                            width = 1280,
+                            height = 640,
+                            frameRate = 30,
+                            fileFormat = "MPEG4"
+                        )
+                    )
                 ),
                 Stream(
+                    item = "yt_test",
                     streamUri = Uri.parse(context.getString(R.string.yt_test_video_fullhd)),
                     mimeType = null,
-                    streamType = StreamType.VIDEO,
-                    language = null,
-                    identifier = "FullHD",
+                    streamTracks = listOf(
+                        VideoStreamTrack(
+                            width = 1920,
+                            height = 960,
+                            frameRate = 30,
+                            fileFormat = "MPEG4"
+                        )
+                    )
                 ),
                 Stream(
+                    item = "yt_test",
                     streamUri = Uri.parse(context.getString(R.string.yt_test_audio_english)),
                     mimeType = null,
-                    streamType = StreamType.AUDIO,
-                    language = "English",
-                    identifier = "default audio",
+                    streamTracks = listOf(
+                        AudioStreamTrack(
+                            bitrate = 125000,
+                            language = LanguageIdentifier.EN,
+                            fileFormat = "MP4A"
+                        )
+                    )
                 ),
                 Stream(
+                    item = "yt_test",
                     streamUri = Uri.parse(context.getString(R.string.yt_test_audio_spanish)),
                     mimeType = null,
-                    streamType = StreamType.AUDIO,
-                    language = "Spanish",
-                    identifier = "default audio",
+                    streamTracks = listOf(
+                        AudioStreamTrack(
+                            bitrate = 125000,
+                            language = LanguageIdentifier.ES,
+                            fileFormat = "MP4A"
+                        )
+                    )
                 )
             )
 
@@ -217,10 +324,10 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
             else -> throw Exception("Unknown stream: $item")
         }
 
-        for(i in 1 .. thumbCount) {
+        for (i in 1..thumbCount) {
             val thumbUrl = String.format(templateUrl, i)
 
-            if(thumbnailCache[thumbUrl] == null) {
+            if (thumbnailCache[thumbUrl] == null) {
                 testRepoScope.launch {
                     val bitmap = withContext(Dispatchers.IO) {
                         val request = Request.Builder().url(thumbUrl).build()

@@ -15,7 +15,7 @@ suspend fun streamErrorHandler(
     repository: MediaRepository
 ): StreamExceptionResponse {
     return if (item == "faulty") {
-        StreamSelectionResponse(SingleSelection(item, repository.getStreams("6502")[0]))
+        StreamSelectionResponse(SingleSelection(repository.getStreams("6502")[0]))
     } else {
         NoResponse()
     }

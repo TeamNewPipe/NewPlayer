@@ -22,11 +22,15 @@ package net.newpipe.newplayer
 
 import android.app.Activity
 import androidx.core.graphics.drawable.IconCompat
+import androidx.media3.common.Format
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import net.newpipe.newplayer.utils.Chapter
+import net.newpipe.newplayer.utils.LanguageIdentifier
+import net.newpipe.newplayer.utils.Stream
 import kotlin.Exception
 
 enum class PlayMode {
@@ -46,16 +50,9 @@ enum class RepeatMode {
     REPEAT_ONE
 }
 
-data class StreamVariants(
-    val identifiers: List<String>,
-    val languages: List<String>
-)
-
 interface NewPlayer {
     // preferences
-    val preferredVideoVariants: List<String>
-    val preferredAudioVariants: List<String>
-    val preferredStreamLanguage: List<String>
+    var preferredStreamLanguages: List<LanguageIdentifier>
     val notificationIcon: IconCompat
     val playerActivityClass: Class<Activity>
 
@@ -75,9 +72,9 @@ interface NewPlayer {
     var currentlyPlayingPlaylistItem: Int
 
     val currentChapters: StateFlow<List<Chapter>>
-    val availableStreamVariants: StateFlow<StreamVariants?>
-    val currentlySelectedLanguage: StateFlow<String?>
-    val currentlySelectedStreamVariant: StateFlow<String?>
+
+    val currentlyPlayingStream: StateFlow<Stream?>
+    val currentlyAvailableStreams: StateFlow<List<Stream>>
 
     // callbacks
 
@@ -94,6 +91,5 @@ interface NewPlayer {
     fun playStream(item: String, playMode: PlayMode)
     fun selectChapter(index: Int)
     fun release()
-    fun getItemLinkOfMediaItem(mediaItem: MediaItem) : String
     fun getItemFromMediaItem(mediaItem: MediaItem) : String
 }

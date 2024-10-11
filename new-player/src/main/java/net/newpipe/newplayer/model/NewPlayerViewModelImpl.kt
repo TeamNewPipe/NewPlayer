@@ -244,14 +244,9 @@ class NewPlayerViewModelImpl @Inject constructor(
             }
 
             viewModelScope.launch {
-                newPlayer.availableStreamVariants.collect { availableVariants ->
-                    if (availableVariants != null) {
-                        mutableUiState.update {
-                            it.copy(
-                                availableStreamVariants = availableVariants.identifiers,
-                                availableLanguages = availableVariants.languages
-                            )
-                        }
+                newPlayer.currentlyAvailableStreams.collect { availableStreams ->
+                    if (availableStreams != null) {
+                        /*TODO*/
                     } else {
                         mutableUiState.update {
                             it.copy(
