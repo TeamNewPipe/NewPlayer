@@ -31,8 +31,6 @@ import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.exoplayer.upstream.LoadErrorHandlingPolicy
 import kotlinx.coroutines.flow.MutableSharedFlow
 import net.newpipe.newplayer.MediaRepository
-import net.newpipe.newplayer.StreamType
-import net.newpipe.newplayer.Stream
 import kotlin.random.Random
 
 @OptIn(UnstableApi::class)
@@ -84,7 +82,8 @@ internal class MediaSourceBuilder
             mediaItemBuilder.setMimeType(stream.mimeType)
         }
 
-        return mediaItemBuilder.build()
+        val mediaItem = mediaItemBuilder.build()
+        return mediaItem
     }
 
     @OptIn(UnstableApi::class)

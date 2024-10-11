@@ -22,24 +22,17 @@ package net.newpipe.newplayer.utils
 
 import android.net.Uri
 
-enum class StreamType {
-    VIDEO,
-    AUDIO,
-    AUDIO_AND_VIDEO,
-    DYNAMIC
-}
-
 data class Stream(
     val streamUri: Uri,
     val identifier: String,
-    val streamType: StreamType,
-    val languages: List<String>,
+    val streamInfo: StreamInfo,
+    val languages: List<LanguageIdentifier>,
     val mimeType: String? = null,
 ) {
     override fun equals(other: Any?) =
         other is Stream
                 && other.streamUri == streamUri
-                && other.streamType == streamType
+                && other.streamInfo == streamInfo
                 && other.identifier == identifier
                 && other.mimeType == mimeType
                 && run {
