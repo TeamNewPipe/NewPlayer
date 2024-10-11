@@ -6,12 +6,10 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.annotation.OptIn
 import androidx.media3.common.MediaMetadata
-import androidx.media3.common.PlaybackException
 import androidx.media3.common.util.UnstableApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.newpipe.newplayer.Chapter
@@ -37,7 +35,7 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
     }
 
     override fun getRepoInfo() =
-        RepoMetaInfo(canHandleTimestampedLinks = true, pullsDataFromNetwrok = true)
+        RepoMetaInfo(canHandleTimestampedLinks = true, pullsDataFromNetwork = true)
 
     @OptIn(UnstableApi::class)
     override suspend fun getMetaInfo(item: String): MediaMetadata =

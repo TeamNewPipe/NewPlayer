@@ -42,7 +42,6 @@ internal class MediaSourceBuilder
     private val uniqueIdToIdLookup: HashMap<Long, String>,
     private val mutableErrorFlow: MutableSharedFlow<Exception>,
     private val httpDataSourceFactory: HttpDataSource.Factory,
-    private val loadErrorHandlingPolicy: LoadErrorHandlingPolicy
 ) {
     @OptIn(UnstableApi::class)
     internal suspend fun buildMediaSource(selectedStream: StreamSelection): MediaSource {
@@ -92,11 +91,9 @@ internal class MediaSourceBuilder
     private fun toMediaSource(mediaItem: MediaItem, stream: Stream): MediaSource =
         if (stream.streamType == StreamType.DYNAMIC)
             DashMediaSource.Factory(httpDataSourceFactory)
-                .setLoadErrorHandlingPolicy(loadErrorHandlingPolicy)
                 .createMediaSource(mediaItem)
         else
             ProgressiveMediaSource.Factory(httpDataSourceFactory)
-                .setLoadErrorHandlingPolicy(loadErrorHandlingPolicy)
                 .createMediaSource(mediaItem)
 
 

@@ -36,7 +36,6 @@ import androidx.media3.common.Tracks
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.MediaSource
-import androidx.media3.exoplayer.upstream.DefaultLoadErrorHandlingPolicy
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.MoreExecutors
@@ -55,7 +54,6 @@ import net.newpipe.newplayer.service.NewPlayerService
 import net.newpipe.newplayer.utils.ActionResponse
 import net.newpipe.newplayer.utils.MediaSourceBuilder
 import net.newpipe.newplayer.utils.NewPlayerException
-import net.newpipe.newplayer.utils.NewPlayerLoadErrorHandlingPolicy
 import net.newpipe.newplayer.utils.NoResponse
 import net.newpipe.newplayer.utils.SingleSelection
 import net.newpipe.newplayer.utils.StreamExceptionResponse
@@ -180,7 +178,7 @@ class NewPlayerImpl(
         val newExoPlayer = ExoPlayer.Builder(app)
             .setAudioAttributes(AudioAttributes.DEFAULT, true)
             .setHandleAudioBecomingNoisy(true)
-            .setWakeMode(if (repository.getRepoInfo().pullsDataFromNetwrok) C.WAKE_MODE_NETWORK else C.WAKE_MODE_LOCAL)
+            .setWakeMode(if (repository.getRepoInfo().pullsDataFromNetwork) C.WAKE_MODE_NETWORK else C.WAKE_MODE_LOCAL)
             .build()
 
         newExoPlayer.addListener(object : Player.Listener {
@@ -466,7 +464,6 @@ class NewPlayerImpl(
             uniqueIdToIdLookup = uniqueIdToIdLookup,
             mutableErrorFlow = mutableErrorFlow,
             httpDataSourceFactory = repository.getHttpDataSourceFactory(item),
-            loadErrorHandlingPolicy = NewPlayerLoadErrorHandlingPolicy(this::onPlayBackError)
         )
         val mediaSource = builder.buildMediaSource(streamSelection)
         uniqueIdToStreamVariantSelection[mediaSource.mediaItem.mediaId.toLong()] = streamSelection

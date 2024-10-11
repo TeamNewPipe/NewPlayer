@@ -21,54 +21,24 @@
 package net.newpipe.newplayer
 
 import android.graphics.Bitmap
-import android.net.Uri
-import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import androidx.media3.common.PlaybackException
 import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.datasource.HttpDataSource
-
-data class Chapter(val chapterStartInMs: Long, val chapterTitle: String?, val thumbnail: Uri?)
-
-enum class StreamType {
-    VIDEO,
-    AUDIO,
-    AUDIO_AND_VIDEO,
-    DYNAMIC
-}
-
-data class Stream(
-    val streamUri: Uri,
-    val identifier: String,
-    val streamType: StreamType,
-    val language: String?,
-    val mimeType: String? = null,
-) {
-    override fun equals(other: Any?) =
-        other is Stream
-                && other.streamUri == streamUri
-                && other.streamType == streamType
-                && other.language == language
-                && other.identifier == identifier
-                && other.mimeType == mimeType
-
-}
+import net.newpipe.newplayer.utils.Chapter
+import net.newpipe.newplayer.utils.Stream
+import net.newpipe.newplayer.utils.Subtitle
 
 data class RepoMetaInfo(
     val canHandleTimestampedLinks: Boolean,
-    val pullsDataFromNetwrok: Boolean
-)
-
-data class Subtitle(
-    val uri: Uri,
-    val identifier: String
+    val pullsDataFromNetwork: Boolean
 )
 
 interface MediaRepository {
 
     fun getRepoInfo(): RepoMetaInfo
 
-    fun getHttpDataSourceFactory(item: String): HttpDataSource.Factory = DefaultHttpDataSource.Factory()
+    fun getHttpDataSourceFactory(item: String): HttpDataSource.Factory =
+        DefaultHttpDataSource.Factory()
 
     suspend fun getMetaInfo(item: String): MediaMetadata
 
