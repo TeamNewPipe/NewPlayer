@@ -20,8 +20,15 @@
 
 package net.newpipe.newplayer.data
 
+import net.newpipe.newplayer.logic.TrackUtils
+
 interface StreamSelection {
     val item: String
+
+    val tracks : List<StreamTrack>
+    val hasVideoTracks:Boolean
+    val hasAudioTracks:Boolean
+    val isDynamic:Boolean
 }
 
 data class SingleSelection(
@@ -29,11 +36,40 @@ data class SingleSelection(
 ) : StreamSelection {
     override val item: String
         get() = stream.item
+
+    override val tracks: List<StreamTrack>
+        get() = stream.streamTracks
+
+    override val hasVideoTracks: Boolean
+        get() = stream.hasVideoTracks
+
+    override val hasAudioTracks: Boolean
+        get() = stream.hasVideoTracks
+
+    override val isDynamic: Boolean
+        get() = stream.isDashOrHls
 }
 
 data class MultiSelection(
     val streams: List<Stream>
 ) : StreamSelection {
+
     override val item: String
         get() = streams[0].item
+
+    override val tracks: List<StreamTrack>
+        get() {
+            val allTracks = mutableListOf<StreamTrack>()
+            streams.forEach { allTracks.addAll(it.streamTracks) }
+            return allTracks
+        }
+
+    override val hasVideoTracks: Boolean
+        get() = TrackUtils.hasVideoTracks(streams)
+
+    override val hasAudioTracks: Boolean
+        get() = TrackUtils.hasAudioTracks(streams)
+
+    override val isDynamic: Boolean
+        get() = TrackUtils.hasDynamicStreams(streams)
 }

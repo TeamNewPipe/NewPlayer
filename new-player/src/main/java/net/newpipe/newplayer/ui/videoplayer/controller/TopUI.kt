@@ -21,6 +21,7 @@
 package net.newpipe.newplayer.ui.videoplayer.controller
 
 import android.app.Activity
+import android.widget.Toast
 import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
@@ -32,13 +33,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -52,6 +60,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
+import net.newpipe.newplayer.data.VideoStreamTrack
+import net.newpipe.newplayer.logic.TrackUtils
 import net.newpipe.newplayer.uiModel.EmbeddedUiConfig
 import net.newpipe.newplayer.uiModel.NewPlayerUIState
 import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
@@ -86,7 +96,7 @@ internal fun TopUI(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                
+
                 val creatorOffset = with(LocalDensity.current) {
                     14.sp.toDp()
                 }
@@ -101,17 +111,7 @@ internal fun TopUI(
         } else {
             Box(modifier = Modifier.weight(1F))
         }
-        Button(
-            onClick = { /*TODO*/ },
-            contentPadding = PaddingValues(0.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Transparent, contentColor = video_player_onSurface
-            ),
-        ) {
-            Text(
-                "1080p", fontWeight = FontWeight.Bold, modifier = Modifier.padding(0.dp)
-            )
-        }
+        TrackSelectionMenu(viewModel, uiState)
         IconButton(
             onClick = { /*TODO*/ },
         ) {
@@ -149,7 +149,57 @@ internal fun TopUI(
                 )
             }
         }
-        DropDownMenu(viewModel, uiState)
+        VideoPlayerMenu(viewModel, uiState)
+    }
+}
+
+@OptIn(UnstableApi::class)
+@Composable
+private fun TrackSelectionMenu(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState) {
+    var menuVisible by remember {
+        mutableStateOf(false)
+    }
+
+    val context = LocalContext.current
+    val noOtherTracksText = stringResource(
+        id = R.string.no_other_tracks_available_toast
+    )
+
+    val availableVideoTracks =
+        uiState.currentlyAvailableTracks.filterIsInstance<VideoStreamTrack>()
+
+    Box {
+        Button(
+            onClick = {
+                if (1 < availableVideoTracks.size) {
+                    viewModel.dialogVisible(true)
+                    menuVisible = true
+                } else
+                    Toast.makeText(
+                        context,
+                        noOtherTracksText,
+                        Toast.LENGTH_SHORT
+
+                    ).show()
+            },
+            contentPadding = PaddingValues(0.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent, contentColor = video_player_onSurface
+            ),
+        ) {
+            Text(
+                "1080p", fontWeight = FontWeight.Bold, modifier = Modifier.padding(0.dp)
+            )
+        }
+        DropdownMenu(expanded = menuVisible, onDismissRequest = { menuVisible = false }) {
+            for (track in availableVideoTracks) {
+                DropdownMenuItem(text = { Text(track.toLongIdentifierString()) },
+                    onClick = { /*TODO*/
+                        viewModel.dialogVisible(false)
+                        menuVisible = false
+                    })
+            }
+        }
     }
 }
 

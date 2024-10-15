@@ -66,20 +66,20 @@ object TrackUtils {
         )
     }
 
-    internal fun tryAndGetMedianVideoOnlyStream(availableStreams: List<Stream>) =
+    internal fun tryAndGetMedianVideoOnlyTracks(availableStreams: List<Stream>) =
         availableStreams.filter { !it.isDashOrHls && it.hasVideoTracks && !it.hasAudioTracks }
             .ifEmpty { null }?.let {
                 it[it.size / 2]
             }
 
-    internal fun tryAndGetMedianCombinedVideoAndAudioStream(availableStreams: List<Stream>) =
+    internal fun tryAndGetMedianCombinedVideoAndAudioTracks(availableStreams: List<Stream>) =
         availableStreams.filter { !it.isDashOrHls && it.hasVideoTracks && it.hasVideoTracks }
             .ifEmpty { null }
             ?.let {
                 it[it.size / 2]
             }
 
-    internal fun tryAndGetMedianAudioOnlyStream(availableStreams: List<Stream>) =
+    internal fun tryAndGetMedianAudioOnlyTracks(availableStreams: List<Stream>) =
         availableStreams.filter { !it.isDashOrHls && it.hasAudioTracks && !it.hasVideoTracks }
             .ifEmpty { null }?.let {
                 it[it.size / 2]
@@ -96,17 +96,33 @@ object TrackUtils {
     internal fun getDynamicStreams(availableStreams: List<Stream>) =
         availableStreams.filter { it.isDashOrHls }
 
-    internal fun getNonDynamicVideoStreams(availableStreams: List<Stream>) =
+    internal fun getNonDynamicVideoTracks(availableStreams: List<Stream>) =
         availableStreams.filter {
             !it.isDashOrHls && it.hasVideoTracks && !it.hasAudioTracks
         }
 
-    internal fun getNonDynamicAudioStreams(availableStreams: List<Stream>) =
+    internal fun getNonDynamicAudioTracks(availableStreams: List<Stream>) =
         availableStreams.filter { !it.isDashOrHls && !it.hasVideoTracks && it.hasAudioTracks }
 
-    internal fun hasVideoStreams(availableStreams: List<Stream>): Boolean {
+    internal fun hasVideoTracks(availableStreams: List<Stream>): Boolean {
         availableStreams.forEach {
             if (it.hasVideoTracks)
+                return true
+        }
+        return false
+    }
+
+    internal fun hasAudioTracks(availableStreams: List<Stream>): Boolean {
+        availableStreams.forEach {
+            if (it.hasAudioTracks)
+                return true
+        }
+        return false
+    }
+
+    internal fun hasDynamicStreams(availableStreams: List<Stream>): Boolean {
+        availableStreams.forEach {
+            if (it.isDashOrHls)
                 return true
         }
         return false

@@ -61,5 +61,6 @@
     <string name="fullscreen_button_description">Switch to fullscreen video mode</string>
     <string name="pip_button_description">Picture in picture</string>
     <string name="playing_in_background">Playing in the background…</string>
-    <string name="seek_thumb_preview">Video seek preview thumbnail</string>
+    <string name="seek_thumb_preview">Video seek preview thumbnail</string>a
+    <string name="no_other_tracks_available_toast">No other stream tracks available.</string>
 </resources>

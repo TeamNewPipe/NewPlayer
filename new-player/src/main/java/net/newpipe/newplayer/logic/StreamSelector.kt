@@ -27,10 +27,10 @@ import net.newpipe.newplayer.data.SingleSelection
 import net.newpipe.newplayer.data.Stream
 import net.newpipe.newplayer.data.StreamSelection
 import net.newpipe.newplayer.logic.TrackUtils.getDynamicStreams
-import net.newpipe.newplayer.logic.TrackUtils.hasVideoStreams
-import net.newpipe.newplayer.logic.TrackUtils.tryAndGetMedianAudioOnlyStream
-import net.newpipe.newplayer.logic.TrackUtils.tryAndGetMedianCombinedVideoAndAudioStream
-import net.newpipe.newplayer.logic.TrackUtils.tryAndGetMedianVideoOnlyStream
+import net.newpipe.newplayer.logic.TrackUtils.hasVideoTracks
+import net.newpipe.newplayer.logic.TrackUtils.tryAndGetMedianAudioOnlyTracks
+import net.newpipe.newplayer.logic.TrackUtils.tryAndGetMedianCombinedVideoAndAudioTracks
+import net.newpipe.newplayer.logic.TrackUtils.tryAndGetMedianVideoOnlyTracks
 
 internal class StreamSelector(
     val preferredLanguages: List<LanguageIdentifier>,
@@ -55,7 +55,7 @@ internal class StreamSelector(
 
 
         // is it a video stream or a pure audio stream?
-        if (hasVideoStreams(availableStreams)) {
+        if (hasVideoTracks(availableStreams)) {
 
             // first: try and get a dynamic stream variant
             val dynamicStreams = getDynamicStreams(availablesInPreferredLanguage)
@@ -65,12 +65,12 @@ internal class StreamSelector(
 
             // second: try and get separate audio and video stream variants
 
-            val videoOnlyStream = tryAndGetMedianVideoOnlyStream(availableStreams)
+            val videoOnlyStream = tryAndGetMedianVideoOnlyTracks(availableStreams)
 
 
             if (videoOnlyStream != null) {
 
-                val audioStream = tryAndGetMedianAudioOnlyStream(availableStreams)
+                val audioStream = tryAndGetMedianAudioOnlyTracks(availableStreams)
 
                 if (videoOnlyStream != null && audioStream != null) {
                     return MultiSelection(listOf(videoOnlyStream, audioStream))
@@ -79,7 +79,7 @@ internal class StreamSelector(
 
             // fourth: try to get a video and audio stream variant with the best fitting identifier
 
-            tryAndGetMedianCombinedVideoAndAudioStream(availableStreams)?.let {
+            tryAndGetMedianCombinedVideoAndAudioTracks(availableStreams)?.let {
                 return SingleSelection(it)
             }
 
@@ -87,7 +87,7 @@ internal class StreamSelector(
 
             // first: try to get an audio stream variant with the best fitting identifier
 
-            tryAndGetMedianAudioOnlyStream(availableStreams)?.let {
+            tryAndGetMedianAudioOnlyTracks(availableStreams)?.let {
                 return SingleSelection(it)
             }
         }
