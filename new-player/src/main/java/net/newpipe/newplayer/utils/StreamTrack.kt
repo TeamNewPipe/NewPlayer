@@ -34,7 +34,8 @@ data class VideoStreamTrack(
     override val fileFormat: String,
 ) : StreamTrack {
 
-    override fun toShortIdentifierString() = "${width}p${if (frameRate != 30) frameRate else ""}"
+    override fun toShortIdentifierString() =
+        "${if (width < height) width else height}p${if (frameRate != 30) frameRate else ""}"
 
     override fun toLongIdentifierString() = "$fileFormat ${toShortIdentifierString()}"
 
@@ -68,7 +69,7 @@ data class AudioStreamTrack(
     val bitrate: Int,
     override val fileFormat: String,
     val language: LanguageIdentifier? = null
-) : StreamTrack{
+) : StreamTrack {
 
     override fun toShortIdentifierString() =
         if (bitrate < 1000) "${bitrate}bps" else "${bitrate / 1000}kbps"
@@ -76,7 +77,7 @@ data class AudioStreamTrack(
     override fun toLongIdentifierString() = "$fileFormat ${toShortIdentifierString()}"
 
     override fun compareTo(other: StreamTrack) =
-        if(other is AudioStreamTrack) {
+        if (other is AudioStreamTrack) {
             bitrate - other.bitrate
         } else {
             -1

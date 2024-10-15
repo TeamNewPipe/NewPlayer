@@ -62,7 +62,7 @@ import net.newpipe.newplayer.utils.StreamExceptionResponse
 import net.newpipe.newplayer.utils.StreamSelection
 import net.newpipe.newplayer.utils.StreamSelectionResponse
 import net.newpipe.newplayer.utils.StreamTrack
-import net.newpipe.newplayer.utils.TrackSelector
+import net.newpipe.newplayer.utils.StreamSelector
 import kotlin.random.Random
 
 private const val TAG = "NewPlayerImpl"
@@ -207,7 +207,7 @@ class NewPlayerImpl(
                         uniqueIdToStreamSelectionLookup[mediaItem.mediaId.toLong()]!!
                     launchJobAndCollectError {
                         mutableCurrentlyAvailableTracks.update {
-                            TrackSelector.getNonDynamicTracksNonDuplicated(repository.getStreams(streamSelection.item))
+                            StreamSelector.getNonDynamicTracksNonDuplicated(repository.getStreams(streamSelection.item))
                         }
                     }
                 } else {
@@ -344,7 +344,7 @@ class NewPlayerImpl(
     override fun playStream(item: String, playMode: PlayMode) {
         launchJobAndCollectError {
             mutableCurrentlyAvailableTracks.update {
-                TrackSelector.getNonDynamicTracksNonDuplicated(repository.getStreams(item))
+                StreamSelector.getNonDynamicTracksNonDuplicated(repository.getStreams(item))
             }
 
             val mediaSource = toMediaSource(item)
@@ -416,11 +416,11 @@ class NewPlayerImpl(
     @OptIn(UnstableApi::class)
     private suspend
     fun toMediaSource(item: String): MediaSource {
-        val trackSelector = TrackSelector(
+        val streamSelector = StreamSelector(
             preferredLanguages = preferredStreamLanguages
         )
 
-        val selection = trackSelector.selectStreamAutomatically(
+        val selection = streamSelector.selectStreamAutomatically(
             item,
             availableStreams = repository.getStreams(item),
         )
