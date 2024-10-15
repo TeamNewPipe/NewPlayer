@@ -25,8 +25,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.media3.common.util.UnstableApi
-import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.InternalNewPlayerViewModel
+import net.newpipe.newplayer.uiModel.NewPlayerUIState
+import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
 import net.newpipe.newplayer.ui.videoplayer.gesture_ui.EmbeddedGestureUI
 import net.newpipe.newplayer.ui.videoplayer.gesture_ui.FullscreenGestureUI
 

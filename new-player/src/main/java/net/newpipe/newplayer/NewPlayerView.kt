@@ -27,11 +27,11 @@ import android.widget.FrameLayout
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import dagger.hilt.android.AndroidEntryPoint
-import net.newpipe.newplayer.model.InternalNewPlayerViewModel
-import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
+import net.newpipe.newplayer.uiModel.NewPlayerViewModel
 import net.newpipe.newplayer.ui.NewPlayerUI
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.utils.NewPlayerException
+import net.newpipe.newplayer.data.NewPlayerException
 
 @AndroidEntryPoint
 class NewPlayerView : FrameLayout {

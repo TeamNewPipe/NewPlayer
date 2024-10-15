@@ -44,10 +44,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
-import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.InternalNewPlayerViewModel
-import net.newpipe.newplayer.model.NewPlayerViewModelDummy
-import net.newpipe.newplayer.model.UIModeState
+import net.newpipe.newplayer.uiModel.NewPlayerUIState
+import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
+import net.newpipe.newplayer.uiModel.NewPlayerViewModelDummy
+import net.newpipe.newplayer.uiModel.UIModeState
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.controller.BottomUI
 import net.newpipe.newplayer.ui.videoplayer.controller.CenterUI

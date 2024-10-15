@@ -18,7 +18,7 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.utils
+package net.newpipe.newplayer.data
 
 interface StreamTrack : Comparable<StreamTrack> {
     val fileFormat: String

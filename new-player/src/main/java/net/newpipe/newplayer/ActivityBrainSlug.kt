@@ -29,8 +29,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import net.newpipe.newplayer.model.InternalNewPlayerViewModel
-import net.newpipe.newplayer.model.NewPlayerViewModel
+import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
+import net.newpipe.newplayer.uiModel.NewPlayerViewModel
 
 private const val TAG = "ActivityBrainSlug"
 

@@ -18,26 +18,22 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.model
+package net.newpipe.newplayer.data
 
-import android.content.pm.ActivityInfo
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+interface StreamSelection {
+    val item: String
+}
 
-/**
- * Restores the embedded mode UI config when returning from fullscreen
- */
-@Parcelize
-data class EmbeddedUiConfig(
-    val systemBarInLightMode: Boolean,
-    val brightness: Float,
-    val screenOrientation: Int
-) : Parcelable {
-    companion object {
-        val DUMMY = EmbeddedUiConfig(
-            systemBarInLightMode = true,
-            brightness = -1f,
-            screenOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        )
-    }
+data class SingleSelection(
+    val stream: Stream
+) : StreamSelection {
+    override val item: String
+        get() = stream.item
+}
+
+data class MultiSelection(
+    val streams: List<Stream>
+) : StreamSelection {
+    override val item: String
+        get() = streams[0].item
 }

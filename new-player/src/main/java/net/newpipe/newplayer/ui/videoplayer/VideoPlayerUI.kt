@@ -47,12 +47,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.graphics.toRect
 import androidx.lifecycle.Lifecycle
 import androidx.media3.common.util.UnstableApi
-import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.InternalNewPlayerViewModel
+import net.newpipe.newplayer.uiModel.NewPlayerUIState
+import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
 import net.newpipe.newplayer.ui.selection_ui.StreamSelectUI
 import androidx.lifecycle.LifecycleEventObserver
-import net.newpipe.newplayer.utils.NewPlayerException
-import net.newpipe.newplayer.model.EmbeddedUiConfig
+import net.newpipe.newplayer.data.NewPlayerException
+import net.newpipe.newplayer.uiModel.EmbeddedUiConfig
 import net.newpipe.newplayer.ui.selection_ui.ChapterSelectUI
 import net.newpipe.newplayer.ui.videoplayer.pip.getPipParams
 import net.newpipe.newplayer.ui.videoplayer.pip.supportsPip

@@ -52,11 +52,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
-import net.newpipe.newplayer.model.EmbeddedUiConfig
-import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.InternalNewPlayerViewModel
-import net.newpipe.newplayer.model.NewPlayerViewModelDummy
-import net.newpipe.newplayer.model.UIModeState
+import net.newpipe.newplayer.uiModel.EmbeddedUiConfig
+import net.newpipe.newplayer.uiModel.NewPlayerUIState
+import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
+import net.newpipe.newplayer.uiModel.NewPlayerViewModelDummy
+import net.newpipe.newplayer.uiModel.UIModeState
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.theme.video_player_onSurface
 import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig

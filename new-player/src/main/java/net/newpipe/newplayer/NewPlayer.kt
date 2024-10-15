@@ -27,10 +27,10 @@ import androidx.media3.common.Player
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import net.newpipe.newplayer.utils.Chapter
-import net.newpipe.newplayer.utils.LanguageIdentifier
-import net.newpipe.newplayer.utils.Stream
-import net.newpipe.newplayer.utils.StreamTrack
+import net.newpipe.newplayer.data.Chapter
+import net.newpipe.newplayer.data.LanguageIdentifier
+import net.newpipe.newplayer.data.Stream
+import net.newpipe.newplayer.data.StreamTrack
 import kotlin.Exception
 
 enum class PlayMode {

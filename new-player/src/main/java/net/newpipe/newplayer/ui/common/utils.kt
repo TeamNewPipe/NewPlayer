@@ -50,9 +50,9 @@ import androidx.core.view.WindowCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
 import coil.compose.AsyncImage
-import net.newpipe.newplayer.utils.NewPlayerException
+import net.newpipe.newplayer.data.NewPlayerException
 import net.newpipe.newplayer.R
-import net.newpipe.newplayer.model.EmbeddedUiConfig
+import net.newpipe.newplayer.uiModel.EmbeddedUiConfig
 import java.util.Locale
 
 @Composable

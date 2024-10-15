@@ -25,9 +25,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.util.UnstableApi
-import net.newpipe.newplayer.model.UIModeState
-import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.NewPlayerViewModelDummy
+import net.newpipe.newplayer.uiModel.UIModeState
+import net.newpipe.newplayer.uiModel.NewPlayerUIState
+import net.newpipe.newplayer.uiModel.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.audioplayer.AudioPlayerUI
 import net.newpipe.newplayer.ui.videoplayer.PreviewBackgroundSurface
 import net.newpipe.newplayer.ui.videoplayer.VideoPlayerControllerUI

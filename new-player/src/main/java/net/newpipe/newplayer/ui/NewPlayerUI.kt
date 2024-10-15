@@ -39,11 +39,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 
 import androidx.media3.common.util.UnstableApi
-import net.newpipe.newplayer.utils.NewPlayerException
-import net.newpipe.newplayer.model.UIModeState
-import net.newpipe.newplayer.model.InternalNewPlayerViewModel
-import net.newpipe.newplayer.model.NewPlayerViewModel
-import net.newpipe.newplayer.model.NewPlayerViewModelDummy
+import net.newpipe.newplayer.data.NewPlayerException
+import net.newpipe.newplayer.uiModel.UIModeState
+import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
+import net.newpipe.newplayer.uiModel.NewPlayerViewModel
+import net.newpipe.newplayer.uiModel.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.audioplayer.AudioPlayerUI
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.VideoPlayerUi

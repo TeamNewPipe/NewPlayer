@@ -18,19 +18,19 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.model
+package net.newpipe.newplayer.uiModel
 
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.util.UnstableApi
-import net.newpipe.newplayer.utils.Chapter
+import net.newpipe.newplayer.data.Chapter
 import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.ui.ContentScale
-import net.newpipe.newplayer.utils.AudioStreamTrack
-import net.newpipe.newplayer.utils.LanguageIdentifier
-import net.newpipe.newplayer.utils.StreamTrack
-import net.newpipe.newplayer.utils.VideoStreamTrack
+import net.newpipe.newplayer.data.AudioStreamTrack
+import net.newpipe.newplayer.data.LanguageIdentifier
+import net.newpipe.newplayer.data.StreamTrack
+import net.newpipe.newplayer.data.VideoStreamTrack
 
 
 @UnstableApi

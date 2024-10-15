@@ -18,15 +18,11 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.model
+package net.newpipe.newplayer.uiModel
 
 import android.os.Bundle
 import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
-import net.newpipe.newplayer.NewPlayer
-import net.newpipe.newplayer.ui.ContentScale
 
 @OptIn(UnstableApi::class)
 internal interface InternalNewPlayerViewModel : NewPlayerViewModel {

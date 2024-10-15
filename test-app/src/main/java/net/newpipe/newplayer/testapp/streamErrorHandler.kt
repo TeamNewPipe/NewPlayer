@@ -2,10 +2,10 @@ package net.newpipe.newplayer.testapp
 
 import androidx.media3.common.MediaItem
 import net.newpipe.newplayer.MediaRepository
-import net.newpipe.newplayer.utils.NoResponse
-import net.newpipe.newplayer.utils.SingleSelection
-import net.newpipe.newplayer.utils.StreamExceptionResponse
-import net.newpipe.newplayer.utils.StreamSelectionResponse
+import net.newpipe.newplayer.logic.NoResponse
+import net.newpipe.newplayer.data.SingleSelection
+import net.newpipe.newplayer.logic.StreamExceptionResponse
+import net.newpipe.newplayer.logic.StreamSelectionResponse
 import java.lang.Exception
 
 suspend fun streamErrorHandler(

@@ -18,13 +18,19 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.utils
+package net.newpipe.newplayer.logic
 
-import net.newpipe.newplayer.utils.TrackUtils.getDynamicStreams
-import net.newpipe.newplayer.utils.TrackUtils.hasVideoStreams
-import net.newpipe.newplayer.utils.TrackUtils.tryAndGetMedianAudioOnlyStream
-import net.newpipe.newplayer.utils.TrackUtils.tryAndGetMedianCombinedVideoAndAudioStream
-import net.newpipe.newplayer.utils.TrackUtils.tryAndGetMedianVideoOnlyStream
+import net.newpipe.newplayer.data.LanguageIdentifier
+import net.newpipe.newplayer.data.MultiSelection
+import net.newpipe.newplayer.data.NewPlayerException
+import net.newpipe.newplayer.data.SingleSelection
+import net.newpipe.newplayer.data.Stream
+import net.newpipe.newplayer.data.StreamSelection
+import net.newpipe.newplayer.logic.TrackUtils.getDynamicStreams
+import net.newpipe.newplayer.logic.TrackUtils.hasVideoStreams
+import net.newpipe.newplayer.logic.TrackUtils.tryAndGetMedianAudioOnlyStream
+import net.newpipe.newplayer.logic.TrackUtils.tryAndGetMedianCombinedVideoAndAudioStream
+import net.newpipe.newplayer.logic.TrackUtils.tryAndGetMedianVideoOnlyStream
 
 internal class StreamSelector(
     val preferredLanguages: List<LanguageIdentifier>,

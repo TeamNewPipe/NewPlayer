@@ -18,15 +18,11 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.utils;
+package net.newpipe.newplayer.data
 
-import net.newpipe.newplayer.NewPlayer
+import android.net.Uri
 
-interface StreamExceptionResponse
-
-data class ActionResponse(val action: () -> Unit) : StreamExceptionResponse
-
-data class StreamSelectionResponse(val streamSelection: StreamSelection) :
-    StreamExceptionResponse
-
-class NoResponse : StreamExceptionResponse
+data class Subtitle(
+    val uri: Uri,
+    val identifier: String
+)

@@ -24,9 +24,9 @@ import android.graphics.Bitmap
 import androidx.media3.common.MediaMetadata
 import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.datasource.HttpDataSource
-import net.newpipe.newplayer.utils.Chapter
-import net.newpipe.newplayer.utils.Stream
-import net.newpipe.newplayer.utils.Subtitle
+import net.newpipe.newplayer.data.Chapter
+import net.newpipe.newplayer.data.Stream
+import net.newpipe.newplayer.data.Subtitle
 
 data class RepoMetaInfo(
     val canHandleTimestampedLinks: Boolean,

@@ -18,24 +18,15 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.utils
+package net.newpipe.newplayer.logic;
 
-import net.newpipe.newplayer.utils.Stream
+import net.newpipe.newplayer.data.StreamSelection
 
-interface StreamSelection {
-    val item: String
-}
+interface StreamExceptionResponse
 
-data class SingleSelection(
-    val stream: Stream
-) : StreamSelection {
-    override val item: String
-        get() = stream.item
-}
+data class ActionResponse(val action: () -> Unit) : StreamExceptionResponse
 
-data class MultiSelection(
-    val streams: List<Stream>
-) : StreamSelection {
-    override val item: String
-        get() = streams[0].item
-}
+data class StreamSelectionResponse(val streamSelection: StreamSelection) :
+    StreamExceptionResponse
+
+class NoResponse : StreamExceptionResponse

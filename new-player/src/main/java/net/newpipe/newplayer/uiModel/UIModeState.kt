@@ -18,7 +18,7 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.model
+package net.newpipe.newplayer.uiModel
 
 import net.newpipe.newplayer.PlayMode
 

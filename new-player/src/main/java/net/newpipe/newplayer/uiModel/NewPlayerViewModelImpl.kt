@@ -18,7 +18,7 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.model
+package net.newpipe.newplayer.uiModel
 
 import android.app.Application
 import android.media.AudioManager
@@ -45,9 +45,9 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import net.newpipe.newplayer.utils.VideoSize
+import net.newpipe.newplayer.data.VideoSize
 import net.newpipe.newplayer.NewPlayer
-import net.newpipe.newplayer.utils.NewPlayerException
+import net.newpipe.newplayer.data.NewPlayerException
 import net.newpipe.newplayer.PlayMode
 import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.ui.ContentScale

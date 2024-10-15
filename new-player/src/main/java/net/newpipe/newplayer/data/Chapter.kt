@@ -18,11 +18,9 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.utils
+package net.newpipe.newplayer.data
 
 import android.net.Uri
 
-data class Subtitle(
-    val uri: Uri,
-    val identifier: String
-)
+data class Chapter(val chapterStartInMs: Long, val chapterTitle: String?, val thumbnail: Uri?)
+

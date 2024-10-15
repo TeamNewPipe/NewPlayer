@@ -51,18 +51,18 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.newpipe.newplayer.service.NewPlayerService
-import net.newpipe.newplayer.utils.ActionResponse
-import net.newpipe.newplayer.utils.Chapter
-import net.newpipe.newplayer.utils.LanguageIdentifier
-import net.newpipe.newplayer.utils.MediaSourceBuilder
-import net.newpipe.newplayer.utils.NewPlayerException
-import net.newpipe.newplayer.utils.NoResponse
-import net.newpipe.newplayer.utils.Stream
-import net.newpipe.newplayer.utils.StreamExceptionResponse
-import net.newpipe.newplayer.utils.StreamSelection
-import net.newpipe.newplayer.utils.StreamSelectionResponse
-import net.newpipe.newplayer.utils.StreamTrack
-import net.newpipe.newplayer.utils.StreamSelector
+import net.newpipe.newplayer.logic.ActionResponse
+import net.newpipe.newplayer.data.Chapter
+import net.newpipe.newplayer.data.LanguageIdentifier
+import net.newpipe.newplayer.logic.MediaSourceBuilder
+import net.newpipe.newplayer.data.NewPlayerException
+import net.newpipe.newplayer.logic.NoResponse
+import net.newpipe.newplayer.data.Stream
+import net.newpipe.newplayer.logic.StreamExceptionResponse
+import net.newpipe.newplayer.data.StreamSelection
+import net.newpipe.newplayer.logic.StreamSelectionResponse
+import net.newpipe.newplayer.data.StreamTrack
+import net.newpipe.newplayer.logic.StreamSelector
 import kotlin.random.Random
 
 private const val TAG = "NewPlayerImpl"

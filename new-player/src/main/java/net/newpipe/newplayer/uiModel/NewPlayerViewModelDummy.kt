@@ -1,4 +1,4 @@
-package net.newpipe.newplayer.model
+package net.newpipe.newplayer.uiModel
 
 import android.os.Bundle
 import androidx.media3.common.util.UnstableApi

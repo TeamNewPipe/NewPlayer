@@ -19,7 +19,7 @@
  */
 
 
-package net.newpipe.newplayer.utils
+package net.newpipe.newplayer.data
 
 internal data class VideoSize(
     val width: Int,

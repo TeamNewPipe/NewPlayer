@@ -18,9 +18,26 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.utils
+package net.newpipe.newplayer.uiModel
 
-import android.net.Uri
+import android.content.pm.ActivityInfo
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-data class Chapter(val chapterStartInMs: Long, val chapterTitle: String?, val thumbnail: Uri?)
-
+/**
+ * Restores the embedded mode UI config when returning from fullscreen
+ */
+@Parcelize
+data class EmbeddedUiConfig(
+    val systemBarInLightMode: Boolean,
+    val brightness: Float,
+    val screenOrientation: Int
+) : Parcelable {
+    companion object {
+        val DUMMY = EmbeddedUiConfig(
+            systemBarInLightMode = true,
+            brightness = -1f,
+            screenOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        )
+    }
+}

@@ -18,7 +18,7 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.utils
+package net.newpipe.newplayer.logic
 
 import androidx.annotation.OptIn
 import androidx.media3.common.MediaItem
@@ -30,6 +30,11 @@ import androidx.media3.exoplayer.source.MergingMediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import kotlinx.coroutines.flow.MutableSharedFlow
 import net.newpipe.newplayer.MediaRepository
+import net.newpipe.newplayer.data.MultiSelection
+import net.newpipe.newplayer.data.NewPlayerException
+import net.newpipe.newplayer.data.SingleSelection
+import net.newpipe.newplayer.data.Stream
+import net.newpipe.newplayer.data.StreamSelection
 
 @OptIn(UnstableApi::class)
 internal class MediaSourceBuilder

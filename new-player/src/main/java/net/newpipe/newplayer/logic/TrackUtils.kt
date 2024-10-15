@@ -18,7 +18,12 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.utils
+package net.newpipe.newplayer.logic
+
+import net.newpipe.newplayer.data.AudioStreamTrack
+import net.newpipe.newplayer.data.LanguageIdentifier
+import net.newpipe.newplayer.data.Stream
+import net.newpipe.newplayer.data.StreamTrack
 
 object TrackUtils {
 
