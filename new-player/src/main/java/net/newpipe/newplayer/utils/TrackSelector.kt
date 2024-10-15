@@ -20,10 +20,10 @@
 
 package net.newpipe.newplayer.utils
 
-internal class StreamSelector(
+internal class TrackSelector(
     val preferredLanguages: List<LanguageIdentifier>,
 ) {
-    internal fun selectStream(
+    internal fun selectStreamAutomatically(
         item: String,
         availableStreams: List<Stream>,
     ): StreamSelection {
@@ -45,7 +45,7 @@ internal class StreamSelector(
 
             // first: try and get a dynamic stream variant
             val dynamicStreams = getDynamicStreams(availablesInPreferredLanguage)
-            if(dynamicStreams.isNotEmpty()) {
+            if (dynamicStreams.isNotEmpty()) {
                 return SingleSelection(dynamicStreams[0])
             }
 
@@ -82,6 +82,18 @@ internal class StreamSelector(
     }
 
     companion object {
+
+        internal fun getAllAvailableTracksNonDuplicated(streams: List<Stream>): List<StreamTrack> {
+            val totalList = mutableListOf<StreamTrack>()
+            streams.forEach {
+                totalList.addAll(it.streamTracks)
+            }
+            totalList.sort()
+            return totalList.distinct()
+        }
+
+        internal fun getNonDynamicTracksNonDuplicated(streams: List<Stream>) =
+            getAllAvailableTracksNonDuplicated(streams.filter { !it.isDashOrHls })
 
         private fun getBestLanguageFit(
             availableStreams: List<Stream>, preferredLanguages: List<LanguageIdentifier>
@@ -137,16 +149,17 @@ internal class StreamSelector(
         private fun getDynamicStreams(availableStreams: List<Stream>) =
             availableStreams.filter { it.isDashOrHls }
 
-        private fun getNonDynamicVideoStreams(availableStreams: List<Stream>) = availableStreams.filter {
-            !it.isDashOrHls && it.hasVideoTracks && !it.hasAudioTracks
-        }
+        private fun getNonDynamicVideoStreams(availableStreams: List<Stream>) =
+            availableStreams.filter {
+                !it.isDashOrHls && it.hasVideoTracks && !it.hasAudioTracks
+            }
 
         private fun getNonDynamicAudioStreams(availableStreams: List<Stream>) =
             availableStreams.filter { !it.isDashOrHls && !it.hasVideoTracks && it.hasAudioTracks }
 
-        private fun hasVideoStreams(availableStreams: List<Stream>) : Boolean {
+        private fun hasVideoStreams(availableStreams: List<Stream>): Boolean {
             availableStreams.forEach {
-                if(it.hasVideoTracks)
+                if (it.hasVideoTracks)
                     return true
             }
             return false

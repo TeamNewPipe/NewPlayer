@@ -61,7 +61,8 @@ import net.newpipe.newplayer.utils.Stream
 import net.newpipe.newplayer.utils.StreamExceptionResponse
 import net.newpipe.newplayer.utils.StreamSelection
 import net.newpipe.newplayer.utils.StreamSelectionResponse
-import net.newpipe.newplayer.utils.StreamSelector
+import net.newpipe.newplayer.utils.StreamTrack
+import net.newpipe.newplayer.utils.TrackSelector
 import kotlin.random.Random
 
 private const val TAG = "NewPlayerImpl"
@@ -165,8 +166,8 @@ class NewPlayerImpl(
             exoPlayer.value?.seekTo(value, 0)
         }
 
-    private var mutableCurrentlyAvailableStreams = MutableStateFlow<List<Stream>>(emptyList())
-    override val currentlyAvailableStreams = mutableCurrentlyAvailableStreams.asStateFlow()
+    private var mutableCurrentlyAvailableTracks = MutableStateFlow<List<StreamTrack>>(emptyList())
+    override val currentlyAvailableTracks: StateFlow<List<StreamTrack>> = mutableCurrentlyAvailableTracks.asStateFlow()
 
     private var mutableCurrentlyPlayingStream = MutableStateFlow<Stream?>(null)
     override val currentlyPlayingStream = mutableCurrentlyPlayingStream.asStateFlow()
@@ -205,12 +206,12 @@ class NewPlayerImpl(
                     val streamSelection =
                         uniqueIdToStreamSelectionLookup[mediaItem.mediaId.toLong()]!!
                     launchJobAndCollectError {
-                        mutableCurrentlyAvailableStreams.update {
-                            repository.getStreams(streamSelection.item)
+                        mutableCurrentlyAvailableTracks.update {
+                            TrackSelector.getNonDynamicTracksNonDuplicated(repository.getStreams(streamSelection.item))
                         }
                     }
                 } else {
-                    mutableCurrentlyAvailableStreams.update { emptyList() }
+                    mutableCurrentlyAvailableTracks.update { emptyList() }
                     mutableCurrentlyPlayingStream.update { null }
                 }
             }
@@ -342,8 +343,8 @@ class NewPlayerImpl(
     @OptIn(UnstableApi::class)
     override fun playStream(item: String, playMode: PlayMode) {
         launchJobAndCollectError {
-            mutableCurrentlyAvailableStreams.update {
-                repository.getStreams(item)
+            mutableCurrentlyAvailableTracks.update {
+                TrackSelector.getNonDynamicTracksNonDuplicated(repository.getStreams(item))
             }
 
             val mediaSource = toMediaSource(item)
@@ -391,7 +392,7 @@ class NewPlayerImpl(
             null
         }
         mediaController = null
-        mutableCurrentlyAvailableStreams.update { emptyList() }
+        mutableCurrentlyAvailableTracks.update { emptyList() }
         mutableCurrentlyPlayingStream.update { null }
         uniqueIdToStreamSelectionLookup = HashMap()
     }
@@ -415,11 +416,11 @@ class NewPlayerImpl(
     @OptIn(UnstableApi::class)
     private suspend
     fun toMediaSource(item: String): MediaSource {
-        val streamSelector = StreamSelector(
+        val trackSelector = TrackSelector(
             preferredLanguages = preferredStreamLanguages
         )
 
-        val selection = streamSelector.selectStream(
+        val selection = trackSelector.selectStreamAutomatically(
             item,
             availableStreams = repository.getStreams(item),
         )

@@ -22,7 +22,6 @@ package net.newpipe.newplayer
 
 import android.app.Activity
 import androidx.core.graphics.drawable.IconCompat
-import androidx.media3.common.Format
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +30,7 @@ import kotlinx.coroutines.flow.StateFlow
 import net.newpipe.newplayer.utils.Chapter
 import net.newpipe.newplayer.utils.LanguageIdentifier
 import net.newpipe.newplayer.utils.Stream
+import net.newpipe.newplayer.utils.StreamTrack
 import kotlin.Exception
 
 enum class PlayMode {
@@ -74,7 +74,7 @@ interface NewPlayer {
     val currentChapters: StateFlow<List<Chapter>>
 
     val currentlyPlayingStream: StateFlow<Stream?>
-    val currentlyAvailableStreams: StateFlow<List<Stream>>
+    val currentlyAvailableTracks: StateFlow<List<StreamTrack>>
 
     // callbacks
 

@@ -244,7 +244,7 @@ class NewPlayerViewModelImpl @Inject constructor(
             }
 
             viewModelScope.launch {
-                newPlayer.currentlyAvailableStreams.collect { availableStreams ->
+                newPlayer.currentlyAvailableTracks.collect { availableStreams ->
                     if (availableStreams != null) {
                         /*TODO*/
                     } else {

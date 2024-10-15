@@ -27,6 +27,7 @@ import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.utils.Chapter
 import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.ui.ContentScale
+import net.newpipe.newplayer.utils.StreamTrack
 
 
 @UnstableApi
@@ -58,7 +59,8 @@ data class NewPlayerUIState(
     val availableSubtitles: List<String>,
     val enteringPip: Boolean,
     val currentSeekPreviewThumbnail: ImageBitmap?,
-    val seekPreviewVisible: Boolean
+    val seekPreviewVisible: Boolean,
+    val currentlyAvailableTracks: List<StreamTrack>
 ) {
     companion object {
         val DEFAULT = NewPlayerUIState(
@@ -89,7 +91,8 @@ data class NewPlayerUIState(
             availableStreamVariants = emptyList(),
             enteringPip = false,
             currentSeekPreviewThumbnail = null,
-            seekPreviewVisible = false
+            seekPreviewVisible = false,
+            currentlyAvailableTracks = emptyList()
         )
 
         val DUMMY = DEFAULT.copy(
