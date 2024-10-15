@@ -34,11 +34,15 @@ import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -101,17 +105,7 @@ internal fun TopUI(
         } else {
             Box(modifier = Modifier.weight(1F))
         }
-        Button(
-            onClick = { /*TODO*/ },
-            contentPadding = PaddingValues(0.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Transparent, contentColor = video_player_onSurface
-            ),
-        ) {
-            Text(
-                "1080p", fontWeight = FontWeight.Bold, modifier = Modifier.padding(0.dp)
-            )
-        }
+        TrackSelectionMenu()
         IconButton(
             onClick = { /*TODO*/ },
         ) {
@@ -149,7 +143,29 @@ internal fun TopUI(
                 )
             }
         }
-        DropDownMenu(viewModel, uiState)
+        VideoPlayerMenu(viewModel, uiState)
+    }
+}
+
+@Composable
+fun TrackSelectionMenu() {
+    val menuVisible by remember {
+        mutableStateOf(false)
+    }
+
+    Button(
+        onClick = { menuVisible },
+        contentPadding = PaddingValues(0.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Transparent, contentColor = video_player_onSurface
+        ),
+    ) {
+        Text(
+            "1080p", fontWeight = FontWeight.Bold, modifier = Modifier.padding(0.dp)
+        )
+    }
+    DropdownMenu(expanded = menuVisible, onDismissRequest = { menuVisible = false}) {
+        
     }
 }
 
