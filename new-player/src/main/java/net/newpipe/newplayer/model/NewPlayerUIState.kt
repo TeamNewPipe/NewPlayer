@@ -27,7 +27,10 @@ import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.utils.Chapter
 import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.ui.ContentScale
+import net.newpipe.newplayer.utils.AudioStreamTrack
+import net.newpipe.newplayer.utils.LanguageIdentifier
 import net.newpipe.newplayer.utils.StreamTrack
+import net.newpipe.newplayer.utils.VideoStreamTrack
 
 
 @UnstableApi
@@ -54,13 +57,10 @@ data class NewPlayerUIState(
     val playListDurationInS: Int,
     val currentlyPlaying: MediaItem?,
     val currentPlaylistItemIndex: Int,
-    val availableStreamVariants: List<String>,
-    val availableLanguages: List<String>,
-    val availableSubtitles: List<String>,
+    val currentlyAvailableTracks: List<StreamTrack>,
     val enteringPip: Boolean,
     val currentSeekPreviewThumbnail: ImageBitmap?,
     val seekPreviewVisible: Boolean,
-    val currentlyAvailableTracks: List<StreamTrack>
 ) {
     companion object {
         val DEFAULT = NewPlayerUIState(
@@ -86,19 +86,20 @@ data class NewPlayerUIState(
             playListDurationInS = 0,
             currentlyPlaying = null,
             currentPlaylistItemIndex = 0,
-            availableLanguages = emptyList(),
-            availableSubtitles = emptyList(),
-            availableStreamVariants = emptyList(),
+            currentlyAvailableTracks = emptyList(),
             enteringPip = false,
             currentSeekPreviewThumbnail = null,
             seekPreviewVisible = false,
-            currentlyAvailableTracks = emptyList()
         )
 
         val DUMMY = DEFAULT.copy(
-            availableLanguages = listOf("German", "English", "Spanish"),
-            availableSubtitles = listOf("German", "English", "Spanish"),
-            availableStreamVariants = listOf("460p", "720p", "1080p60"),
+            currentlyAvailableTracks = listOf(
+                VideoStreamTrack(width= 1920, height = 1080, frameRate = 30, fileFormat = "MPEG4"),
+                VideoStreamTrack(width= 1280, height = 720, frameRate = 30, fileFormat = "MPEG4"),
+                VideoStreamTrack(width= 853, height = 480, frameRate = 30, fileFormat = "MPEG4"),
+                AudioStreamTrack(bitrate = 49000, language = LanguageIdentifier.EN, fileFormat = "MP4A"),
+                AudioStreamTrack(bitrate = 49000, language = LanguageIdentifier.ES, fileFormat = "MP4A")
+            ),
             uiMode = UIModeState.EMBEDDED_VIDEO,
             playing = true,
             seekerPosition = 0.3f,

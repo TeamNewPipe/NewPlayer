@@ -51,6 +51,7 @@ import net.newpipe.newplayer.utils.NewPlayerException
 import net.newpipe.newplayer.PlayMode
 import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.ui.ContentScale
+import net.newpipe.newplayer.utils.TrackSelector
 import java.util.LinkedList
 import kotlin.math.abs
 
@@ -244,16 +245,11 @@ class NewPlayerViewModelImpl @Inject constructor(
             }
 
             viewModelScope.launch {
-                newPlayer.currentlyAvailableTracks.collect { availableStreams ->
-                    if (availableStreams != null) {
-                        /*TODO*/
-                    } else {
-                        mutableUiState.update {
-                            it.copy(
-                                availableLanguages = emptyList(),
-                                availableStreamVariants = emptyList()
-                            )
-                        }
+                newPlayer.currentlyAvailableTracks.collect { availableTracks ->
+                    mutableUiState.update {
+                        it.copy(
+                            currentlyAvailableTracks = availableTracks
+                        )
                     }
                 }
             }

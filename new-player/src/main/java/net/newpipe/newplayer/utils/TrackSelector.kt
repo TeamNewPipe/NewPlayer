@@ -95,6 +95,9 @@ internal class TrackSelector(
         internal fun getNonDynamicTracksNonDuplicated(streams: List<Stream>) =
             getAllAvailableTracksNonDuplicated(streams.filter { !it.isDashOrHls })
 
+        internal fun getAvailableLanguages(tracks: List<StreamTrack>) =
+            tracks.filterIsInstance<AudioStreamTrack>().map { it.language }.filterNotNull()
+
         private fun getBestLanguageFit(
             availableStreams: List<Stream>, preferredLanguages: List<LanguageIdentifier>
         ): LanguageIdentifier? {
