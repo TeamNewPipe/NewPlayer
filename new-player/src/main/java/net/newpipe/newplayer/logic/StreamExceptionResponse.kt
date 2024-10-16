@@ -26,7 +26,9 @@ interface StreamExceptionResponse
 
 data class ActionResponse(val action: () -> Unit) : StreamExceptionResponse
 
-data class StreamSelectionResponse(val streamSelection: StreamSelection) :
+data class ReplaceStreamSelectionResponse(val streamSelection: StreamSelection) :
     StreamExceptionResponse
+
+data class ReplaceItemResponse(val newItem: String) : StreamExceptionResponse
 
 class NoResponse : StreamExceptionResponse

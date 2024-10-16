@@ -63,6 +63,15 @@ data class VideoStreamTrack(
             1
         }
 
+    override fun toString() = """
+        VideoStreamTrack {
+            width = $width
+            height = $height
+            frameRate = $frameRate
+            fileFormat = $fileFormat
+        }
+    """.trimIndent()
+
 }
 
 data class AudioStreamTrack(
@@ -92,4 +101,12 @@ data class AudioStreamTrack(
         result = 31 * result + fileFormat.hashCode()
         return result
     }
+
+    override fun toString() = """
+        AudioStreamTrack {
+            bitrate = $bitrate
+            language = $language
+            fileFormat = $fileFormat
+        }
+    """.trimIndent()
 }

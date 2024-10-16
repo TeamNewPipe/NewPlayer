@@ -56,11 +56,12 @@ import net.newpipe.newplayer.data.Chapter
 import net.newpipe.newplayer.logic.MediaSourceBuilder
 import net.newpipe.newplayer.data.NewPlayerException
 import net.newpipe.newplayer.logic.NoResponse
-import net.newpipe.newplayer.data.Stream
 import net.newpipe.newplayer.logic.StreamExceptionResponse
 import net.newpipe.newplayer.data.StreamSelection
-import net.newpipe.newplayer.logic.StreamSelectionResponse
+import net.newpipe.newplayer.logic.ReplaceStreamSelectionResponse
 import net.newpipe.newplayer.data.StreamTrack
+import net.newpipe.newplayer.logic.ReloadItemResponse
+import net.newpipe.newplayer.logic.ReplaceItemResponse
 import net.newpipe.newplayer.logic.StreamSelector
 import net.newpipe.newplayer.logic.TrackUtils
 import kotlin.random.Random
@@ -170,10 +171,12 @@ class NewPlayerImpl(
         }
 
     private var mutableCurrentlyAvailableTracks = MutableStateFlow<List<StreamTrack>>(emptyList())
-    override val currentlyAvailableTracks: StateFlow<List<StreamTrack>> = mutableCurrentlyAvailableTracks.asStateFlow()
+    override val currentlyAvailableTracks: StateFlow<List<StreamTrack>> =
+        mutableCurrentlyAvailableTracks.asStateFlow()
 
     private var mutableCurrentlyPlayingTracks = MutableStateFlow<List<StreamTrack>>(emptyList())
-    override val currentlyPlayingTracks: StateFlow<List<StreamTrack>> = mutableCurrentlyPlayingTracks.asStateFlow()
+    override val currentlyPlayingTracks: StateFlow<List<StreamTrack>> =
+        mutableCurrentlyPlayingTracks.asStateFlow()
 
     private fun setupNewExoplayer() {
         val newExoPlayer = ExoPlayer.Builder(app)
@@ -210,7 +213,11 @@ class NewPlayerImpl(
                         uniqueIdToStreamSelectionLookup[mediaItem.mediaId.toLong()]!!
                     launchJobAndCollectError {
                         mutableCurrentlyAvailableTracks.update {
-                            TrackUtils.getNonDynamicTracksNonDuplicated(repository.getStreams(streamSelection.item))
+                            TrackUtils.getNonDynamicTracksNonDuplicated(
+                                repository.getStreams(
+                                    streamSelection.item
+                                )
+                            )
                         }
                     }
                 } else {
@@ -221,8 +228,15 @@ class NewPlayerImpl(
             @OptIn(UnstableApi::class)
             override fun onTracksChanged(tracks: Tracks) {
                 super.onTracksChanged(tracks)
-                mutableCurrentlyPlayingTracks.update {
+                val streamTracks =
                     TrackUtils.streamTracksFromMedia3Tracks(tracks, onlySelectedTracks = true)
+                streamTracks.joinToString("\n") { it.toString() }
+                Log.d(
+                    TAG,
+                    "currently playing tracks: \n ${streamTracks.joinToString("\n") { it.toString() }}"
+                )
+                mutableCurrentlyPlayingTracks.update {
+                    streamTracks
                 }
             }
         })
@@ -249,8 +263,12 @@ class NewPlayerImpl(
                     response.action()
                 }
 
-                is StreamSelectionResponse -> {
-                    replaceCurrentStream(response.streamSelection)
+                is ReplaceStreamSelectionResponse -> {
+                    replaceCurrentStreamSelection(response.streamSelection)
+                }
+
+                is ReplaceItemResponse -> {
+                    replaceCurrentItem(response.newItem)
                 }
 
                 is NoResponse -> {
@@ -397,6 +415,42 @@ class NewPlayerImpl(
         this.exoPlayer.value?.play()
     }
 
+    /**
+     * Replaces the current stream and continues playing at the position the previous stream stopped.
+     * This can be used to replace a faulty stream or change to a stream with a different language/quality.
+     */
+    @OptIn(UnstableApi::class)
+    private suspend fun replaceCurrentStreamSelection(streamSelection: StreamSelection) {
+        val item =
+            uniqueIdToStreamSelectionLookup[this.currentlyPlaying.value?.mediaId?.toLong()]!!.item
+        val mediaSource = toMediaSource(streamSelection, item)
+        replaceCurrentMediaSource(mediaSource)
+    }
+
+    @OptIn(UnstableApi::class)
+    private fun replaceCurrentMediaSource(mediaSource: MediaSource) {
+        val currentPosition = this.currentPosition
+        val currentlyPlayingPlaylistItem = this.currentlyPlayingPlaylistItem
+
+        this.exoPlayer.value?.removeMediaItem(currentlyPlayingPlaylistItem)
+        this.exoPlayer.value?.addMediaSource(currentlyPlayingPlaylistItem, mediaSource)
+        if (this.exoPlayer.value?.playbackState == Player.STATE_IDLE) {
+            prepare()
+        }
+        this.currentlyPlayingPlaylistItem = currentlyPlayingPlaylistItem
+        this.exoPlayer.value?.seekTo(currentPosition)
+        this.exoPlayer.value?.play()
+    }
+
+    private suspend fun replaceCurrentItem(item: String) {
+        mutableCurrentlyAvailableTracks.update {
+            TrackUtils.getNonDynamicTracksNonDuplicated(repository.getStreams(item))
+        }
+
+        val mediaSource = toMediaSource(item)
+        replaceCurrentMediaSource(mediaSource)
+    }
+
     @OptIn(UnstableApi::class)
     private suspend
     fun toMediaSource(item: String): MediaSource {
@@ -424,28 +478,6 @@ class NewPlayerImpl(
         uniqueIdToStreamSelectionLookup[uniqueId] = streamSelection
         val mediaSource = builder.buildMediaSource(streamSelection, uniqueId)
         return mediaSource
-    }
-
-    /**
-     * Replaces the current stream and continues playing at the position the previous stream stopped.
-     * This can be used to replace a faulty stream or change to a stream with a different language/quality.
-     */
-    @OptIn(UnstableApi::class)
-    private suspend fun replaceCurrentStream(streamSelection: StreamSelection) {
-        val currentPosition = this.currentPosition
-        val currentlyPlayingPlaylistItem = this.currentlyPlayingPlaylistItem
-        val item =
-            uniqueIdToStreamSelectionLookup[this.currentlyPlaying.value?.mediaId?.toLong()]!!.item
-
-        val mediaSource = toMediaSource(streamSelection, item)
-        this.exoPlayer.value?.removeMediaItem(currentlyPlayingPlaylistItem)
-        this.exoPlayer.value?.addMediaSource(currentlyPlayingPlaylistItem, mediaSource)
-        if (this.exoPlayer.value?.playbackState == Player.STATE_IDLE) {
-            prepare()
-        }
-        this.currentlyPlayingPlaylistItem = currentlyPlayingPlaylistItem
-        this.exoPlayer.value?.seekTo(currentPosition)
-        this.exoPlayer.value?.play()
     }
 
     private fun launchJobAndCollectError(task: suspend () -> Unit) =
