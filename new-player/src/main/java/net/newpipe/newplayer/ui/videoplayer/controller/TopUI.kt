@@ -161,14 +161,16 @@ private fun TrackSelectionMenu(viewModel: InternalNewPlayerViewModel, uiState: N
     }
 
     val context = LocalContext.current
-    val noOtherTracksText = stringResource(
-        id = R.string.no_other_tracks_available_toast
-    )
+
 
     val availableVideoTracks =
         uiState.currentlyAvailableTracks.filterIsInstance<VideoStreamTrack>()
 
     Box {
+        val noOtherTracksText = stringResource(
+            id = R.string.no_other_tracks_available_toast
+        )
+
         Button(
             onClick = {
                 if (1 < availableVideoTracks.size) {
@@ -188,7 +190,14 @@ private fun TrackSelectionMenu(viewModel: InternalNewPlayerViewModel, uiState: N
             ),
         ) {
             Text(
-                "1080p", fontWeight = FontWeight.Bold, modifier = Modifier.padding(0.dp)
+                try {
+                    uiState.currentlyPlayingTracks.filterIsInstance<VideoStreamTrack>()[0]
+                        .toShortIdentifierString()
+                } catch (_: IndexOutOfBoundsException) {
+                    stringResource(R.string.loading)
+                },
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(0.dp)
             )
         }
         DropdownMenu(expanded = menuVisible, onDismissRequest = { menuVisible = false }) {

@@ -63,4 +63,5 @@
     <string name="playing_in_background">Playing in the background…</string>
     <string name="seek_thumb_preview">Video seek preview thumbnail</string>a
     <string name="no_other_tracks_available_toast">No other stream tracks available.</string>
+    <string name="loading">Loading</string>
 </resources>

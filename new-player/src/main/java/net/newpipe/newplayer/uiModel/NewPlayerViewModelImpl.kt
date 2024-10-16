@@ -254,6 +254,16 @@ class NewPlayerViewModelImpl @Inject constructor(
                 }
             }
 
+            viewModelScope.launch {
+                newPlayer.currentlyPlayingTracks.collect { playingTracks ->
+                    mutableUiState.update {
+                        it.copy(
+                            currentlyPlayingTracks = playingTracks
+                        )
+                    }
+                }
+            }
+
             mutableUiState.update {
                 it.copy(
                     playing = newPlayer.exoPlayer.value?.isPlaying ?: false,

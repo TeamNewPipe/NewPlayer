@@ -57,6 +57,7 @@ data class NewPlayerUIState(
     val currentlyPlaying: MediaItem?,
     val currentPlaylistItemIndex: Int,
     val currentlyAvailableTracks: List<StreamTrack>,
+    val currentlyPlayingTracks: List<StreamTrack>,
     val enteringPip: Boolean,
     val currentSeekPreviewThumbnail: ImageBitmap?,
     val seekPreviewVisible: Boolean,
@@ -86,6 +87,7 @@ data class NewPlayerUIState(
             currentlyPlaying = null,
             currentPlaylistItemIndex = 0,
             currentlyAvailableTracks = emptyList(),
+            currentlyPlayingTracks = emptyList(),
             enteringPip = false,
             currentSeekPreviewThumbnail = null,
             seekPreviewVisible = false,
@@ -97,6 +99,10 @@ data class NewPlayerUIState(
                 VideoStreamTrack(width= 1280, height = 720, frameRate = 30, fileFormat = "MPEG4"),
                 VideoStreamTrack(width= 853, height = 480, frameRate = 30, fileFormat = "MPEG4"),
                 AudioStreamTrack(bitrate = 49000, language = "en", fileFormat = "MP4A"),
+                AudioStreamTrack(bitrate = 49000, language = "es", fileFormat = "MP4A")
+            ),
+            currentlyPlayingTracks = listOf(
+                VideoStreamTrack(width= 1920, height = 1080, frameRate = 30, fileFormat = "MPEG4"),
                 AudioStreamTrack(bitrate = 49000, language = "es", fileFormat = "MP4A")
             ),
             uiMode = UIModeState.EMBEDDED_VIDEO,
