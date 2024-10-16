@@ -20,10 +20,17 @@
 
 package net.newpipe.newplayer.logic
 
+import android.util.Log
+import androidx.annotation.OptIn
+import androidx.media3.common.C
+import androidx.media3.common.Tracks
+import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.data.AudioStreamTrack
-import net.newpipe.newplayer.data.LanguageIdentifier
 import net.newpipe.newplayer.data.Stream
 import net.newpipe.newplayer.data.StreamTrack
+import net.newpipe.newplayer.data.VideoStreamTrack
+
+private const val TAG = "TrackUtils"
 
 object TrackUtils {
 
@@ -43,8 +50,8 @@ object TrackUtils {
         tracks.filterIsInstance<AudioStreamTrack>().mapNotNull { it.language }
 
     internal fun getBestLanguageFit(
-        availableStreams: List<Stream>, preferredLanguages: List<LanguageIdentifier>
-    ): LanguageIdentifier? {
+        availableStreams: List<Stream>, preferredLanguages: List<String>
+    ): String? {
         for (preferredLanguage in preferredLanguages) {
             for (available in availableStreams) {
                 if (available.languages.contains(
@@ -59,7 +66,7 @@ object TrackUtils {
     }
 
     internal fun filtersByLanguage(
-        availableStreams: List<Stream>, language: LanguageIdentifier
+        availableStreams: List<Stream>, language: String
     ) = availableStreams.filter {
         it.languages.contains(
             language
@@ -126,5 +133,47 @@ object TrackUtils {
                 return true
         }
         return false
+    }
+
+    @OptIn(UnstableApi::class)
+    internal fun streamTracksFromMedia3Tracks(media3Tracks: Tracks, onlySelectedTracks: Boolean = false): List<StreamTrack> {
+        val tracks = mutableListOf<StreamTrack>()
+        for (group in media3Tracks.groups) {
+            for (i in 0 until group.length) {
+                if(onlySelectedTracks && group.isTrackSelected(i))
+                    continue
+
+                val format = group.getTrackFormat(i)
+                when (group.type) {
+                    C.TRACK_TYPE_AUDIO ->
+                        tracks.add(
+                            AudioStreamTrack(
+                                bitrate = format.bitrate,
+                                fileFormat = "",
+                                language = format.language
+                            )
+                        )
+
+                    C.TRACK_TYPE_VIDEO ->
+                        tracks.add(
+                            VideoStreamTrack(
+                                width = format.width,
+                                height = format.height,
+                                frameRate = format.frameRate.toInt(),
+                                fileFormat = ""
+                            )
+                        )
+
+                    C.TRACK_TYPE_TEXT -> Unit
+                    else -> Log.w(
+                        TAG,
+                        "Unknown or unsupported media3 track type encountered during track conversion: $group.type"
+                    )
+                }
+            }
+        }
+        tracks.sort()
+
+        return tracks.distinct()
     }
 }

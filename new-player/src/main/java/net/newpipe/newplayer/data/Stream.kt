@@ -30,7 +30,7 @@ data class Stream(
     val isDashOrHls: Boolean = false
 ) {
 
-    val languages: List<LanguageIdentifier>
+    val languages: List<String>
         get() = streamTracks.filterIsInstance<AudioStreamTrack>().mapNotNull { it.language }
 
     val hasAudioTracks: Boolean

@@ -16,7 +16,6 @@ import net.newpipe.newplayer.data.Chapter
 import net.newpipe.newplayer.MediaRepository
 import net.newpipe.newplayer.RepoMetaInfo
 import net.newpipe.newplayer.data.AudioStreamTrack
-import net.newpipe.newplayer.data.LanguageIdentifier
 import net.newpipe.newplayer.data.Stream
 import net.newpipe.newplayer.data.Subtitle
 import net.newpipe.newplayer.data.VideoStreamTrack
@@ -107,7 +106,7 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
                         AudioStreamTrack(
                             bitrate = 480000,
                             fileFormat = "MPEG4",
-                            language = LanguageIdentifier.EN
+                            language = "en"
                         ),
                         VideoStreamTrack(
                             width = 1024,
@@ -128,7 +127,7 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
                         AudioStreamTrack(
                             bitrate = 480000,
                             fileFormat = "MP4A",
-                            language = LanguageIdentifier.EN
+                            language = "en"
                         ),
                         VideoStreamTrack(
                             width = 1024,
@@ -181,12 +180,12 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
                         AudioStreamTrack(
                             bitrate = 128000,
                             fileFormat = "MP4A",
-                            language = LanguageIdentifier.EN
+                            language = "en"
                         ),
                         AudioStreamTrack(
                             bitrate = 127000,
                             fileFormat = "MP4A",
-                            language = LanguageIdentifier.DE
+                            language = "de"
                         )
                     )
                 ),
@@ -211,12 +210,12 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
                         AudioStreamTrack(
                             bitrate = 128000,
                             fileFormat = "MP4A",
-                            language = LanguageIdentifier.EN
+                            language = "en"
                         ),
                         AudioStreamTrack(
                             bitrate = 127000,
                             fileFormat = "MP4A",
-                            language = LanguageIdentifier.DE
+                            language = "de"
                         )
 
                     )
@@ -271,7 +270,7 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
                     streamTracks = listOf(
                         AudioStreamTrack(
                             bitrate = 125000,
-                            language = LanguageIdentifier.EN,
+                            language = "en",
                             fileFormat = "MP4A"
                         )
                     )
@@ -283,7 +282,7 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
                     streamTracks = listOf(
                         AudioStreamTrack(
                             bitrate = 125000,
-                            language = LanguageIdentifier.ES,
+                            language = "es",
                             fileFormat = "MP4A"
                         )
                     )

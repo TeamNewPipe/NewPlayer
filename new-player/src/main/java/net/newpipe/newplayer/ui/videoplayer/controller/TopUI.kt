@@ -192,7 +192,7 @@ private fun TrackSelectionMenu(viewModel: InternalNewPlayerViewModel, uiState: N
             )
         }
         DropdownMenu(expanded = menuVisible, onDismissRequest = { menuVisible = false }) {
-            for (track in availableVideoTracks) {
+            for (track in availableVideoTracks.reversed()) {
                 DropdownMenuItem(text = { Text(track.toLongIdentifierString()) },
                     onClick = { /*TODO*/
                         viewModel.dialogVisible(false)

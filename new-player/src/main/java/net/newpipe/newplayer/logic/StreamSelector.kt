@@ -20,7 +20,6 @@
 
 package net.newpipe.newplayer.logic
 
-import net.newpipe.newplayer.data.LanguageIdentifier
 import net.newpipe.newplayer.data.MultiSelection
 import net.newpipe.newplayer.data.NewPlayerException
 import net.newpipe.newplayer.data.SingleSelection
@@ -33,7 +32,10 @@ import net.newpipe.newplayer.logic.TrackUtils.tryAndGetMedianCombinedVideoAndAud
 import net.newpipe.newplayer.logic.TrackUtils.tryAndGetMedianVideoOnlyTracks
 
 internal class StreamSelector(
-    val preferredLanguages: List<LanguageIdentifier>,
+    /**
+     * Must be in IETF-BCP-47 format
+     */
+    val preferredLanguages: List<String>,
 ) {
     internal fun selectStreamAutomatically(
         item: String,

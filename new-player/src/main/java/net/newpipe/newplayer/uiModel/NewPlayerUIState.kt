@@ -28,7 +28,6 @@ import net.newpipe.newplayer.data.Chapter
 import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.ui.ContentScale
 import net.newpipe.newplayer.data.AudioStreamTrack
-import net.newpipe.newplayer.data.LanguageIdentifier
 import net.newpipe.newplayer.data.StreamTrack
 import net.newpipe.newplayer.data.VideoStreamTrack
 
@@ -97,8 +96,8 @@ data class NewPlayerUIState(
                 VideoStreamTrack(width= 1920, height = 1080, frameRate = 30, fileFormat = "MPEG4"),
                 VideoStreamTrack(width= 1280, height = 720, frameRate = 30, fileFormat = "MPEG4"),
                 VideoStreamTrack(width= 853, height = 480, frameRate = 30, fileFormat = "MPEG4"),
-                AudioStreamTrack(bitrate = 49000, language = LanguageIdentifier.EN, fileFormat = "MP4A"),
-                AudioStreamTrack(bitrate = 49000, language = LanguageIdentifier.ES, fileFormat = "MP4A")
+                AudioStreamTrack(bitrate = 49000, language = "en", fileFormat = "MP4A"),
+                AudioStreamTrack(bitrate = 49000, language = "es", fileFormat = "MP4A")
             ),
             uiMode = UIModeState.EMBEDDED_VIDEO,
             playing = true,

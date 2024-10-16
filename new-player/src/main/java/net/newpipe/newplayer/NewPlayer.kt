@@ -28,8 +28,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import net.newpipe.newplayer.data.Chapter
-import net.newpipe.newplayer.data.LanguageIdentifier
 import net.newpipe.newplayer.data.Stream
+import net.newpipe.newplayer.data.StreamSelection
 import net.newpipe.newplayer.data.StreamTrack
 import kotlin.Exception
 
@@ -52,7 +52,7 @@ enum class RepeatMode {
 
 interface NewPlayer {
     // preferences
-    var preferredStreamLanguages: List<LanguageIdentifier>
+    var preferredStreamLanguages: List<String>
     val notificationIcon: IconCompat
     val playerActivityClass: Class<Activity>
 
@@ -73,7 +73,7 @@ interface NewPlayer {
 
     val currentChapters: StateFlow<List<Chapter>>
 
-    val currentlyPlayingStream: StateFlow<Stream?>
+    val currentlyPlayingTracks: StateFlow<List<StreamTrack>>
     val currentlyAvailableTracks: StateFlow<List<StreamTrack>>
 
     // callbacks

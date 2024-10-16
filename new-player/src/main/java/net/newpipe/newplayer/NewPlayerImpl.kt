@@ -53,7 +53,6 @@ import kotlinx.coroutines.launch
 import net.newpipe.newplayer.service.NewPlayerService
 import net.newpipe.newplayer.logic.ActionResponse
 import net.newpipe.newplayer.data.Chapter
-import net.newpipe.newplayer.data.LanguageIdentifier
 import net.newpipe.newplayer.logic.MediaSourceBuilder
 import net.newpipe.newplayer.data.NewPlayerException
 import net.newpipe.newplayer.logic.NoResponse
@@ -88,7 +87,10 @@ class NewPlayerImpl(
     override val exoPlayer = mutableExoPlayer.asStateFlow()
 
 
-    override var preferredStreamLanguages: List<LanguageIdentifier> = emptyList()
+    /**
+     * Must be in IETF-BCP-47 format
+     */
+    override var preferredStreamLanguages: List<String> = emptyList()
 
     private var playerScope = CoroutineScope(Dispatchers.Main + Job())
 
@@ -170,8 +172,8 @@ class NewPlayerImpl(
     private var mutableCurrentlyAvailableTracks = MutableStateFlow<List<StreamTrack>>(emptyList())
     override val currentlyAvailableTracks: StateFlow<List<StreamTrack>> = mutableCurrentlyAvailableTracks.asStateFlow()
 
-    private var mutableCurrentlyPlayingStream = MutableStateFlow<Stream?>(null)
-    override val currentlyPlayingStream = mutableCurrentlyPlayingStream.asStateFlow()
+    private var mutableCurrentlyPlayingTracks = MutableStateFlow<List<StreamTrack>>(emptyList())
+    override val currentlyPlayingTracks: StateFlow<List<StreamTrack>> = mutableCurrentlyPlayingTracks.asStateFlow()
 
     private fun setupNewExoplayer() {
         val newExoPlayer = ExoPlayer.Builder(app)
@@ -213,14 +215,15 @@ class NewPlayerImpl(
                     }
                 } else {
                     mutableCurrentlyAvailableTracks.update { emptyList() }
-                    mutableCurrentlyPlayingStream.update { null }
                 }
             }
 
             @OptIn(UnstableApi::class)
             override fun onTracksChanged(tracks: Tracks) {
                 super.onTracksChanged(tracks)
-                updateStreamSelection()
+                mutableCurrentlyPlayingTracks.update {
+                    TrackUtils.streamTracksFromMedia3Tracks(tracks, onlySelectedTracks = true)
+                }
             }
         })
         mutableExoPlayer.update {
@@ -353,26 +356,6 @@ class NewPlayerImpl(
         }
     }
 
-
-    @OptIn(UnstableApi::class)
-    private fun updateStreamSelection() {
-        currentlyPlaying.value?.let { mediaItem ->
-
-            exoPlayer.value?.currentTracks?.let { tracks ->
-                println("gurken trackgroups : ${tracks.groups.size}")
-                var group_num = 0
-                for (group in tracks.groups) {
-                    println("   gurken group: ${++group_num}")
-                    for (i in 0 until group.length) {
-                        val format = group.getTrackFormat(i)
-                        format.metadata
-                        println("   gurken track $i: language: ${format.language}, labels: ${format.labels.size}, width: ${format.width} height: ${format.height}")
-                    }
-                }
-            }
-        }
-    }
-
     @OptIn(UnstableApi::class)
     override fun selectChapter(index: Int) {
         val chapters = currentChapters.value
@@ -394,7 +377,7 @@ class NewPlayerImpl(
         }
         mediaController = null
         mutableCurrentlyAvailableTracks.update { emptyList() }
-        mutableCurrentlyPlayingStream.update { null }
+        mutableCurrentlyPlayingTracks.update { emptyList() }
         uniqueIdToStreamSelectionLookup = HashMap()
     }
 

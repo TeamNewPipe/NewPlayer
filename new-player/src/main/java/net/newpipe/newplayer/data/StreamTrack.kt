@@ -68,7 +68,7 @@ data class VideoStreamTrack(
 data class AudioStreamTrack(
     val bitrate: Int,
     override val fileFormat: String,
-    val language: LanguageIdentifier? = null
+    val language: String? = null
 ) : StreamTrack {
 
     override fun toShortIdentifierString() =
