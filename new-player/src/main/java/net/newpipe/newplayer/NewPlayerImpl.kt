@@ -60,7 +60,6 @@ import net.newpipe.newplayer.logic.StreamExceptionResponse
 import net.newpipe.newplayer.data.StreamSelection
 import net.newpipe.newplayer.logic.ReplaceStreamSelectionResponse
 import net.newpipe.newplayer.data.StreamTrack
-import net.newpipe.newplayer.logic.ReloadItemResponse
 import net.newpipe.newplayer.logic.ReplaceItemResponse
 import net.newpipe.newplayer.logic.StreamSelector
 import net.newpipe.newplayer.logic.TrackUtils
@@ -230,6 +229,9 @@ class NewPlayerImpl(
                 super.onTracksChanged(tracks)
                 val streamTracks =
                     TrackUtils.streamTracksFromMedia3Tracks(tracks, onlySelectedTracks = true)
+                        .ifEmpty {
+                            TrackUtils.streamTracksFromMedia3Tracks(tracks, onlySelectedTracks = false)
+                        }
                 streamTracks.joinToString("\n") { it.toString() }
                 Log.d(
                     TAG,
