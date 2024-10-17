@@ -98,6 +98,7 @@ data class AudioStreamTrack(
 
     override fun hashCode(): Int {
         var result = bitrate
+        result = 31 * result + language.hashCode()
         result = 31 * result + fileFormat.hashCode()
         return result
     }

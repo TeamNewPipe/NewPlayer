@@ -212,11 +212,13 @@ class NewPlayerImpl(
                         uniqueIdToStreamSelectionLookup[mediaItem.mediaId.toLong()]!!
                     launchJobAndCollectError {
                         mutableCurrentlyAvailableTracks.update {
-                            TrackUtils.getNonDynamicTracksNonDuplicated(
+                            val tracks = TrackUtils.getNonDynamicTracksNonDuplicated(
                                 repository.getStreams(
                                     streamSelection.item
                                 )
                             )
+                            Log.d(TAG, "New avialble tracks: \n" + tracks.joinToString())
+                            tracks
                         }
                     }
                 } else {
@@ -230,7 +232,10 @@ class NewPlayerImpl(
                 val streamTracks =
                     TrackUtils.streamTracksFromMedia3Tracks(tracks, onlySelectedTracks = true)
                         .ifEmpty {
-                            TrackUtils.streamTracksFromMedia3Tracks(tracks, onlySelectedTracks = false)
+                            TrackUtils.streamTracksFromMedia3Tracks(
+                                tracks,
+                                onlySelectedTracks = false
+                            )
                         }
                 streamTracks.joinToString("\n") { it.toString() }
                 Log.d(
@@ -368,7 +373,10 @@ class NewPlayerImpl(
     override fun playStream(item: String, playMode: PlayMode) {
         launchJobAndCollectError {
             mutableCurrentlyAvailableTracks.update {
-                TrackUtils.getNonDynamicTracksNonDuplicated(repository.getStreams(item))
+                val tracks =
+                    TrackUtils.getNonDynamicTracksNonDuplicated(repository.getStreams(item))
+                Log.d(TAG, "New avialble tracks: \n" + tracks.joinToString())
+                tracks
             }
 
             val mediaSource = toMediaSource(item)
@@ -446,7 +454,9 @@ class NewPlayerImpl(
 
     private suspend fun replaceCurrentItem(item: String) {
         mutableCurrentlyAvailableTracks.update {
-            TrackUtils.getNonDynamicTracksNonDuplicated(repository.getStreams(item))
+            val tracks = TrackUtils.getNonDynamicTracksNonDuplicated(repository.getStreams(item))
+            Log.d(TAG, "New avialble tracks: \n" + tracks.joinToString())
+            tracks
         }
 
         val mediaSource = toMediaSource(item)
