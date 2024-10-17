@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
+import net.newpipe.newplayer.logic.TrackUtils
 import net.newpipe.newplayer.uiModel.EmbeddedUiConfig
 import net.newpipe.newplayer.uiModel.NewPlayerUIState
 import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
@@ -62,11 +63,13 @@ import net.newpipe.newplayer.uiModel.UIModeState
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.pip.supportsPip
 import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
+import java.util.Locale
 
 @OptIn(UnstableApi::class)
 @Composable
 internal fun VideoPlayerMenu(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState) {
     var showMainMenu: Boolean by remember { mutableStateOf(false) }
+    var showLanguageMenu: Boolean by remember { mutableStateOf(false) }
 
     val pixel_density = LocalDensity.current
 
@@ -78,6 +81,8 @@ internal fun VideoPlayerMenu(viewModel: InternalNewPlayerViewModel, uiState: New
         getEmbeddedUiConfig(activity = LocalContext.current as Activity)
     else
         EmbeddedUiConfig.DUMMY
+
+    val availableLanguages = TrackUtils.getAvailableLanguages(uiState.currentlyAvailableTracks)
 
     Box {
         IconButton(onClick = {
@@ -99,8 +104,10 @@ internal fun VideoPlayerMenu(viewModel: InternalNewPlayerViewModel, uiState: New
             expanded = showMainMenu,
             onDismissRequest = {
                 showMainMenu = false
-                viewModel.dialogVisible(false)
+                if (!showLanguageMenu)
+                    viewModel.dialogVisible(false)
             }) {
+
             DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_open_in_browser)) },
                 leadingIcon = {
                     Icon(
@@ -142,7 +149,7 @@ internal fun VideoPlayerMenu(viewModel: InternalNewPlayerViewModel, uiState: New
                         )
                     })
             }
-            if(uiState.uiMode.fullscreen) {
+            if (uiState.uiMode.fullscreen) {
                 DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_fit_screen)) },
                     leadingIcon = {
                         Icon(
@@ -160,15 +167,36 @@ internal fun VideoPlayerMenu(viewModel: InternalNewPlayerViewModel, uiState: New
                     )
                 },
                 onClick = { /*TODO*/ showMainMenu = false })
-            DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_language)) },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Translate,
-                        contentDescription = stringResource(R.string.menu_item_language)
-                    )
-                },
-                onClick = { /*TODO*/ showMainMenu = false })
+            if (2 <= availableLanguages.size) {
+                DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_language)) },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Filled.Translate,
+                            contentDescription = stringResource(R.string.menu_item_language)
+                        )
+                    },
+                    onClick = {
+                        showLanguageMenu = true
+                        showMainMenu = false
+                    })
+            }
+        }
 
+        DropdownMenu(expanded = showLanguageMenu, onDismissRequest = {
+            showLanguageMenu = false
+            viewModel.dialogVisible(false)
+        }) {
+            for (language in availableLanguages) {
+                val locale = Locale(language)
+
+                DropdownMenuItem(
+                    text = {
+                        Text(locale.displayLanguage)
+                    },
+                    onClick = { /*TODO*/ showLanguageMenu = false
+                        viewModel.dialogVisible(false)
+                    })
+            }
         }
     }
 

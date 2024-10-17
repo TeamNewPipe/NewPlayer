@@ -35,7 +35,7 @@ data class VideoStreamTrack(
 ) : StreamTrack {
 
     override fun toShortIdentifierString() =
-        "${if (width < height) width else height}p${if (frameRate != 30) frameRate else ""}"
+        "${if (width < height) width else height}p${if (frameRate > 30) frameRate else ""}"
 
     override fun toLongIdentifierString() = "$fileFormat ${toShortIdentifierString()}"
 
