@@ -55,6 +55,8 @@ import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.logic.TrackUtils
+import net.newpipe.newplayer.ui.common.LanguageMenu
+import net.newpipe.newplayer.ui.common.LanguageMenuItem
 import net.newpipe.newplayer.uiModel.EmbeddedUiConfig
 import net.newpipe.newplayer.uiModel.NewPlayerUIState
 import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
@@ -82,7 +84,7 @@ internal fun VideoPlayerMenu(viewModel: InternalNewPlayerViewModel, uiState: New
     else
         EmbeddedUiConfig.DUMMY
 
-    val availableLanguages = TrackUtils.getAvailableLanguages(uiState.currentlyAvailableTracks)
+
 
     Box {
         IconButton(onClick = {
@@ -167,39 +169,21 @@ internal fun VideoPlayerMenu(viewModel: InternalNewPlayerViewModel, uiState: New
                     )
                 },
                 onClick = { /*TODO*/ showMainMenu = false })
-            if (2 <= availableLanguages.size) {
-                DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_language)) },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Filled.Translate,
-                            contentDescription = stringResource(R.string.menu_item_language)
-                        )
-                    },
-                    onClick = {
-                        showLanguageMenu = true
-                        showMainMenu = false
-                    })
-            }
+
+            LanguageMenuItem(uiState = uiState, onClick = {
+                showLanguageMenu = true
+                showMainMenu = false
+            })
         }
 
-        DropdownMenu(expanded = showLanguageMenu, onDismissRequest = {
-            showLanguageMenu = false
-            viewModel.dialogVisible(false)
-        }) {
-            for (language in availableLanguages) {
-                val locale = Locale(language)
-
-                DropdownMenuItem(
-                    text = {
-                        Text(locale.displayLanguage)
-                    },
-                    onClick = { /*TODO*/ showLanguageMenu = false
-                        viewModel.dialogVisible(false)
-                    })
-            }
-        }
+        LanguageMenu(
+            uiState = uiState,
+            viewModel = viewModel,
+            isVisible = showLanguageMenu,
+            makeInvisible = {
+                showLanguageMenu = false
+            })
     }
-
 }
 
 ///////////////////////////////////////////////////////////////////

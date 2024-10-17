@@ -54,6 +54,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
+import net.newpipe.newplayer.ui.common.LanguageMenu
+import net.newpipe.newplayer.ui.common.LanguageMenuItem
 import net.newpipe.newplayer.uiModel.EmbeddedUiConfig
 import net.newpipe.newplayer.uiModel.NewPlayerUIState
 import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
@@ -135,6 +137,7 @@ internal fun AudioBottomUI(viewModel: InternalNewPlayerViewModel, uiState: NewPl
 @Composable
 private fun Menu(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState) {
     var showMenu: Boolean by remember { mutableStateOf(false) }
+    var showLanguageMenu: Boolean by remember { mutableStateOf(false) }
 
     val embeddedUiConfig = if (LocalContext.current is Activity)
         getEmbeddedUiConfig(activity = LocalContext.current as Activity)
@@ -159,14 +162,10 @@ private fun Menu(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIStat
                     )
                 },
                 onClick = { /*TODO*/ showMenu = false })
-            DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_language)) },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Translate,
-                        contentDescription = stringResource(R.string.menu_item_language)
-                    )
-                },
-                onClick = { /*TODO*/ showMenu = false })
+            LanguageMenuItem(uiState = uiState, onClick = {
+                showLanguageMenu = true
+                showMenu = false
+            })
             DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_share_timestamp)) },
                 leadingIcon = {
                     Icon(
@@ -184,7 +183,7 @@ private fun Menu(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIStat
                 },
                 onClick = { /*TODO*/ showMenu = false })
 
-            if(supportsPip(LocalContext.current)) {
+            if (supportsPip(LocalContext.current)) {
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.pip_button_description)) },
                     onClick = {
@@ -200,6 +199,13 @@ private fun Menu(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIStat
                     })
             }
         }
+        LanguageMenu(
+            uiState = uiState,
+            viewModel = viewModel,
+            isVisible = showLanguageMenu,
+            makeInvisible = {
+                showLanguageMenu = false
+            })
     }
 }
 

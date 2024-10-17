@@ -27,7 +27,7 @@
     <string name="audio_mode">Audio Mode</string>
     <string name="menu_item_fit_screen">Fit screen</string>
     <string name="menu_item_sub_titles">Subtitles</string>
-    <string name="menu_item_language">Language</string>
+    <string name="menu_selected_language_item">Selected language: %s</string>
     <string name="menu_item_playback_speed">Playback speed</string>
     <string name="widget_description_previous_stream">Previous stream</string>
     <string name="widget_description_fast_rewind">Fast rewind</string>
