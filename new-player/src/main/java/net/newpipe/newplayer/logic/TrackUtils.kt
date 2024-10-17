@@ -20,6 +20,7 @@
 
 package net.newpipe.newplayer.logic
 
+import android.provider.MediaStore.Video
 import android.util.Log
 import androidx.annotation.OptIn
 import androidx.media3.common.C
@@ -135,12 +136,40 @@ object TrackUtils {
         return false
     }
 
+    internal fun getStreamMatchingAudioTrack(
+        availableStreams: List<Stream>,
+        track: AudioStreamTrack,
+        matchLanguage: Boolean = true,
+        matchBitrate: Boolean = true,
+        matchFileFormat: Boolean = true,
+    ) = availableStreams.filterIsInstance<AudioStreamTrack>()
+        .filter{!matchLanguage || it.language == track.language}
+        .filter{!matchBitrate || it.bitrate == track.bitrate}
+        .filter{!matchFileFormat || it.fileFormat == track.fileFormat}
+
+
+    internal fun getStreamsMatchingVideoTrack(
+        availableStreams: List<Stream>,
+        track: VideoStreamTrack,
+        matchWidth: Boolean = true,
+        matchHeight: Boolean = true,
+        matchFrameRate: Boolean = true,
+        matchFileFormat: Boolean = true
+    ) = availableStreams.filterIsInstance<VideoStreamTrack>()
+        .filter{!matchWidth || it.width == track.width}
+        .filter{!matchHeight || it.height == track.height}
+        .filter{!matchFrameRate || it.frameRate == track.frameRate}
+        .filter{!matchFileFormat || it.fileFormat == track.fileFormat}
+
     @OptIn(UnstableApi::class)
-    internal fun streamTracksFromMedia3Tracks(media3Tracks: Tracks, onlySelectedTracks: Boolean = false): List<StreamTrack> {
+    internal fun streamTracksFromMedia3Tracks(
+        media3Tracks: Tracks,
+        onlySelectedTracks: Boolean = false
+    ): List<StreamTrack> {
         val tracks = mutableListOf<StreamTrack>()
         for (group in media3Tracks.groups) {
             for (i in 0 until group.length) {
-                if(onlySelectedTracks && group.isTrackSelected(i))
+                if (onlySelectedTracks && group.isTrackSelected(i))
                     continue
 
                 val format = group.getTrackFormat(i)
