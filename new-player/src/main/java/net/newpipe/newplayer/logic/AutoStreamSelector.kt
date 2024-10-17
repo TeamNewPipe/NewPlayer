@@ -31,7 +31,7 @@ import net.newpipe.newplayer.logic.TrackUtils.tryAndGetMedianAudioOnlyTracks
 import net.newpipe.newplayer.logic.TrackUtils.tryAndGetMedianCombinedVideoAndAudioTracks
 import net.newpipe.newplayer.logic.TrackUtils.tryAndGetMedianVideoOnlyTracks
 
-internal class StreamSelector(
+internal class AutoStreamSelector(
     /**
      * Must be in IETF-BCP-47 format
      */

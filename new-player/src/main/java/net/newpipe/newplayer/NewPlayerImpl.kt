@@ -61,7 +61,7 @@ import net.newpipe.newplayer.data.StreamSelection
 import net.newpipe.newplayer.logic.ReplaceStreamSelectionResponse
 import net.newpipe.newplayer.data.StreamTrack
 import net.newpipe.newplayer.logic.ReplaceItemResponse
-import net.newpipe.newplayer.logic.StreamSelector
+import net.newpipe.newplayer.logic.AutoStreamSelector
 import net.newpipe.newplayer.logic.TrackUtils
 import kotlin.random.Random
 
@@ -176,6 +176,8 @@ class NewPlayerImpl(
     private var mutableCurrentlyPlayingTracks = MutableStateFlow<List<StreamTrack>>(emptyList())
     override val currentlyPlayingTracks: StateFlow<List<StreamTrack>> =
         mutableCurrentlyPlayingTracks.asStateFlow()
+
+    override var currentStreamLanguageConstraint: String? = null
 
     private fun setupNewExoplayer() {
         val newExoPlayer = ExoPlayer.Builder(app)
@@ -466,11 +468,11 @@ class NewPlayerImpl(
     @OptIn(UnstableApi::class)
     private suspend
     fun toMediaSource(item: String): MediaSource {
-        val streamSelector = StreamSelector(
+        val autoStreamSelector = AutoStreamSelector(
             preferredLanguages = preferredStreamLanguages
         )
 
-        val selection = streamSelector.selectStreamAutomatically(
+        val selection = autoStreamSelector.selectStreamAutomatically(
             item,
             availableStreams = repository.getStreams(item),
         )
