@@ -207,6 +207,7 @@ class NewPlayerImpl(
             }
 
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                currentStreamLanguageConstraint = null
                 super.onMediaItemTransition(mediaItem, reason)
                 mutableCurrentlyPlaying.update { mediaItem }
                 if (mediaItem != null) {
@@ -418,6 +419,7 @@ class NewPlayerImpl(
 
     @OptIn(UnstableApi::class)
     private fun internalPlayStream(mediaSource: MediaSource, playMode: PlayMode) {
+        currentStreamLanguageConstraint = null
         if (exoPlayer.value?.playbackState == Player.STATE_IDLE || exoPlayer.value == null) {
             prepare()
         }
@@ -469,11 +471,11 @@ class NewPlayerImpl(
     private suspend
     fun toMediaSource(item: String): MediaSource {
         val autoStreamSelector = AutoStreamSelector(
-            preferredLanguages = preferredStreamLanguages
+            preferredLanguages = preferredStreamLanguages,
+            streamLanguageConstraint = currentStreamLanguageConstraint
         )
 
         val selection = autoStreamSelector.selectStreamAutomatically(
-            item,
             availableStreams = repository.getStreams(item),
         )
         return toMediaSource(selection, item)

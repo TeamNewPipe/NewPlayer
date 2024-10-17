@@ -31,14 +31,25 @@ import net.newpipe.newplayer.logic.TrackUtils.tryAndGetMedianAudioOnlyTracks
 import net.newpipe.newplayer.logic.TrackUtils.tryAndGetMedianCombinedVideoAndAudioTracks
 import net.newpipe.newplayer.logic.TrackUtils.tryAndGetMedianVideoOnlyTracks
 
+/**
+ * TODO: This whole class is just a concept. this should really be finished at some point.
+ */
 internal class AutoStreamSelector(
     /**
      * Must be in IETF-BCP-47 format
+     * This is a soft constraint. If no language can be found in the available tracks
+     * that fits on of the preferred languages, a default language is picked.
      */
     val preferredLanguages: List<String>,
+
+    /**
+     * This is a hard constraint. If not null a stream with this language must be selected,
+     * otherwise the automatic stream selection fails.
+     * Setting this will override the [preferredLanguages].
+     */
+    val streamLanguageConstraint: String?
 ) {
     internal fun selectStreamAutomatically(
-        item: String,
         availableStreams: List<Stream>,
     ): StreamSelection {
 
@@ -47,7 +58,8 @@ internal class AutoStreamSelector(
 
         val bestFittingLanguage =
             TrackUtils.getBestLanguageFit(availableStreams, preferredLanguages)
-        val availablesInPreferredLanguage =
+
+        val availableInPreferredLanguage =
             if (bestFittingLanguage != null) TrackUtils.filtersByLanguage(
                 availableStreams, bestFittingLanguage
             )
@@ -60,7 +72,7 @@ internal class AutoStreamSelector(
         if (hasVideoTracks(availableStreams)) {
 
             // first: try and get a dynamic stream variant
-            val dynamicStreams = getDynamicStreams(availablesInPreferredLanguage)
+            val dynamicStreams = getDynamicStreams(availableInPreferredLanguage)
             if (dynamicStreams.isNotEmpty()) {
                 return SingleSelection(dynamicStreams[0])
             }
