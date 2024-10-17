@@ -353,7 +353,7 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
             "6502" -> context.getString(R.string.ccc_6502_preview_thumbnails)
             "imu" -> context.getString(R.string.ccc_imu_preview_thumbnails)
             "portrait" -> return null
-            "ty_test" -> return null
+            "yt_test" -> return null
             "faulty" -> return null
             else -> throw Exception("Unknown stream: $item")
         }
