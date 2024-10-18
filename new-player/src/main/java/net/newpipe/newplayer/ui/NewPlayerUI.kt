@@ -54,6 +54,17 @@ import net.newpipe.newplayer.ui.common.setScreenBrightness
 
 private const val TAG = "VideoPlayerUI"
 
+
+/**
+ * The NewPlayerUI composable. Use this in your compose setup to display the NewPlayerUI.
+ *
+ * Keep in mind that NewPlayer will deeply integrate into your UI and your Activity.
+ * You must take care about complying to requests of NewPlayer like when NewPlayer wants to
+ * display the NewPlayerUI in fullscreen mode. It's your duty to ensure that all other composable
+ * or views are hidden and only NewPlayerUI is visible. You can read more about this in
+ * the [NewPlayerViewModel], since the [viewModel] is responsible to tell your UI how to behave
+ * in such cases.
+ */
 @OptIn(UnstableApi::class)
 @Composable
 fun NewPlayerUI(

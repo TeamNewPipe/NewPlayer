@@ -33,6 +33,10 @@ import net.newpipe.newplayer.ui.NewPlayerUI
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.data.NewPlayerException
 
+
+/**
+ * A wrapper for [NewPlayerUI] to allow NewPlayer to be used in a [views](https://developer.android.com/develop/ui/views/layout/declaring-layout) environment.
+ */
 @AndroidEntryPoint
 class NewPlayerView : FrameLayout {
 
