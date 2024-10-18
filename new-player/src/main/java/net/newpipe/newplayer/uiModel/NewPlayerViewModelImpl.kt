@@ -49,8 +49,8 @@ import kotlinx.coroutines.launch
 import net.newpipe.newplayer.data.VideoSize
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.data.NewPlayerException
-import net.newpipe.newplayer.PlayMode
-import net.newpipe.newplayer.RepeatMode
+import net.newpipe.newplayer.data.PlayMode
+import net.newpipe.newplayer.data.RepeatMode
 import net.newpipe.newplayer.ui.ContentScale
 import java.util.LinkedList
 import kotlin.math.abs

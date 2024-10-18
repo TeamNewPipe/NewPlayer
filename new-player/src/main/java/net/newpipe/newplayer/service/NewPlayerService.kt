@@ -44,7 +44,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import net.newpipe.newplayer.NewPlayer
-import net.newpipe.newplayer.PlayMode
+import net.newpipe.newplayer.data.PlayMode
 import javax.inject.Inject
 
 private const val TAG = "NewPlayerService"

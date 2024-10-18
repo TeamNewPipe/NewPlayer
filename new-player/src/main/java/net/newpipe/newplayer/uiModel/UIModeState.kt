@@ -20,7 +20,7 @@
 
 package net.newpipe.newplayer.uiModel
 
-import net.newpipe.newplayer.PlayMode
+import net.newpipe.newplayer.data.PlayMode
 
 enum class UIModeState {
     PLACEHOLDER,

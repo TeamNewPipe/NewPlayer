@@ -55,6 +55,8 @@ import net.newpipe.newplayer.logic.ActionResponse
 import net.newpipe.newplayer.data.Chapter
 import net.newpipe.newplayer.logic.MediaSourceBuilder
 import net.newpipe.newplayer.data.NewPlayerException
+import net.newpipe.newplayer.data.PlayMode
+import net.newpipe.newplayer.data.RepeatMode
 import net.newpipe.newplayer.logic.NoResponse
 import net.newpipe.newplayer.logic.StreamExceptionResponse
 import net.newpipe.newplayer.data.StreamSelection

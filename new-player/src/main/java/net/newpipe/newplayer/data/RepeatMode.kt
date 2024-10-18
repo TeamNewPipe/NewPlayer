@@ -20,8 +20,25 @@
 
 package net.newpipe.newplayer.data
 
+
+import net.newpipe.newplayer.data.PlayMode.IDLE
+/**
+ * The playlist repeat mode.
+ */
 enum class RepeatMode {
+    /**
+     * Don't repeat. Quit playback and switch to [IDLE] mode after being done playing the active
+     * playlist.
+     */
     DO_NOT_REPEAT,
+
+    /**
+     * Repeats the currently active playlist after playing the last item of the playlist.
+     */
     REPEAT_ALL,
+
+    /**
+     * Keeps repeating the current item of a playlist.
+     */
     REPEAT_ONE
 }

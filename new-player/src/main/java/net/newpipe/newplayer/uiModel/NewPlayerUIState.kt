@@ -25,9 +25,9 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.data.Chapter
-import net.newpipe.newplayer.RepeatMode
 import net.newpipe.newplayer.ui.ContentScale
 import net.newpipe.newplayer.data.AudioStreamTrack
+import net.newpipe.newplayer.data.RepeatMode
 import net.newpipe.newplayer.data.StreamTrack
 import net.newpipe.newplayer.data.VideoStreamTrack
 

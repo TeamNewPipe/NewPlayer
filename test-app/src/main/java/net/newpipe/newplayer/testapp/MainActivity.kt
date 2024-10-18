@@ -35,7 +35,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.newpipe.newplayer.ActivityBrainSlug
 import net.newpipe.newplayer.NewPlayer
-import net.newpipe.newplayer.PlayMode
+import net.newpipe.newplayer.data.PlayMode
 import net.newpipe.newplayer.uiModel.NewPlayerViewModel
 import net.newpipe.newplayer.uiModel.NewPlayerViewModelImpl
 import net.newpipe.newplayer.uiModel.UIModeState
