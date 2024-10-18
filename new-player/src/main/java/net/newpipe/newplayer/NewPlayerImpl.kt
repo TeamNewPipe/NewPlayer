@@ -75,7 +75,7 @@ class NewPlayerImpl(
         app,
         R.drawable.new_player_tiny_icon
     ),
-    val rescueStreamFault: suspend (
+    override val rescueStreamFault: suspend (
         item: String?,
         mediaItem: MediaItem?,
         exception: Exception,
@@ -388,10 +388,11 @@ class NewPlayerImpl(
     }
 
     @OptIn(UnstableApi::class)
+    @Throws(IndexOutOfBoundsException::class)
     override fun selectChapter(index: Int) {
         val chapters = currentChapters.value
         assert(index in chapters.indices) {
-            throw NewPlayerException("Chapter selection out of bound: selected chapter index: $index, available chapters: ${chapters.size}")
+            throw IndexOutOfBoundsException("Chapter selection out of bound: selected chapter index: $index, available chapters: ${chapters.size}")
         }
         val chapter = chapters[index]
         currentPosition = chapter.chapterStartInMs
