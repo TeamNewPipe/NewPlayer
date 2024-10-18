@@ -70,6 +70,7 @@ import net.newpipe.newplayer.uiModel.UIModeState
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.theme.video_player_onSurface
 import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
+import net.newpipe.newplayer.ui.common.showNotYetImplementedToast
 
 @OptIn(UnstableApi::class)
 @Composable
@@ -112,8 +113,12 @@ internal fun TopUI(
             Box(modifier = Modifier.weight(1F))
         }
         TrackSelectionMenu(viewModel, uiState)
+
+        val context = LocalContext.current
         IconButton(
-            onClick = { /*TODO*/ },
+            onClick = { /*TODO*/
+                showNotYetImplementedToast(context)
+            },
         ) {
             Text(
                 "1x", fontWeight = FontWeight.Bold, modifier = Modifier.padding(0.dp)
@@ -203,7 +208,9 @@ private fun TrackSelectionMenu(viewModel: InternalNewPlayerViewModel, uiState: N
         DropdownMenu(expanded = menuVisible, onDismissRequest = { menuVisible = false }) {
             for (track in availableVideoTracks.reversed()) {
                 DropdownMenuItem(text = { Text(track.toLongIdentifierString()) },
-                    onClick = { /*TODO*/
+                    onClick = {
+                        /* TODO */
+                        showNotYetImplementedToast(context)
                         viewModel.dialogVisible(false)
                         menuVisible = false
                     })

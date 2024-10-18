@@ -64,6 +64,7 @@ import net.newpipe.newplayer.uiModel.UIModeState
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.pip.supportsPip
 import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
+import net.newpipe.newplayer.ui.common.showNotYetImplementedToast
 
 @OptIn(UnstableApi::class)
 @Composable
@@ -154,6 +155,8 @@ private fun Menu(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIStat
             )
         }
         DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
+            val context = LocalContext.current
+
             DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_playback_speed)) },
                 leadingIcon = {
                     Icon(
@@ -161,7 +164,9 @@ private fun Menu(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIStat
                         contentDescription = stringResource(R.string.menu_item_playback_speed)
                     )
                 },
-                onClick = { /*TODO*/ showMenu = false })
+                onClick = { /*TODO*/
+                    showNotYetImplementedToast(context)
+                    showMenu = false })
             LanguageMenuItem(uiState = uiState, onClick = {
                 showLanguageMenu = true
                 showMenu = false
@@ -173,7 +178,9 @@ private fun Menu(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIStat
                         contentDescription = stringResource(R.string.menu_item_share_timestamp)
                     )
                 },
-                onClick = { /*TODO*/ showMenu = false })
+                onClick = { /*TODO*/
+                    showNotYetImplementedToast(context)
+                    showMenu = false })
             DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_open_in_browser)) },
                 leadingIcon = {
                     Icon(
@@ -181,7 +188,9 @@ private fun Menu(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIStat
                         contentDescription = stringResource(R.string.menu_item_open_in_browser)
                     )
                 },
-                onClick = { /*TODO*/ showMenu = false })
+                onClick = { /*TODO*/
+                    showNotYetImplementedToast(context)
+                    showMenu = false })
 
             if (supportsPip(LocalContext.current)) {
                 DropdownMenuItem(

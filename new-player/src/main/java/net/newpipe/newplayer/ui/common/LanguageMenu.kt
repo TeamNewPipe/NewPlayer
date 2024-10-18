@@ -28,6 +28,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
@@ -48,12 +49,15 @@ internal fun LanguageMenu(uiState: NewPlayerUIState, viewModel: InternalNewPlaye
     }) {
         for (language in availableLanguages) {
             val locale = Locale(language)
+            val context = LocalContext.current
 
             DropdownMenuItem(
                 text = {
                     Text(locale.displayLanguage)
                 },
-                onClick = { /*TODO*/ makeInvisible()
+                onClick = { /*TODO*/
+                    showNotYetImplementedToast(context)
+                    makeInvisible()
                     viewModel.dialogVisible(false)
                 })
         }

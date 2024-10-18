@@ -65,6 +65,7 @@ import net.newpipe.newplayer.uiModel.UIModeState
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.pip.supportsPip
 import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
+import net.newpipe.newplayer.ui.common.showNotYetImplementedToast
 import java.util.Locale
 
 @OptIn(UnstableApi::class)
@@ -110,6 +111,8 @@ internal fun VideoPlayerMenu(viewModel: InternalNewPlayerViewModel, uiState: New
                     viewModel.dialogVisible(false)
             }) {
 
+            val context = LocalContext.current
+
             DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_open_in_browser)) },
                 leadingIcon = {
                     Icon(
@@ -117,7 +120,9 @@ internal fun VideoPlayerMenu(viewModel: InternalNewPlayerViewModel, uiState: New
                         contentDescription = stringResource(R.string.menu_item_open_in_browser)
                     )
                 },
-                onClick = { /*TODO*/ showMainMenu = false })
+                onClick = { /*TODO*/
+                    showNotYetImplementedToast(context)
+                    showMainMenu = false })
             DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_share_timestamp)) },
                 leadingIcon = {
                     Icon(
@@ -125,7 +130,9 @@ internal fun VideoPlayerMenu(viewModel: InternalNewPlayerViewModel, uiState: New
                         contentDescription = stringResource(R.string.menu_item_share_timestamp)
                     )
                 },
-                onClick = { /*TODO*/ showMainMenu = false })
+                onClick = { /*TODO*/
+                    showNotYetImplementedToast(context)
+                    showMainMenu = false })
             DropdownMenuItem(text = { Text(stringResource(R.string.audio_mode)) }, leadingIcon = {
                 Icon(
                     imageVector = Icons.Filled.Headset,
@@ -159,7 +166,9 @@ internal fun VideoPlayerMenu(viewModel: InternalNewPlayerViewModel, uiState: New
                             contentDescription = stringResource(R.string.menu_item_fit_screen)
                         )
                     },
-                    onClick = { /*TODO*/ showMainMenu = false })
+                    onClick = { /*TODO*/
+                        showNotYetImplementedToast(context)
+                        showMainMenu = false })
             }
             DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_sub_titles)) },
                 leadingIcon = {
@@ -168,7 +177,9 @@ internal fun VideoPlayerMenu(viewModel: InternalNewPlayerViewModel, uiState: New
                         contentDescription = stringResource(R.string.menu_item_sub_titles)
                     )
                 },
-                onClick = { /*TODO*/ showMainMenu = false })
+                onClick = { /*TODO*/
+                    showNotYetImplementedToast(context)
+                    showMainMenu = false })
 
             LanguageMenuItem(uiState = uiState, onClick = {
                 showLanguageMenu = true
