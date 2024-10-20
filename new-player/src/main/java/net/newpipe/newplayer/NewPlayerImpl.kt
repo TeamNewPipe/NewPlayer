@@ -71,7 +71,7 @@ private const val TAG = "NewPlayerImpl"
 
 class NewPlayerImpl(
     val app: Application,
-    override val playerActivityClass: Class<Activity>,
+    override val playerActivityClass: Class<out Activity>,
     override val repository: MediaRepository,
     override val notificationIcon: IconCompat = IconCompat.createWithResource(
         app,

@@ -26,7 +26,7 @@ internal fun createNewPlayerNotification(
     session: MediaSession,
     notificationManager: NotificationManager,
     notificationIcon: IconCompat,
-    playerActivity: Class<Activity>
+    playerActivity: Class<out Activity>
 ): Notification {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

@@ -66,7 +66,7 @@ interface NewPlayer {
     /**
      * The class of the activity that holds the NewPlayerUI.
      */
-    val playerActivityClass: Class<Activity>
+    val playerActivityClass: Class<out Activity>
 
     /**
      * The exoPlayer NewPlayer uses.

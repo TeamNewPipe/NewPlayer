@@ -44,7 +44,7 @@ object NewPlayerComponent {
             app = app,
             repository = TestMediaRepository(app),
             notificationIcon = IconCompat.createWithResource(app, R.drawable.tinny_cools),
-            playerActivityClass = MainActivity::class.java as Class<Activity>,
+            playerActivityClass = MainActivity::class.java,
             rescueStreamFault = ::streamErrorHandler
         )
         if (app is NewPlayerApp) {
