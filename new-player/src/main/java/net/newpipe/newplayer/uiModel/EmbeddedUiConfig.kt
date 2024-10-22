@@ -23,9 +23,17 @@ package net.newpipe.newplayer.uiModel
 import android.content.pm.ActivityInfo
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import net.newpipe.newplayer.ui.NewPlayerUI
 
 /**
- * Restores the embedded mode UI config when returning from fullscreen
+ * This helps to restore properties of the UI/SystemUI when returning from fullscreen mode.
+ * [NewPlayerViewModelImpl] uses this to store the properties when switching to a fullscreen mode.
+ * When returning from a fullscreen mode [NewPlayerViewModelImpl] will store the current
+ * EmbeddedUiConfig in the [NewPlayerUIState]. When returning from fullscreen mode
+ * [NewPlayerUI] will then restore that configuration.
+ *
+ * TODO: At least in theory. Brightnes and the systembar theme don't work (correctly) right now.
+ *
  */
 @Parcelize
 data class EmbeddedUiConfig(

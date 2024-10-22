@@ -31,9 +31,16 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
 import net.newpipe.newplayer.uiModel.NewPlayerViewModel
+import net.newpipe.newplayer.uiModel.NewPlayerUIState
 
 private const val TAG = "ActivityBrainSlug"
 
+/**
+ * TODO: Remove this.
+ * This class should help for transitioning from and to fullscreen mode.
+ * However A user could also just subscribe to the [NewPlayerUIState]
+ * to check weather the UI is in fullscreen mode or not.
+ */
 class ActivityBrainSlug {
 
     private val viewModel: InternalNewPlayerViewModel

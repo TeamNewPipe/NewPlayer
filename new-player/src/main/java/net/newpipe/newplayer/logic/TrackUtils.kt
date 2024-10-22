@@ -20,8 +20,7 @@
 
 package net.newpipe.newplayer.logic
 
-import android.provider.MediaStore.Video
-import android.util.Log
+ import android.util.Log
 import androidx.annotation.OptIn
 import androidx.media3.common.C
 import androidx.media3.common.Tracks
@@ -33,6 +32,9 @@ import net.newpipe.newplayer.data.VideoStreamTrack
 
 private const val TAG = "TrackUtils"
 
+/**
+ * This provides several tools to handle [StreamTrack]s.
+ */
 object TrackUtils {
 
     internal fun getAllAvailableTracksNonDuplicated(streams: List<Stream>): List<StreamTrack> {
@@ -136,6 +138,12 @@ object TrackUtils {
         return false
     }
 
+    /**
+     * You can filter for [StreamTrack]s by simply testing if a track equals the one
+     * you are looking for.
+     * However maybe you just want to filter tracks based on only some attributes.
+     * You can do this with this function.
+     */
     internal fun getStreamMatchingAudioTrack(
         availableStreams: List<Stream>,
         track: AudioStreamTrack,
@@ -147,7 +155,12 @@ object TrackUtils {
         .filter{!matchBitrate || it.bitrate == track.bitrate}
         .filter{!matchFileFormat || it.fileFormat == track.fileFormat}
 
-
+    /**
+     * You can filter for [StreamTrack]s by simply testing if a track equals the one
+     * you are looking for.
+     * However maybe you just want to filter tracks based on only some attributes.
+     * You can do this with this function.
+     */
     internal fun getStreamsMatchingVideoTrack(
         availableStreams: List<Stream>,
         track: VideoStreamTrack,
