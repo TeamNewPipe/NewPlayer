@@ -20,8 +20,25 @@
 
 package net.newpipe.newplayer.ui
 
+/**
+ * Depicts how the video should be layout in fullscreen mode.
+ */
 enum class ContentScale {
-    FILL,
+    /**
+     * The video will fill the entire screen but it will also be stretched.
+     */
+    STRETCHED,
+
+    /**
+     * The video will fit fully inside the screen's view pod, and will align with at least two
+     * opposing borders.
+     */
     FIT_INSIDE,
+
+    /**
+     * The video will fill the entire screen. The aspect ratio of the video will remain true,
+     * but parts of the video will be cropped of. However, the video will align with at least
+     * two opposing borders, so that as little as possible video content is cropped of.
+     */
     CROP
 }
