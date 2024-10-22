@@ -22,7 +22,22 @@ package net.newpipe.newplayer.uiModel
 
 import net.newpipe.newplayer.data.PlayMode
 
+
+/**
+ * This depicts the UI mode. In layman's terms you could say it depicts which
+ * of NewPlayer's many UI screens should be visible.
+ * The UIModeState can be derived from the [PlayMode].
+ * However, while [PlayMode] depicts in which mode to play a certain item in,
+ * UIModeState is more detailed and depicts the actually visible UI.
+ * Because of this multiple UIModeStates can be mapped to the same [PlayMode].
+ *
+ * UIModeState is mainly thought to be used and modified internally. However,
+ * since a UIModeState is part of the [NewPlayerUIState], it is public.
+ */
 enum class UIModeState {
+    /**
+     * Same as [PlayMode.IDLE]
+     */
     PLACEHOLDER,
 
     EMBEDDED_VIDEO,
@@ -41,6 +56,9 @@ enum class UIModeState {
     AUDIO_CHAPTER_SELECT,
     AUDIO_STREAM_SELECT;
 
+    /**
+     * Depicts if the current mode requires the UI to be in fullscreen mode.
+     */
     val fullscreen: Boolean
         get() =
             when (this) {
@@ -94,6 +112,9 @@ enum class UIModeState {
                 else -> true
             }
 
+    /**
+     * Depicts if the current mode requires the screen to be rotated to best fit the video dimensions.
+     */
     val fitScreenRotation: Boolean
         get() =
             when (this) {
@@ -105,6 +126,9 @@ enum class UIModeState {
                 else -> false
             }
 
+    /**
+     * Depicts if the current state requires the progress update job of the viewModel to run.
+     */
     val requiresProgressUpdate: Boolean
         get() =
             when (this) {
