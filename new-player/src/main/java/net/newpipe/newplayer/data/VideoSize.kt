@@ -21,7 +21,20 @@
 
 package net.newpipe.newplayer.data
 
+/**
+ * This class depicts video sizes. A Media3 implementation ([androidx.media3.common.VideoSize])
+ * could have been used, however because of the pixelWidthHeightRatio stuff I wanted a tool that
+ * I can control better.
+ *
+ * @param width depicts the width of the video with which it is encoded with
+ *      (not with which it is played back with).
+ * @param height depicts the height of the video with which it is encoded with
+ *      (not with which it is played back with).
+ * @param pixelWidthHeightRatio the ratio of each individual pixel. Normally it's 1 but some
+ *      (older) media.ccc videos go wonky.
+ */
 internal data class VideoSize(
+
     val width: Int,
     val height: Int,
     /// The width/height ratio of a single pixel
@@ -39,7 +52,7 @@ internal data class VideoSize(
         }
 
     override fun hashCode() =
-        width + height * 9999999 + (pixelWidthHeightRatio*10000).toInt()
+        width + height * 999999 + (pixelWidthHeightRatio*10000).toInt()
 
     fun getRatio() =
         (width * pixelWidthHeightRatio) / height

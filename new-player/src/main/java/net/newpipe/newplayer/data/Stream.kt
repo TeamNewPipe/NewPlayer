@@ -22,6 +22,18 @@ package net.newpipe.newplayer.data
 
 import android.net.Uri
 
+/**
+ * A stream represents one actual video stream that is associated with a video.
+ * Each stream has its own URI (and therefore correspond to one individual video container).
+ * Each stream can contain multiple audio/video tracks.
+ *
+ * @param item The item the stream belongs to.
+ * @param streamUri the URI of the stream.
+ * @param streamTracks the tracks that the stream contains
+ * @param mimeType The mime type of the stream. This may only be set if ExoPlayer might not be
+ * able to infer the type of of the stream from the Uri itself.
+ * @param isDashOrHls depicts wather its a dynamic stream or not.
+ */
 data class Stream(
     val item: String,
     val streamUri: Uri,
@@ -30,8 +42,12 @@ data class Stream(
     val isDashOrHls: Boolean = false
 ) {
 
+    /**
+     * The list of audio languages provided by the stream.
+     */
     val languages: List<String>
         get() = streamTracks.filterIsInstance<AudioStreamTrack>().mapNotNull { it.language }
+
 
     val hasAudioTracks: Boolean
         get() {
@@ -52,9 +68,7 @@ data class Stream(
     val audioStreamTrack: List<AudioStreamTrack>
         get() = streamTracks.filterIsInstance<AudioStreamTrack>()
 
-    override fun equals(other: Any?) =
-        other is Stream
-                && other.hashCode() == this.hashCode()
+    override fun equals(other: Any?) = other is Stream && other.hashCode() == this.hashCode()
 
     override fun hashCode(): Int {
         var result = item.hashCode()

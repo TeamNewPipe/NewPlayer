@@ -4,6 +4,9 @@ import net.newpipe.newplayer.data.Stream
 import net.newpipe.newplayer.data.StreamSelection
 import net.newpipe.newplayer.data.StreamTrack
 
+/**
+ * TODO
+ */
 internal object ConstraintStreamSelector {
     fun selectStream(
         availableStreams: List<Stream>,

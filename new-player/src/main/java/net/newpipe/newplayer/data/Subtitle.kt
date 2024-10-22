@@ -22,6 +22,9 @@ package net.newpipe.newplayer.data
 
 import android.net.Uri
 
+/**
+ * TODO
+ */
 data class Subtitle(
     val uri: Uri,
     val identifier: String

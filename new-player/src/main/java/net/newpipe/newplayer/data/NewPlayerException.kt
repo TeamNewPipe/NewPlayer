@@ -20,6 +20,9 @@
 
 package net.newpipe.newplayer.data
 
+/**
+ * An Exception, but from NewPlayer.
+ */
 class NewPlayerException : Exception {
     constructor(message: String) : super(message)
     constructor(message: String, cause: Throwable) : super(message, cause)

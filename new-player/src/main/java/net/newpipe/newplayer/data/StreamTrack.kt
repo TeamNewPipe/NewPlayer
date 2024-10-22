@@ -20,6 +20,9 @@
 
 package net.newpipe.newplayer.data
 
+/**
+ * Media3 does not provide a class to represent individual tracks. So here we go.
+ */
 interface StreamTrack : Comparable<StreamTrack> {
     val fileFormat: String
 
@@ -27,6 +30,9 @@ interface StreamTrack : Comparable<StreamTrack> {
     fun toLongIdentifierString(): String
 }
 
+/**
+ * A track representing a video track.
+ */
 data class VideoStreamTrack(
     val width: Int,
     val height: Int,
@@ -74,6 +80,9 @@ data class VideoStreamTrack(
 
 }
 
+/**
+ * A track representing an audio track.
+ */
 data class AudioStreamTrack(
     val bitrate: Int,
     override val fileFormat: String,

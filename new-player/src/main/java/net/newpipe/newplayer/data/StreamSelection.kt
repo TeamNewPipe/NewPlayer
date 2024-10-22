@@ -20,8 +20,14 @@
 
 package net.newpipe.newplayer.data
 
+import androidx.media3.exoplayer.source.MergingMediaSource
 import net.newpipe.newplayer.logic.TrackUtils
 
+/**
+ * A selection of streams that should be used for playback.
+ * This is used by the stream selection algorithm to depict which streams should be used
+ * to build a MediaSource from and thus forward to the actual ExoPlayer.
+ */
 interface StreamSelection {
     val item: String
 
@@ -31,6 +37,11 @@ interface StreamSelection {
     val isDynamic:Boolean
 }
 
+/**
+ * This is used if only one single stream should be forwarded to ExoPlayer.
+ * This can be either a DASH/HLS stream or a progressive stream that has all the required
+ * tracks already muxed together.
+ */
 data class SingleSelection(
     val stream: Stream
 ) : StreamSelection {
@@ -50,6 +61,17 @@ data class SingleSelection(
         get() = stream.isDashOrHls
 }
 
+/**
+ * This can be used if tracks from multiple streams should be forwarded to ExoPlayer, so
+ * ExoPlayer can mux them together.
+ * This StreamSelection will be made into a [MergingMediaSource].
+ * This stream selection will not depict which of the tracks contained in the StreamSelection
+ * should be muxed together by ExoPlayer. This MultiSelection only depicts that at least all the
+ * tracks that should be played are contained.
+ *
+ * The information to pick the actual tracks out of the available tracks within this selection
+ * bust be given to ExoPlayer through another mechanism. (You see this is still TODO).
+ */
 data class MultiSelection(
     val streams: List<Stream>
 ) : StreamSelection {

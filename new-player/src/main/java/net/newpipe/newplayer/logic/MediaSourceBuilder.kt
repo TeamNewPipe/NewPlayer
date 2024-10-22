@@ -36,6 +36,9 @@ import net.newpipe.newplayer.data.SingleSelection
 import net.newpipe.newplayer.data.Stream
 import net.newpipe.newplayer.data.StreamSelection
 
+/**
+ * This class help to transforms a [StreamSelection] into a [MediaSource].
+ */
 @OptIn(UnstableApi::class)
 internal class MediaSourceBuilder
     (
