@@ -171,6 +171,7 @@ class NewPlayerViewModelImpl @Inject constructor(
                             if (isPlaying && uiState.value.uiMode.videoControllerUiVisible) {
                                 startHideUiDelayedJob()
                             } else {
+                                // TODO why cancel the job, if the ui is already not visible?
                                 hideUiDelayedJob?.cancel()
                             }
                         }
@@ -193,6 +194,8 @@ class NewPlayerViewModelImpl @Inject constructor(
                         override fun onRepeatModeChanged(repeatMode: Int) {
                             super.onRepeatModeChanged(repeatMode)
                             mutableUiState.update {
+                                // TODO why are you using newPlayer.repeatMode instead of just
+                                //  repeatMode? Also below
                                 it.copy(repeatMode = newPlayer.repeatMode)
                             }
                         }
@@ -267,6 +270,7 @@ class NewPlayerViewModelImpl @Inject constructor(
             }
 
             mutableUiState.update {
+                // TODO shouldn't this update rather happen in `newPlayer.exoPlayer.collect`?
                 it.copy(
                     playing = newPlayer.exoPlayer.value?.isPlaying ?: false,
                     isLoading = !(newPlayer.exoPlayer.value?.isPlaying
@@ -335,6 +339,7 @@ class NewPlayerViewModelImpl @Inject constructor(
         }
     }
 
+    // TODO this function is complicated, add more comments
     override fun changeUiMode(newUiModeState: UIModeState, embeddedUiConfig: EmbeddedUiConfig?) {
         if (newUiModeState == uiState.value.uiMode) {
             return;
@@ -348,6 +353,7 @@ class NewPlayerViewModelImpl @Inject constructor(
                     newUiModeState == UIModeState.FULLSCREEN_VIDEO_CONTROLLER_UI)
             && (newPlayer?.exoPlayer?.value?.isPlaying == true)
         ) {
+            // TODO shouldn't it hide immediately (?)
             startHideUiDelayedJob()
         } else {
             hideUiDelayedJob?.cancel()
@@ -450,11 +456,28 @@ class NewPlayerViewModelImpl @Inject constructor(
     @OptIn(UnstableApi::class)
     private fun updateProgressInPlaylistOnce() {
         mutableUiState.update {
+            // TODO to save power, a cumulative sum of the durations can be computed only once for a
+            //  specific playList instance, and then it can be queried in O(1) as many times as
+            //  needed (though it isn't so important, since it's only relevant in stream selection
+            //  UIs)
+
+            // TODO the UI layer has access to playList, right? So why not perform the calculation
+            //  there? It would avoid needing to start jobs, and it would be automatically be
+            //  enabled/disabled if the UI is not shown for any reason (e.g. even if the phone is
+            //  put in stand-by I think). I imagine something like:
+            //  val progressInPreviousItems = remember(state.playList, state.currentPlaylistItemIndex) {
+            //      42 // perform the calculation below
+            //  }
+            //  val progressInPlaylist = progressInPreviousItems + state.playbackPositionInMs
+
             var progress = 0L
             val currentlyPlaying = it.currentlyPlaying?.mediaId?.toLong() ?: 0L
             for (item in it.playList) {
                 if (item.mediaId.toLong() == currentlyPlaying) break;
                 progress += item.mediaMetadata.durationMs
+                    // TODO it might be possible for an item to have an unknown duration until it is
+                    //  played (e.g. shorts), in that case the player should count it as 0, and then
+                    //  show a 2:35+ instead of 2:35 when showing the total duration
                     ?: throw NewPlayerException("Media Item not containing duration. Media Item in question: ${item.mediaMetadata.title}")
             }
             progress += (newPlayer?.currentPosition ?: 0)
@@ -475,7 +498,11 @@ class NewPlayerViewModelImpl @Inject constructor(
         hideUiDelayedJob?.cancel()
         progressUpdaterJob?.cancel()
 
+        // TODO use it.value instead
         val seekPositionInMs = getSeekerPositionInMs(uiState.value)
+        // TODO I would argue that the player position should be changed only when the user
+        //  lifts the finger from the screen, to avoid buffering in useless places (?).
+        //  So the newPlayer?.currentPosition assignment would only happen in seekingFinished()
         newPlayer?.currentPosition = seekPositionInMs
         Log.i(TAG, "Seek to Ms: $seekPositionInMs")
 
@@ -493,7 +520,6 @@ class NewPlayerViewModelImpl @Inject constructor(
         updatePreviewThumbnailJob?.cancel()
 
         updatePreviewThumbnailJob = viewModelScope.launch {
-
             val item = newPlayer?.currentlyPlaying?.value?.let {
                 newPlayer?.getItemFromMediaItem(it)
             }
@@ -586,6 +612,9 @@ class NewPlayerViewModelImpl @Inject constructor(
     override fun volumeChange(changeRate: Float) {
         val currentVolume = mutableUiState.value.soundVolume
         val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC).toFloat()
+        // TODO extract these two 1.3f (this and the one for brightness) to a single constant
+        //  value named something like GESTURE_SCROLL_RATE_MULTIPLIER, along with a
+        //  javadoc containing the content in the comment below
         // we multiply changeRate by 1.5 so your finger only has to swipe a portion of the whole
         // screen in order to fully enable or disable the volume
         val newVolume = (currentVolume + changeRate * 1.3f).coerceIn(0f, 1f)
@@ -631,6 +660,7 @@ class NewPlayerViewModelImpl @Inject constructor(
         }
     }
 
+    // TODO shouldn't this be provided by implementors (e.g. the NewPipe app)?
     override fun onStorePlaylist() {
         TODO("Not yet implemented")
     }
@@ -663,6 +693,7 @@ class NewPlayerViewModelImpl @Inject constructor(
         playlistItemToBeMoved = null
     }
 
+    // TODO rename to something like showOrHideUi(visible: Boolean)
     override fun dialogVisible(visible: Boolean) {
         if (visible) {
             hideUiDelayedJob?.cancel()
