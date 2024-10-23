@@ -29,6 +29,7 @@ import androidx.annotation.OptIn
 import androidx.annotation.RequiresApi
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.os.BundleCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -299,17 +300,10 @@ class NewPlayerViewModelImpl @Inject constructor(
     @OptIn(UnstableApi::class)
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun initUIState(instanceState: Bundle) {
-
-        val recoveredUiState =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) instanceState.getParcelable(
-                VIDEOPLAYER_UI_STATE, NewPlayerUIState::class.java
-            )
-            else instanceState.getParcelable(VIDEOPLAYER_UI_STATE)
-
-        if (recoveredUiState != null) {
-            mutableUiState.update {
-                recoveredUiState
-            }
+        BundleCompat.getParcelable(
+            instanceState, VIDEOPLAYER_UI_STATE, NewPlayerUIState::class.java,
+        )?.let { recoveredUiState ->
+            mutableUiState.value = recoveredUiState
         }
     }
 
@@ -418,6 +412,10 @@ class NewPlayerViewModelImpl @Inject constructor(
     }
 
     private fun startProgressUpdatePeriodicallyJob() {
+        // TODO this function should check whether the UI state every time deviceInPowerSaveMode or
+        //  mutableUiState.value.uiMode.requiresProgressUpdate changes, and either start or stop the
+        //  job. The condition checks should not be left to the callers.
+
         progressUpdaterJob?.cancel()
         progressUpdaterJob = viewModelScope.launch {
             while (true) {
@@ -564,16 +562,21 @@ class NewPlayerViewModelImpl @Inject constructor(
 
     override fun brightnessChange(changeRate: Float, systemBrightness: Float) {
         mutableUiState.update {
+            // TODO use it.uiMode.fullscreen
             if (mutableUiState.value.uiMode.fullscreen) {
                 val currentBrightness = mutableUiState.value.brightness
+                // TODO I would remove this `if`, and rather make it so that `brightnessChange` is
+                //  called only with a valid value for systemBrightness (so replace -1f with 0.5f
+                //  in FullscreenGestureUi
                     ?: if (systemBrightness < 0f) 0.5f else systemBrightness
                 Log.d(
                     TAG,
                     "currentBrightnes: $currentBrightness, sytemBrightness: $systemBrightness, changeRate: $changeRate"
                 )
 
+                // TODO extract these two 1.3f (this and the one for volume) to a single constant
+                //  value named something like GESTURE_SCROLL_RATE_MULTIPLIER
                 val newBrightness = (currentBrightness + changeRate * 1.3f).coerceIn(0f, 1f)
-
                 it.copy(brightness = newBrightness)
             } else {
                 it

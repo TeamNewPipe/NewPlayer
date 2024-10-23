@@ -70,10 +70,12 @@ private const val TAG = "VideoPlayerUI"
 fun NewPlayerUI(
     viewModel: NewPlayerViewModel?,
 ) {
-    assert(viewModel is InternalNewPlayerViewModel?) {
-        throw NewPlayerException("The view model given to NewPlayerUI must be of type InternalNewPlayerViewModel. This can not be implemented externally, so do not extend NewPlayerViewModel")
+    if (viewModel !is InternalNewPlayerViewModel?) {
+        throw NewPlayerException(
+            "The view model given to NewPlayerUI must be of type InternalNewPlayerViewModel. "
+                    + "This can not be implemented externally, so do not extend NewPlayerViewModel"
+        )
     }
-    val viewModel = viewModel as InternalNewPlayerViewModel?
 
     if (viewModel == null) {
         LoadingPlaceholder()
@@ -85,6 +87,8 @@ fun NewPlayerUI(
         val activity = LocalContext.current as Activity
         val view = LocalView.current
 
+        // TODO this is a side-effect of the composition and should (probably) not happen on every
+        //  recomposition
         val window = activity.window
         val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
         windowInsetsController.systemBarsBehavior =

@@ -98,6 +98,10 @@ internal fun VideoPlayerUi(viewModel: InternalNewPlayerViewModel, uiState: NewPl
     }
 
     LaunchedEffect(uiState.enteringPip) {
+        // TODO what if supportsPip returns false? Shouldn't the enteringPip flag be cleared?
+        //  Probably the supportsPip check can be done in Application and then be available
+        //  throughout the app execution, so that the check can be done in the view model and
+        //  PIP state changes can be ignored.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && supportsPip(activity))
             if (uiState.enteringPip) {
                 val pipParams = getPipParams(uiState.contentRatio, videoViewBounds)
