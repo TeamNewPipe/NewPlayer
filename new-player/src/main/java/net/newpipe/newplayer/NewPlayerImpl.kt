@@ -234,20 +234,20 @@ class NewPlayerImpl(
             @OptIn(UnstableApi::class)
             override fun onTracksChanged(tracks: Tracks) {
                 super.onTracksChanged(tracks)
-                val streamTracks =
-                    TrackUtils.streamTracksFromMedia3Tracks(tracks, onlySelectedTracks = true)
-                        .ifEmpty {
-                            TrackUtils.streamTracksFromMedia3Tracks(
-                                tracks,
-                                onlySelectedTracks = false
-                            )
-                        }
-                streamTracks.joinToString("\n") { it.toString() }
-                Log.d(
-                    TAG,
-                    "currently playing tracks: \n ${streamTracks.joinToString("\n") { it.toString() }}"
-                )
                 mutableCurrentlyPlayingTracks.update {
+                    val streamTracks =
+                        TrackUtils.streamTracksFromMedia3Tracks(tracks, onlySelectedTracks = true)
+                            .ifEmpty {
+                                TrackUtils.streamTracksFromMedia3Tracks(
+                                    tracks,
+                                    onlySelectedTracks = false
+                                )
+                            }
+                    Log.d(
+                        TAG,
+                        "currently playing tracks: \n ${streamTracks.joinToString("\n") { it.toString() }}"
+                    )
+
                     streamTracks
                 }
             }
@@ -304,16 +304,19 @@ class NewPlayerImpl(
     init {
         playerScope.launch {
             currentlyPlaying.collect { playing ->
-                playing?.let {
-                    try {
-                        val chapters =
-                            repository.getChapters(
-                                uniqueIdToStreamSelectionLookup[playing.mediaId.toLong()]!!.item
-                            )
-                        mutableCurrentChapter.update { chapters }
-                    } catch (e: Exception) {
-                        mutableErrorFlow.emit(e)
-                    }
+                mutableCurrentChapter.update {
+                    playing?.let {
+                        try {
+                            val chapters =
+                                repository.getChapters(
+                                    uniqueIdToStreamSelectionLookup[playing.mediaId.toLong()]!!.item
+                                )
+                            return@let chapters
+                        } catch (e: Exception) {
+                            mutableErrorFlow.emit(e)
+                            return@let emptyList()
+                        }
+                    } ?: emptyList()
                 }
             }
         }
