@@ -60,6 +60,7 @@ val VIDEOPLAYER_UI_STATE = "video_player_ui_state"
 
 private const val TAG = "VideoPlayerViewModel"
 
+private const val GESTURE_SCROLL_RATE_MULTIPLIER = 1.3f
 
 @UnstableApi
 @HiltViewModel
@@ -570,9 +571,11 @@ class NewPlayerViewModelImpl @Inject constructor(
                     "currentBrightnes: $currentBrightness, sytemBrightness: $systemBrightness, changeRate: $changeRate"
                 )
 
-                // TODO extract these two 1.3f (this and the one for volume) to a single constant
-                //  value named something like GESTURE_SCROLL_RATE_MULTIPLIER
-                val newBrightness = (currentBrightness + changeRate * 1.3f).coerceIn(0f, 1f)
+                val newBrightness =
+                    (currentBrightness + changeRate * GESTURE_SCROLL_RATE_MULTIPLIER).coerceIn(
+                        0f,
+                        1f
+                    )
                 it.copy(brightness = newBrightness)
             } else {
                 it
@@ -696,8 +699,6 @@ class NewPlayerViewModelImpl @Inject constructor(
         val videoRatio = VideoSize.fromMedia3VideoSize(player.videoSize).getRatio()
         return (if (videoRatio.isNaN()) currentContentRatio
         else videoRatio).coerceIn(minContentRatio, maxContentRatio)
-
-
     } ?: minContentRatio
 
     private fun <T> safeTryEmit(sharedFlow: MutableSharedFlow<T>, value: T) {
