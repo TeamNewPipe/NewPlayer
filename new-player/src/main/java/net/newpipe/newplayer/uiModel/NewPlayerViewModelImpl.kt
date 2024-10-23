@@ -64,9 +64,6 @@ private const val TAG = "VideoPlayerViewModel"
 @UnstableApi
 @HiltViewModel
 class NewPlayerViewModelImpl @Inject constructor(
-    // TODO this seems unused? If you planned to save things inside here, explain your plans so they
-    //  can be implemented by future contributors
-    private val savedStateHandle: SavedStateHandle,
     application: Application,
 ) : AndroidViewModel(application), InternalNewPlayerViewModel {
 

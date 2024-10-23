@@ -31,6 +31,7 @@ import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
+import androidx.media3.common.Player.TIMELINE_CHANGE_REASON_PLAYLIST_CHANGED
 import androidx.media3.common.Timeline
 import androidx.media3.common.Tracks
 import androidx.media3.common.util.UnstableApi
@@ -202,9 +203,11 @@ class NewPlayerImpl(
 
             override fun onTimelineChanged(timeline: Timeline, reason: Int) {
                 // TODO shouldn't you check that reason == TIMELINE_CHANGE_REASON_PLAYLIST_CHANGED
-                mutablePlaylist.update {
-                    (0..<newExoPlayer.mediaItemCount).map {
-                        newExoPlayer.getMediaItemAt(it)
+                if(reason == TIMELINE_CHANGE_REASON_PLAYLIST_CHANGED) {
+                    mutablePlaylist.update {
+                        (0..<newExoPlayer.mediaItemCount).map {
+                            newExoPlayer.getMediaItemAt(it)
+                        }
                     }
                 }
             }
