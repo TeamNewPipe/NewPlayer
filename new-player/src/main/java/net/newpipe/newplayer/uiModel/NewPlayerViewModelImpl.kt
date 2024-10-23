@@ -88,9 +88,10 @@ class NewPlayerViewModelImpl @Inject constructor(
         getSystemService(application.applicationContext, AudioManager::class.java)!!
 
     init {
-        val soundVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
-            .toFloat() / audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC).toFloat()
         mutableUiState.update {
+            val soundVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+                .toFloat() / audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC).toFloat()
+
             it.copy(soundVolume = soundVolume)
         }
     }
@@ -181,9 +182,12 @@ class NewPlayerViewModelImpl @Inject constructor(
 
                         override fun onIsLoadingChanged(isLoading: Boolean) {
                             super.onIsLoadingChanged(isLoading)
-                            if (!player.isPlaying) {
-                                mutableUiState.update {
+                            mutableUiState.update {
+                                if (!player.isPlaying) {
+
                                     it.copy(isLoading = isLoading)
+                                } else {
+                                    it
                                 }
                             }
                         }
@@ -371,42 +375,36 @@ class NewPlayerViewModelImpl @Inject constructor(
         }
 
         // notify the UI itself about the change of the UIMode
-        if (newUiModeState == UIModeState.PIP) {
-            if (uiState.value.uiMode.inAudioMode) {
-                mutableUiState.update {
-                    it.copy(uiMode = uiState.value.uiMode.getVideoEquivalent())
-                }
-            } else if (uiState.value.uiMode.videoControllerUiVisible) {
-                mutableUiState.update {
-                    it.copy(uiMode = uiState.value.uiMode.getUiHiddenState())
-                }
-            }
-            mutableUiState.update {
-                it.copy(enteringPip = true)
-            }
-
-        } else {
-            if (uiState.value.uiMode.fullscreen && !newUiModeState.fullscreen) {
-                mutableUiState.update {
-                    it.copy(uiMode = newUiModeState, embeddedUiConfig = this.embeddedUiConfig)
+        mutableUiState.update {
+            if (newUiModeState == UIModeState.PIP) {
+                if (uiState.value.uiMode.inAudioMode) {
+                    it.copy(uiMode = uiState.value.uiMode.getVideoEquivalent(), enteringPip = true)
+                } else if (uiState.value.uiMode.videoControllerUiVisible) {
+                    it.copy(uiMode = uiState.value.uiMode.getUiHiddenState(), enteringPip = true)
+                } else {
+                    it.copy(enteringPip = true)
                 }
             } else {
-                mutableUiState.update {
+                if (uiState.value.uiMode.fullscreen && !newUiModeState.fullscreen) {
+                    it.copy(uiMode = newUiModeState, embeddedUiConfig = this.embeddedUiConfig)
+                } else {
                     it.copy(uiMode = newUiModeState)
                 }
             }
         }
 
-        // update play mode in NewPlayer if that value was not updated through the newPlayer object
-        val newPlayMode = newUiModeState.toPlayMode()
-        // take the next value from the player because changeUiMode is called when the playBackMode
-        // of the player changes. If this value was taken from the viewModel instead
-        // this would lead to an endless loop. of changeMode state calling it self over and over again
-        // through the callback of the newPlayer?.playBackMode change
-        val currentPlayMode = newPlayer?.playBackMode?.value ?: PlayMode.IDLE
-        if (newPlayMode != currentPlayMode) {
-            newPlayer?.playBackMode?.update {
+        newPlayer?.playBackMode?.update {
+            // update play mode in NewPlayer if that value was not updated through the newPlayer object
+            val newPlayMode = newUiModeState.toPlayMode()
+            // take the next value from the player because changeUiMode is called when the playBackMode
+            // of the player changes. If this value was taken from the viewModel instead
+            // this would lead to an endless loop. of changeMode state calling itself over and over again
+            // through the callback of the newPlayer?.playBackMode change
+            val currentPlayMode = newPlayer?.playBackMode?.value ?: PlayMode.IDLE
+            if (newPlayMode != currentPlayMode) {
                 newPlayMode
+            } else {
+                it
             }
         }
     }
@@ -430,12 +428,12 @@ class NewPlayerViewModelImpl @Inject constructor(
     }
 
     private fun updateProgressOnce() {
-        val progress = newPlayer?.currentPosition ?: 0
-        val duration = newPlayer?.duration ?: 1
-        val bufferedPercentage = (newPlayer?.bufferedPercentage?.toFloat() ?: 0f) / 100f
-        val progressPercentage = progress.toFloat() / duration.toFloat()
-
         mutableUiState.update {
+            val progress = newPlayer?.currentPosition ?: 0
+            val duration = newPlayer?.duration ?: 1
+            val bufferedPercentage = (newPlayer?.bufferedPercentage?.toFloat() ?: 0f) / 100f
+            val progressPercentage = progress.toFloat() / duration.toFloat()
+
             it.copy(
                 seekerPosition = progressPercentage,
                 durationInMs = duration,
@@ -457,15 +455,16 @@ class NewPlayerViewModelImpl @Inject constructor(
 
     @OptIn(UnstableApi::class)
     private fun updateProgressInPlaylistOnce() {
-        var progress = 0L
-        val currentlyPlaying = uiState.value.currentlyPlaying?.mediaId?.toLong() ?: 0L
-        for (item in uiState.value.playList) {
-            if (item.mediaId.toLong() == currentlyPlaying) break;
-            progress += item.mediaMetadata.durationMs
-                ?: throw NewPlayerException("Media Item not containing duration. Media Item in question: ${item.mediaMetadata.title}")
-        }
-        progress += (newPlayer?.currentPosition ?: 0)
         mutableUiState.update {
+            var progress = 0L
+            val currentlyPlaying = uiState.value.currentlyPlaying?.mediaId?.toLong() ?: 0L
+            for (item in uiState.value.playList) {
+                if (item.mediaId.toLong() == currentlyPlaying) break;
+                progress += item.mediaMetadata.durationMs
+                    ?: throw NewPlayerException("Media Item not containing duration. Media Item in question: ${item.mediaMetadata.title}")
+            }
+            progress += (newPlayer?.currentPosition ?: 0)
+
             it.copy(
                 playbackPositionInPlaylistMs = progress
             )
@@ -497,17 +496,18 @@ class NewPlayerViewModelImpl @Inject constructor(
         updatePreviewThumbnailJob?.cancel()
 
         updatePreviewThumbnailJob = viewModelScope.launch {
-            val item = newPlayer?.currentlyPlaying?.value?.let {
-                newPlayer?.getItemFromMediaItem(it)
-            }
-            item?.let {
-                val bitmap = newPlayer?.repository?.getPreviewThumbnail(item, seekPositionInMs)
-                mutableUiState.update {
-                    it.copy(
+            mutableUiState.update { uiState ->
+                val item = newPlayer?.currentlyPlaying?.value?.let {
+                    newPlayer?.getItemFromMediaItem(it)
+                }
+                item?.let {
+                    val bitmap = newPlayer?.repository?.getPreviewThumbnail(item, seekPositionInMs)
+
+                    uiState.copy(
                         currentSeekPreviewThumbnail = bitmap?.asImageBitmap(),
                         seekPreviewVisible = true
                     )
-                }
+                } ?: uiState
             }
         }
     }
@@ -563,17 +563,20 @@ class NewPlayerViewModelImpl @Inject constructor(
     }
 
     override fun brightnessChange(changeRate: Float, systemBrightness: Float) {
-        if (mutableUiState.value.uiMode.fullscreen) {
-            val currentBrightness = mutableUiState.value.brightness
-                ?: if (systemBrightness < 0f) 0.5f else systemBrightness
-            Log.d(
-                TAG,
-                "currentBrightnes: $currentBrightness, sytemBrightness: $systemBrightness, changeRate: $changeRate"
-            )
+        mutableUiState.update {
+            if (mutableUiState.value.uiMode.fullscreen) {
+                val currentBrightness = mutableUiState.value.brightness
+                    ?: if (systemBrightness < 0f) 0.5f else systemBrightness
+                Log.d(
+                    TAG,
+                    "currentBrightnes: $currentBrightness, sytemBrightness: $systemBrightness, changeRate: $changeRate"
+                )
 
-            val newBrightness = (currentBrightness + changeRate * 1.3f).coerceIn(0f, 1f)
-            mutableUiState.update {
+                val newBrightness = (currentBrightness + changeRate * 1.3f).coerceIn(0f, 1f)
+
                 it.copy(brightness = newBrightness)
+            } else {
+                it
             }
         }
     }
@@ -635,11 +638,12 @@ class NewPlayerViewModelImpl @Inject constructor(
             playlistItemToBeMoved = from
         }
         playlistItemNewPosition = to
-        val tempList = LinkedList(uiState.value.playList)
-        val item = uiState.value.playList[from]
-        tempList.removeAt(from)
-        tempList.add(to, item)
         mutableUiState.update {
+            val tempList = ArrayList(uiState.value.playList)
+            val item = uiState.value.playList[from]
+            tempList.removeAt(from)
+            tempList.add(to, item)
+
             it.copy(
                 playList = tempList
             )
@@ -673,11 +677,15 @@ class NewPlayerViewModelImpl @Inject constructor(
     }
 
     override fun onPictureInPictureModeChanged(isPictureInPictureMode: Boolean) {
-        if (isPictureInPictureMode) {
-            mutableUiState.update {
+        mutableUiState.update {
+            if (isPictureInPictureMode) {
                 it.copy(uiMode = UIModeState.PIP)
+            } else {
+                it
             }
-        } else {
+        }
+
+        if (!isPictureInPictureMode) {
             changeUiMode(UIModeState.FULLSCREEN_VIDEO, null)
         }
     }
