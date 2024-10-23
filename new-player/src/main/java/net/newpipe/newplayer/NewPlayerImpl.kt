@@ -305,19 +305,19 @@ class NewPlayerImpl(
     init {
         playerScope.launch {
             currentlyPlaying.collect { playing ->
-                mutableCurrentChapter.update {
-                    playing?.let {
-                        try {
+                playing?.let {
+                    try {
+                        mutableCurrentChapter.update {
                             val chapters =
                                 repository.getChapters(
                                     uniqueIdToStreamSelectionLookup[playing.mediaId.toLong()]!!.item
                                 )
-                            return@let chapters
-                        } catch (e: Exception) {
-                            mutableErrorFlow.emit(e)
-                            return@let emptyList()
+
+                            chapters
                         }
-                    } ?: emptyList()
+                    } catch (e: Exception) {
+                        mutableErrorFlow.emit(e)
+                    }
                 }
             }
         }
