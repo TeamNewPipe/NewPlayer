@@ -87,14 +87,7 @@ fun NewPlayerUI(
         val activity = LocalContext.current as Activity
         val view = LocalView.current
 
-        // TODO this is a side-effect of the composition and should (probably) not happen on every
-        //  recomposition
         val window = activity.window
-        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
-        windowInsetsController.systemBarsBehavior =
-            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-
-        val defaultBrightness = getDefaultBrightness(activity)
 
         // Setup fullscreen
 
@@ -121,6 +114,10 @@ fun NewPlayerUI(
         LaunchedEffect(
             key1 = uiState.uiMode.systemInsetsVisible,
         ) {
+            val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+            windowInsetsController.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+
             if (uiState.uiMode.systemInsetsVisible) {
                 windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
             } else {
@@ -149,6 +146,8 @@ fun NewPlayerUI(
 
         LaunchedEffect(key1 = uiState.brightness) {
             Log.d(TAG, "New Brightnes: ${uiState.brightness}")
+            val defaultBrightness = getDefaultBrightness(activity)
+
             setScreenBrightness(
                 uiState.brightness ?: defaultBrightness, activity
             )
