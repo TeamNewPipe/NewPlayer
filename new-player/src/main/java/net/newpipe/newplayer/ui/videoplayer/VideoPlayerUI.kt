@@ -22,6 +22,7 @@ package net.newpipe.newplayer.ui.videoplayer
 
 import android.app.Activity
 import android.os.Build
+import android.util.Log
 import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
@@ -44,6 +45,7 @@ import androidx.compose.ui.graphics.toAndroidRectF
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.UiMode
 import androidx.core.graphics.toRect
 import androidx.lifecycle.Lifecycle
 import androidx.media3.common.util.UnstableApi
@@ -57,6 +59,7 @@ import net.newpipe.newplayer.ui.selection_ui.ChapterSelectUI
 import net.newpipe.newplayer.ui.videoplayer.pip.getPipParams
 import net.newpipe.newplayer.ui.videoplayer.pip.supportsPip
 import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
+import net.newpipe.newplayer.uiModel.UIModeState
 
 @OptIn(UnstableApi::class)
 @Composable
@@ -97,21 +100,25 @@ internal fun VideoPlayerUi(viewModel: InternalNewPlayerViewModel, uiState: NewPl
         }
     }
 
-    LaunchedEffect(uiState.enteringPip) {
+    LaunchedEffect(uiState.enteringPip, uiState.contentRatio) {
         // TODO what if supportsPip returns false? Shouldn't the enteringPip flag be cleared?
-        //  Probably the supportsPip check can be done in Application and then be available
+
+        // TODO 2 Probably the supportsPip check can be done in Application and then be available
         //  throughout the app execution, so that the check can be done in the view model and
         //  PIP state changes can be ignored.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && supportsPip(activity))
-            if (uiState.enteringPip) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && supportsPip(activity)) {
+            if (uiState.enteringPip || uiState.uiMode == UIModeState.PIP) {
                 val pipParams = getPipParams(uiState.contentRatio, videoViewBounds)
-                if (pipParams != null) {
+                    ?: throw NewPlayerException("Pip params where null even though pip seemed to be supported.")
+                if (uiState.enteringPip) {
                     activity.enterPictureInPictureMode(pipParams)
+                    viewModel.doneEnteringPip()
                 } else {
-                    throw NewPlayerException("Pip params where null even though pip seemed to be supported.")
+                    activity.setPictureInPictureParams(pipParams)
                 }
-                viewModel.doneEnteringPip()
             }
+        }
     }
 
     Surface(
