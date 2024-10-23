@@ -216,6 +216,9 @@ interface NewPlayer {
      */
     fun addToPlaylist(item: String)
 
+    // TODO probably need also functions to enqueue next, add multiple items, enqueue next multiple
+    //  items
+
     /**
      * Same as ExoPlayer's movePlaylistItem. See [Player.moveMediaItem]
      */

@@ -201,6 +201,7 @@ class NewPlayerImpl(
             }
 
             override fun onTimelineChanged(timeline: Timeline, reason: Int) {
+                // TODO shouldn't you check that reason == TIMELINE_CHANGE_REASON_PLAYLIST_CHANGED
                 mutablePlaylist.update {
                     (0..<newExoPlayer.mediaItemCount).map {
                         newExoPlayer.getMediaItemAt(it)
