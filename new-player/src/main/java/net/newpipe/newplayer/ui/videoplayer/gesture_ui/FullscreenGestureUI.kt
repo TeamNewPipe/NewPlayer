@@ -92,7 +92,7 @@ internal fun FullscreenGestureUI(
         if (LocalContext.current is Activity)
             getDefaultBrightness(LocalContext.current as Activity)
         else
-            -1f
+            0.5f
 
     val embeddedUiConfig =
         if (LocalContext.current is Activity)

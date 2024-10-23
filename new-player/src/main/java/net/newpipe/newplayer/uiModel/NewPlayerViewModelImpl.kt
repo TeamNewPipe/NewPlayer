@@ -565,12 +565,9 @@ class NewPlayerViewModelImpl @Inject constructor(
 
     override fun brightnessChange(changeRate: Float, systemBrightness: Float) {
         mutableUiState.update {
-            // TODO I would remove this `if`, and rather make it so that `brightnessChange` is
-            //  called only with a valid value for systemBrightness (so replace -1f with 0.5f
-            //  in FullscreenGestureUi
             if (it.uiMode.fullscreen) {
                 val currentBrightness = it.brightness
-                    ?: if (systemBrightness < 0f) 0.5f else systemBrightness
+                    ?: systemBrightness
                 Log.d(
                     TAG,
                     "currentBrightnes: $currentBrightness, sytemBrightness: $systemBrightness, changeRate: $changeRate"
