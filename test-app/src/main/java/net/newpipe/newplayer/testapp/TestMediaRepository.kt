@@ -151,12 +151,12 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
                             frameRate = 30,
                             fileFormat = "MPEG4"
                         ),
-                    AudioStreamTrack(
-                        bitrate = 125000,
-                        fileFormat = "MP4A"
+                        AudioStreamTrack(
+                            bitrate = 125000,
+                            fileFormat = "MP4A"
+                        )
                     )
                 )
-            )
             )
 
             "imu" -> listOf(
@@ -358,15 +358,10 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
             else -> throw Exception("Unknown stream: $item")
         }
 
-        val thumbCount = when (item) {
-            "6502" -> 312
-            "imu" -> 361
-            else -> throw Exception("Unknown stream: $item")
-        }
 
         val thumbnailTimestamp = (timestampInMs / (10 * 1000)) + 1
 
-        if (thumbCount < thumbnailTimestamp) {
+        if (getCountOfPreviewThumbnails(item) < thumbnailTimestamp) {
             return null
         }
 
@@ -378,6 +373,13 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
 
         return null
     }
+
+    override suspend fun getCountOfPreviewThumbnails(item: String): Long = when (item) {
+        "6502" -> 312
+        "imu" -> 361
+        else -> 0
+    }
+
 
     override suspend fun getChapters(item: String) =
         when (item) {

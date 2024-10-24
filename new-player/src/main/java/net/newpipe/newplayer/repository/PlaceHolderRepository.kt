@@ -43,6 +43,8 @@ class PlaceHolderRepository : MediaRepository {
 
     override suspend fun getPreviewThumbnail(item: String, timestampInMs: Long) = null
 
+    override suspend fun getCountOfPreviewThumbnails(item: String): Long = 0
+
     override suspend fun getChapters(item: String) = emptyList<Chapter>()
 
     override suspend fun getTimestampLink(item: String, timestampInSeconds: Long) = ""

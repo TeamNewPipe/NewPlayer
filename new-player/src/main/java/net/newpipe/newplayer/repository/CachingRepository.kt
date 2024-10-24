@@ -30,6 +30,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import net.newpipe.newplayer.data.Chapter
+import net.newpipe.newplayer.data.NewPlayerException
 import net.newpipe.newplayer.data.Stream
 import net.newpipe.newplayer.data.Subtitle
 
@@ -56,22 +57,21 @@ class CachingRepository(
 
     private val cacheRepoScope = CoroutineScope(requestDispatcher + Job())
 
+    private data class Entry<T>(val data: T)
+
     private open inner class Cache<K, T> {
-        var cache: HashMap<K, T> = HashMap()
+        var cache: HashMap<K, Entry<T>> = HashMap()
         var requestLock: HashMap<K, Deferred<Unit>> = HashMap()
 
         suspend fun get(key: K, onCacheMiss: suspend () -> T): T {
-            return cache[key] ?: run {
+            return (cache[key] ?: run {
                 val deferred = requestLock[key] ?: cacheRepoScope.async {
                     val newValue = onCacheMiss()
-                    if (newValue != null) {
-                        cache[key] = newValue
-                    }
-                    Unit
+                    cache[key] = Entry(newValue)
                 }
                 deferred.await()
                 cache[key]!!
-            }
+            }).data
         }
 
         fun flush() {
