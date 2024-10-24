@@ -30,25 +30,6 @@ import net.newpipe.newplayer.data.Subtitle
 import net.newpipe.newplayer.data.StreamTrack
 
 /**
- * General information about the repository and the data it provides.
- */
-data class RepoMetaInfo(
-    /**
-     * Depict weather it is possible to create timestamped likes to items.
-     * For example you can create a time stamped url to a youtube video.
-     * But you can not even share a link to a video that is stored locally on your phones storage.
-     */
-    val canHandleTimestampedLinks: Boolean,
-
-    /**
-     * Tells if the repository pulls data from the Network or if the data the repository provides
-     * is stored locally. Please keep in mind that this setting will also influence the sleep lock
-     * of your device.
-     */
-    val pullsDataFromNetwork: Boolean
-)
-
-/**
  * You, dear Developer who uses NewPlayer, will want to implement MediaRepository.
  * This interface is the thing that will enable NewPlayer to access your content.
  * Just like the ViewModel and the View, the Repository is an element of the MVVM architecture.
