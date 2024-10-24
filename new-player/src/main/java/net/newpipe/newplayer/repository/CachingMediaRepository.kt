@@ -1,3 +1,23 @@
+/* NewPlayer
+ *
+ * @author Christian Schabesberger
+ *
+ * Copyright (C) NewPipe e.V. 2024 <code(at)newpipe-ev.de>
+ *
+ * NewPlayer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * NewPlayer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package net.newpipe.newplayer.repository
 
 import android.graphics.Bitmap
@@ -9,8 +29,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import net.newpipe.newplayer.data.Chapter
 import net.newpipe.newplayer.data.Stream
 import net.newpipe.newplayer.data.Subtitle
@@ -25,6 +43,11 @@ import net.newpipe.newplayer.data.Subtitle
  * cache instead in order not to cache the same data twice. When using your own cache you will also
  * be able to share cached data between your app and NewPlayer. (IE. NewPipe should not use this).
  *
+ * @param actualRepository the actual repository
+ * @param requestDispatcher the thread this repository should use to perform requests with.
+ * This should be the same thad as the one NewPlayer is in.
+ *
+ * TODO: Maybe a (individual) timeout would be nice
  */
 class CachingMediaRepository(
     val actualRepository: MediaRepository,
@@ -64,6 +87,7 @@ class CachingMediaRepository(
     private var metaInfoCache = ItemCache<MediaMetadata>()
     private var streamsCache = ItemCache<List<Stream>>()
     private var subtitlesCache = ItemCache<List<Subtitle>>()
+    private var countOfPreviewThumbnailsCache = ItemCache<Long>()
     private var thumbnailCache = TimeStampedCache<Bitmap?>()
     private var chapterCache = ItemCache<List<Chapter>>()
     private var timestampLinkCache = TimeStampedCache<String>()
@@ -87,6 +111,11 @@ class CachingMediaRepository(
             actualRepository.getPreviewThumbnail(item, timestampInMs)
         }
 
+    override suspend fun getCountOfPreviewThumbnails(item: String) =
+        countOfPreviewThumbnailsCache.get(item) {
+            actualRepository.getCountOfPreviewThumbnails(item)
+        }
+
     override suspend fun getChapters(item: String) = chapterCache.get(item) {
         actualRepository.getChapters(item)
     }
@@ -96,12 +125,15 @@ class CachingMediaRepository(
             actualRepository.getTimestampLink(item, timestampInSeconds)
         }
 
+    /**
+     * Will flush the caches.
+     */
     fun flush() {
         cacheRepoScope.cancel()
         metaInfoCache.flush()
         streamsCache.flush()
         subtitlesCache.flush()
-        thumbnailCache.flush()
+        countOfPreviewThumbnailsCache.flush()
         thumbnailCache.flush()
         chapterCache.flush()
         timestampLinkCache.flush()

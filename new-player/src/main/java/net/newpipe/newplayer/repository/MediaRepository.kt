@@ -111,6 +111,12 @@ interface MediaRepository {
     suspend fun getPreviewThumbnail(item: String, timestampInMs: Long): Bitmap?
 
     /**
+     * The amount of review thumbnails an item provides. This is used to tell async
+     * requesting tools how much requests to spawn to get all thumbnails.
+     */
+    suspend fun getCountOfPreviewThumbnails(item: String) : Long
+
+    /**
      * This should return the chapters associated with an **item**. If an **item** does not have
      * chapters you may return an empty list.
      */
