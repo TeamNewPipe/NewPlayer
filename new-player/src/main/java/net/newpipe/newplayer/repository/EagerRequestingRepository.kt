@@ -20,8 +20,12 @@
 
 package net.newpipe.newplayer.repository
 
-import kotlinx.coroutines.async
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 /**
  * This is a meta media repository that performs requests to all possible values of an item
@@ -33,23 +37,34 @@ import kotlinx.coroutines.coroutineScope
  * @param cachingRepository a MediaRepository implementation that performs caching
  * @param disableEagerCaching this allows to temporarily disable eager requests. This can be uses
  * when the system is in power saving mode.
+ * @param requestDispatcher the thread this repository should use to perform requests with.
+ * This should be the same thad as the one NewPlayer is in.
  */
 class EagerRequestingRepository(
     val cachingRepository: MediaRepository,
-    var disableEagerCaching: Boolean = false
+    var disableEagerCaching: Boolean = false,
+    val requestDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : MediaRepository {
     var hasBeenSeenBefore = HashSet<String>()
 
+    val requestScope = CoroutineScope(requestDispatcher + Job())
+
     private suspend fun requestAll(item: String): Unit = coroutineScope {
-        async { cachingRepository.getMetaInfo(item) }
-        async { cachingRepository.getStreams(item) }
-        async { cachingRepository.getSubtitles(item) }
-        async {
-            for (i in 0..cachingRepository.getCountOfPreviewThumbnails(item)) {
-                async { cachingRepository.getPreviewThumbnail(item, i) }
+        requestScope.launch { cachingRepository.getMetaInfo(item) }
+        requestScope.launch { cachingRepository.getStreams(item) }
+        requestScope.launch { cachingRepository.getSubtitles(item) }
+        requestScope.launch {
+            val info = cachingRepository.getPreviewThumbnailsInfo(item)
+            for (i in 0..info.count) {
+                requestScope.launch {
+                    cachingRepository.getPreviewThumbnail(
+                        item,
+                        info.distanceInMS * i
+                    )
+                }
             }
         }
-        async { cachingRepository.getChapters(item) }
+        requestScope.launch { cachingRepository.getChapters(item) }
     }
 
     private suspend fun <T> requestAllIfNotSeenBefore(item: String, request: suspend () -> T): T {
@@ -82,9 +97,9 @@ class EagerRequestingRepository(
             cachingRepository.getPreviewThumbnail(item, timestampInMs)
         }
 
-    override suspend fun getCountOfPreviewThumbnails(item: String) =
+    override suspend fun getPreviewThumbnailsInfo(item: String) =
         requestAllIfNotSeenBefore(item) {
-            cachingRepository.getCountOfPreviewThumbnails(item)
+            cachingRepository.getPreviewThumbnailsInfo(item)
         }
 
     override suspend fun getChapters(item: String) =

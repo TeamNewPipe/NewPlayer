@@ -60,7 +60,7 @@ class MultiRepository(val actualRepositories: List<MultiRepoEntry>) : MediaRepos
         return exec(repo, decomposedItem[1])
     }
 
-    override fun getRepoInfo(): RepoMetaInfo {
+    override fun getRepoInfo(): MediaRepository.RepoMetaInfo {
         var pullsDataFromNetwork = false
         var handlesTimestampLinks = true
         for (entry in actualRepositories) {
@@ -70,7 +70,7 @@ class MultiRepository(val actualRepositories: List<MultiRepoEntry>) : MediaRepos
                 entry.repository.getRepoInfo().canHandleTimestampedLinks && handlesTimestampLinks
         }
 
-        return RepoMetaInfo(
+        return MediaRepository.RepoMetaInfo(
             pullsDataFromNetwork = pullsDataFromNetwork,
             canHandleTimestampedLinks = handlesTimestampLinks
         )
@@ -94,9 +94,9 @@ class MultiRepository(val actualRepositories: List<MultiRepoEntry>) : MediaRepos
             repo.getPreviewThumbnail(item, timestampInMs)
         }
 
-    override suspend fun getCountOfPreviewThumbnails(item: String) =
+    override suspend fun getPreviewThumbnailsInfo(item: String) =
         pickAndExecuteRepo(item) { repo, item ->
-            repo.getCountOfPreviewThumbnails(item)
+            repo.getPreviewThumbnailsInfo(item)
         }
 
     override suspend fun getChapters(item: String) =

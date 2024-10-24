@@ -32,8 +32,7 @@ import net.newpipe.newplayer.data.Subtitle
  */
 class PlaceHolderRepository : MediaRepository {
     override fun getRepoInfo() =
-        RepoMetaInfo(canHandleTimestampedLinks = true, pullsDataFromNetwork = false)
-
+        MediaRepository.RepoMetaInfo(canHandleTimestampedLinks = true, pullsDataFromNetwork = false)
 
     override suspend fun getMetaInfo(item: String) = MediaMetadata.Builder().build()
 
@@ -43,7 +42,8 @@ class PlaceHolderRepository : MediaRepository {
 
     override suspend fun getPreviewThumbnail(item: String, timestampInMs: Long) = null
 
-    override suspend fun getCountOfPreviewThumbnails(item: String): Long = 0
+    override suspend fun getPreviewThumbnailsInfo(item: String) =
+        MediaRepository.PreviewThumbnailsInfo(0, 0)
 
     override suspend fun getChapters(item: String) = emptyList<Chapter>()
 

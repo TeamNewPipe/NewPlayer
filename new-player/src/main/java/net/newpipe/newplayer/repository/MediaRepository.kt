@@ -72,6 +72,40 @@ import net.newpipe.newplayer.data.StreamTrack
 interface MediaRepository {
 
     /**
+     * General information about the repository and the data it provides.
+     */
+    data class RepoMetaInfo(
+        /**
+         * Depict weather it is possible to create timestamped likes to items.
+         * For example, you can create a time stamped url to a youtube video.
+         * But you can not even share a link to a video that is stored locally on your phones' storage.
+         */
+        val canHandleTimestampedLinks: Boolean,
+
+        /**
+         * Tells if the repository pulls data from the Network or if the data the repository provides
+         * is stored locally. Please keep in mind that this setting will also influence the sleep lock
+         * of your device.
+         */
+        val pullsDataFromNetwork: Boolean
+    )
+
+    /**
+     * Information about thumbnail previews. This is required to get prefetching to work correctly.
+     */
+    data class PreviewThumbnailsInfo (
+        /**
+         * How many preview thumbnails are there for this video
+         */
+        val count: Long,
+
+        /**
+         * The distance between each thumbnail in milliseconds.
+         */
+        val distanceInMS: Long,
+    )
+
+    /**
      * Returns the information of the repository. Please see the documentation for [RepoMetaInfo]
      * for more details.
      */
@@ -114,7 +148,7 @@ interface MediaRepository {
      * The amount of review thumbnails an item provides. This is used to tell async
      * requesting tools how much requests to spawn to get all thumbnails.
      */
-    suspend fun getCountOfPreviewThumbnails(item: String) : Long
+    suspend fun getPreviewThumbnailsInfo(item: String) : PreviewThumbnailsInfo
 
     /**
      * This should return the chapters associated with an **item**. If an **item** does not have

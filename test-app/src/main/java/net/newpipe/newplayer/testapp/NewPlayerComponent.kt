@@ -32,6 +32,7 @@ import kotlinx.coroutines.launch
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.NewPlayerImpl
 import net.newpipe.newplayer.repository.CachingRepository
+import net.newpipe.newplayer.repository.EagerRequestingRepository
 import javax.inject.Singleton
 
 
@@ -43,7 +44,7 @@ object NewPlayerComponent {
     fun provideNewPlayer(app: Application): NewPlayer {
         val player = NewPlayerImpl(
             app = app,
-            repository = CachingRepository(TestMediaRepository(app)),
+            repository = EagerRequestingRepository(CachingRepository(TestMediaRepository(app))),
             notificationIcon = IconCompat.createWithResource(app, R.drawable.tinny_cools),
             playerActivityClass = MainActivity::class.java,
             rescueStreamFault = ::streamErrorHandler

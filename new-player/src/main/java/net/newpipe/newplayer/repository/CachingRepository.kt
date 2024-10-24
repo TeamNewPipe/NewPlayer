@@ -30,7 +30,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import net.newpipe.newplayer.data.Chapter
-import net.newpipe.newplayer.data.NewPlayerException
 import net.newpipe.newplayer.data.Stream
 import net.newpipe.newplayer.data.Subtitle
 
@@ -87,7 +86,7 @@ class CachingRepository(
     private var metaInfoCache = ItemCache<MediaMetadata>()
     private var streamsCache = ItemCache<List<Stream>>()
     private var subtitlesCache = ItemCache<List<Subtitle>>()
-    private var countOfPreviewThumbnailsCache = ItemCache<Long>()
+    private var previewThumbnailsInfoCache = ItemCache<MediaRepository.PreviewThumbnailsInfo>()
     private var thumbnailCache = TimeStampedCache<Bitmap?>()
     private var chapterCache = ItemCache<List<Chapter>>()
     private var timestampLinkCache = TimeStampedCache<String>()
@@ -111,9 +110,9 @@ class CachingRepository(
             actualRepository.getPreviewThumbnail(item, timestampInMs)
         }
 
-    override suspend fun getCountOfPreviewThumbnails(item: String) =
-        countOfPreviewThumbnailsCache.get(item) {
-            actualRepository.getCountOfPreviewThumbnails(item)
+    override suspend fun getPreviewThumbnailsInfo(item: String) =
+        previewThumbnailsInfoCache.get(item) {
+            actualRepository.getPreviewThumbnailsInfo(item)
         }
 
     override suspend fun getChapters(item: String) = chapterCache.get(item) {
@@ -133,7 +132,7 @@ class CachingRepository(
         metaInfoCache.flush()
         streamsCache.flush()
         subtitlesCache.flush()
-        countOfPreviewThumbnailsCache.flush()
+        previewThumbnailsInfoCache.flush()
         thumbnailCache.flush()
         chapterCache.flush()
         timestampLinkCache.flush()

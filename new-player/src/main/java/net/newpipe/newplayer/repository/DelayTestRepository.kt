@@ -58,9 +58,9 @@ class DelayTestRepository(val actualRepo: MediaRepository, var delayInMS: Long) 
         return actualRepo.getPreviewThumbnail(item, timestampInMs)
     }
 
-    override suspend fun getCountOfPreviewThumbnails(item: String): Long {
+    override suspend fun getPreviewThumbnailsInfo(item: String): MediaRepository.PreviewThumbnailsInfo {
         delay(delayInMS)
-        return actualRepo.getCountOfPreviewThumbnails(item)
+        return actualRepo.getPreviewThumbnailsInfo(item)
     }
 
     override suspend fun getChapters(item: String): List<Chapter> {

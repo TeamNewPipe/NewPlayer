@@ -7,36 +7,23 @@ import android.net.Uri
 import androidx.annotation.OptIn
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.util.UnstableApi
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.newpipe.newplayer.data.Chapter
 import net.newpipe.newplayer.repository.MediaRepository
-import net.newpipe.newplayer.repository.RepoMetaInfo
 import net.newpipe.newplayer.data.AudioStreamTrack
 import net.newpipe.newplayer.data.Stream
 import net.newpipe.newplayer.data.Subtitle
 import net.newpipe.newplayer.data.VideoStreamTrack
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.Response
+
 
 class TestMediaRepository(private val context: Context) : MediaRepository {
     private val client = OkHttpClient()
-    private val thumbnailCache = HashMap<String, Bitmap>()
-    private val testRepoScope = CoroutineScope(Dispatchers.Main + Job())
-
-    private fun get(url: String): Response {
-        val request = Request.Builder()
-            .url(url)
-            .build()
-        return client.newCall(request).execute()
-    }
 
     override fun getRepoInfo() =
-        RepoMetaInfo(canHandleTimestampedLinks = true, pullsDataFromNetwork = true)
+        MediaRepository.RepoMetaInfo(canHandleTimestampedLinks = true, pullsDataFromNetwork = true)
 
     @OptIn(UnstableApi::class)
     override suspend fun getMetaInfo(item: String): MediaMetadata =
@@ -92,9 +79,6 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
 
 
     override suspend fun getStreams(item: String): List<Stream> {
-        testRepoScope.launch {
-            populateSeekPreviewThumbnailCache(item)
-        }
 
         return when (item) {
             "6502" -> listOf(
@@ -307,46 +291,6 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
             else -> emptyList()
         }
 
-    private suspend fun populateSeekPreviewThumbnailCache(item: String) {
-        val templateUrl = when (item) {
-            "6502" -> context.getString(R.string.ccc_6502_preview_thumbnails)
-            "imu" -> context.getString(R.string.ccc_imu_preview_thumbnails)
-            "portrait" -> return
-            "yt_test" -> return
-            "faulty" -> return
-            else -> throw Exception("Unknown stream: $item")
-        }
-
-        val thumbCount = when (item) {
-            "6502" -> 312
-            "imu" -> 361
-            else -> throw Exception("Unknown stream: $item")
-        }
-
-        for (i in 1..thumbCount) {
-            val thumbUrl = String.format(templateUrl, i)
-
-            if (thumbnailCache[thumbUrl] == null) {
-                testRepoScope.launch {
-                    val bitmap = withContext(Dispatchers.IO) {
-                        val request = Request.Builder().url(thumbUrl).build()
-                        val response = client.newCall(request).execute()
-                        try {
-                            val responseBody = response.body
-                            val bitmap = BitmapFactory.decodeStream(responseBody.byteStream())
-                            return@withContext bitmap
-                        } catch (e: Exception) {
-                            return@withContext null
-                        }
-                    }
-                    if (bitmap != null) {
-                        thumbnailCache[thumbUrl] = bitmap
-                    }
-                }
-            }
-        }
-    }
-
     override suspend fun getPreviewThumbnail(item: String, timestampInMs: Long): Bitmap? {
 
         val templateUrl = when (item) {
@@ -359,26 +303,43 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
         }
 
 
-        val thumbnailTimestamp = (timestampInMs / (10 * 1000)) + 1
+        val thumbnailId = (timestampInMs / (10 * 1000)) + 1
 
-        if (getCountOfPreviewThumbnails(item) < thumbnailTimestamp) {
+        if (getPreviewThumbnailsInfo(item).count < thumbnailId) {
             return null
         }
 
-        val thumbUrl = String.format(templateUrl, thumbnailTimestamp)
+        val thumbUrl = String.format(templateUrl, thumbnailId)
 
-        thumbnailCache[thumbUrl]?.let {
-            return it
+        val bitmap = withContext(Dispatchers.IO) {
+            val request = Request.Builder().url(thumbUrl).build()
+            val response = client.newCall(request).execute()
+            try {
+                val responseBody = response.body
+                val bitmap = BitmapFactory.decodeStream(responseBody.byteStream())
+                return@withContext bitmap
+            } catch (e: Exception) {
+                return@withContext null
+            }
         }
 
-        return null
+        return bitmap
     }
 
-    override suspend fun getCountOfPreviewThumbnails(item: String): Long = when (item) {
-        "6502" -> 312
-        "imu" -> 361
-        else -> 0
-    }
+    override suspend fun getPreviewThumbnailsInfo(item: String) =
+        when (item) {
+            "6502" -> MediaRepository.PreviewThumbnailsInfo(
+                count = 312,
+                distanceInMS = 10 * 1000
+            )
+
+            "imu" -> MediaRepository.PreviewThumbnailsInfo(
+                count = 361,
+                distanceInMS = 10 * 1000
+            )
+
+            else -> MediaRepository.PreviewThumbnailsInfo(0, 0)
+        }
 
 
     override suspend fun getChapters(item: String) =
