@@ -2,6 +2,9 @@ package net.newpipe.newplayer.repository
 
 import android.graphics.Bitmap
 import androidx.media3.common.MediaMetadata
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import net.newpipe.newplayer.data.Chapter
 import net.newpipe.newplayer.data.Stream
 import net.newpipe.newplayer.data.Subtitle
@@ -15,19 +18,26 @@ import net.newpipe.newplayer.data.Subtitle
  * However, it's discouraged to use this cache if your app already has a cache. Use your own
  * cache instead in order not to cache the same data twice. When using your own cache you will also
  * be able to share cached data between your app and NewPlayer. (IE. NewPipe should not use this).
+ *
+ * **You must not share this cache between different threads.** Coroutines is ok though.
  */
 class CachingMediaRepository(val actualRepository: MediaRepository) : MediaRepository {
 
     open class Cache<K, T> {
         var cache: HashMap<K, T> = HashMap()
+        var requestLock: HashMap<K, Deferred<Unit>> = HashMap()
 
         suspend fun get(key: K, onCacheMiss: suspend () -> T): T =
-            cache[key] ?: run {
-                val newValue = onCacheMiss()
-                if(newValue != null) {
-                    cache[key] = newValue
+            cache[key] ?: coroutineScope {
+                val deferred = requestLock[key] ?: async {
+                    val newValue = onCacheMiss()
+                    if (newValue != null) {
+                        cache[key] = newValue
+                    }
+                    Unit
                 }
-                newValue
+                deferred.await()
+                cache[key]!!
             }
 
         fun flush() {
@@ -35,7 +45,7 @@ class CachingMediaRepository(val actualRepository: MediaRepository) : MediaRepos
         }
     }
 
-    data class TimestampedItem(val item:String, val timestamp:Long)
+    data class TimestampedItem(val item: String, val timestamp: Long)
     class ItemCache<T> : Cache<String, T>()
     class TimeStampedCache<T> : Cache<TimestampedItem, T>()
 
