@@ -42,6 +42,7 @@ class CachingMediaRepository(val actualRepository: MediaRepository) : MediaRepos
 
         fun flush() {
             cache = HashMap()
+            requestLock = HashMap()
         }
     }
 
