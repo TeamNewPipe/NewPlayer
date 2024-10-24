@@ -62,7 +62,7 @@ class CachingRepository(
         var cache: HashMap<K, Entry<T>> = HashMap()
         var requestLock: HashMap<K, Deferred<Unit>> = HashMap()
 
-        suspend fun get(key: K, onCacheMiss: suspend () -> T): T {
+        open suspend fun get(key: K, onCacheMiss: suspend () -> T): T {
             return (cache[key] ?: run {
                 val deferred = requestLock[key] ?: cacheRepoScope.async {
                     val newValue = onCacheMiss()
@@ -81,13 +81,20 @@ class CachingRepository(
 
     private data class TimestampedItem(val item: String, val timestamp: Long)
     private inner class ItemCache<T> : Cache<String, T>()
-    private inner class TimeStampedCache<T> : Cache<TimestampedItem, T>()
+    private open inner class TimeStampedCache<T> : Cache<TimestampedItem, T>()
+    private inner class PreviewThumbnailCache<T> : TimeStampedCache<T>() {
+        override suspend fun get(key: TimestampedItem, onCacheMiss: suspend () -> T): T {
+            val info = getPreviewThumbnailsInfo(key.item)
+            val correctedTimestamp = (key.timestamp / info.distanceInMS) * info.distanceInMS
+            return super.get(TimestampedItem(key.item, correctedTimestamp), onCacheMiss)
+        }
+    }
 
     private var metaInfoCache = ItemCache<MediaMetadata>()
     private var streamsCache = ItemCache<List<Stream>>()
     private var subtitlesCache = ItemCache<List<Subtitle>>()
     private var previewThumbnailsInfoCache = ItemCache<MediaRepository.PreviewThumbnailsInfo>()
-    private var thumbnailCache = TimeStampedCache<Bitmap?>()
+    private var thumbnailCache = PreviewThumbnailCache<Bitmap?>()
     private var chapterCache = ItemCache<List<Chapter>>()
     private var timestampLinkCache = TimeStampedCache<String>()
 

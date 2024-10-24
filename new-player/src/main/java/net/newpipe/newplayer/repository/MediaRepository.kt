@@ -147,6 +147,7 @@ interface MediaRepository {
     /**
      * The amount of review thumbnails an item provides. This is used to tell async
      * requesting tools how much requests to spawn to get all thumbnails.
+     * It's also used to calculate the correct keys for the caching repository.
      */
     suspend fun getPreviewThumbnailsInfo(item: String) : PreviewThumbnailsInfo
 
