@@ -2,9 +2,15 @@ package net.newpipe.newplayer.repository
 
 import android.graphics.Bitmap
 import androidx.media3.common.MediaMetadata
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import net.newpipe.newplayer.data.Chapter
 import net.newpipe.newplayer.data.Stream
 import net.newpipe.newplayer.data.Subtitle
@@ -19,17 +25,21 @@ import net.newpipe.newplayer.data.Subtitle
  * cache instead in order not to cache the same data twice. When using your own cache you will also
  * be able to share cached data between your app and NewPlayer. (IE. NewPipe should not use this).
  *
- * **You must not share this cache between different threads.** Coroutines is ok though.
  */
-class CachingMediaRepository(val actualRepository: MediaRepository) : MediaRepository {
+class CachingMediaRepository(
+    val actualRepository: MediaRepository,
+    requestDispatcher: CoroutineDispatcher = Dispatchers.Main
+) : MediaRepository {
 
-    open class Cache<K, T> {
+    private val cacheRepoScope = CoroutineScope(requestDispatcher + Job())
+
+    private open inner class Cache<K, T> {
         var cache: HashMap<K, T> = HashMap()
         var requestLock: HashMap<K, Deferred<Unit>> = HashMap()
 
-        suspend fun get(key: K, onCacheMiss: suspend () -> T): T =
-            cache[key] ?: coroutineScope {
-                val deferred = requestLock[key] ?: async {
+        suspend fun get(key: K, onCacheMiss: suspend () -> T): T {
+            return cache[key] ?: run {
+                val deferred = requestLock[key] ?: cacheRepoScope.async {
                     val newValue = onCacheMiss()
                     if (newValue != null) {
                         cache[key] = newValue
@@ -39,6 +49,7 @@ class CachingMediaRepository(val actualRepository: MediaRepository) : MediaRepos
                 deferred.await()
                 cache[key]!!
             }
+        }
 
         fun flush() {
             cache = HashMap()
@@ -46,9 +57,9 @@ class CachingMediaRepository(val actualRepository: MediaRepository) : MediaRepos
         }
     }
 
-    data class TimestampedItem(val item: String, val timestamp: Long)
-    class ItemCache<T> : Cache<String, T>()
-    class TimeStampedCache<T> : Cache<TimestampedItem, T>()
+    private data class TimestampedItem(val item: String, val timestamp: Long)
+    private inner class ItemCache<T> : Cache<String, T>()
+    private inner class TimeStampedCache<T> : Cache<TimestampedItem, T>()
 
     private var metaInfoCache = ItemCache<MediaMetadata>()
     private var streamsCache = ItemCache<List<Stream>>()
@@ -86,6 +97,7 @@ class CachingMediaRepository(val actualRepository: MediaRepository) : MediaRepos
         }
 
     fun flush() {
+        cacheRepoScope.cancel()
         metaInfoCache.flush()
         streamsCache.flush()
         subtitlesCache.flush()
