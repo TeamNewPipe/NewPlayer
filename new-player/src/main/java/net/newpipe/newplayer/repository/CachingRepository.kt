@@ -49,7 +49,7 @@ import net.newpipe.newplayer.data.Subtitle
  *
  * TODO: Maybe a (individual) timeout would be nice
  */
-class CachingMediaRepository(
+class CachingRepository(
     val actualRepository: MediaRepository,
     requestDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : MediaRepository {
