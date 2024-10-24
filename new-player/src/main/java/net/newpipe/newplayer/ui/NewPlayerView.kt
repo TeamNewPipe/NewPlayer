@@ -18,7 +18,7 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer
+package net.newpipe.newplayer.ui
 
 import android.content.Context
 import android.util.AttributeSet
@@ -27,9 +27,9 @@ import android.widget.FrameLayout
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import dagger.hilt.android.AndroidEntryPoint
+import net.newpipe.newplayer.R
 import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
 import net.newpipe.newplayer.uiModel.NewPlayerViewModel
-import net.newpipe.newplayer.ui.NewPlayerUI
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.data.NewPlayerException
 
