@@ -36,6 +36,7 @@ import kotlin.Exception
 import android.app.Application
 import net.newpipe.newplayer.data.PlayMode
 import net.newpipe.newplayer.data.RepeatMode
+import net.newpipe.newplayer.repository.MediaRepository
 
 /**
  * The default implementation of the NewPlayer interface is [NewPlayerImpl].

@@ -29,7 +29,7 @@ import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.source.MergingMediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import kotlinx.coroutines.flow.MutableSharedFlow
-import net.newpipe.newplayer.MediaRepository
+import net.newpipe.newplayer.repository.MediaRepository
 import net.newpipe.newplayer.data.MultiSelection
 import net.newpipe.newplayer.data.NewPlayerException
 import net.newpipe.newplayer.data.SingleSelection

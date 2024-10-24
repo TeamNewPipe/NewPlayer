@@ -13,8 +13,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.newpipe.newplayer.data.Chapter
-import net.newpipe.newplayer.MediaRepository
-import net.newpipe.newplayer.RepoMetaInfo
+import net.newpipe.newplayer.repository.MediaRepository
+import net.newpipe.newplayer.repository.RepoMetaInfo
 import net.newpipe.newplayer.data.AudioStreamTrack
 import net.newpipe.newplayer.data.Stream
 import net.newpipe.newplayer.data.Subtitle

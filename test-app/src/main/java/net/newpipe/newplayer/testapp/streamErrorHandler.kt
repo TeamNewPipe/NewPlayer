@@ -1,7 +1,7 @@
 package net.newpipe.newplayer.testapp
 
 import androidx.media3.common.MediaItem
-import net.newpipe.newplayer.MediaRepository
+import net.newpipe.newplayer.repository.MediaRepository
 import net.newpipe.newplayer.logic.NoResponse
 import net.newpipe.newplayer.data.SingleSelection
 import net.newpipe.newplayer.logic.StreamExceptionResponse

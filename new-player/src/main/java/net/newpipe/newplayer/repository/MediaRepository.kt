@@ -18,7 +18,7 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer
+package net.newpipe.newplayer.repository
 
 import android.graphics.Bitmap
 import androidx.media3.common.MediaMetadata

@@ -66,6 +66,7 @@ import net.newpipe.newplayer.data.StreamTrack
 import net.newpipe.newplayer.logic.ReplaceItemResponse
 import net.newpipe.newplayer.logic.AutoStreamSelector
 import net.newpipe.newplayer.logic.TrackUtils
+import net.newpipe.newplayer.repository.MediaRepository
 import kotlin.random.Random
 
 private const val TAG = "NewPlayerImpl"
