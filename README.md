@@ -89,7 +89,7 @@ Main menu
 </tr>
 </table>
 
-### Getting started
+## Getting started
 
 1. **Add NewPlayer to your project** 
 
@@ -113,17 +113,52 @@ Main menu
       ```
     - **Use NewPlayer with views**
 
-      For a views environment (and for compatibility with NewPipe before its UI refactoring), NewPlayer provides a [`NewPlayerView`]() TODO
+      For a views environment (and for compatibility with NewPipe before its UI refactoring), NewPlayer provides a [`NewPlayerView`](https://github.com/TeamNewPipe/NewPlayer/blob/dev/new-player/src/main/java/net/newpipe/newplayer/ui/NewPlayerView.kt). This acts as a simple wrapper for the [`NewPlayerUI`](https://github.com/TeamNewPipe/NewPlayer/blob/72c14d39822b96420f5c71bb559b47f39dc9ed90/new-player/src/main/java/net/newpipe/newplayer/ui/NewPlayerUI.kt#L59) composable.
+      
+      In order to use it simply put it into the layout of the activity/fragment that should host NewPlayer. You can put multiple instances of `NewPlayerView` into your layout [`NewPlayerViewModel`](https://github.com/TeamNewPipe/NewPlayer/blob/dev/new-player/src/main/java/net/newpipe/newplayer/uiModel/NewPlayerViewModel.kt). You should only have one instance of `NewPlayerView` in your layout.
+
+      You can find an exmapple of how to use `NewPlayerView` in the [test-app](https://github.com/TeamNewPipe/NewPlayer/blob/0cec868ec310a79de19af27c0ab47e54e4dda6a3/test-app/src/main/res/layout/activity_main.xml#L28) *(If there are still two versions of `NewPlayerView` in the test-app's layout: Dear NewPlayer devs, please make it one asap.)*
+
+      Remember to also give the `NewPlayerView` an instance of `NewPlayerViewModel` in the `onCreate()` function of your activity/fragment.
+
 4. **Install NewPlayer in your code**
 
-   NewPlayer requires [Hilt](https://developer.android.com/training/dependency-injection/hilt-android) for dependency injection.
+   NewPlayer requires [Hilt](https://developer.android.com/training/dependency-injection/hilt-android) for dependency injection. Therefore, you must create an instance of the NewPlayer object through a Component that must install the NewPlayer instance in the [`Application`](https://developer.android.com/reference/android/app/Application) instance. The NewPlayer instance must live for as long as the app lives. An example of how to do this can be found again in the [`test-app`](https://github.com/TeamNewPipe/NewPlayer/blob/dev/test-app/src/main/java/net/newpipe/newplayer/testapp/NewPlayerComponent.kt#L40-L62).
+
+   In order to use NewPlayer, the NewPlayer object needs an instance of the [`MediaRepository`](https://github.com/TeamNewPipe/NewPlayer/blob/dev/new-player/src/main/java/net/newpipe/newplayer/repository/MediaRepository.kt). The `MediaRepository` is the primary way that NewPlayer can access data and request the information it needs to operate. In other words you provide NewPlayer with the information it needs through the `MediaRepository`. Because of this you will have to implement this yourself and provide it to `NewPlayer`. For the sake of simplicity however for now you can give the NewPlayer object the [`PlaceHolderRepository`](https://github.com/TeamNewPipe/NewPlayer/blob/dev/new-player/src/main/java/net/newpipe/newplayer/repository/PlaceHolderRepository.kt). This repository implementation does nothing but at least allows you to continue installing NewPlayer without a functioning Repository yet.
+
+5. **Install NewPlayer in the NewPlayerViewModel**
+
+   Eventually you will have to put install the NewPlayer instance in the `NewPlayerViewModel` instance in the Activity that hosts the viewmodel.
+   This way `NewPlayer` can actually talk to your UI. You can do this by simply setting the viewmodel's NewPlayer: `myNewPlayerViewModel.newPlayer = myNewPlayer`.
+
+6. **Give NewPlayer access to your media**
+
+   You can do this by implementing your own [`MediaRepository`](https://github.com/TeamNewPipe/NewPlayer/blob/dev/new-player/src/main/java/net/newpipe/newplayer/repository/MediaRepository.kt). You can find more information about the [`MediaRepository`](https://github.com/TeamNewPipe/NewPlayer/blob/dev/new-player/src/main/java/net/newpipe/newplayer/repository/MediaRepository.kt) inside its [`code documentation`](https://github.com/TeamNewPipe/NewPlayer/blob/dev/new-player/src/main/java/net/newpipe/newplayer/repository/MediaRepository.kt#L32-71). You can also find a [test implementation](https://github.com/TeamNewPipe/NewPlayer/blob/dev/test-app/src/main/java/net/newpipe/newplayer/testapp/TestMediaRepository.kt) of it in the test-app.
+
+7. **Do advanced things**
+   Like applying caching and prefetching to your media repository using the meta `MediaRepository` implementations, or perform error handling and error recovering. *TOOD: Write the documentation for this*
 
 
+## How does NewPlayer work
 
-### How does NewPlayer work
+![Immage showing NewPlayer's architecture](/misc/newplayer_architecture.svg)
 
 NewPlayer uses [MVVM](https://www.geeksforgeeks.org/mvvm-model-view-viewmodel-architecture-pattern-in-android/) architecture design pattern.
 
-![Immage showing NewPlayer's architecture](/misc/newplayer_architecture.svg)
+
+### NewPlayerUI
+
+TODO
+
+### NewPlayerViewModel
+
+TODO
+
+### NewPlayer
+
+TODO
+
+### Media repository
 
 TODO: Documentation
