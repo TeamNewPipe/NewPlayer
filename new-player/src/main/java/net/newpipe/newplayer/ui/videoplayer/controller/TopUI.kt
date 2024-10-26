@@ -28,12 +28,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.automirrored.filled.MenuBook
-import androidx.compose.material.icons.filled.Language
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
@@ -84,7 +84,9 @@ internal fun TopUI(
             EmbeddedUiConfig.DUMMY
 
     Row(
-        modifier = modifier,
+        // the default height for an app bar is 64.dp according to this source:
+        // https://cs.android.com/androidx/platform/frameworks/support/+/7b27816c561b8f271d79d24ab21ba7d08aaad031:compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/TopAppBarSmallTokens.kt;l=26
+        //modifier = modifier.height(64.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -103,7 +105,7 @@ internal fun TopUI(
                 }
                 Text(
                     modifier = Modifier.offset(y = creatorOffset),
-                    text = uiState.currentlyPlaying?.mediaMetadata?.artist.toString() ?: "",
+                    text = uiState.currentlyPlaying?.mediaMetadata?.artist.toString(),
                     fontSize = 12.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -116,6 +118,7 @@ internal fun TopUI(
 
         val context = LocalContext.current
         IconButton(
+            modifier = Modifier,
             onClick = { /*TODO*/
                 showNotYetImplementedToast(context)
             },
@@ -126,6 +129,7 @@ internal fun TopUI(
         }
         AnimatedVisibility(visible = uiState.chapters.isNotEmpty()) {
             IconButton(
+                modifier = Modifier,
                 onClick = {
                     viewModel.changeUiMode(
                         uiState.uiMode.getChapterSelectUiState(),
@@ -141,6 +145,7 @@ internal fun TopUI(
         }
         AnimatedVisibility(visible = 1 < uiState.playList.size) {
             IconButton(
+                modifier = Modifier,
                 onClick = {
                     viewModel.changeUiMode(
                         uiState.uiMode.getStreamSelectUiState(),
@@ -154,7 +159,11 @@ internal fun TopUI(
                 )
             }
         }
-        VideoPlayerMenu(viewModel, uiState)
+        VideoPlayerMenu(
+            modifier = Modifier,
+            viewModel = viewModel,
+            uiState = uiState
+        )
     }
 }
 
@@ -177,6 +186,7 @@ private fun TrackSelectionMenu(viewModel: InternalNewPlayerViewModel, uiState: N
         )
 
         Button(
+            modifier = Modifier,
             onClick = {
                 if (1 < availableVideoTracks.size) {
                     viewModel.dialogVisible(true)

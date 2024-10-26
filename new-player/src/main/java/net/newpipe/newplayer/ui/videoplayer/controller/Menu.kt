@@ -23,6 +23,7 @@ package net.newpipe.newplayer.ui.videoplayer.controller
 import android.app.Activity
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FitScreen
@@ -70,7 +71,11 @@ import java.util.Locale
 
 @OptIn(UnstableApi::class)
 @Composable
-internal fun VideoPlayerMenu(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState) {
+internal fun VideoPlayerMenu(
+    modifier: Modifier = Modifier,
+    viewModel: InternalNewPlayerViewModel,
+    uiState: NewPlayerUIState
+) {
     var showMainMenu: Boolean by remember { mutableStateOf(false) }
     var showLanguageMenu: Boolean by remember { mutableStateOf(false) }
 
@@ -91,7 +96,7 @@ internal fun VideoPlayerMenu(viewModel: InternalNewPlayerViewModel, uiState: New
         IconButton(onClick = {
             showMainMenu = true
             viewModel.dialogVisible(true)
-        }, modifier = Modifier.onPlaced {
+        }, modifier = modifier.onPlaced {
             offsetY = with(pixel_density) {
                 it.size.height.toDp()
             }
@@ -122,7 +127,8 @@ internal fun VideoPlayerMenu(viewModel: InternalNewPlayerViewModel, uiState: New
                 },
                 onClick = { /*TODO*/
                     showNotYetImplementedToast(context)
-                    showMainMenu = false })
+                    showMainMenu = false
+                })
             DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_share_timestamp)) },
                 leadingIcon = {
                     Icon(
@@ -132,7 +138,8 @@ internal fun VideoPlayerMenu(viewModel: InternalNewPlayerViewModel, uiState: New
                 },
                 onClick = { /*TODO*/
                     showNotYetImplementedToast(context)
-                    showMainMenu = false })
+                    showMainMenu = false
+                })
             DropdownMenuItem(text = { Text(stringResource(R.string.audio_mode)) }, leadingIcon = {
                 Icon(
                     imageVector = Icons.Filled.Headset,
@@ -168,7 +175,8 @@ internal fun VideoPlayerMenu(viewModel: InternalNewPlayerViewModel, uiState: New
                     },
                     onClick = { /*TODO*/
                         showNotYetImplementedToast(context)
-                        showMainMenu = false })
+                        showMainMenu = false
+                    })
             }
             DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_sub_titles)) },
                 leadingIcon = {
@@ -179,7 +187,8 @@ internal fun VideoPlayerMenu(viewModel: InternalNewPlayerViewModel, uiState: New
                 },
                 onClick = { /*TODO*/
                     showNotYetImplementedToast(context)
-                    showMainMenu = false })
+                    showMainMenu = false
+                })
 
             LanguageMenuItem(uiState = uiState, onClick = {
                 showLanguageMenu = true
@@ -207,7 +216,7 @@ internal fun VideoPlayerMenu(viewModel: InternalNewPlayerViewModel, uiState: New
 private fun VideoPlayerControllerDropDownPreview() {
     VideoPlayerTheme {
         Box(Modifier.fillMaxSize()) {
-            VideoPlayerMenu(NewPlayerViewModelDummy(), NewPlayerUIState.DUMMY)
+            VideoPlayerMenu(viewModel = NewPlayerViewModelDummy(), uiState = NewPlayerUIState.DUMMY)
         }
     }
 }

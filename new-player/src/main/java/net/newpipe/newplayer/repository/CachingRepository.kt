@@ -82,9 +82,12 @@ class CachingRepository(
     private data class TimestampedItem(val item: String, val timestamp: Long)
     private inner class ItemCache<T> : Cache<String, T>()
     private open inner class TimeStampedCache<T> : Cache<TimestampedItem, T>()
-    private inner class PreviewThumbnailCache<T> : TimeStampedCache<T>() {
-        override suspend fun get(key: TimestampedItem, onCacheMiss: suspend () -> T): T {
+    private inner class PreviewThumbnailCache : TimeStampedCache<Bitmap?>() {
+        override suspend fun get(key: TimestampedItem, onCacheMiss: suspend () -> Bitmap?): Bitmap? {
             val info = getPreviewThumbnailsInfo(key.item)
+            if(info.distanceInMS <= 0) {
+                return null
+            }
             val correctedTimestamp = (key.timestamp / info.distanceInMS) * info.distanceInMS
             return super.get(TimestampedItem(key.item, correctedTimestamp), onCacheMiss)
         }
@@ -94,7 +97,7 @@ class CachingRepository(
     private var streamsCache = ItemCache<List<Stream>>()
     private var subtitlesCache = ItemCache<List<Subtitle>>()
     private var previewThumbnailsInfoCache = ItemCache<MediaRepository.PreviewThumbnailsInfo>()
-    private var thumbnailCache = PreviewThumbnailCache<Bitmap?>()
+    private var thumbnailCache = PreviewThumbnailCache()
     private var chapterCache = ItemCache<List<Chapter>>()
     private var timestampLinkCache = TimeStampedCache<String>()
 
