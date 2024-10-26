@@ -632,7 +632,7 @@ class NewPlayerViewModelImpl @Inject constructor(
     }
 
     override fun onStorePlaylist() {
-        TODO("Not yet implemented")
+
     }
 
     override fun movePlaylistItem(from: Int, to: Int) {

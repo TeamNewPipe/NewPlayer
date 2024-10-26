@@ -52,6 +52,7 @@ import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
 import net.newpipe.newplayer.ui.common.getLocale
 import net.newpipe.newplayer.ui.common.getPlaylistDurationInMS
 import net.newpipe.newplayer.ui.common.getTimeStringFromMs
+import net.newpipe.newplayer.ui.common.showNotYetImplementedToast
 
 @androidx.annotation.OptIn(UnstableApi::class)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -87,8 +88,13 @@ internal fun StreamSelectTopBar(
 
             ShuffleModeButton(viewModel = viewModel, uiState = uiState)
 
+            val context = LocalContext.current
+
             IconButton(
-                onClick = viewModel::onStorePlaylist
+                onClick = {
+                    showNotYetImplementedToast(context)
+                    viewModel.onStorePlaylist()
+                }
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.PlaylistAdd,
