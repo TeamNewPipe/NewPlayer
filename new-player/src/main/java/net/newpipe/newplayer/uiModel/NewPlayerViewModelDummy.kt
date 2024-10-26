@@ -100,6 +100,10 @@ open class NewPlayerViewModelDummy : InternalNewPlayerViewModel {
         println("dummy impl")
     }
 
+    override fun resetHideDelayTimer() {
+        println("dummy reset hide delay timer")
+    }
+
     override fun onPictureInPictureModeChanged(isPictureInPictureMode: Boolean) {
         println("dummy impl isInPictureInPictureMode: $isPictureInPictureMode")
     }

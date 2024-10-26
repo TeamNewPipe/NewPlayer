@@ -31,7 +31,6 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.os.BundleCompat
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
@@ -44,7 +43,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.newpipe.newplayer.data.VideoSize
@@ -53,7 +51,6 @@ import net.newpipe.newplayer.data.NewPlayerException
 import net.newpipe.newplayer.data.PlayMode
 import net.newpipe.newplayer.data.RepeatMode
 import net.newpipe.newplayer.ui.ContentScale
-import java.util.LinkedList
 import kotlin.math.abs
 
 val VIDEOPLAYER_UI_STATE = "video_player_ui_state"
@@ -169,7 +166,7 @@ class NewPlayerViewModelImpl @Inject constructor(
                                 it.copy(playing = isPlaying, isLoading = false)
                             }
                             if (isPlaying && uiState.value.uiMode.videoControllerUiVisible) {
-                                startHideUiDelayedJob()
+                                resetHideDelayTimer()
                             } else {
                                 hideUiDelayedJob?.cancel()
                             }
@@ -316,7 +313,7 @@ class NewPlayerViewModelImpl @Inject constructor(
     }
 
     override fun prevStream() {
-        startHideUiDelayedJob()
+        resetHideDelayTimer()
         newPlayer?.let { newPlayer ->
             if (0 <= newPlayer.currentlyPlayingPlaylistItem - 1) {
                 newPlayer.currentlyPlayingPlaylistItem -= 1
@@ -325,7 +322,7 @@ class NewPlayerViewModelImpl @Inject constructor(
     }
 
     override fun nextStream() {
-        startHideUiDelayedJob()
+        resetHideDelayTimer()
         newPlayer?.let { newPlayer ->
             if (newPlayer.currentlyPlayingPlaylistItem + 1 <
                 (newPlayer.exoPlayer.value?.mediaItemCount ?: 0)
@@ -348,7 +345,7 @@ class NewPlayerViewModelImpl @Inject constructor(
                     newUiModeState == UIModeState.FULLSCREEN_VIDEO_CONTROLLER_UI)
             && (newPlayer?.exoPlayer?.value?.isPlaying == true)
         ) {
-            startHideUiDelayedJob()
+            resetHideDelayTimer()
         } else {
             hideUiDelayedJob?.cancel()
         }
@@ -399,7 +396,7 @@ class NewPlayerViewModelImpl @Inject constructor(
         }
     }
 
-    private fun startHideUiDelayedJob() {
+    override fun resetHideDelayTimer() {
         hideUiDelayedJob?.cancel()
         hideUiDelayedJob = viewModelScope.launch {
             delay(2000)
@@ -519,7 +516,7 @@ class NewPlayerViewModelImpl @Inject constructor(
             it.copy(seekPreviewVisible = false)
         }
 
-        startHideUiDelayedJob()
+        resetHideDelayTimer()
         startProgressUpdatePeriodicallyJob()
     }
 
@@ -548,13 +545,13 @@ class NewPlayerViewModelImpl @Inject constructor(
         }
 
         if (mutableUiState.value.uiMode.videoControllerUiVisible) {
-            startHideUiDelayedJob()
+            resetHideDelayTimer()
         }
     }
 
     override fun finishFastSeek() {
         if (mutableUiState.value.uiMode.videoControllerUiVisible) {
-            startHideUiDelayedJob()
+            resetHideDelayTimer()
         }
         mutableUiState.update {
             it.copy(fastSeekSeconds = 0)
@@ -671,7 +668,7 @@ class NewPlayerViewModelImpl @Inject constructor(
                 hideUiDelayedJob?.cancel()
             }
         } else {
-            startHideUiDelayedJob()
+            resetHideDelayTimer()
         }
     }
 

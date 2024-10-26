@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -86,7 +87,7 @@ internal fun TopUI(
     Row(
         // the default height for an app bar is 64.dp according to this source:
         // https://cs.android.com/androidx/platform/frameworks/support/+/7b27816c561b8f271d79d24ab21ba7d08aaad031:compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/TopAppBarSmallTokens.kt;l=26
-        //modifier = modifier.height(64.dp),
+        modifier = modifier.height(64.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -118,9 +119,10 @@ internal fun TopUI(
 
         val context = LocalContext.current
         IconButton(
-            modifier = Modifier,
+            modifier = Modifier.fillMaxHeight(),
             onClick = { /*TODO*/
                 showNotYetImplementedToast(context)
+                viewModel.resetHideDelayTimer()
             },
         ) {
             Text(
@@ -129,7 +131,7 @@ internal fun TopUI(
         }
         AnimatedVisibility(visible = uiState.chapters.isNotEmpty()) {
             IconButton(
-                modifier = Modifier,
+                modifier = Modifier.fillMaxHeight(),
                 onClick = {
                     viewModel.changeUiMode(
                         uiState.uiMode.getChapterSelectUiState(),
@@ -145,7 +147,7 @@ internal fun TopUI(
         }
         AnimatedVisibility(visible = 1 < uiState.playList.size) {
             IconButton(
-                modifier = Modifier,
+                modifier = Modifier.fillMaxHeight(),
                 onClick = {
                     viewModel.changeUiMode(
                         uiState.uiMode.getStreamSelectUiState(),
@@ -160,7 +162,7 @@ internal fun TopUI(
             }
         }
         VideoPlayerMenu(
-            modifier = Modifier,
+            modifier = Modifier.fillMaxHeight(),
             viewModel = viewModel,
             uiState = uiState
         )
@@ -198,6 +200,7 @@ private fun TrackSelectionMenu(viewModel: InternalNewPlayerViewModel, uiState: N
                         Toast.LENGTH_SHORT
 
                     ).show()
+                viewModel.resetHideDelayTimer()
             },
             contentPadding = PaddingValues(0.dp),
             colors = ButtonDefaults.buttonColors(

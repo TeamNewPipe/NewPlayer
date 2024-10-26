@@ -54,4 +54,5 @@ internal interface InternalNewPlayerViewModel : NewPlayerViewModel {
     fun onStreamItemDragFinished()
     fun dialogVisible(visible: Boolean)
     fun doneEnteringPip()
+    fun resetHideDelayTimer()
 }
