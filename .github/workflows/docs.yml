@@ -3,7 +3,7 @@ name: Build and deploy Kotlin docs
 on:
   push:
     branches:
-      - dev
+      - master
 
 permissions:
   # The generated docs are written to the `gh-pages` branch.

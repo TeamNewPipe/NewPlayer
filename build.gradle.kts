@@ -1,3 +1,7 @@
+import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.dokka.base.DokkaBase
+import org.jetbrains.dokka.base.DokkaBaseConfiguration
+
 /* NewPlayer
  *
  * @author Christian Schabesberger
@@ -39,6 +43,13 @@ afterEvaluate {
                 version = "0.1-DEVEL"
             }
         }
+    }
+}
+
+
+buildscript {
+    dependencies {
+        classpath(libs.dokka.base)
     }
 }
 
