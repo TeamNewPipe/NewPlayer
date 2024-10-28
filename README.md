@@ -15,6 +15,16 @@
 ### So what is NewPlayer then?
 NewPlayer is a media framework, which is independent of NewPipe itself. I decided to make it independent, because one of the big issues we have with the current player is that it is deeply integrated into NewPipe. Therefore, I wanted to make NewPlayer a separate module in order to enforce that the interface between NewPipe and the player is only as big as necessary. This also has the advantage that NewPlayer can be used independently of NewPipe itself, which means it can be used in other apps too.
 
+## Content
+
+1. [Quick overview](#let-me-give-you-a-profile-about-newplayer)
+2. [Preview](#how-does-newplayer-look-like)
+3. [Documentation](#documentation)
+   - [Getting started](#getting-started)
+   - [How NewPlayer works](#how-does-newplayer-work)
+4. [Code Documentation](https://teamnewpipe.github.io/NewPlayer/)
+
+
 ### Let me give you a Profile about NewPlayer:
 - It is a module, separate from NewPipe and can be used as an independent player framework
 - It is based on the [Media3](https://developer.android.com/media/media3) library
@@ -134,15 +144,11 @@ Main menu
 
 6. **Give NewPlayer access to your media**
 
-   You can do this by implementing your own [`MediaRepository`](https://teamnewpipe.github.io/NewPlayer/new-player/net.newpipe.newplayer.repository/-media-repository/index.html). You can find more information about the [`MediaRepository`](https://teamnewpipe.github.io/NewPlayer/new-player/net.newpipe.newplayer.repository/-media-repository/index.html) inside its [`code documentation`](https://github.com/TeamNewPipe/NewPlayer/blob/dev/new-player/src/main/java/net/newpipe/newplayer/repository/MediaRepository.kt#L32-71). You can also find a [test implementation](https://github.com/TeamNewPipe/NewPlayer/blob/dev/test-app/src/main/java/net/newpipe/newplayer/testapp/TestMediaRepository.kt) of it in the test-app.
+   You can do this by implementing your own [`MediaRepository`](https://teamnewpipe.github.io/NewPlayer/new-player/net.newpipe.newplayer.repository/-media-repository/index.html). More information can be found about thins in the [`MediaRepository code documentation`](https://teamnewpipe.github.io/NewPlayer/new-player/net.newpipe.newplayer.repository/-media-repository/index.html). There is also an [example implementation](https://github.com/TeamNewPipe/NewPlayer/blob/dev/test-app/src/main/java/net/newpipe/newplayer/testapp/TestMediaRepository.kt) of it in the test-app.
 
 7. **Do advanced things**
    Like applying caching and prefetching to your media repository using the meta `MediaRepository` implementations, or perform error handling and error recovering. *TOOD: Write the documentation for this*
 
-
-## Documentation
-
-You can find the code documentation for NewPlayer [here](https://teamnewpipe.github.io/NewPlayer/).
 
 ## How does NewPlayer work
 
