@@ -20,7 +20,6 @@
 
 package net.newpipe.newplayer.testapp
 
-import android.app.Activity
 import android.app.Application
 import android.util.Log
 import androidx.core.graphics.drawable.IconCompat
@@ -32,7 +31,7 @@ import kotlinx.coroutines.launch
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.NewPlayerImpl
 import net.newpipe.newplayer.repository.CachingRepository
-import net.newpipe.newplayer.repository.EagerRequestingRepository
+import net.newpipe.newplayer.repository.PrefetchingRepository
 import javax.inject.Singleton
 
 
@@ -44,7 +43,7 @@ object NewPlayerComponent {
     fun provideNewPlayer(app: Application): NewPlayer {
         val player = NewPlayerImpl(
             app = app,
-            repository = EagerRequestingRepository(CachingRepository(TestMediaRepository(app))),
+            repository = PrefetchingRepository(CachingRepository(TestMediaRepository(app))),
             notificationIcon = IconCompat.createWithResource(app, R.drawable.tinny_cools),
             playerActivityClass = MainActivity::class.java,
             rescueStreamFault = ::streamErrorHandler

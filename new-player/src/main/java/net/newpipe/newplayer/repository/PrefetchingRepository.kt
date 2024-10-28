@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
  * @param requestDispatcher the thread this repository should use to perform requests with.
  * This should be the same thad as the one NewPlayer is in.
  */
-class EagerRequestingRepository(
+class PrefetchingRepository(
     val cachingRepository: MediaRepository,
     var disableEagerCaching: Boolean = false,
     val requestDispatcher: CoroutineDispatcher = Dispatchers.Main
