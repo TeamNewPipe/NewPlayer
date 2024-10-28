@@ -27,6 +27,8 @@ import net.newpipe.newplayer.R
 /**
  * This piece of code should eventually vanish once NewPlayer is sufficiently done ;-)
  */
+
+/** @hide */
 internal fun showNotYetImplementedToast(context: Context) {
     Toast.makeText(
         context,

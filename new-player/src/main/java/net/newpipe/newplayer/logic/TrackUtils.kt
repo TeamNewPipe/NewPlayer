@@ -35,9 +35,12 @@ private const val TAG = "TrackUtils"
 /**
  * This provides several tools to handle [StreamTrack]s.
  */
-object TrackUtils {
+/** @hide */
+internal object TrackUtils {
 
-    internal fun getAllAvailableTracksNonDuplicated(streams: List<Stream>): List<StreamTrack> {
+    
+/** @hide */
+internal fun getAllAvailableTracksNonDuplicated(streams: List<Stream>): List<StreamTrack> {
         val totalList = mutableListOf<StreamTrack>()
         streams.forEach {
             totalList.addAll(it.streamTracks)
@@ -46,13 +49,19 @@ object TrackUtils {
         return totalList.distinct()
     }
 
-    internal fun getNonDynamicTracksNonDuplicated(streams: List<Stream>) =
+    
+/** @hide */
+internal fun getNonDynamicTracksNonDuplicated(streams: List<Stream>) =
         getAllAvailableTracksNonDuplicated(streams.filter { !it.isDashOrHls })
 
-    internal fun getAvailableLanguages(tracks: List<StreamTrack>) =
+    
+/** @hide */
+internal fun getAvailableLanguages(tracks: List<StreamTrack>) =
         tracks.filterIsInstance<AudioStreamTrack>().mapNotNull { it.language }
 
-    internal fun getBestLanguageFit(
+    
+/** @hide */
+internal fun getBestLanguageFit(
         availableStreams: List<Stream>, preferredLanguages: List<String>
     ): String? {
         for (preferredLanguage in preferredLanguages) {
@@ -68,7 +77,9 @@ object TrackUtils {
         return null
     }
 
-    internal fun filtersByLanguage(
+    
+/** @hide */
+internal fun filtersByLanguage(
         availableStreams: List<Stream>, language: String
     ) = availableStreams.filter {
         it.languages.contains(
@@ -76,45 +87,61 @@ object TrackUtils {
         )
     }
 
-    internal fun tryAndGetMedianVideoOnlyTracks(availableStreams: List<Stream>) =
+    
+/** @hide */
+internal fun tryAndGetMedianVideoOnlyTracks(availableStreams: List<Stream>) =
         availableStreams.filter { !it.isDashOrHls && it.hasVideoTracks && !it.hasAudioTracks }
             .ifEmpty { null }?.let {
                 it[it.size / 2]
             }
 
-    internal fun tryAndGetMedianCombinedVideoAndAudioTracks(availableStreams: List<Stream>) =
+    
+/** @hide */
+internal fun tryAndGetMedianCombinedVideoAndAudioTracks(availableStreams: List<Stream>) =
         availableStreams.filter { !it.isDashOrHls && it.hasVideoTracks && it.hasVideoTracks }
             .ifEmpty { null }
             ?.let {
                 it[it.size / 2]
             }
 
-    internal fun tryAndGetMedianAudioOnlyTracks(availableStreams: List<Stream>) =
+    
+/** @hide */
+internal fun tryAndGetMedianAudioOnlyTracks(availableStreams: List<Stream>) =
         availableStreams.filter { !it.isDashOrHls && it.hasAudioTracks && !it.hasVideoTracks }
             .ifEmpty { null }?.let {
                 it[it.size / 2]
             }
 
 
-    internal fun getDemuxedStreams(
+    
+/** @hide */
+internal fun getDemuxedStreams(
         availableStreams: List<Stream>
     ) = availableStreams.filter {
         !it.isDashOrHls && it.streamTracks.size == 1
     }
 
 
-    internal fun getDynamicStreams(availableStreams: List<Stream>) =
+    
+/** @hide */
+internal fun getDynamicStreams(availableStreams: List<Stream>) =
         availableStreams.filter { it.isDashOrHls }
 
-    internal fun getNonDynamicVideoTracks(availableStreams: List<Stream>) =
+    
+/** @hide */
+internal fun getNonDynamicVideoTracks(availableStreams: List<Stream>) =
         availableStreams.filter {
             !it.isDashOrHls && it.hasVideoTracks && !it.hasAudioTracks
         }
 
-    internal fun getNonDynamicAudioTracks(availableStreams: List<Stream>) =
+    
+/** @hide */
+internal fun getNonDynamicAudioTracks(availableStreams: List<Stream>) =
         availableStreams.filter { !it.isDashOrHls && !it.hasVideoTracks && it.hasAudioTracks }
 
-    internal fun hasVideoTracks(availableStreams: List<Stream>): Boolean {
+    
+/** @hide */
+internal fun hasVideoTracks(availableStreams: List<Stream>): Boolean {
         availableStreams.forEach {
             if (it.hasVideoTracks)
                 return true
@@ -122,7 +149,9 @@ object TrackUtils {
         return false
     }
 
-    internal fun hasAudioTracks(availableStreams: List<Stream>): Boolean {
+    
+/** @hide */
+internal fun hasAudioTracks(availableStreams: List<Stream>): Boolean {
         availableStreams.forEach {
             if (it.hasAudioTracks)
                 return true
@@ -130,7 +159,9 @@ object TrackUtils {
         return false
     }
 
-    internal fun hasDynamicStreams(availableStreams: List<Stream>): Boolean {
+    
+/** @hide */
+internal fun hasDynamicStreams(availableStreams: List<Stream>): Boolean {
         availableStreams.forEach {
             if (it.isDashOrHls)
                 return true
@@ -144,7 +175,9 @@ object TrackUtils {
      * However maybe you just want to filter tracks based on only some attributes.
      * You can do this with this function.
      */
-    internal fun getStreamMatchingAudioTrack(
+    
+/** @hide */
+internal fun getStreamMatchingAudioTrack(
         availableStreams: List<Stream>,
         track: AudioStreamTrack,
         matchLanguage: Boolean = true,
@@ -161,7 +194,9 @@ object TrackUtils {
      * However maybe you just want to filter tracks based on only some attributes.
      * You can do this with this function.
      */
-    internal fun getStreamsMatchingVideoTrack(
+    
+/** @hide */
+internal fun getStreamsMatchingVideoTrack(
         availableStreams: List<Stream>,
         track: VideoStreamTrack,
         matchWidth: Boolean = true,
@@ -175,7 +210,9 @@ object TrackUtils {
         .filter{!matchFileFormat || it.fileFormat == track.fileFormat}
 
     @OptIn(UnstableApi::class)
-    internal fun streamTracksFromMedia3Tracks(
+    
+/** @hide */
+internal fun streamTracksFromMedia3Tracks(
         media3Tracks: Tracks,
         onlySelectedTracks: Boolean = false
     ): List<StreamTrack> {

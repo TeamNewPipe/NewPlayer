@@ -40,6 +40,8 @@ import androidx.compose.ui.unit.dp
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 @Composable
+
+/** @hide */
 internal fun LoadingPlaceholder(aspectRatio: Float = 3F / 1F) {
     Surface(
         modifier = Modifier

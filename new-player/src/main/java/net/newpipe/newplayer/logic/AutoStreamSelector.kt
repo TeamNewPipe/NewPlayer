@@ -33,7 +33,10 @@ import net.newpipe.newplayer.logic.TrackUtils.tryAndGetMedianVideoOnlyTracks
 
 /**
  * TODO: This whole class is just a concept. this should really be finished at some point.
+ *
+ * @hide
  */
+/** @hide */
 internal class AutoStreamSelector(
     /**
      * Must be in IETF-BCP-47 format
@@ -49,7 +52,10 @@ internal class AutoStreamSelector(
      */
     val streamLanguageConstraint: String?
 ) {
-    internal fun selectStreamAutomatically(
+
+    
+/** @hide */
+internal fun selectStreamAutomatically(
         availableStreams: List<Stream>,
     ): StreamSelection {
 

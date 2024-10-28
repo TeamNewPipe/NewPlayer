@@ -63,6 +63,8 @@ private enum class IndicatorMode {
 
 @OptIn(UnstableApi::class)
 @Composable
+
+/** @hide */
 internal fun FullscreenGestureUI(
     modifier: Modifier = Modifier, viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState,
     onVolumeIndicatorVisibilityChanged: (Boolean) -> Unit
@@ -218,6 +220,8 @@ internal fun FullscreenGestureUI(
 }
 
 @Composable
+
+/** @hide */
 internal fun IndicatorAnimation(modifier: Modifier, visible: Boolean, content: @Composable () -> Unit) {
     AnimatedVisibility(
         modifier = modifier,

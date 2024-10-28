@@ -75,6 +75,8 @@ import net.newpipe.newplayer.ui.common.showNotYetImplementedToast
 
 @OptIn(UnstableApi::class)
 @Composable
+
+/** @hide */
 internal fun TopUI(
     modifier: Modifier, viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState
 ) {

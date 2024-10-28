@@ -48,6 +48,8 @@ import net.newpipe.newplayer.ui.common.getInsets
 
 @OptIn(UnstableApi::class)
 @Composable
+
+/** @hide */
 internal fun ChapterSelectUI(
     viewModel: InternalNewPlayerViewModel,
     uiState: NewPlayerUIState,

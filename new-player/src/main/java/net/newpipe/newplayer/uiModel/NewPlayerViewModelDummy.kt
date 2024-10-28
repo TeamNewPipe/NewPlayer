@@ -9,6 +9,9 @@ import kotlinx.coroutines.flow.asSharedFlow
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.ui.ContentScale
 
+/**
+ * A dummy/placeholder implementation of the [NewPlayerViewModel]
+ */
 @UnstableApi
 open class NewPlayerViewModelDummy : InternalNewPlayerViewModel {
     override var newPlayer: NewPlayer? = null

@@ -68,6 +68,8 @@ import net.newpipe.newplayer.ui.common.showNotYetImplementedToast
 
 @OptIn(UnstableApi::class)
 @Composable
+
+/** @hide */
 internal fun AudioBottomUI(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState) {
 
     val embeddedUiConfig = if (LocalContext.current is Activity)

@@ -56,6 +56,8 @@ import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 @OptIn(UnstableApi::class)
 @Composable
+
+/** @hide */
 internal fun CenterUI(
     modifier: Modifier = Modifier,
     viewModel: InternalNewPlayerViewModel,

@@ -31,7 +31,9 @@ import net.newpipe.newplayer.data.PlayMode
  * UIModeState is more detailed and depicts the actually visible UI.
  * Because of this multiple UIModeStates can be mapped to the same [PlayMode].
  *
- * UIModeState is mainly thought to be used and modified internally. However,
+ * UIModeState is mainly thought to be used and modified 
+/** @hide */
+internally. However,
  * since a UIModeState is part of the [NewPlayerUIState], it is public.
  */
 enum class UIModeState {

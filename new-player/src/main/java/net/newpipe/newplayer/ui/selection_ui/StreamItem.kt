@@ -75,6 +75,8 @@ import sh.calvin.reorderable.ReorderableCollectionItemScope
 @androidx.annotation.OptIn(UnstableApi::class)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+
+/** @hide */
 internal fun StreamItem(
     modifier: Modifier = Modifier,
     playlistItem: MediaItem,

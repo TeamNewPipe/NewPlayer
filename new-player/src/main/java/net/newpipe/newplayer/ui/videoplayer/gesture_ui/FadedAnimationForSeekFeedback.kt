@@ -31,6 +31,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 
 @Composable
+
+/** @hide */
 internal fun FadedAnimationForSeekFeedback(
     fastSeekSeconds: Int,
     backwards: Boolean = false,

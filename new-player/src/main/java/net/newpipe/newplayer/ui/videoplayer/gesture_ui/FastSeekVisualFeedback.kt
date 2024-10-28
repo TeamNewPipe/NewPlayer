@@ -58,13 +58,23 @@ import net.newpipe.newplayer.R
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.INDICATOR_BACKGROUND_COLOR
 
+
+/** @hide */
 internal const val SEEK_ANIMATION_DURATION_IN_MS = 300
+
+/** @hide */
 internal const val FAST_SEEK_MODE_DURATION = 500L
+
+/** @hide */
 internal const val SEEK_ANIMATION_FADE_IN = 200
+
+/** @hide */
 internal const val SEEK_ANIMATION_FADE_OUT = 500
 
 
 @Composable
+
+/** @hide */
 internal fun FastSeekVisualFeedback(modifier: Modifier = Modifier, seconds: Int, backwards: Boolean) {
 
     val contentDescription = String.format(

@@ -22,6 +22,8 @@
 package net.newpipe.newplayer.ui.seeker
 
 // returns the corresponding position in pixels of progress in the the slider.
+
+/** @hide */
 internal fun valueToPx(
     value: Float,
     widthPx: Float,
@@ -34,6 +36,8 @@ internal fun valueToPx(
 }
 
 // returns the corresponding progress value for a position in slider
+
+/** @hide */
 internal fun pxToValue(
     position: Float,
     widthPx: Float,
@@ -49,6 +53,8 @@ internal fun pxToValue(
 
 // converts the start value of a segment to the corresponding start and end pixel values
 // at which the segment will start and end on the track.
+
+/** @hide */
 internal fun segmentToPxValues(
     segments: List<Segment>,
     range: ClosedFloatingPointRange<Float>,
@@ -77,6 +83,8 @@ internal fun segmentToPxValues(
     }
 }
 
+
+/** @hide */
 internal fun chapterSegmentToPxValues(
     segments: List<ChapterSegment>,
     range: ClosedFloatingPointRange<Float>,
@@ -105,9 +113,13 @@ internal fun chapterSegmentToPxValues(
     }
 }
 
+
+/** @hide */
 internal fun rtlAware(value: Float, widthPx: Float, isRtl: Boolean) =
     if (isRtl) widthPx - value else value
 
+
+/** @hide */
 internal fun lerp(start: Float, end: Float, fraction: Float): Float {
     return (1 - fraction) * start + fraction * end
 }

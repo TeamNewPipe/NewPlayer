@@ -37,9 +37,12 @@ import net.newpipe.newplayer.data.Stream
 import net.newpipe.newplayer.data.StreamSelection
 
 /**
- * This class help to transforms a [StreamSelection] into a [MediaSource].
+ * This class help to transform a [StreamSelection] into a [MediaSource].
+ *
+ * @hide
  */
 @OptIn(UnstableApi::class)
+/** @hide */
 internal class MediaSourceBuilder
     (
     private val repository: MediaRepository,
@@ -47,7 +50,9 @@ internal class MediaSourceBuilder
     private val httpDataSourceFactory: HttpDataSource.Factory,
 ) {
     @OptIn(UnstableApi::class)
-    internal suspend fun buildMediaSource(
+    
+/** @hide */
+internal suspend fun buildMediaSource(
         streamSelection: StreamSelection,
         uniqueId: Long
     ): MediaSource {

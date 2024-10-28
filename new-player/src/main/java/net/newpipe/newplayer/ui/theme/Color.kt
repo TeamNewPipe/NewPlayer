@@ -82,7 +82,8 @@ val video_player_scrim = Color(0xFF000000)
 @OptIn(UnstableApi::class)
 @Preview(device = "spec:width=1080px,height=600px,dpi=440,orientation=landscape")
 @Composable
-fun VideoPlayerControllerUIPreviewEmbeddedColorPreview() {
+/** @hide */
+internal fun VideoPlayerControllerUIPreviewEmbeddedColorPreview() {
     VideoPlayerTheme {
         PreviewBackgroundSurface {
             VideoPlayerControllerUI(
@@ -106,7 +107,8 @@ fun VideoPlayerControllerUIPreviewEmbeddedColorPreview() {
 @OptIn(UnstableApi::class)
 @Preview(device = "id:pixel_6")
 @Composable
-fun AudioPlayerUIColorPreview() {
+/** @hide */
+internal fun AudioPlayerUIColorPreview() {
     VideoPlayerTheme {
         PreviewBackgroundSurface {
             AudioPlayerUI(

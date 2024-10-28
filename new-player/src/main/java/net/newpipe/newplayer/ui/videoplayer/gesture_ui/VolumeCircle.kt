@@ -55,6 +55,8 @@ private const val LINE_STROKE_WIDTH =6
 private const val CIRCLE_SIZE = 130
 
 @Composable
+
+/** @hide */
 internal fun VolumeCircle(
     modifier: Modifier = Modifier,
     volumeFraction: Float,

@@ -32,10 +32,13 @@ import net.newpipe.newplayer.ui.videoplayer.gesture_ui.FullscreenGestureUI
 
 private const val TAG = "TouchUi"
 
-val INDICATOR_BACKGROUND_COLOR = Color.Black.copy(alpha = 0.3f)
+/** @hide */
+internal val INDICATOR_BACKGROUND_COLOR = Color.Black.copy(alpha = 0.3f)
 
 @OptIn(UnstableApi::class)
 @Composable
+
+/** @hide */
 internal fun GestureUI(
     modifier: Modifier,
     viewModel: InternalNewPlayerViewModel,

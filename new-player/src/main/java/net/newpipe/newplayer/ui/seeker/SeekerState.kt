@@ -36,6 +36,8 @@ import androidx.compose.ui.graphics.Color
  * will be created by [rememberSeekerState]
  * */
 @Stable
+
+/** @hide */
 internal class SeekerState() {
 
     /**
@@ -43,13 +45,19 @@ internal class SeekerState() {
      * */
     var currentSegment: Segment by mutableStateOf(Segment.Unspecified)
 
-    internal var onDrag: ((Float) -> Unit)? = null
+    
+/** @hide */
+internal var onDrag: ((Float) -> Unit)? = null
 
-    internal val draggableState = DraggableState {
+    
+/** @hide */
+internal val draggableState = DraggableState {
         onDrag?.invoke(it)
     }
 
-    internal fun currentSegment(
+    
+/** @hide */
+internal fun currentSegment(
         value: Float,
         segments: List<Segment>
     ) = (segments.findLast { value >= it.start } ?: Segment.Unspecified).also { this.currentSegment = it }
@@ -59,6 +67,8 @@ internal class SeekerState() {
  * Creates a SeekerState which will be remembered across compositions.
  * */
 @Composable
+
+/** @hide */
 internal fun rememberSeekerState(): SeekerState = remember {
     SeekerState()
 }
@@ -71,6 +81,8 @@ internal fun rememberSeekerState(): SeekerState = remember {
  * @param color the color of the segment
  * */
 @Immutable
+
+/** @hide */
 internal data class Segment(
     val name: String,
     val start: Float,
@@ -83,7 +95,9 @@ internal data class Segment(
 }
 
  @Immutable
- internal data class ChapterSegment(
+ 
+/** @hide */
+internal data class ChapterSegment(
      val name: String,
      val start: Float,
      val color: Color = Color.Unspecified
@@ -94,6 +108,8 @@ internal data class Segment(
  }
 
 @Immutable
+
+/** @hide */
 internal data class SegmentPxs(
     val name: String,
     val startPx: Float,

@@ -58,7 +58,8 @@ val VideoPlayerColorScheme = darkColorScheme(
 )
 
 @Composable
-fun VideoPlayerTheme(
+/** @hide */
+internal fun VideoPlayerTheme(
     content: @Composable () -> Unit
 ) {
     MaterialTheme(

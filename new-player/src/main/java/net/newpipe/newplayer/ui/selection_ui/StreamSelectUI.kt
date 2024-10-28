@@ -50,10 +50,14 @@ import net.newpipe.newplayer.ui.common.rememberReorderHapticFeedback
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
+
+/** @hide */
 internal val ITEM_CORNER_SHAPE = RoundedCornerShape(10.dp)
 
 @OptIn(UnstableApi::class)
 @Composable
+
+/** @hide */
 internal fun StreamSelectUI(
     viewModel: InternalNewPlayerViewModel,
     uiState: NewPlayerUIState,

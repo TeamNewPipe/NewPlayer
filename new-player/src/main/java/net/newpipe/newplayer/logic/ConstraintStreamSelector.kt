@@ -8,7 +8,10 @@ import net.newpipe.newplayer.data.StreamTrack
  * TODO
  * This selector should be used if the uses did pic a specific language and/or a specific
  * video resolution.
+ *
+ * @hide
  */
+/** @hide */
 internal object ConstraintStreamSelector {
     fun selectStream(
         availableStreams: List<Stream>,

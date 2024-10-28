@@ -72,6 +72,8 @@ private const val BOX_PADDING = 4
 
 @OptIn(UnstableApi::class)
 @Composable
+
+/** @hide */
 internal fun ThumbPreview(
     modifier: Modifier = Modifier,
     uiState: NewPlayerUIState,

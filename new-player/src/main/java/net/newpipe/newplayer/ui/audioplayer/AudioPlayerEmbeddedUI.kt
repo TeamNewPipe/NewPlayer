@@ -59,6 +59,8 @@ import net.newpipe.newplayer.ui.common.getTimeStringFromMs
 
 @OptIn(androidx.media3.common.util.UnstableApi::class)
 @Composable
+
+/** @hide */
 internal fun AudioPlayerEmbeddedUI(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState) {
     val locale = getLocale()!!
 

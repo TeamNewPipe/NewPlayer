@@ -56,6 +56,8 @@ import net.newpipe.newplayer.uiModel.EmbeddedUiConfig
 import java.util.Locale
 
 @Composable
+
+/** @hide */
 internal fun LockScreenOrientation(orientation: Int) {
     val context = LocalContext.current
     LaunchedEffect(orientation) {
@@ -65,6 +67,8 @@ internal fun LockScreenOrientation(orientation: Int) {
 }
 
 @SuppressLint("NewApi")
+
+/** @hide */
 internal fun getDefaultBrightness(activity: Activity): Float {
     val window = activity.window
     val layout = window.attributes as WindowManager.LayoutParams
@@ -72,6 +76,8 @@ internal fun getDefaultBrightness(activity: Activity): Float {
 }
 
 @SuppressLint("NewApi")
+
+/** @hide */
 internal fun setScreenBrightness(value: Float, activity: Activity) {
     val window = activity.window
     val layout = window.attributes as WindowManager.LayoutParams
@@ -79,6 +85,8 @@ internal fun setScreenBrightness(value: Float, activity: Activity) {
     window.attributes = layout
 }
 
+
+/** @hide */
 internal fun Context.findActivity(): Activity? = when (this) {
     is Activity -> this
     is ContextWrapper -> baseContext.findActivity()
@@ -88,6 +96,8 @@ internal fun Context.findActivity(): Activity? = when (this) {
 
 @Composable
 @ReadOnlyComposable
+
+/** @hide */
 internal fun getLocale(): Locale? {
     val configuration = LocalConfiguration.current
     return ConfigurationCompat.getLocales(configuration).get(0)
@@ -95,6 +105,8 @@ internal fun getLocale(): Locale? {
 
 @Composable
 @ReadOnlyComposable
+
+/** @hide */
 internal fun getEmbeddedUiConfig(activity: Activity): EmbeddedUiConfig {
     val window = activity.window
     val view = LocalView.current
@@ -113,6 +125,8 @@ internal fun getEmbeddedUiConfig(activity: Activity): EmbeddedUiConfig {
 }
 
 @Composable
+
+/** @hide */
 internal fun getInsets() =
     WindowInsets.systemBars.union(WindowInsets.displayCutout).union(WindowInsets.waterfall)
 
@@ -126,6 +140,8 @@ private const val MILLIS_PER_DAY =
 private const val MILLIS_PER_HOUR = MINUTES_PER_HOUR * SECONDS_PER_MINUTE * MILLIS_PER_SECOND
 private const val MILLIS_PER_MINUTE = SECONDS_PER_MINUTE * MILLIS_PER_SECOND
 
+
+/** @hide */
 internal fun getTimeStringFromMs(
     timeSpanInMs: Long,
     locale: Locale,
@@ -154,6 +170,8 @@ internal fun getTimeStringFromMs(
 }
 
 @Composable
+
+/** @hide */
 internal fun Thumbnail(
     modifier: Modifier = Modifier,
     thumbnail: Uri?,
@@ -186,12 +204,16 @@ internal fun Thumbnail(
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 @Composable
+
+/** @hide */
 internal fun isInPowerSaveMode() =
     (LocalContext.current.getSystemService(Context.POWER_SERVICE) as PowerManager)
         .isPowerSaveMode
 
 
 @OptIn(UnstableApi::class)
+
+/** @hide */
 internal fun getPlaylistDurationInMS(playlist: List<MediaItem>): Long {
     var duration = 0L
     for (item in playlist) {
@@ -202,6 +224,8 @@ internal fun getPlaylistDurationInMS(playlist: List<MediaItem>): Long {
     return duration
 }
 
+
+/** @hide */
 internal fun relaunchCurrentActivity(activity: Activity) {
 
     /*

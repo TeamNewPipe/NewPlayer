@@ -76,6 +76,8 @@ private val UI_ENTER_ANIMATION = fadeIn(tween(200))
 private val UI_EXIT_ANIMATION = fadeOut(tween(200))
 
 @Composable
+
+/** @hide */
 internal fun lightAudioControlButtonColorScheme() = ButtonDefaults.buttonColors().copy(
     containerColor = MaterialTheme.colorScheme.background,
     contentColor = MaterialTheme.colorScheme.onSurface,
@@ -84,6 +86,8 @@ internal fun lightAudioControlButtonColorScheme() = ButtonDefaults.buttonColors(
 
 @OptIn(UnstableApi::class)
 @Composable
+
+/** @hide */
 internal fun AudioPlayerUI(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState, isLandScape: Boolean) {
     val insets = getInsets()
 

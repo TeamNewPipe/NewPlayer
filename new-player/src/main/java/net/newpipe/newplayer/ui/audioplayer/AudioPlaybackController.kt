@@ -56,6 +56,8 @@ import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 @androidx.annotation.OptIn(UnstableApi::class)
 @Composable
+
+/** @hide */
 internal fun AudioPlaybackController(
     modifier: Modifier = Modifier,
     viewModel: InternalNewPlayerViewModel,

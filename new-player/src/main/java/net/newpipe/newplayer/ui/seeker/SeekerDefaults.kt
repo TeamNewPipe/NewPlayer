@@ -33,6 +33,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import net.newpipe.newplayer.ui.theme.VideoPlayerColorScheme
 
+
+/** @hide */
 internal object SeekerDefaults {
 
     /**
@@ -101,17 +103,29 @@ internal object SeekerDefaults {
     private const val DisabledTrackAlpha = 0.22f
     private const val DisabledProgressAlpha = 0.32f
 
-    internal val ThumbRadius = 10.dp
+    
+/** @hide */
+internal val ThumbRadius = 10.dp
     private val TrackHeight = 4.dp
     private val Gap = 2.dp
 
-    internal val MinSliderHeight = 48.dp
-    internal val MinSliderWidth = ThumbRadius * 2
+    
+/** @hide */
+internal val MinSliderHeight = 48.dp
+    
+/** @hide */
+internal val MinSliderWidth = ThumbRadius * 2
 
-    internal val ThumbDefaultElevation = 1.dp
-    internal val ThumbPressedElevation = 6.dp
+    
+/** @hide */
+internal val ThumbDefaultElevation = 1.dp
+    
+/** @hide */
+internal val ThumbPressedElevation = 6.dp
 
-    internal val ThumbRippleRadius = 24.dp
+    
+/** @hide */
+internal val ThumbRippleRadius = 24.dp
 }
 
 /**
@@ -120,6 +134,8 @@ internal object SeekerDefaults {
  * See [SeekerDefaults.seekerColors] for default implementation.
  * */
 @Stable
+
+/** @hide */
 internal interface SeekerColors {
 
     /**
@@ -161,6 +177,8 @@ internal interface SeekerColors {
  * See [SeekerDefaults.seekerDimensions] for default implementation.
  * */
 @Stable
+
+/** @hide */
 internal interface SeekerDimensions {
 
     /**
@@ -189,6 +207,8 @@ internal interface SeekerDimensions {
 }
 
 @Immutable
+
+/** @hide */
 internal class DefaultSeekerDimensions(
     val trackHeight: Dp,
     val progressHeight: Dp,
@@ -241,6 +261,8 @@ internal class DefaultSeekerDimensions(
 }
 
 @Immutable
+
+/** @hide */
 internal class DefaultSeekerColor(
     val progressColor: Color,
     val trackColor: Color,

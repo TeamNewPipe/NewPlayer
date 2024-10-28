@@ -70,6 +70,8 @@ private const val SEEKER_PADDING = 4
 
 @OptIn(UnstableApi::class)
 @Composable
+
+/** @hide */
 internal fun BottomUI(
     modifier: Modifier, viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState
 ) {

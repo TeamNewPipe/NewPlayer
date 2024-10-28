@@ -32,7 +32,10 @@ package net.newpipe.newplayer.data
  *      (not with which it is played back with).
  * @param pixelWidthHeightRatio the ratio of each individual pixel. Normally it's 1 but some
  *      (older) media.ccc videos go wonky.
+ *
+ * @hide
  */
+/** @hide */
 internal data class VideoSize(
 
     val width: Int,

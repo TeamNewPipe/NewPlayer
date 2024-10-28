@@ -45,10 +45,10 @@ import net.newpipe.newplayer.repository.MediaRepository
  * [NewPlayerImpl] will therefore also contain the instance of [Player].
  *
  * Keep ind mind that a NewPlayer instance must live in an [Application] instance.
- * Otherwise the NewPlayer instance can not outlive an Activity or Service. NewPlayer must be
+ * Otherwise, the NewPlayer instance can not outlive an Activity or Service. NewPlayer must be
  * able to do this though in order to
  * 1. Run in background
- * 2. If its executed on a TV: Stop when the main activity is closed. (The reason the NewPlayer
+ * 2. If it's executed on a TV: Stop when the main activity is closed. (The reason the NewPlayer
  * instance should not be hosted inside a MediaService, since on TV there should not be a playback
  * service.)
  */
@@ -253,7 +253,9 @@ interface NewPlayer {
 
     /**
      * Same as ExoPlayer's release. See [Player.release]
-     * In addition to releasing the internal ExoPlayer, NewPlayer will also clean up other things
+     * In addition to releasing the 
+/** @hide */
+internal ExoPlayer, NewPlayer will also clean up other things
      * that do not need to exist while NewPlayer is in IDLE mode. This includes the ExoPlayer
      * instance itself.
      */

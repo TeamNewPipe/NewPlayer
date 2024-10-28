@@ -55,6 +55,8 @@ import net.newpipe.newplayer.ui.common.Thumbnail
 import net.newpipe.newplayer.ui.common.getLocale
 import net.newpipe.newplayer.ui.common.getTimeStringFromMs
 
+
+/** @hide */
 internal fun isActiveChapter(chapterId: Int, chapters: List<Chapter>, playbackPosition: Long) : Boolean {
     assert(0 <= chapterId && chapterId < chapters.size) {
         throw NewPlayerException("Chapter Id out of bounds: id: $chapterId, chapters.size: ${chapters.size}")
@@ -67,6 +69,8 @@ internal fun isActiveChapter(chapterId: Int, chapters: List<Chapter>, playbackPo
 }
 
 @Composable
+
+/** @hide */
 internal fun ChapterItem(
     modifier: Modifier = Modifier,
     id: Int,

@@ -52,6 +52,8 @@ private const val TAG = "EmbeddedGestureUI"
 
 @OptIn(UnstableApi::class)
 @Composable
+
+/** @hide */
 internal fun EmbeddedGestureUI(
     modifier: Modifier = Modifier, viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState
 ) {

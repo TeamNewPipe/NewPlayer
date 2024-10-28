@@ -71,6 +71,8 @@ import java.util.Locale
 
 @OptIn(UnstableApi::class)
 @Composable
+
+/** @hide */
 internal fun VideoPlayerMenu(
     modifier: Modifier = Modifier,
     viewModel: InternalNewPlayerViewModel,

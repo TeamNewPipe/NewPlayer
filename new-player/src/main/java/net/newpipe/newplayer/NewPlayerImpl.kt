@@ -393,7 +393,9 @@ class NewPlayerImpl(
             }
 
             val mediaSource = toMediaSource(item)
-            internalPlayStream(mediaSource, playMode)
+            
+/** @hide */
+internalPlayStream(mediaSource, playMode)
         }
     }
 
@@ -429,7 +431,9 @@ class NewPlayerImpl(
 
 
     @OptIn(UnstableApi::class)
-    private fun internalPlayStream(mediaSource: MediaSource, playMode: PlayMode) {
+    private fun 
+/** @hide */
+internalPlayStream(mediaSource: MediaSource, playMode: PlayMode) {
         currentStreamLanguageConstraint = null
         if (exoPlayer.value?.playbackState == Player.STATE_IDLE || exoPlayer.value == null) {
             prepare()

@@ -49,7 +49,9 @@ import javax.inject.Inject
 
 private const val TAG = "NewPlayerService"
 
+
 @AndroidEntryPoint
+/** @hide */
 internal class NewPlayerService : MediaSessionService() {
 
     private var mediaSession: MediaSession? = null

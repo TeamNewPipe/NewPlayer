@@ -42,6 +42,8 @@ import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+
+/** @hide */
 internal fun ChapterSelectTopBar(modifier: Modifier = Modifier, onClose: () -> Unit) {
     TopAppBar(modifier = modifier,
         colors = topAppBarColors(containerColor = Color.Transparent),

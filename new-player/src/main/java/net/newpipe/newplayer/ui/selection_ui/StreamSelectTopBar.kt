@@ -57,6 +57,8 @@ import net.newpipe.newplayer.ui.common.showNotYetImplementedToast
 @androidx.annotation.OptIn(UnstableApi::class)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+
+/** @hide */
 internal fun StreamSelectTopBar(
     modifier: Modifier = Modifier,
     viewModel: InternalNewPlayerViewModel,

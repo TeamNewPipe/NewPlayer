@@ -40,6 +40,8 @@ import java.util.Locale
 
 @OptIn(UnstableApi::class)
 @Composable
+
+/** @hide */
 internal fun LanguageMenu(uiState: NewPlayerUIState, viewModel: InternalNewPlayerViewModel, isVisible: Boolean, makeInvisible: () -> Unit) {
     val availableLanguages = TrackUtils.getAvailableLanguages(uiState.currentlyAvailableTracks)
 
@@ -67,6 +69,8 @@ internal fun LanguageMenu(uiState: NewPlayerUIState, viewModel: InternalNewPlaye
 
 @OptIn(UnstableApi::class)
 @Composable
+
+/** @hide */
 internal fun LanguageMenuItem(uiState: NewPlayerUIState, onClick: () -> Unit) {
     val availableLanguages = TrackUtils.getAvailableLanguages(uiState.currentlyAvailableTracks)
 
