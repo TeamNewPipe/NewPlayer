@@ -24,7 +24,6 @@ NewPlayer is a media framework, which is independent of NewPipe itself. I decide
    - [How NewPlayer works](#how-does-newplayer-work)
 4. [Code Documentation](https://teamnewpipe.github.io/NewPlayer/)
 
-
 ### Let me give you a Profile about NewPlayer:
 - It is a module, separate from NewPipe and can be used as an independent player framework
 - It is based on the [Media3](https://developer.android.com/media/media3) library
