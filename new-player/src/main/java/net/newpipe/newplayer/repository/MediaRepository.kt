@@ -160,7 +160,7 @@ interface MediaRepository {
     /**
      * Should return the link to a certain timestamp of the video/audio stream associated by **item**.
      * An example for a timestamp link would be this (don't watch it though its dangerous):
-     * []https://www.youtube.com/watch?v=H8ZH_mkfPUY&t=19s](https://www.youtube.com/watch?v=H8ZH_mkfPUY&t=19s)
+     * [https://www.youtube.com/watch?v=H8ZH_mkfPUY&t=19s](https://www.youtube.com/watch?v=H8ZH_mkfPUY&t=19s)
      */
     suspend fun getTimestampLink(item: String, timestampInSeconds: Long): String
 }

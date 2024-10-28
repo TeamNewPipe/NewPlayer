@@ -151,18 +151,28 @@ You can find the code documentation for NewPlayer [here](https://teamnewpipe.git
 NewPlayer uses [MVVM](https://www.geeksforgeeks.org/mvvm-model-view-viewmodel-architecture-pattern-in-android/) architecture design pattern.
 
 
-### NewPlayerUI
+### [NewPlayerUI](https://teamnewpipe.github.io/NewPlayer/new-player/net.newpipe.newplayer.ui/-new-player-view/index.html)
 
-TODO
+This contains the whole UI of NewPlayer. This composable represents all. From the fullscreen video playback mode to the embedded audio playback mode. This composable resizes or changes its content depending on what should be displayed.
+By itself it is dump. It will only render out what is stated by [NewPlayerUIState](#newplayeruistate), and forward any input to the view model. The logic behind the UI is defined by [NewPlayerViewModel](#newplayerviewmodel) instead.
 
-### NewPlayerViewModel
+### [NewPlayerViewModel](https://teamnewpipe.github.io/NewPlayer/new-player/net.newpipe.newplayer.uiModel/-new-player-view-model/index.html)
 
-TODO
+The [NewPlayerViewModel](https://teamnewpipe.github.io/NewPlayer/new-player/net.newpipe.newplayer.uiModel/-new-player-view-model/index.html) contains the logic for the UI itself. This will produce a [NewPlayerUIState](#newplayeruistate) whenever the [NewPlayerUI](#newplayerui) should change. It will not take care about the playback or data gathering logic. This is the duty of the [NewPlayer](#newplayer) object.
 
-### NewPlayer
 
-TODO
+### [NewPlayerUIState](https://teamnewpipe.github.io/NewPlayer/new-player/net.newpipe.newplayer.uiModel/-new-player-u-i-state/index.html)
 
-### Media repository
+This defines a state of the UI. [NewPlayerUI](#newplayerui) basically just renders what this object defines. It is changed and produced by [NewPlayerViewModel](#newplayerviewmodel) whenever the UI should be updated.
 
-TODO: Documentation
+### [NewPlayer](https://teamnewpipe.github.io/NewPlayer/new-player/net.newpipe.newplayer/-new-player/index.html)
+
+This object contains the business logic of NewPlayer. It contains the actual instance of the [Media3 ExoPlayer](https://developer.android.com/media/media3/exoplayer). You can controll playback and else through this object. However, also the [NewPlayerViewModel](#newplayerviewmodel) as well as NewPlayer's implementation of the [MediaSessionService](https://developer.android.com/media/media3/session/background-playback) will interact with this object.
+
+### [MediaRepository](https://teamnewpipe.github.io/NewPlayer/new-player/net.newpipe.newplayer.repository/-media-repository/index.html)
+
+The [MediaRepository](https://teamnewpipe.github.io/NewPlayer/new-player/net.newpipe.newplayer.repository/-media-repository/index.html) is NewPlayer's way to access data. Through that repository NewPlayers is getting the information it needs to display on screen. The repository can deliver data that is either stored on disk or is available online.
+NewPlayer itself only supplies the interface of the MediaRepository. It is the duty of the developer using NewPlayer to implement it.
+You can find more information about the [MediaRepository at its code documentation](https://teamnewpipe.github.io/NewPlayer/new-player/net.newpipe.newplayer.repository/-media-repository/index.html).
+
+
