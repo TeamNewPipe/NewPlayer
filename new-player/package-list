@@ -108,7 +108,6 @@ $dokka.location:net.newpipe.newplayer.logic/ReplaceStreamSelectionResponse///Poi
 $dokka.location:net.newpipe.newplayer.logic/ReplaceStreamSelectionResponse/ReplaceStreamSelectionResponse/#net.newpipe.newplayer.data.StreamSelection/PointingToDeclaration/new-player/net.newpipe.newplayer.logic/-replace-stream-selection-response/-replace-stream-selection-response.html
 $dokka.location:net.newpipe.newplayer.logic/ReplaceStreamSelectionResponse/streamSelection/#/PointingToDeclaration/new-player/net.newpipe.newplayer.logic/-replace-stream-selection-response/stream-selection.html
 $dokka.location:net.newpipe.newplayer.logic/StreamExceptionResponse///PointingToDeclaration/new-player/net.newpipe.newplayer.logic/-stream-exception-response/index.html
-$dokka.location:net.newpipe.newplayer.logic/TrackUtils///PointingToDeclaration/new-player/net.newpipe.newplayer.logic/-track-utils/index.html
 $dokka.location:net.newpipe.newplayer.repository////PointingToDeclaration/new-player/net.newpipe.newplayer.repository/index.html
 $dokka.location:net.newpipe.newplayer.repository/CachingRepository///PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-caching-repository/index.html
 $dokka.location:net.newpipe.newplayer.repository/CachingRepository/CachingRepository/#net.newpipe.newplayer.repository.MediaRepository#kotlinx.coroutines.CoroutineDispatcher/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-caching-repository/-caching-repository.html
@@ -134,22 +133,6 @@ $dokka.location:net.newpipe.newplayer.repository/DelayTestRepository/getRepoInfo
 $dokka.location:net.newpipe.newplayer.repository/DelayTestRepository/getStreams/#kotlin.String/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-delay-test-repository/get-streams.html
 $dokka.location:net.newpipe.newplayer.repository/DelayTestRepository/getSubtitles/#kotlin.String/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-delay-test-repository/get-subtitles.html
 $dokka.location:net.newpipe.newplayer.repository/DelayTestRepository/getTimestampLink/#kotlin.String#kotlin.Long/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-delay-test-repository/get-timestamp-link.html
-$dokka.location:net.newpipe.newplayer.repository/EagerRequestingRepository///PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-eager-requesting-repository/index.html
-$dokka.location:net.newpipe.newplayer.repository/EagerRequestingRepository/EagerRequestingRepository/#net.newpipe.newplayer.repository.MediaRepository#kotlin.Boolean#kotlinx.coroutines.CoroutineDispatcher/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-eager-requesting-repository/-eager-requesting-repository.html
-$dokka.location:net.newpipe.newplayer.repository/EagerRequestingRepository/cachingRepository/#/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-eager-requesting-repository/caching-repository.html
-$dokka.location:net.newpipe.newplayer.repository/EagerRequestingRepository/disableEagerCaching/#/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-eager-requesting-repository/disable-eager-caching.html
-$dokka.location:net.newpipe.newplayer.repository/EagerRequestingRepository/getChapters/#kotlin.String/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-eager-requesting-repository/get-chapters.html
-$dokka.location:net.newpipe.newplayer.repository/EagerRequestingRepository/getMetaInfo/#kotlin.String/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-eager-requesting-repository/get-meta-info.html
-$dokka.location:net.newpipe.newplayer.repository/EagerRequestingRepository/getPreviewThumbnail/#kotlin.String#kotlin.Long/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-eager-requesting-repository/get-preview-thumbnail.html
-$dokka.location:net.newpipe.newplayer.repository/EagerRequestingRepository/getPreviewThumbnailsInfo/#kotlin.String/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-eager-requesting-repository/get-preview-thumbnails-info.html
-$dokka.location:net.newpipe.newplayer.repository/EagerRequestingRepository/getRepoInfo/#/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-eager-requesting-repository/get-repo-info.html
-$dokka.location:net.newpipe.newplayer.repository/EagerRequestingRepository/getStreams/#kotlin.String/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-eager-requesting-repository/get-streams.html
-$dokka.location:net.newpipe.newplayer.repository/EagerRequestingRepository/getSubtitles/#kotlin.String/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-eager-requesting-repository/get-subtitles.html
-$dokka.location:net.newpipe.newplayer.repository/EagerRequestingRepository/getTimestampLink/#kotlin.String#kotlin.Long/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-eager-requesting-repository/get-timestamp-link.html
-$dokka.location:net.newpipe.newplayer.repository/EagerRequestingRepository/hasBeenSeenBefore/#/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-eager-requesting-repository/has-been-seen-before.html
-$dokka.location:net.newpipe.newplayer.repository/EagerRequestingRepository/requestDispatcher/#/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-eager-requesting-repository/request-dispatcher.html
-$dokka.location:net.newpipe.newplayer.repository/EagerRequestingRepository/requestScope/#/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-eager-requesting-repository/request-scope.html
-$dokka.location:net.newpipe.newplayer.repository/EagerRequestingRepository/reset/#/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-eager-requesting-repository/reset.html
 $dokka.location:net.newpipe.newplayer.repository/MediaRepository.PreviewThumbnailsInfo///PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-media-repository/-preview-thumbnails-info/index.html
 $dokka.location:net.newpipe.newplayer.repository/MediaRepository.PreviewThumbnailsInfo/PreviewThumbnailsInfo/#kotlin.Long#kotlin.Long/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-media-repository/-preview-thumbnails-info/-preview-thumbnails-info.html
 $dokka.location:net.newpipe.newplayer.repository/MediaRepository.PreviewThumbnailsInfo/count/#/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-media-repository/-preview-thumbnails-info/count.html
@@ -194,18 +177,25 @@ $dokka.location:net.newpipe.newplayer.repository/PlaceHolderRepository/getRepoIn
 $dokka.location:net.newpipe.newplayer.repository/PlaceHolderRepository/getStreams/#kotlin.String/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-place-holder-repository/get-streams.html
 $dokka.location:net.newpipe.newplayer.repository/PlaceHolderRepository/getSubtitles/#kotlin.String/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-place-holder-repository/get-subtitles.html
 $dokka.location:net.newpipe.newplayer.repository/PlaceHolderRepository/getTimestampLink/#kotlin.String#kotlin.Long/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-place-holder-repository/get-timestamp-link.html
-$dokka.location:net.newpipe.newplayer.service////PointingToDeclaration/new-player/net.newpipe.newplayer.service/index.html
-$dokka.location:net.newpipe.newplayer.service//NEW_PLAYER_MEDIA_NOTIFICATION_CHANNEL_NAME/#/PointingToDeclaration/new-player/net.newpipe.newplayer.service/-n-e-w_-p-l-a-y-e-r_-m-e-d-i-a_-n-o-t-i-f-i-c-a-t-i-o-n_-c-h-a-n-n-e-l_-n-a-m-e.html
-$dokka.location:net.newpipe.newplayer.service//NEW_PLAYER_MEDIA_NOTIFICATION_ID/#/PointingToDeclaration/new-player/net.newpipe.newplayer.service/-n-e-w_-p-l-a-y-e-r_-m-e-d-i-a_-n-o-t-i-f-i-c-a-t-i-o-n_-i-d.html
-$dokka.location:net.newpipe.newplayer.service//NEW_PLAYER_REQUEST_CODE_OPEN_ACTIVITY/#/PointingToDeclaration/new-player/net.newpipe.newplayer.service/-n-e-w_-p-l-a-y-e-r_-r-e-q-u-e-s-t_-c-o-d-e_-o-p-e-n_-a-c-t-i-v-i-t-y.html
-$dokka.location:net.newpipe.newplayer.ui.seeker////PointingToDeclaration/new-player/net.newpipe.newplayer.ui.seeker/index.html
-$dokka.location:net.newpipe.newplayer.ui.seeker//SeekerPreview/#/PointingToDeclaration/new-player/net.newpipe.newplayer.ui.seeker/-seeker-preview.html
+$dokka.location:net.newpipe.newplayer.repository/PrefetchingRepository///PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-prefetching-repository/index.html
+$dokka.location:net.newpipe.newplayer.repository/PrefetchingRepository/PrefetchingRepository/#net.newpipe.newplayer.repository.MediaRepository#kotlin.Boolean#kotlinx.coroutines.CoroutineDispatcher/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-prefetching-repository/-prefetching-repository.html
+$dokka.location:net.newpipe.newplayer.repository/PrefetchingRepository/cachingRepository/#/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-prefetching-repository/caching-repository.html
+$dokka.location:net.newpipe.newplayer.repository/PrefetchingRepository/disableEagerCaching/#/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-prefetching-repository/disable-eager-caching.html
+$dokka.location:net.newpipe.newplayer.repository/PrefetchingRepository/getChapters/#kotlin.String/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-prefetching-repository/get-chapters.html
+$dokka.location:net.newpipe.newplayer.repository/PrefetchingRepository/getMetaInfo/#kotlin.String/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-prefetching-repository/get-meta-info.html
+$dokka.location:net.newpipe.newplayer.repository/PrefetchingRepository/getPreviewThumbnail/#kotlin.String#kotlin.Long/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-prefetching-repository/get-preview-thumbnail.html
+$dokka.location:net.newpipe.newplayer.repository/PrefetchingRepository/getPreviewThumbnailsInfo/#kotlin.String/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-prefetching-repository/get-preview-thumbnails-info.html
+$dokka.location:net.newpipe.newplayer.repository/PrefetchingRepository/getRepoInfo/#/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-prefetching-repository/get-repo-info.html
+$dokka.location:net.newpipe.newplayer.repository/PrefetchingRepository/getStreams/#kotlin.String/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-prefetching-repository/get-streams.html
+$dokka.location:net.newpipe.newplayer.repository/PrefetchingRepository/getSubtitles/#kotlin.String/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-prefetching-repository/get-subtitles.html
+$dokka.location:net.newpipe.newplayer.repository/PrefetchingRepository/getTimestampLink/#kotlin.String#kotlin.Long/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-prefetching-repository/get-timestamp-link.html
+$dokka.location:net.newpipe.newplayer.repository/PrefetchingRepository/hasBeenSeenBefore/#/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-prefetching-repository/has-been-seen-before.html
+$dokka.location:net.newpipe.newplayer.repository/PrefetchingRepository/requestDispatcher/#/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-prefetching-repository/request-dispatcher.html
+$dokka.location:net.newpipe.newplayer.repository/PrefetchingRepository/requestScope/#/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-prefetching-repository/request-scope.html
+$dokka.location:net.newpipe.newplayer.repository/PrefetchingRepository/reset/#/PointingToDeclaration/new-player/net.newpipe.newplayer.repository/-prefetching-repository/reset.html
 $dokka.location:net.newpipe.newplayer.ui.theme////PointingToDeclaration/new-player/net.newpipe.newplayer.ui.theme/index.html
-$dokka.location:net.newpipe.newplayer.ui.theme//AudioPlayerUIColorPreview/#/PointingToDeclaration/new-player/net.newpipe.newplayer.ui.theme/-audio-player-u-i-color-preview.html
 $dokka.location:net.newpipe.newplayer.ui.theme//Typography/#/PointingToDeclaration/new-player/net.newpipe.newplayer.ui.theme/-typography.html
 $dokka.location:net.newpipe.newplayer.ui.theme//VideoPlayerColorScheme/#/PointingToDeclaration/new-player/net.newpipe.newplayer.ui.theme/-video-player-color-scheme.html
-$dokka.location:net.newpipe.newplayer.ui.theme//VideoPlayerControllerUIPreviewEmbeddedColorPreview/#/PointingToDeclaration/new-player/net.newpipe.newplayer.ui.theme/-video-player-controller-u-i-preview-embedded-color-preview.html
-$dokka.location:net.newpipe.newplayer.ui.theme//VideoPlayerTheme/#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/new-player/net.newpipe.newplayer.ui.theme/-video-player-theme.html
 $dokka.location:net.newpipe.newplayer.ui.theme//video_player_background/#/PointingToDeclaration/new-player/net.newpipe.newplayer.ui.theme/video_player_background.html
 $dokka.location:net.newpipe.newplayer.ui.theme//video_player_error/#/PointingToDeclaration/new-player/net.newpipe.newplayer.ui.theme/video_player_error.html
 $dokka.location:net.newpipe.newplayer.ui.theme//video_player_errorContainer/#/PointingToDeclaration/new-player/net.newpipe.newplayer.ui.theme/video_player_error-container.html
@@ -236,8 +226,6 @@ $dokka.location:net.newpipe.newplayer.ui.theme//video_player_surfaceTint/#/Point
 $dokka.location:net.newpipe.newplayer.ui.theme//video_player_surfaceVariant/#/PointingToDeclaration/new-player/net.newpipe.newplayer.ui.theme/video_player_surface-variant.html
 $dokka.location:net.newpipe.newplayer.ui.theme//video_player_tertiary/#/PointingToDeclaration/new-player/net.newpipe.newplayer.ui.theme/video_player_tertiary.html
 $dokka.location:net.newpipe.newplayer.ui.theme//video_player_tertiaryContainer/#/PointingToDeclaration/new-player/net.newpipe.newplayer.ui.theme/video_player_tertiary-container.html
-$dokka.location:net.newpipe.newplayer.ui.videoplayer////PointingToDeclaration/new-player/net.newpipe.newplayer.ui.videoplayer/index.html
-$dokka.location:net.newpipe.newplayer.ui.videoplayer//INDICATOR_BACKGROUND_COLOR/#/PointingToDeclaration/new-player/net.newpipe.newplayer.ui.videoplayer/-i-n-d-i-c-a-t-o-r_-b-a-c-k-g-r-o-u-n-d_-c-o-l-o-r.html
 $dokka.location:net.newpipe.newplayer.ui////PointingToDeclaration/new-player/net.newpipe.newplayer.ui/index.html
 $dokka.location:net.newpipe.newplayer.ui//NewPlayerUI/#net.newpipe.newplayer.uiModel.NewPlayerViewModel?/PointingToDeclaration/new-player/net.newpipe.newplayer.ui/-new-player-u-i.html
 $dokka.location:net.newpipe.newplayer.ui/ContentScale.CROP///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}new-player/net.newpipe.newplayer.ui/-content-scale/-c-r-o-p/index.html
@@ -488,10 +476,7 @@ net.newpipe.newplayer
 net.newpipe.newplayer.data
 net.newpipe.newplayer.logic
 net.newpipe.newplayer.repository
-net.newpipe.newplayer.service
 net.newpipe.newplayer.ui
-net.newpipe.newplayer.ui.seeker
 net.newpipe.newplayer.ui.theme
-net.newpipe.newplayer.ui.videoplayer
 net.newpipe.newplayer.uiModel
 

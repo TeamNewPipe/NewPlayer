@@ -2,7 +2,7 @@
 <html class="no-js">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-    <title>EagerRequestingRepository</title>
+    <title>PrefetchingRepository</title>
     <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
     <script>var pathToRoot = "../../../";</script>
     <script>document.documentElement.classList.replace("no-js","js");</script>
@@ -32,6 +32,8 @@
 <script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
 <script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
 <script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
+<link href="../../../images/logo-icon.png">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
 </head>
 <body>
     <div class="root">
@@ -61,23 +63,23 @@
                 <div class="sidebar--inner" id="sideMenu"></div>
             </div>
             <div id="main">
-<div class="main-content" data-page-type="classlike" id="content" pageIds="new-player::net.newpipe.newplayer.repository/EagerRequestingRepository///PointingToDeclaration//-1850485088">
-  <div class="breadcrumbs"><a href="../../../index.html">new-player</a><span class="delimiter">/</span><a href="../index.html">net.newpipe.newplayer.repository</a><span class="delimiter">/</span><span class="current">EagerRequestingRepository</span></div>
+<div class="main-content" data-page-type="classlike" id="content" pageIds="new-player::net.newpipe.newplayer.repository/PrefetchingRepository///PointingToDeclaration//-1850485088">
+  <div class="breadcrumbs"><a href="../../../index.html">new-player</a><span class="delimiter">/</span><a href="../index.html">net.newpipe.newplayer.repository</a><span class="delimiter">/</span><span class="current">PrefetchingRepository</span></div>
   <div class="cover ">
-    <h1 class="cover"><span>Eager</span><wbr></wbr><span>Requesting</span><wbr></wbr><span><span>Repository</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">EagerRequestingRepository</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>cachingRepository<span class="token operator">: </span><a href="../-media-repository/index.html">MediaRepository</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>disableEagerCaching<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>requestDispatcher<span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines/CoroutineDispatcher///PointingToDeclaration/">CoroutineDispatcher</span><span class="token operator"> = </span>Dispatchers.Main</span></span><span class="token punctuation">)</span> : <a href="../-media-repository/index.html">MediaRepository</a></div><p class="paragraph">This is a meta media repository that performs requests to all possible values of an item as soon as it gets an item it has not seen before. This can be used in combination with a caching repository to perform eager caching.</p><p class="paragraph">An exception to this are requests to <code class="lang-kotlin">getTimestampLink()</code> since actual requests this is rare.</p><h4 class="">Parameters</h4><div class="table"><div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>caching</span><wbr></wbr><span><span>Repository</span></span></u></div></span></div><div><div class="title"><p class="paragraph">a MediaRepository implementation that performs caching</p></div></div></div></div><div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>disable</span><wbr></wbr><span>Eager</span><wbr></wbr><span><span>Caching</span></span></u></div></span></div><div><div class="title"><p class="paragraph">this allows to temporarily disable eager requests. This can be uses when the system is in power saving mode.</p></div></div></div></div><div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>request</span><wbr></wbr><span><span>Dispatcher</span></span></u></div></span></div><div><div class="title"><p class="paragraph">the thread this repository should use to perform requests with. This should be the same thad as the one NewPlayer is in.</p></div></div></div></div></div></div></div>
+    <h1 class="cover"><span>Prefetching</span><wbr></wbr><span><span>Repository</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">PrefetchingRepository</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>cachingRepository<span class="token operator">: </span><a href="../-media-repository/index.html">MediaRepository</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>disableEagerCaching<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>requestDispatcher<span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines/CoroutineDispatcher///PointingToDeclaration/">CoroutineDispatcher</span><span class="token operator"> = </span>Dispatchers.Main</span></span><span class="token punctuation">)</span> : <a href="../-media-repository/index.html">MediaRepository</a></div><p class="paragraph">This is a meta media repository that performs requests to all possible values of an item as soon as it gets an item it has not seen before. This can be used in combination with a caching repository to perform eager caching.</p><p class="paragraph">An exception to this are requests to <code class="lang-kotlin">getTimestampLink()</code> since actual requests this is rare.</p><h4 class="">Parameters</h4><div class="table"><div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>caching</span><wbr></wbr><span><span>Repository</span></span></u></div></span></div><div><div class="title"><p class="paragraph">a MediaRepository implementation that performs caching</p></div></div></div></div><div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>disable</span><wbr></wbr><span>Eager</span><wbr></wbr><span><span>Caching</span></span></u></div></span></div><div><div class="title"><p class="paragraph">this allows to temporarily disable eager requests. This can be uses when the system is in power saving mode.</p></div></div></div></div><div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>request</span><wbr></wbr><span><span>Dispatcher</span></span></u></div></span></div><div><div class="title"><p class="paragraph">the thread this repository should use to perform requests with. This should be the same thad as the one NewPlayer is in.</p></div></div></div></div></div></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
     <div class="tabs-section-body">
       <div data-togglable="CONSTRUCTOR">
         <h2 class="">Constructors</h2>
-        <div class="table"><a data-name="1738819097%2FConstructors%2F-1850485088" anchor-label="EagerRequestingRepository" id="1738819097%2FConstructors%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+        <div class="table"><a data-name="-367132263%2FConstructors%2F-1850485088" anchor-label="PrefetchingRepository" id="-367132263%2FConstructors%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
           <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-eager-requesting-repository.html"><span>Eager</span><wbr></wbr><span>Requesting</span><wbr></wbr><span><span>Repository</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1738819097%2FConstructors%2F-1850485088"></span>
+                  <div><a href="-prefetching-repository.html"><span>Prefetching</span><wbr></wbr><span><span>Repository</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-367132263%2FConstructors%2F-1850485088"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
@@ -91,12 +93,12 @@
       </div>
       <div data-togglable="PROPERTY">
         <h2 class="">Properties</h2>
-        <div class="table"><a data-name="1644461941%2FProperties%2F-1850485088" anchor-label="cachingRepository" id="1644461941%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+        <div class="table"><a data-name="-1344938315%2FProperties%2F-1850485088" anchor-label="cachingRepository" id="-1344938315%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
           <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="caching-repository.html"><span>caching</span><wbr></wbr><span><span>Repository</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1644461941%2FProperties%2F-1850485088"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1344938315%2FProperties%2F-1850485088"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
@@ -106,12 +108,12 @@
               </div>
             </div>
           </div>
-<a data-name="2013582319%2FProperties%2F-1850485088" anchor-label="disableEagerCaching" id="2013582319%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+<a data-name="-1761909969%2FProperties%2F-1850485088" anchor-label="disableEagerCaching" id="-1761909969%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
           <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="disable-eager-caching.html"><span>disable</span><wbr></wbr><span>Eager</span><wbr></wbr><span><span>Caching</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2013582319%2FProperties%2F-1850485088"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1761909969%2FProperties%2F-1850485088"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
@@ -121,12 +123,12 @@
               </div>
             </div>
           </div>
-<a data-name="638318430%2FProperties%2F-1850485088" anchor-label="hasBeenSeenBefore" id="638318430%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+<a data-name="1943885470%2FProperties%2F-1850485088" anchor-label="hasBeenSeenBefore" id="1943885470%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
           <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="has-been-seen-before.html"><span>has</span><wbr></wbr><span>Been</span><wbr></wbr><span>Seen</span><wbr></wbr><span><span>Before</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="638318430%2FProperties%2F-1850485088"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1943885470%2FProperties%2F-1850485088"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
@@ -136,12 +138,12 @@
               </div>
             </div>
           </div>
-<a data-name="1537892840%2FProperties%2F-1850485088" anchor-label="requestDispatcher" id="1537892840%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+<a data-name="-1451507416%2FProperties%2F-1850485088" anchor-label="requestDispatcher" id="-1451507416%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
           <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="request-dispatcher.html"><span>request</span><wbr></wbr><span><span>Dispatcher</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1537892840%2FProperties%2F-1850485088"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1451507416%2FProperties%2F-1850485088"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
@@ -151,12 +153,12 @@
               </div>
             </div>
           </div>
-<a data-name="948436407%2FProperties%2F-1850485088" anchor-label="requestScope" id="948436407%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+<a data-name="2057836151%2FProperties%2F-1850485088" anchor-label="requestScope" id="2057836151%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
           <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="request-scope.html"><span>request</span><wbr></wbr><span><span>Scope</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="948436407%2FProperties%2F-1850485088"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2057836151%2FProperties%2F-1850485088"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
@@ -170,12 +172,12 @@
       </div>
       <div data-togglable="FUNCTION">
         <h2 class="">Functions</h2>
-        <div class="table"><a data-name="-1524381822%2FFunctions%2F-1850485088" anchor-label="getChapters" id="-1524381822%2FFunctions%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+        <div class="table"><a data-name="-500907966%2FFunctions%2F-1850485088" anchor-label="getChapters" id="-500907966%2FFunctions%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
           <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="get-chapters.html"><span>get</span><wbr></wbr><span><span>Chapters</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1524381822%2FFunctions%2F-1850485088"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-500907966%2FFunctions%2F-1850485088"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
@@ -200,12 +202,12 @@
               </div>
             </div>
           </div>
-<a data-name="-1764111281%2FFunctions%2F-1850485088" anchor-label="getMetaInfo" id="-1764111281%2FFunctions%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+<a data-name="-740637425%2FFunctions%2F-1850485088" anchor-label="getMetaInfo" id="-740637425%2FFunctions%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
           <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="get-meta-info.html"><span>get</span><wbr></wbr><span>Meta</span><wbr></wbr><span><span>Info</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1764111281%2FFunctions%2F-1850485088"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-740637425%2FFunctions%2F-1850485088"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
@@ -215,12 +217,12 @@
               </div>
             </div>
           </div>
-<a data-name="1610879898%2FFunctions%2F-1850485088" anchor-label="getPreviewThumbnail" id="1610879898%2FFunctions%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+<a data-name="-1114559398%2FFunctions%2F-1850485088" anchor-label="getPreviewThumbnail" id="-1114559398%2FFunctions%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
           <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="get-preview-thumbnail.html"><span>get</span><wbr></wbr><span>Preview</span><wbr></wbr><span><span>Thumbnail</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1610879898%2FFunctions%2F-1850485088"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1114559398%2FFunctions%2F-1850485088"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
@@ -230,12 +232,12 @@
               </div>
             </div>
           </div>
-<a data-name="276306735%2FFunctions%2F-1850485088" anchor-label="getPreviewThumbnailsInfo" id="276306735%2FFunctions%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+<a data-name="891378287%2FFunctions%2F-1850485088" anchor-label="getPreviewThumbnailsInfo" id="891378287%2FFunctions%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
           <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="get-preview-thumbnails-info.html"><span>get</span><wbr></wbr><span>Preview</span><wbr></wbr><span>Thumbnails</span><wbr></wbr><span><span>Info</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="276306735%2FFunctions%2F-1850485088"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="891378287%2FFunctions%2F-1850485088"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
@@ -245,12 +247,12 @@
               </div>
             </div>
           </div>
-<a data-name="-2076068728%2FFunctions%2F-1850485088" anchor-label="getRepoInfo" id="-2076068728%2FFunctions%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+<a data-name="1700496328%2FFunctions%2F-1850485088" anchor-label="getRepoInfo" id="1700496328%2FFunctions%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
           <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="get-repo-info.html"><span>get</span><wbr></wbr><span>Repo</span><wbr></wbr><span><span>Info</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2076068728%2FFunctions%2F-1850485088"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1700496328%2FFunctions%2F-1850485088"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
@@ -260,12 +262,12 @@
               </div>
             </div>
           </div>
-<a data-name="-1448749403%2FFunctions%2F-1850485088" anchor-label="getStreams" id="-1448749403%2FFunctions%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+<a data-name="1078117861%2FFunctions%2F-1850485088" anchor-label="getStreams" id="1078117861%2FFunctions%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
           <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="get-streams.html"><span>get</span><wbr></wbr><span><span>Streams</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1448749403%2FFunctions%2F-1850485088"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1078117861%2FFunctions%2F-1850485088"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
@@ -275,12 +277,12 @@
               </div>
             </div>
           </div>
-<a data-name="648456269%2FFunctions%2F-1850485088" anchor-label="getSubtitles" id="648456269%2FFunctions%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+<a data-name="-1983592563%2FFunctions%2F-1850485088" anchor-label="getSubtitles" id="-1983592563%2FFunctions%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
           <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="get-subtitles.html"><span>get</span><wbr></wbr><span><span>Subtitles</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="648456269%2FFunctions%2F-1850485088"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1983592563%2FFunctions%2F-1850485088"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
@@ -290,27 +292,27 @@
               </div>
             </div>
           </div>
-<a data-name="1340705340%2FFunctions%2F-1850485088" anchor-label="getTimestampLink" id="1340705340%2FFunctions%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+<a data-name="1935747452%2FFunctions%2F-1850485088" anchor-label="getTimestampLink" id="1935747452%2FFunctions%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
           <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="get-timestamp-link.html"><span>get</span><wbr></wbr><span>Timestamp</span><wbr></wbr><span><span>Link</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1340705340%2FFunctions%2F-1850485088"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1935747452%2FFunctions%2F-1850485088"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend override </span><span class="token keyword">fun </span><a href="get-timestamp-link.html"><span class="token function">getTimestampLink</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">item<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">timestampInSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Should return the link to a certain timestamp of the video/audio stream associated by <strong>item</strong>. An example for a timestamp link would be this (don't watch it though its dangerous): []https://www.youtube.com/watch?v=H8ZH_mkfPUY&t=19s](https://www.youtube.com/watch?v=H8ZH_mkfPUY&t=19s)</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend override </span><span class="token keyword">fun </span><a href="get-timestamp-link.html"><span class="token function">getTimestampLink</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">item<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">timestampInSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Should return the link to a certain timestamp of the video/audio stream associated by <strong>item</strong>. An example for a timestamp link would be this (don't watch it though its dangerous): <a href="https://www.youtube.com/watch?v=H8ZH_mkfPUY&amp;t=19s">https://www.youtube.com/watch?v=H8ZH_mkfPUY&t=19s</a></p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1308103375%2FFunctions%2F-1850485088" anchor-label="reset" id="1308103375%2FFunctions%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+<a data-name="1030640143%2FFunctions%2F-1850485088" anchor-label="reset" id="1030640143%2FFunctions%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
           <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="reset.html"><span><span>reset</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1308103375%2FFunctions%2F-1850485088"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1030640143%2FFunctions%2F-1850485088"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
@@ -326,7 +328,7 @@
   </div>
 </div>
       <div class="footer">
-        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>(c) 2024 NewPipe e.V.</span><span
                 class="pull-right"><span>Generated by </span><a
                 href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
       </div>

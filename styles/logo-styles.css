@@ -3,7 +3,7 @@
  */
 
 :root {
-    --dokka-logo-image-url: url('../images/logo-icon.svg');
+    --dokka-logo-image-url: url('../images/logo-icon.png');
     --dokka-logo-height: 50px;
     --dokka-logo-width: 50px;
 }
