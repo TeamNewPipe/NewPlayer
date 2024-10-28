@@ -50,6 +50,7 @@ afterEvaluate {
 buildscript {
     dependencies {
         classpath(libs.dokka.base)
+        classpath(libs.dokka.android)
     }
 }
 

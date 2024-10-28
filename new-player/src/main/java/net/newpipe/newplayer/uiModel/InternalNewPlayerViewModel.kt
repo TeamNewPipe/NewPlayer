@@ -25,6 +25,7 @@ import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
 
 @OptIn(UnstableApi::class)
+/** @hide */
 internal interface InternalNewPlayerViewModel : NewPlayerViewModel {
     var minContentRatio: Float
     var maxContentRatio: Float
