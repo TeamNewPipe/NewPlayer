@@ -99,7 +99,7 @@ Main menu
    ```
 
 2. **Modify your Activity in the `AndroidManifest.xml`**
-   - Add `android:supportsPictureInPicture="true"` to the `<activity>` tag of the activity that will hold the [NewPlayerUI](https://github.com/TeamNewPipe/NewPlayer/blob/master/new-player/src/main/java/net/newpipe/newplayer/ui/NewPlayerUI.kt)
+   - Add `android:supportsPictureInPicture="true"` to the `<activity>` tag of the activity that will hold the [NewPlayerUI](https://teamnewpipe.github.io/NewPlayer/new-player/net.newpipe.newplayer.ui/-new-player-u-i.html)
    - Also add `android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"` to the `<activity>` tag. This will ensure a smooth transition from and to PiP mode. However, be aware that when you do this, a screen rotation or size change does not trigger an activity reconfiguration. You may have to trigger this by yourself. See [this](https://github.com/TeamNewPipe/NewPlayer/blob/72c14d39822b96420f5c71bb559b47f39dc9ed90/test-app/src/main/java/net/newpipe/newplayer/testapp/MainActivity.kt#L173-L198) code from the text app if you want to know how you could achieve this. However, bear in mind that if you use compose you might not need a screen reconfiguration at all. There just use [androidx.adaptive](https://developer.android.com/reference/kotlin/androidx/compose/material3/adaptive/package-summary) framework to handle screen rotation foo.
 
 3. **Install NewPlayer in your Activity's layout**
@@ -107,7 +107,7 @@ Main menu
     NewPlayer can be used in a [compose](https://developer.android.com/compose) as well as the classic views environment.
     - **Use NewPlayer with Compose**
 
-      You can add NewPlayer in a compose environment by using the [`NewPlayerUI`](https://github.com/TeamNewPipe/NewPlayer/blob/72c14d39822b96420f5c71bb559b47f39dc9ed90/new-player/src/main/java/net/newpipe/newplayer/ui/NewPlayerUI.kt#L59) composable for now we will add it with a dummy view model (later more about that):
+      You can add NewPlayer in a compose environment by using the [`NewPlayerUI`](https://teamnewpipe.github.io/NewPlayer/new-player/net.newpipe.newplayer.ui/-new-player-u-i.html) composable for now we will add it with a dummy view model (later more about that):
       ```kotlin
       NewPlayerUI(NewPlayerViewModelDummy())
       ```
@@ -125,7 +125,7 @@ Main menu
 
    NewPlayer requires [Hilt](https://developer.android.com/training/dependency-injection/hilt-android) for dependency injection. Therefore, you must create an instance of the NewPlayer object through a Component that must install the NewPlayer instance in the [`Application`](https://developer.android.com/reference/android/app/Application) instance. The NewPlayer instance must live for as long as the app lives. An example of how to do this can be found again in the [`test-app`](https://github.com/TeamNewPipe/NewPlayer/blob/dev/test-app/src/main/java/net/newpipe/newplayer/testapp/NewPlayerComponent.kt#L40-L62).
 
-   In order to use NewPlayer, the NewPlayer object needs an instance of the [`MediaRepository`](https://github.com/TeamNewPipe/NewPlayer/blob/dev/new-player/src/main/java/net/newpipe/newplayer/repository/MediaRepository.kt). The `MediaRepository` is the primary way that NewPlayer can access data and request the information it needs to operate. In other words you provide NewPlayer with the information it needs through the `MediaRepository`. Because of this you will have to implement this yourself and provide it to `NewPlayer`. For the sake of simplicity however for now you can give the NewPlayer object the [`PlaceHolderRepository`](https://github.com/TeamNewPipe/NewPlayer/blob/dev/new-player/src/main/java/net/newpipe/newplayer/repository/PlaceHolderRepository.kt). This repository implementation does nothing but at least allows you to continue installing NewPlayer without a functioning Repository yet.
+   In order to use NewPlayer, the NewPlayer object needs an instance of the [`MediaRepository`](https://teamnewpipe.github.io/NewPlayer/new-player/net.newpipe.newplayer.repository/-media-repository/index.html). The `MediaRepository` is the primary way that NewPlayer can access data and request the information it needs to operate. In other words you provide NewPlayer with the information it needs through the `MediaRepository`. Because of this you will have to implement this yourself and provide it to `NewPlayer`. For the sake of simplicity however for now you can give the NewPlayer object the [`PlaceHolderRepository`](https://teamnewpipe.github.io/NewPlayer/new-player/net.newpipe.newplayer.repository/-place-holder-repository/index.html). This repository implementation does nothing but at least allows you to continue installing NewPlayer without a functioning Repository yet.
 
 5. **Install NewPlayer in the NewPlayerViewModel**
 
@@ -134,11 +134,15 @@ Main menu
 
 6. **Give NewPlayer access to your media**
 
-   You can do this by implementing your own [`MediaRepository`](https://github.com/TeamNewPipe/NewPlayer/blob/dev/new-player/src/main/java/net/newpipe/newplayer/repository/MediaRepository.kt). You can find more information about the [`MediaRepository`](https://github.com/TeamNewPipe/NewPlayer/blob/dev/new-player/src/main/java/net/newpipe/newplayer/repository/MediaRepository.kt) inside its [`code documentation`](https://github.com/TeamNewPipe/NewPlayer/blob/dev/new-player/src/main/java/net/newpipe/newplayer/repository/MediaRepository.kt#L32-71). You can also find a [test implementation](https://github.com/TeamNewPipe/NewPlayer/blob/dev/test-app/src/main/java/net/newpipe/newplayer/testapp/TestMediaRepository.kt) of it in the test-app.
+   You can do this by implementing your own [`MediaRepository`](https://teamnewpipe.github.io/NewPlayer/new-player/net.newpipe.newplayer.repository/-media-repository/index.html). You can find more information about the [`MediaRepository`](https://teamnewpipe.github.io/NewPlayer/new-player/net.newpipe.newplayer.repository/-media-repository/index.html) inside its [`code documentation`](https://github.com/TeamNewPipe/NewPlayer/blob/dev/new-player/src/main/java/net/newpipe/newplayer/repository/MediaRepository.kt#L32-71). You can also find a [test implementation](https://github.com/TeamNewPipe/NewPlayer/blob/dev/test-app/src/main/java/net/newpipe/newplayer/testapp/TestMediaRepository.kt) of it in the test-app.
 
 7. **Do advanced things**
    Like applying caching and prefetching to your media repository using the meta `MediaRepository` implementations, or perform error handling and error recovering. *TOOD: Write the documentation for this*
 
+
+## Documentation
+
+You can find the code documentation for NewPlayer [here](https://teamnewpipe.github.io/NewPlayer/).
 
 ## How does NewPlayer work
 
