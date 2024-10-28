@@ -87,6 +87,7 @@ internal fun TopUI(
     Row(
         // the default height for an app bar is 64.dp according to this source:
         // https://cs.android.com/androidx/platform/frameworks/support/+/7b27816c561b8f271d79d24ab21ba7d08aaad031:compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/TopAppBarSmallTokens.kt;l=26
+        // However tbh it feels a bit to height.
         modifier = modifier.height(64.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -94,7 +95,7 @@ internal fun TopUI(
         if (uiState.uiMode.fullscreen) {
             Box(modifier = Modifier.weight(1F), contentAlignment = Alignment.CenterStart) {
                 Text(
-                    text = uiState.currentlyPlaying?.mediaMetadata?.title.toString() ?: "",
+                    text = uiState.currentlyPlaying?.mediaMetadata?.title.toString(),
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,

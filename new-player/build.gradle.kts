@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.androidHilt)
     alias(libs.plugins.kotlinParcelize)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.dokka.base)
 }
 
 android {

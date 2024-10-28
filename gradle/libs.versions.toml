@@ -47,6 +47,7 @@ reorderable = "2.4.0-alpha02"
 media3Session = "1.4.1"
 media3ExoplayerDash = "1.4.1"
 adaptiveAndroid = "1.0.0"
+dockaVersion = "1.9.20"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -96,3 +97,4 @@ androidHilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroi
 kotlinAndroidKsp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }
 kotlinParcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlinParcelize" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+dokka-base = { id = "org.jetbrains.dokka", version.ref = "dockaVersion" }
