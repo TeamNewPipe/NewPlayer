@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="191.18193mm"
-   height="89.471748mm"
-   viewBox="0 0 191.18193 89.471748"
+   width="138.70154mm"
+   height="150.72867mm"
+   viewBox="0 0 138.70154 150.72867"
    version="1.1"
    id="svg1"
    inkscape:version="1.3.2 (091e20ef0f, 2023-11-25)"
@@ -23,20 +23,20 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="0.7603233"
-     inkscape:cx="407.06368"
-     inkscape:cy="-0.65761499"
-     inkscape:window-width="2560"
-     inkscape:window-height="1371"
+     inkscape:zoom="0.53762976"
+     inkscape:cx="464.07401"
+     inkscape:cy="356.19308"
+     inkscape:window-width="1920"
+     inkscape:window-height="1011"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g2-9" />
+     inkscape:current-layer="g24" />
   <defs
      id="defs1">
     <marker
        style="overflow:visible"
-       id="marker17"
+       id="marker15"
        refX="0"
        refY="0"
        orient="auto-start-reverse"
@@ -52,7 +52,7 @@
          d="M 3,-3 0,0 3,3"
          transform="rotate(180,0.125,0)"
          sodipodi:nodetypes="ccc"
-         id="path17" />
+         id="path15" />
     </marker>
     <marker
        style="overflow:visible"
@@ -79,7 +79,7 @@
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-7.2123955,-72.484374)">
+     transform="translate(-28.772793,-29.776116)">
     <g
        id="g2">
       <g
@@ -87,233 +87,320 @@
          transform="translate(0,-4.7625002)">
         <g
            id="g24">
-          <rect
-             style="fill:#00ffff;stroke:#181818;stroke-width:0.264583"
-             id="rect2"
-             width="38.810482"
-             height="14.410788"
-             x="8.932188"
-             y="131.23648" />
-          <text
-             xml:space="preserve"
-             style="font-weight:bold;font-size:3.88056px;font-family:'Fira Mono';-inkscape-font-specification:'Fira Mono Bold';vector-effect:non-scaling-stroke;fill:#000000;fill-opacity:1;stroke:#181818;stroke-width:0.264583;-inkscape-stroke:hairline"
-             x="12.88814"
-             y="139.42244"
-             id="text1"><tspan
-               sodipodi:role="line"
-               id="tspan1"
-               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
-               x="12.88814"
-               y="139.42244">YourBusinesLogic</tspan></text>
-          <rect
-             style="fill:#00ffff;stroke:#181818;stroke-width:0.264583"
-             id="rect2-8"
-             width="22.366695"
-             height="15.736862"
-             x="169.88976"
-             y="130.04271" />
-          <text
-             xml:space="preserve"
-             style="font-weight:bold;font-size:3.88056px;font-family:'Fira Mono';-inkscape-font-specification:'Fira Mono Bold';vector-effect:non-scaling-stroke;fill:#000000;fill-opacity:1;stroke:#181818;stroke-width:0.264583;-inkscape-stroke:hairline"
-             x="175.3811"
-             y="139.27635"
-             id="text1-6"><tspan
-               sodipodi:role="line"
-               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
-               x="175.3811"
-               y="139.27635"
-               id="tspan10">YourUI</tspan></text>
-          <rect
-             style="fill:#00ffff;stroke:#181818;stroke-width:0.264583"
-             id="rect2-5"
-             width="41.985485"
-             height="14.410789"
-             x="7.344687"
-             y="96.859116"
-             transform="translate(0,4.7625002)" />
-          <text
-             xml:space="preserve"
-             style="font-weight:bold;font-size:3.88056px;font-family:'Fira Mono';-inkscape-font-specification:'Fira Mono Bold';vector-effect:non-scaling-stroke;fill:#000000;fill-opacity:1;stroke:#181818;stroke-width:0.264583;-inkscape-stroke:hairline"
-             x="9.8697166"
-             y="109.80757"
-             id="text1-0"><tspan
-               sodipodi:role="line"
-               id="tspan1-3"
-               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
-               x="9.8697166"
-               y="109.80757">YourMediaRepository</tspan></text>
-          <rect
-             style="fill:#00ff00;stroke:#181818;stroke-width:0.264583"
-             id="rect2-5-2"
-             width="24.121912"
-             height="14.54308"
-             x="64.811119"
-             y="101.55547" />
-          <text
-             xml:space="preserve"
-             style="font-weight:bold;font-size:3.88056px;font-family:'Fira Mono';-inkscape-font-specification:'Fira Mono Bold';vector-effect:non-scaling-stroke;fill:#000000;fill-opacity:1;stroke:#181818;stroke-width:0.264583;-inkscape-stroke:hairline"
-             x="67.316574"
-             y="109.80757"
-             id="text1-0-0"><tspan
-               sodipodi:role="line"
-               id="tspan1-3-6"
-               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
-               x="67.316574"
-               y="109.80757">NewPlayer</tspan></text>
-          <rect
-             style="fill:#00ff00;stroke:#181818;stroke-width:0.264583"
-             id="rect2-5-2-6"
-             width="45.046047"
-             height="14.741518"
-             x="104.41397"
-             y="101.45625" />
-          <text
-             xml:space="preserve"
-             style="font-weight:bold;font-size:3.88056px;font-family:'Fira Mono';-inkscape-font-specification:'Fira Mono Bold';vector-effect:non-scaling-stroke;fill:#000000;fill-opacity:1;stroke:#181818;stroke-width:0.264583;-inkscape-stroke:hairline"
-             x="108.08937"
-             y="109.80757"
-             id="text1-0-0-5"><tspan
-               sodipodi:role="line"
-               id="tspan1-3-6-6"
-               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
-               x="108.08937"
-               y="109.80757">NewPlayerViewModel</tspan></text>
-          <rect
-             style="fill:#00ff00;stroke:#181818;stroke-width:0.264583"
-             id="rect2-5-2-6-5"
-             width="32.26429"
-             height="14.333186"
-             x="164.94096"
-             y="101.66042" />
-          <text
-             xml:space="preserve"
-             style="font-weight:bold;font-size:3.88056px;font-family:'Fira Mono';-inkscape-font-specification:'Fira Mono Bold';vector-effect:non-scaling-stroke;fill:#000000;fill-opacity:1;stroke:#181818;stroke-width:0.264583;-inkscape-stroke:hairline"
-             x="169.77818"
-             y="109.80758"
-             id="text1-0-0-5-4"><tspan
-               sodipodi:role="line"
-               id="tspan1-3-6-6-7"
-               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
-               x="169.77818"
-               y="109.80758">NewPlayerUI</tspan></text>
-          <path
-             style="fill:none;fill-opacity:1;stroke:#181818;stroke-width:0.264583;stroke-opacity:1;marker-start:url(#marker17);marker-end:url(#ArrowWide)"
-             d="M 47.742673,133.67938 64.811115,104.06451"
-             id="path11"
-             transform="translate(0,4.7625002)" />
-          <path
-             style="fill:none;fill-opacity:1;stroke:#181818;stroke-width:0.264583;stroke-opacity:1;marker-start:url(#marker17);marker-end:url(#ArrowWide)"
-             d="M 49.330173,104.06451 H 64.811115"
-             id="path12"
-             transform="translate(0,4.7625002)" />
-          <path
-             style="fill:none;fill-opacity:1;stroke:#181818;stroke-width:0.264583;stroke-opacity:1;marker-start:url(#marker17);marker-end:url(#ArrowWide)"
-             d="M 47.742673,133.67938 169.88976,133.14863"
-             id="path18"
-             transform="translate(0,4.7625002)" />
-          <path
-             style="fill:none;fill-opacity:1;stroke:#181818;stroke-width:0.264583;stroke-opacity:1;marker-start:url(#marker17);marker-end:url(#ArrowWide)"
-             d="m 149.46002,104.06451 20.42974,29.08412"
-             id="path19"
-             transform="translate(0,4.7625002)" />
-          <path
-             style="fill:none;fill-opacity:1;stroke:#181818;stroke-width:0.264583;stroke-opacity:1;marker-start:url(#marker17);marker-end:url(#ArrowWide)"
-             d="M 88.933027,104.06451 H 104.41397"
-             id="path20"
-             transform="translate(0,4.7625002)" />
-          <path
-             style="fill:none;fill-opacity:1;stroke:#181818;stroke-width:0.264583;stroke-opacity:1;marker-start:url(#marker17);marker-end:url(#ArrowWide)"
-             d="m 149.46002,104.06451 h 15.48094"
-             id="path21"
-             transform="translate(0,4.7625002)" />
-          <rect
-             style="fill:#00ffff;fill-opacity:1;stroke:#181818;stroke-width:0.264583;stroke-opacity:1"
-             id="rect21-1"
-             width="4"
-             height="4"
-             x="20.902037"
-             y="162.58633" />
-          <text
-             xml:space="preserve"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';fill:#00ffff;fill-opacity:1;stroke:#181818;stroke-width:0.264583;stroke-opacity:1"
-             x="28.299534"
-             y="165.59438"
-             id="text21"><tspan
-               sodipodi:role="line"
-               id="tspan21"
-               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
-               x="28.299534"
-               y="165.59438">Thigs you need to implement</tspan></text>
-          <rect
-             style="fill:#00ff00;fill-opacity:1;stroke:#181818;stroke-width:0.264583;stroke-opacity:1"
-             id="rect21"
-             width="4"
-             height="4"
-             x="20.902037"
-             y="154.01434" />
-          <text
-             xml:space="preserve"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
-             x="28.091105"
-             y="157.03281"
-             id="text22"><tspan
-               sodipodi:role="line"
-               id="tspan22"
-               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.264583"
-               x="28.091105"
-               y="157.03281">Parts of NewPlayer</tspan></text>
           <g
-             id="g1"
-             transform="translate(5.8208336)">
+             id="g13"
+             transform="translate(9.9252568,-87.510186)">
             <rect
-               style="fill:#00ff00;stroke:#181818;stroke-width:0.264583"
-               id="rect2-5-2-5"
-               width="46.550426"
-               height="14.543083"
-               x="99.300697"
-               y="77.379166" />
+               style="fill:#00ffff;fill-opacity:1;stroke:#181818;stroke-width:0.264583;stroke-opacity:1"
+               id="rect21-1"
+               width="4"
+               height="4"
+               x="18.979828"
+               y="268.64517" />
             <text
                xml:space="preserve"
-               style="font-weight:bold;font-size:3.88056px;font-family:'Fira Mono';-inkscape-font-specification:'Fira Mono Bold';vector-effect:non-scaling-stroke;fill:#000000;fill-opacity:1;stroke:#181818;stroke-width:0.264583;-inkscape-stroke:hairline"
-               x="101.37305"
-               y="85.654953"
-               id="text1-0-0-2"><tspan
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';fill:#00ffff;fill-opacity:1;stroke:#181818;stroke-width:0.264583;stroke-opacity:1"
+               x="26.377325"
+               y="271.6532"
+               id="text21"><tspan
                  sodipodi:role="line"
-                 id="tspan1-3-6-9"
+                 id="tspan21"
                  style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
-                 x="101.37305"
-                 y="85.654953">NewPlayerMediaService</tspan></text>
-          </g>
-          <g
-             id="g2-9"
-             transform="translate(65.640266)">
+                 x="26.377325"
+                 y="271.6532">Thigs you need to implement</tspan></text>
             <rect
-               style="fill:#00ff00;stroke:#181818;stroke-width:0.264583"
-               id="rect2-5-2-5-3"
-               width="33.321075"
-               height="14.675375"
-               x="99.300697"
-               y="77.379166" />
+               style="fill:#00ff00;fill-opacity:1;stroke:#181818;stroke-width:0.264583;stroke-opacity:1"
+               id="rect21"
+               width="4"
+               height="4"
+               x="18.979828"
+               y="260.07318" />
             <text
                xml:space="preserve"
-               style="font-weight:bold;font-size:3.88056px;font-family:'Fira Mono';-inkscape-font-specification:'Fira Mono Bold';vector-effect:non-scaling-stroke;fill:#000000;fill-opacity:1;stroke:#181818;stroke-width:0.264583;-inkscape-stroke:hairline"
-               x="101.06807"
-               y="86.106689"
-               id="text1-0-0-2-6"><tspan
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+               x="26.168896"
+               y="263.09164"
+               id="text22"><tspan
                  sodipodi:role="line"
-                 id="tspan1-3-6-9-0"
-                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
-                 x="101.06807"
-                 y="86.106689">MediaNotification</tspan></text>
-            <path
-               style="fill:#000000;stroke:#181818;stroke-width:0.264999;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#marker17);marker-end:url(#marker17)"
-               d="m 86.031686,84.650709 13.26901,0.06615"
-               id="path3" />
+                 id="tspan22"
+                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.264583"
+                 x="26.168896"
+                 y="263.09164">Parts of NewPlayer</tspan></text>
           </g>
-          <path
-             style="fill:#000000;stroke:#181818;stroke-width:0.265;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#marker17);marker-end:url(#marker17)"
-             d="M 88.933029,108.82702 105.12153,84.650709"
-             id="path2" />
+          <g
+             id="g23"
+             transform="rotate(90,58.129745,173.93489)">
+            <g
+               id="g29">
+              <g
+                 id="g9"
+                 transform="rotate(-90,-7.1359985,119.60127)">
+                <rect
+                   style="fill:#00ffff;stroke:#181818;stroke-width:0.264583"
+                   id="rect2"
+                   width="38.810482"
+                   height="14.410788"
+                   x="8.932188"
+                   y="131.23648" />
+                <text
+                   xml:space="preserve"
+                   style="font-weight:bold;font-size:3.88056px;font-family:'Fira Mono';-inkscape-font-specification:'Fira Mono Bold';vector-effect:non-scaling-stroke;fill:#000000;fill-opacity:1;stroke:#181818;stroke-width:0.264583;-inkscape-stroke:hairline"
+                   x="12.88814"
+                   y="139.42244"
+                   id="text1"><tspan
+                     sodipodi:role="line"
+                     id="tspan1"
+                     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+                     x="12.88814"
+                     y="139.42244">YourBusinesLogic</tspan></text>
+              </g>
+              <g
+                 id="g8"
+                 transform="rotate(-90,41.360269,138.48268)">
+                <rect
+                   style="fill:#00ffff;stroke:#181818;stroke-width:0.264583"
+                   id="rect2-5"
+                   width="41.985485"
+                   height="14.410789"
+                   x="7.344687"
+                   y="96.859116"
+                   transform="translate(0,4.7625002)" />
+                <text
+                   xml:space="preserve"
+                   style="font-weight:bold;font-size:3.88056px;font-family:'Fira Mono';-inkscape-font-specification:'Fira Mono Bold';vector-effect:non-scaling-stroke;fill:#000000;fill-opacity:1;stroke:#181818;stroke-width:0.264583;-inkscape-stroke:hairline"
+                   x="9.8697166"
+                   y="109.80757"
+                   id="text1-0"><tspan
+                     sodipodi:role="line"
+                     id="tspan1-3"
+                     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+                     x="9.8697166"
+                     y="109.80757">YourMediaRepository</tspan></text>
+              </g>
+              <g
+                 id="g7"
+                 transform="rotate(-90,50.309967,175.44664)">
+                <rect
+                   style="fill:#00ff00;stroke:#181818;stroke-width:0.264583"
+                   id="rect2-5-2"
+                   width="24.121912"
+                   height="14.54308"
+                   x="64.811119"
+                   y="101.55547" />
+                <text
+                   xml:space="preserve"
+                   style="font-weight:bold;font-size:3.88056px;font-family:'Fira Mono';-inkscape-font-specification:'Fira Mono Bold';vector-effect:non-scaling-stroke;fill:#000000;fill-opacity:1;stroke:#181818;stroke-width:0.264583;-inkscape-stroke:hairline"
+                   x="67.316574"
+                   y="109.80757"
+                   id="text1-0-0"><tspan
+                     sodipodi:role="line"
+                     id="tspan1-3-6"
+                     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+                     x="67.316574"
+                     y="109.80757">NewPlayer</tspan></text>
+              </g>
+              <g
+                 id="g6"
+                 transform="rotate(-90,45.806624,199.12292)">
+                <rect
+                   style="fill:#00ff00;stroke:#181818;stroke-width:0.264583"
+                   id="rect2-5-2-6"
+                   width="45.046047"
+                   height="14.741518"
+                   x="104.41397"
+                   y="101.45625" />
+                <text
+                   xml:space="preserve"
+                   style="font-weight:bold;font-size:3.88056px;font-family:'Fira Mono';-inkscape-font-specification:'Fira Mono Bold';vector-effect:non-scaling-stroke;fill:#000000;fill-opacity:1;stroke:#181818;stroke-width:0.264583;-inkscape-stroke:hairline"
+                   x="108.08937"
+                   y="109.80757"
+                   id="text1-0-0-5"><tspan
+                     sodipodi:role="line"
+                     id="tspan1-3-6-6"
+                     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+                     x="108.08937"
+                     y="109.80757">NewPlayerViewModel</tspan></text>
+              </g>
+              <g
+                 id="g1"
+                 transform="rotate(-90,83.587272,212.72726)">
+                <rect
+                   style="fill:#00ff00;stroke:#181818;stroke-width:0.264583"
+                   id="rect2-5-2-5"
+                   width="46.550426"
+                   height="14.543083"
+                   x="99.300697"
+                   y="77.379166" />
+                <text
+                   xml:space="preserve"
+                   style="font-weight:bold;font-size:3.88056px;font-family:'Fira Mono';-inkscape-font-specification:'Fira Mono Bold';vector-effect:non-scaling-stroke;fill:#000000;fill-opacity:1;stroke:#181818;stroke-width:0.264583;-inkscape-stroke:hairline"
+                   x="101.37305"
+                   y="85.654953"
+                   id="text1-0-0-2"><tspan
+                     sodipodi:role="line"
+                     id="tspan1-3-6-9"
+                     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+                     x="101.37305"
+                     y="85.654953">NewPlayerMediaService</tspan></text>
+              </g>
+              <g
+                 id="g5"
+                 transform="rotate(-90,27.012003,238.18895)">
+                <rect
+                   style="fill:#00ffff;stroke:#181818;stroke-width:0.264583"
+                   id="rect2-8"
+                   width="22.366695"
+                   height="15.736862"
+                   x="169.88976"
+                   y="130.04271" />
+                <text
+                   xml:space="preserve"
+                   style="font-weight:bold;font-size:3.88056px;font-family:'Fira Mono';-inkscape-font-specification:'Fira Mono Bold';vector-effect:non-scaling-stroke;fill:#000000;fill-opacity:1;stroke:#181818;stroke-width:0.264583;-inkscape-stroke:hairline"
+                   x="175.3811"
+                   y="139.27635"
+                   id="text1-6"><tspan
+                     sodipodi:role="line"
+                     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+                     x="175.3811"
+                     y="139.27635"
+                     id="tspan10">YourUI</tspan></text>
+              </g>
+              <g
+                 id="g4"
+                 transform="rotate(-90,58.486419,240.57924)">
+                <rect
+                   style="fill:#00ff00;stroke:#181818;stroke-width:0.264583"
+                   id="rect2-5-2-6-5"
+                   width="32.26429"
+                   height="14.333186"
+                   x="164.94096"
+                   y="101.66042" />
+                <text
+                   xml:space="preserve"
+                   style="font-weight:bold;font-size:3.88056px;font-family:'Fira Mono';-inkscape-font-specification:'Fira Mono Bold';vector-effect:non-scaling-stroke;fill:#000000;fill-opacity:1;stroke:#181818;stroke-width:0.264583;-inkscape-stroke:hairline"
+                   x="169.77818"
+                   y="109.80758"
+                   id="text1-0-0-5-4"><tspan
+                     sodipodi:role="line"
+                     id="tspan1-3-6-6-7"
+                     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+                     x="169.77818"
+                     y="109.80758">NewPlayerUI</tspan></text>
+              </g>
+              <g
+                 id="g3"
+                 transform="rotate(-90,65.858601,223.84126)">
+                <rect
+                   style="fill:#00ff00;stroke:#181818;stroke-width:0.264583"
+                   id="rect2-5-2-5-3"
+                   width="33.321075"
+                   height="14.675375"
+                   x="99.300697"
+                   y="77.379166" />
+                <text
+                   xml:space="preserve"
+                   style="font-weight:bold;font-size:3.88056px;font-family:'Fira Mono';-inkscape-font-specification:'Fira Mono Bold';vector-effect:non-scaling-stroke;fill:#000000;fill-opacity:1;stroke:#181818;stroke-width:0.264583;-inkscape-stroke:hairline"
+                   x="101.06807"
+                   y="86.106689"
+                   id="text1-0-0-2-6"><tspan
+                     sodipodi:role="line"
+                     id="tspan1-3-6-9-0"
+                     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-opacity:1"
+                     x="101.06807"
+                     y="86.106689">MediaNotification</tspan></text>
+              </g>
+              <path
+                 style="fill:#000000;stroke:#181818;stroke-width:0.264999;marker-start:url(#ArrowWide);marker-end:url(#ArrowWide)"
+                 d="m 80.55912,120.30435 2.620981,-13.53732"
+                 id="path13"
+                 transform="rotate(-90,58.129746,173.93489)" />
+              <path
+                 style="fill:#000000;stroke:#181818;stroke-width:0.264999;marker-start:url(#marker15);marker-end:url(#marker15)"
+                 d="M 147.93679,120.30435 83.180101,106.76703"
+                 id="path14"
+                 sodipodi:nodetypes="cc"
+                 transform="rotate(-90,58.129746,173.93489)" />
+              <path
+                 style="fill:#000000;stroke:#181818;stroke-width:0.264999;marker-start:url(#ArrowWide);marker-end:url(#marker15)"
+                 d="M 147.93679,120.30435 V 50.407769"
+                 id="path16"
+                 transform="rotate(-90,58.129746,173.93489)" />
+              <path
+                 style="fill:#000000;stroke:#181818;stroke-width:0.264999;marker-start:url(#ArrowWide);marker-end:url(#marker15)"
+                 d="M 58.326008,78.5874 83.180101,92.223944"
+                 id="path17"
+                 transform="rotate(-90,58.129746,173.93489)" />
+              <path
+                 style="fill:#000000;stroke:#181818;stroke-width:0.264999;marker-start:url(#ArrowWide);marker-end:url(#marker15)"
+                 d="M 83.180101,92.223944 114.07208,78.686614"
+                 id="path18"
+                 transform="rotate(-90,58.129746,173.93489)" />
+              <path
+                 style="fill:#000000;stroke:#181818;stroke-width:0.264999;marker-start:url(#ArrowWide);marker-end:url(#marker15)"
+                 d="m 114.07208,63.945098 1e-5,-14.239168"
+                 id="path19"
+                 transform="rotate(-90,58.129746,173.93489)" />
+              <path
+                 style="fill:#000000;stroke:#181818;stroke-width:0.264999;marker-start:url(#ArrowWide);marker-end:url(#marker15)"
+                 d="m 58.326005,49.877028 3e-6,14.167289"
+                 id="path20"
+                 transform="rotate(-90,58.129746,173.93489)" />
+              <g
+                 id="g25"
+                 transform="matrix(0.66705311,0,0,0.66705311,3.7425559,48.825588)">
+                <circle
+                   style="fill:none;stroke:#181818;stroke-width:1;stroke-dasharray:none"
+                   id="path21"
+                   cx="58.129745"
+                   cy="173.93489"
+                   r="12" />
+                <ellipse
+                   style="fill:none;stroke:#181818;stroke-width:1;stroke-dasharray:none"
+                   id="path21-3"
+                   cx="58.129745"
+                   cy="173.93489"
+                   rx="12.085646"
+                   ry="7.4547558" />
+                <path
+                   style="fill:none;stroke:#181818;stroke-width:1;stroke-dasharray:none"
+                   d="M 45.980791,173.93489 H 70.129745"
+                   id="path22" />
+                <path
+                   style="fill:none;stroke:#181818;stroke-width:1;stroke-dasharray:none"
+                   d="m 50.913477,183.77369 v -19.4394"
+                   id="path23" />
+                <path
+                   style="fill:none;stroke:#181818;stroke-width:1;stroke-dasharray:none"
+                   d="m 58.129743,185.93489 v -24"
+                   id="path24" />
+              </g>
+              <path
+                 style="fill:none;stroke:#181818;stroke-width:0.667053;stroke-dasharray:none"
+                 d="M 47.331817,171.4124 V 158.44529"
+                 id="path23-9" />
+              <path
+                 id="rect26"
+                 style="stroke:none;stroke-width:0.753498"
+                 d="m 34.12289,147.16111 h 16.32712 v -15.525 H 37.176023 l -3.053133,2.84015 v 1.83748 h 3.317133 v 6.46683 H 34.12289 Z m 5.9034,-7.76269 a 2.2604926,2.2604926 0 0 1 2.260354,-2.26036 2.2604926,2.2604926 0 0 1 2.260355,2.26036 2.2604926,2.2604926 0 0 1 -2.260355,2.26074 2.2604926,2.2604926 0 0 1 -2.260354,-2.26074 z" />
+              <rect
+                 style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.753498;stroke-dasharray:none"
+                 id="rect27"
+                 width="1.5066298"
+                 height="2.1411674"
+                 x="-138.45113"
+                 y="34.620808"
+                 transform="rotate(-90)" />
+              <path
+                 style="fill:none;fill-opacity:1;stroke:#181818;stroke-width:0.265;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#ArrowWide);marker-end:url(#ArrowWide)"
+                 d="M 18.909996,151.50552 34.414184,164.8494"
+                 id="path28" />
+              <path
+                 style="fill:none;fill-opacity:1;stroke:#181818;stroke-width:0.264999;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#ArrowWide);marker-end:url(#ArrowWide)"
+                 d="M 18.909996,151.50552 34.298983,139.39861"
+                 id="path29"
+                 sodipodi:nodetypes="cc" />
+            </g>
+          </g>
         </g>
       </g>
     </g>
