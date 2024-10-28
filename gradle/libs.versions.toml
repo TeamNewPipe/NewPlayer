@@ -18,7 +18,7 @@
 # along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
 
 [versions]
-agp = "8.5.1"
+agp = "8.7.1"
 kotlin = "2.0.20-Beta2"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -47,6 +47,7 @@ reorderable = "2.4.0-alpha02"
 media3Session = "1.4.1"
 media3ExoplayerDash = "1.4.1"
 adaptiveAndroid = "1.0.0"
+dokkaVersion = "1.9.20"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -78,14 +79,15 @@ androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
-newplayer = { group = "com.github.theScrabi.NewPlayer", name = "new-player", version.ref = "newplayer" }
 okhttp-android = { group = "com.squareup.okhttp3", name = "okhttp-android", version.ref = "okhttpAndroid" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 reorderable = { group = "sh.calvin.reorderable", name = "reorderable", version.ref = "reorderable" }
 androidx-media3-session = { group = "androidx.media3", name = "media3-session", version.ref = "media3Session" }
 androidx-media3-exoplayer-dash = { group = "androidx.media3", name = "media3-exoplayer-dash", version.ref = "media3ExoplayerDash" }
 androidx-adaptive-android = { group = "androidx.compose.material3.adaptive", name = "adaptive-android", version.ref = "adaptiveAndroid" }
-
+dokka-base = { module = "org.jetbrains.dokka:dokka-base", version.ref = "dokkaVersion" }
+dokka-android = {module = "org.jetbrains.dokka:android-documentation-plugin", version.ref = "dokkaVersion" }
+newplayer = { group = "com.github.theScrabi.NewPlayer", name = "new-player", version.ref = "newplayer" }
 
 
 [plugins]
@@ -96,3 +98,4 @@ androidHilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroi
 kotlinAndroidKsp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }
 kotlinParcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlinParcelize" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+dokka-base = { id = "org.jetbrains.dokka", version.ref = "dokkaVersion" }

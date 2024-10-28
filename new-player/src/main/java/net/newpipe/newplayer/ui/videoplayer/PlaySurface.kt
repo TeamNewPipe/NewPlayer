@@ -36,6 +36,8 @@ import androidx.media3.common.Player
 import net.newpipe.newplayer.ui.ContentScale
 
 @Composable
+
+/** @hide */
 internal fun PlaySurface(
     modifier: Modifier,
     player: Player?,
@@ -45,12 +47,18 @@ internal fun PlaySurface(
     contentRatio: Float
 ) {
 
-    var internalModifier = modifier.aspectRatio(contentRatio)
+    var 
+/** @hide */
+internalModifier = modifier.aspectRatio(contentRatio)
 
     if(uiRatio <= contentRatio) {
-        internalModifier.fillMaxWidth()
+        
+/** @hide */
+internalModifier.fillMaxWidth()
     } else {
-        internalModifier.fillMaxHeight()
+        
+/** @hide */
+internalModifier.fillMaxHeight()
     }
 
     /*
@@ -73,7 +81,9 @@ internal fun PlaySurface(
 
 
     Box(
-        modifier = internalModifier.background(color = Color.Green)
+        modifier = 
+/** @hide */
+internalModifier.background(color = Color.Green)
     ) {
         AndroidView(
             modifier = Modifier.fillMaxSize(),

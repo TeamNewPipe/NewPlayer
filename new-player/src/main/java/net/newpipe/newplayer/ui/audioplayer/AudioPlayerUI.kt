@@ -56,10 +56,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
-import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.InternalNewPlayerViewModel
-import net.newpipe.newplayer.model.NewPlayerViewModelDummy
-import net.newpipe.newplayer.model.UIModeState
+import net.newpipe.newplayer.uiModel.NewPlayerUIState
+import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
+import net.newpipe.newplayer.uiModel.NewPlayerViewModelDummy
+import net.newpipe.newplayer.uiModel.UIModeState
 import net.newpipe.newplayer.ui.common.NewPlayerSeeker
 import net.newpipe.newplayer.ui.common.ThumbPreview
 import net.newpipe.newplayer.ui.selection_ui.ChapterSelectUI
@@ -76,6 +76,8 @@ private val UI_ENTER_ANIMATION = fadeIn(tween(200))
 private val UI_EXIT_ANIMATION = fadeOut(tween(200))
 
 @Composable
+
+/** @hide */
 internal fun lightAudioControlButtonColorScheme() = ButtonDefaults.buttonColors().copy(
     containerColor = MaterialTheme.colorScheme.background,
     contentColor = MaterialTheme.colorScheme.onSurface,
@@ -84,6 +86,8 @@ internal fun lightAudioControlButtonColorScheme() = ButtonDefaults.buttonColors(
 
 @OptIn(UnstableApi::class)
 @Composable
+
+/** @hide */
 internal fun AudioPlayerUI(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState, isLandScape: Boolean) {
     val insets = getInsets()
 

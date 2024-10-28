@@ -15,18 +15,23 @@ import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaStyleNotificationHelper
 import net.newpipe.newplayer.R
 
-const val NEW_PLAYER_MEDIA_NOTIFICATION_ID = 17480
-const val NEW_PLAYER_MEDIA_NOTIFICATION_CHANNEL_NAME = "Player"
+/** @hide */
+internal const val NEW_PLAYER_MEDIA_NOTIFICATION_ID = 17480
+/** @hide */
+internal const val NEW_PLAYER_MEDIA_NOTIFICATION_CHANNEL_NAME = "Player"
 
-const val NEW_PLAYER_REQUEST_CODE_OPEN_ACTIVITY = 0
+/** @hide */
+internal const val NEW_PLAYER_REQUEST_CODE_OPEN_ACTIVITY = 0
+
 
 @OptIn(UnstableApi::class)
+/** @hide */
 internal fun createNewPlayerNotification(
     service: NewPlayerService,
     session: MediaSession,
     notificationManager: NotificationManager,
     notificationIcon: IconCompat,
-    playerActivity: Class<Activity>
+    playerActivity: Class<out Activity>
 ): Notification {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

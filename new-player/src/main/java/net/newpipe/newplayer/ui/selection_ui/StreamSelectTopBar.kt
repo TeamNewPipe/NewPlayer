@@ -41,10 +41,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
-import net.newpipe.newplayer.model.EmbeddedUiConfig
-import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.InternalNewPlayerViewModel
-import net.newpipe.newplayer.model.NewPlayerViewModelDummy
+import net.newpipe.newplayer.uiModel.EmbeddedUiConfig
+import net.newpipe.newplayer.uiModel.NewPlayerUIState
+import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
+import net.newpipe.newplayer.uiModel.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.common.RepeatModeButton
 import net.newpipe.newplayer.ui.common.ShuffleModeButton
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
@@ -52,10 +52,13 @@ import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
 import net.newpipe.newplayer.ui.common.getLocale
 import net.newpipe.newplayer.ui.common.getPlaylistDurationInMS
 import net.newpipe.newplayer.ui.common.getTimeStringFromMs
+import net.newpipe.newplayer.ui.common.showNotYetImplementedToast
 
 @androidx.annotation.OptIn(UnstableApi::class)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+
+/** @hide */
 internal fun StreamSelectTopBar(
     modifier: Modifier = Modifier,
     viewModel: InternalNewPlayerViewModel,
@@ -87,8 +90,13 @@ internal fun StreamSelectTopBar(
 
             ShuffleModeButton(viewModel = viewModel, uiState = uiState)
 
+            val context = LocalContext.current
+
             IconButton(
-                onClick = viewModel::onStorePlaylist
+                onClick = {
+                    showNotYetImplementedToast(context)
+                    viewModel.onStorePlaylist()
+                }
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.PlaylistAdd,

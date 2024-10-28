@@ -28,9 +28,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.media3.common.util.UnstableApi
-import net.newpipe.newplayer.Chapter
-import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.InternalNewPlayerViewModel
+import net.newpipe.newplayer.data.Chapter
+import net.newpipe.newplayer.uiModel.NewPlayerUIState
+import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
 import net.newpipe.newplayer.ui.seeker.ChapterSegment
 import net.newpipe.newplayer.ui.seeker.DefaultSeekerColor
 import net.newpipe.newplayer.ui.seeker.Seeker
@@ -40,6 +40,8 @@ private const val TAG = "NewPlayerSeeker"
 
 @OptIn(UnstableApi::class)
 @Composable
+
+/** @hide */
 internal fun NewPlayerSeeker(
     modifier: Modifier = Modifier,
     viewModel: InternalNewPlayerViewModel,

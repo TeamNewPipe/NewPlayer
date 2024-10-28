@@ -48,11 +48,11 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.util.UnstableApi
-import net.newpipe.newplayer.model.EmbeddedUiConfig
-import net.newpipe.newplayer.model.UIModeState
-import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.InternalNewPlayerViewModel
-import net.newpipe.newplayer.model.NewPlayerViewModelDummy
+import net.newpipe.newplayer.uiModel.EmbeddedUiConfig
+import net.newpipe.newplayer.uiModel.UIModeState
+import net.newpipe.newplayer.uiModel.NewPlayerUIState
+import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
+import net.newpipe.newplayer.uiModel.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.common.getDefaultBrightness
 import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
@@ -63,6 +63,8 @@ private enum class IndicatorMode {
 
 @OptIn(UnstableApi::class)
 @Composable
+
+/** @hide */
 internal fun FullscreenGestureUI(
     modifier: Modifier = Modifier, viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState,
     onVolumeIndicatorVisibilityChanged: (Boolean) -> Unit
@@ -92,7 +94,7 @@ internal fun FullscreenGestureUI(
         if (LocalContext.current is Activity)
             getDefaultBrightness(LocalContext.current as Activity)
         else
-            -1f
+            0.5f
 
     val embeddedUiConfig =
         if (LocalContext.current is Activity)
@@ -218,6 +220,8 @@ internal fun FullscreenGestureUI(
 }
 
 @Composable
+
+/** @hide */
 internal fun IndicatorAnimation(modifier: Modifier, visible: Boolean, content: @Composable () -> Unit) {
     AnimatedVisibility(
         modifier = modifier,

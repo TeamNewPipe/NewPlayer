@@ -34,12 +34,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
-import net.newpipe.newplayer.RepeatMode
-import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.InternalNewPlayerViewModel
+import net.newpipe.newplayer.data.RepeatMode
+
+import net.newpipe.newplayer.uiModel.NewPlayerUIState
+import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
 
 @OptIn(UnstableApi::class)
 @Composable
+
+/** @hide */
 internal fun RepeatModeButton(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState) {
     IconButton(
         onClick = viewModel::cycleRepeatMode
@@ -65,6 +68,8 @@ internal fun RepeatModeButton(viewModel: InternalNewPlayerViewModel, uiState: Ne
 
 @OptIn(UnstableApi::class)
 @Composable
+
+/** @hide */
 internal fun ShuffleModeButton(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState) {
     IconButton(
         onClick = viewModel::toggleShuffle

@@ -40,9 +40,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
-import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.InternalNewPlayerViewModel
-import net.newpipe.newplayer.model.NewPlayerViewModelDummy
+import net.newpipe.newplayer.uiModel.NewPlayerUIState
+import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
+import net.newpipe.newplayer.uiModel.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.common.ReorderHapticFeedbackType
 import net.newpipe.newplayer.ui.common.getInsets
@@ -50,10 +50,14 @@ import net.newpipe.newplayer.ui.common.rememberReorderHapticFeedback
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
+
+/** @hide */
 internal val ITEM_CORNER_SHAPE = RoundedCornerShape(10.dp)
 
 @OptIn(UnstableApi::class)
 @Composable
+
+/** @hide */
 internal fun StreamSelectUI(
     viewModel: InternalNewPlayerViewModel,
     uiState: NewPlayerUIState,

@@ -35,10 +35,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.newpipe.newplayer.ActivityBrainSlug
 import net.newpipe.newplayer.NewPlayer
-import net.newpipe.newplayer.PlayMode
-import net.newpipe.newplayer.model.NewPlayerViewModel
-import net.newpipe.newplayer.model.NewPlayerViewModelImpl
-import net.newpipe.newplayer.model.UIModeState
+import net.newpipe.newplayer.data.PlayMode
+import net.newpipe.newplayer.uiModel.NewPlayerViewModel
+import net.newpipe.newplayer.uiModel.NewPlayerViewModelImpl
+import net.newpipe.newplayer.uiModel.UIModeState
 import net.newpipe.newplayer.testapp.databinding.ActivityMainBinding
 import net.newpipe.newplayer.ui.ContentScale
 import javax.inject.Inject
@@ -100,6 +100,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.buttons.addYtTestVideoButton.setOnClickListener {
             newPlayer.addToPlaylist("yt_test")
+        }
+
+        binding.buttons.addFaultyStream.setOnClickListener {
+            newPlayer.addToPlaylist("faulty")
         }
 
         binding.buttons.listenModeButton.setOnClickListener {

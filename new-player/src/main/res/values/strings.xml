@@ -27,7 +27,7 @@
     <string name="audio_mode">Audio Mode</string>
     <string name="menu_item_fit_screen">Fit screen</string>
     <string name="menu_item_sub_titles">Subtitles</string>
-    <string name="menu_item_language">Language</string>
+    <string name="menu_selected_language_item">Selected language: %s</string>
     <string name="menu_item_playback_speed">Playback speed</string>
     <string name="widget_description_previous_stream">Previous stream</string>
     <string name="widget_description_fast_rewind">Fast rewind</string>
@@ -61,5 +61,8 @@
     <string name="fullscreen_button_description">Switch to fullscreen video mode</string>
     <string name="pip_button_description">Picture in picture</string>
     <string name="playing_in_background">Playing in the background…</string>
-    <string name="seek_thumb_preview">Video seek preview thumbnail</string>
+    <string name="seek_thumb_preview">Video seek preview thumbnail</string>a
+    <string name="no_other_tracks_available_toast">No other stream tracks available.</string>
+    <string name="loading">Loading</string>
+    <string name="function_not_yet_implemented_toast">Function is not yet implemented.</string>
 </resources>

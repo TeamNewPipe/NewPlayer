@@ -39,11 +39,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 
 import androidx.media3.common.util.UnstableApi
-import net.newpipe.newplayer.NewPlayerException
-import net.newpipe.newplayer.model.UIModeState
-import net.newpipe.newplayer.model.InternalNewPlayerViewModel
-import net.newpipe.newplayer.model.NewPlayerViewModel
-import net.newpipe.newplayer.model.NewPlayerViewModelDummy
+import net.newpipe.newplayer.data.NewPlayerException
+import net.newpipe.newplayer.uiModel.UIModeState
+import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
+import net.newpipe.newplayer.uiModel.NewPlayerViewModel
+import net.newpipe.newplayer.uiModel.NewPlayerViewModelDummy
 import net.newpipe.newplayer.ui.audioplayer.AudioPlayerUI
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.VideoPlayerUi
@@ -54,15 +54,28 @@ import net.newpipe.newplayer.ui.common.setScreenBrightness
 
 private const val TAG = "VideoPlayerUI"
 
+
+/**
+ * The NewPlayerUI composable. Use this in your compose setup to display the NewPlayerUI.
+ *
+ * Keep in mind that NewPlayer will deeply integrate into your UI and your Activity.
+ * You must take care about complying to requests of NewPlayer like when NewPlayer wants to
+ * display the NewPlayerUI in fullscreen mode. It's your duty to ensure that all other composable
+ * or views are hidden and only NewPlayerUI is visible. You can read more about this in
+ * the [NewPlayerViewModel], since the [viewModel] is responsible to tell your UI how to behave
+ * in such cases.
+ */
 @OptIn(UnstableApi::class)
 @Composable
 fun NewPlayerUI(
     viewModel: NewPlayerViewModel?,
 ) {
-    assert(viewModel is InternalNewPlayerViewModel?) {
-        throw NewPlayerException("The view model given to NewPlayerUI must be of type InternalNewPlayerViewModel. This can not be implemented externally, so do not extend NewPlayerViewModel")
+    if (viewModel !is InternalNewPlayerViewModel?) {
+        throw NewPlayerException(
+            "The view model given to NewPlayerUI must be of type InternalNewPlayerViewModel. "
+                    + "This can not be implemented externally, so do not extend NewPlayerViewModel"
+        )
     }
-    val viewModel = viewModel as InternalNewPlayerViewModel?
 
     if (viewModel == null) {
         LoadingPlaceholder()
@@ -75,11 +88,6 @@ fun NewPlayerUI(
         val view = LocalView.current
 
         val window = activity.window
-        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
-        windowInsetsController.systemBarsBehavior =
-            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-
-        val defaultBrightness = getDefaultBrightness(activity)
 
         // Setup fullscreen
 
@@ -106,6 +114,10 @@ fun NewPlayerUI(
         LaunchedEffect(
             key1 = uiState.uiMode.systemInsetsVisible,
         ) {
+            val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+            windowInsetsController.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+
             if (uiState.uiMode.systemInsetsVisible) {
                 windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
             } else {
@@ -134,6 +146,8 @@ fun NewPlayerUI(
 
         LaunchedEffect(key1 = uiState.brightness) {
             Log.d(TAG, "New Brightnes: ${uiState.brightness}")
+            val defaultBrightness = getDefaultBrightness(activity)
+
             setScreenBrightness(
                 uiState.brightness ?: defaultBrightness, activity
             )

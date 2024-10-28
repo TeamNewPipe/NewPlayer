@@ -24,6 +24,8 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 
+
+/** @hide */
 internal fun supportsPip(context: Context) =
     if(Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
         val isSupported by lazy {

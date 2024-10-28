@@ -40,11 +40,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.util.UnstableApi
-import net.newpipe.newplayer.model.EmbeddedUiConfig
-import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.InternalNewPlayerViewModel
-import net.newpipe.newplayer.model.NewPlayerViewModelDummy
-import net.newpipe.newplayer.model.UIModeState
+import net.newpipe.newplayer.uiModel.EmbeddedUiConfig
+import net.newpipe.newplayer.uiModel.NewPlayerUIState
+import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
+import net.newpipe.newplayer.uiModel.NewPlayerViewModelDummy
+import net.newpipe.newplayer.uiModel.UIModeState
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
 
@@ -52,6 +52,8 @@ private const val TAG = "EmbeddedGestureUI"
 
 @OptIn(UnstableApi::class)
 @Composable
+
+/** @hide */
 internal fun EmbeddedGestureUI(
     modifier: Modifier = Modifier, viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState
 ) {

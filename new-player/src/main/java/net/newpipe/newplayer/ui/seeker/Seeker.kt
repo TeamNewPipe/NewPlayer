@@ -117,6 +117,8 @@ import kotlin.math.atan2
  * appearance / behavior of this Seeker in different [Interaction]s.
  * */
 @Composable
+
+/** @hide */
 internal fun Seeker(
     modifier: Modifier = Modifier,
     state: SeekerState = rememberSeekerState(),
@@ -618,7 +620,8 @@ private fun Modifier.progressSemantics(
 
 @Preview(showBackground = true)
 @Composable
-fun SeekerPreview() {
+/** @hide */
+internal fun SeekerPreview() {
     val segments = listOf(
         Segment(name = "Intro", start = 0.1f, end = 0.3f, color = Color.Green),
         Segment(name = "Talk 1", start = 0.5f, end = 0.6f, color = Color.Cyan),

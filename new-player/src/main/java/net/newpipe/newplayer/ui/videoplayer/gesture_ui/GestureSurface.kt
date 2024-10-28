@@ -46,6 +46,8 @@ private const val MULTITAB_MODE_DELAY: Long = 300
 
 @Composable
 @OptIn(ExperimentalComposeUiApi::class)
+
+/** @hide */
 internal fun GestureSurface(
     modifier: Modifier,
     color: Color = Color.Transparent,

@@ -47,14 +47,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import net.newpipe.newplayer.Chapter
-import net.newpipe.newplayer.NewPlayerException
+import net.newpipe.newplayer.data.Chapter
+import net.newpipe.newplayer.data.NewPlayerException
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.common.Thumbnail
 import net.newpipe.newplayer.ui.common.getLocale
 import net.newpipe.newplayer.ui.common.getTimeStringFromMs
 
+
+/** @hide */
 internal fun isActiveChapter(chapterId: Int, chapters: List<Chapter>, playbackPosition: Long) : Boolean {
     assert(0 <= chapterId && chapterId < chapters.size) {
         throw NewPlayerException("Chapter Id out of bounds: id: $chapterId, chapters.size: ${chapters.size}")
@@ -67,6 +69,8 @@ internal fun isActiveChapter(chapterId: Int, chapters: List<Chapter>, playbackPo
 }
 
 @Composable
+
+/** @hide */
 internal fun ChapterItem(
     modifier: Modifier = Modifier,
     id: Int,

@@ -23,6 +23,7 @@ package net.newpipe.newplayer.ui.videoplayer.controller
 import android.app.Activity
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FitScreen
@@ -54,19 +55,31 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
-import net.newpipe.newplayer.model.EmbeddedUiConfig
-import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.InternalNewPlayerViewModel
-import net.newpipe.newplayer.model.NewPlayerViewModelDummy
-import net.newpipe.newplayer.model.UIModeState
+import net.newpipe.newplayer.logic.TrackUtils
+import net.newpipe.newplayer.ui.common.LanguageMenu
+import net.newpipe.newplayer.ui.common.LanguageMenuItem
+import net.newpipe.newplayer.uiModel.EmbeddedUiConfig
+import net.newpipe.newplayer.uiModel.NewPlayerUIState
+import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
+import net.newpipe.newplayer.uiModel.NewPlayerViewModelDummy
+import net.newpipe.newplayer.uiModel.UIModeState
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.videoplayer.pip.supportsPip
 import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
+import net.newpipe.newplayer.ui.common.showNotYetImplementedToast
+import java.util.Locale
 
 @OptIn(UnstableApi::class)
 @Composable
-internal fun DropDownMenu(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState) {
+
+/** @hide */
+internal fun VideoPlayerMenu(
+    modifier: Modifier = Modifier,
+    viewModel: InternalNewPlayerViewModel,
+    uiState: NewPlayerUIState
+) {
     var showMainMenu: Boolean by remember { mutableStateOf(false) }
+    var showLanguageMenu: Boolean by remember { mutableStateOf(false) }
 
     val pixel_density = LocalDensity.current
 
@@ -79,11 +92,13 @@ internal fun DropDownMenu(viewModel: InternalNewPlayerViewModel, uiState: NewPla
     else
         EmbeddedUiConfig.DUMMY
 
+
+
     Box {
         IconButton(onClick = {
             showMainMenu = true
             viewModel.dialogVisible(true)
-        }, modifier = Modifier.onPlaced {
+        }, modifier = modifier.onPlaced {
             offsetY = with(pixel_density) {
                 it.size.height.toDp()
             }
@@ -99,8 +114,12 @@ internal fun DropDownMenu(viewModel: InternalNewPlayerViewModel, uiState: NewPla
             expanded = showMainMenu,
             onDismissRequest = {
                 showMainMenu = false
-                viewModel.dialogVisible(false)
+                if (!showLanguageMenu)
+                    viewModel.dialogVisible(false)
             }) {
+
+            val context = LocalContext.current
+
             DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_open_in_browser)) },
                 leadingIcon = {
                     Icon(
@@ -108,7 +127,10 @@ internal fun DropDownMenu(viewModel: InternalNewPlayerViewModel, uiState: NewPla
                         contentDescription = stringResource(R.string.menu_item_open_in_browser)
                     )
                 },
-                onClick = { /*TODO*/ showMainMenu = false })
+                onClick = { /*TODO*/
+                    showNotYetImplementedToast(context)
+                    showMainMenu = false
+                })
             DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_share_timestamp)) },
                 leadingIcon = {
                     Icon(
@@ -116,7 +138,10 @@ internal fun DropDownMenu(viewModel: InternalNewPlayerViewModel, uiState: NewPla
                         contentDescription = stringResource(R.string.menu_item_share_timestamp)
                     )
                 },
-                onClick = { /*TODO*/ showMainMenu = false })
+                onClick = { /*TODO*/
+                    showNotYetImplementedToast(context)
+                    showMainMenu = false
+                })
             DropdownMenuItem(text = { Text(stringResource(R.string.audio_mode)) }, leadingIcon = {
                 Icon(
                     imageVector = Icons.Filled.Headset,
@@ -142,7 +167,7 @@ internal fun DropDownMenu(viewModel: InternalNewPlayerViewModel, uiState: NewPla
                         )
                     })
             }
-            if(uiState.uiMode.fullscreen) {
+            if (uiState.uiMode.fullscreen) {
                 DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_fit_screen)) },
                     leadingIcon = {
                         Icon(
@@ -150,7 +175,10 @@ internal fun DropDownMenu(viewModel: InternalNewPlayerViewModel, uiState: NewPla
                             contentDescription = stringResource(R.string.menu_item_fit_screen)
                         )
                     },
-                    onClick = { /*TODO*/ showMainMenu = false })
+                    onClick = { /*TODO*/
+                        showNotYetImplementedToast(context)
+                        showMainMenu = false
+                    })
             }
             DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_sub_titles)) },
                 leadingIcon = {
@@ -159,19 +187,25 @@ internal fun DropDownMenu(viewModel: InternalNewPlayerViewModel, uiState: NewPla
                         contentDescription = stringResource(R.string.menu_item_sub_titles)
                     )
                 },
-                onClick = { /*TODO*/ showMainMenu = false })
-            DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_language)) },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Translate,
-                        contentDescription = stringResource(R.string.menu_item_language)
-                    )
-                },
-                onClick = { /*TODO*/ showMainMenu = false })
+                onClick = { /*TODO*/
+                    showNotYetImplementedToast(context)
+                    showMainMenu = false
+                })
 
+            LanguageMenuItem(uiState = uiState, onClick = {
+                showLanguageMenu = true
+                showMainMenu = false
+            })
         }
-    }
 
+        LanguageMenu(
+            uiState = uiState,
+            viewModel = viewModel,
+            isVisible = showLanguageMenu,
+            makeInvisible = {
+                showLanguageMenu = false
+            })
+    }
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -184,7 +218,7 @@ internal fun DropDownMenu(viewModel: InternalNewPlayerViewModel, uiState: NewPla
 private fun VideoPlayerControllerDropDownPreview() {
     VideoPlayerTheme {
         Box(Modifier.fillMaxSize()) {
-            DropDownMenu(NewPlayerViewModelDummy(), NewPlayerUIState.DUMMY)
+            VideoPlayerMenu(viewModel = NewPlayerViewModelDummy(), uiState = NewPlayerUIState.DUMMY)
         }
     }
 }

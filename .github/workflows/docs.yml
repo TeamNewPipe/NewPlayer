@@ -1,0 +1,38 @@
+name: Build and deploy Kotlin docs
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  # The generated docs are written to the `gh-pages` branch.
+  contents: write
+
+jobs:
+  build-and-deploy-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+
+      - name: Build DokkaDocs
+        run: ./gradlew dokkaHtml
+
+      - name: Deploy DokkaDocs
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./new-player/build/dokka/html

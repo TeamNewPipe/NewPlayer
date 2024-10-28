@@ -26,7 +26,10 @@ import android.os.Bundle
 import androidx.media3.session.CommandButton
 import androidx.media3.session.SessionCommand
 import net.newpipe.newplayer.R
+import net.newpipe.newplayer.NewPlayerImpl
 
+
+/** @hide */
 internal data class CustomCommand(
     val action: String,
     val commandButton: CommandButton
@@ -36,6 +39,15 @@ internal data class CustomCommand(
     }
 }
 
+/**
+ * There could be more custom commands, other then just "Close".
+ * In order to match NewPipe's current implementation there could also be a mechanism for
+ * the [NewPlayerImpl] object that allows you to define which commands should be visible.
+ * This way the user can decide which additional commands should be shown.
+ *
+ *  @hide
+ */
+/** @hide */
 internal fun buildCustomCommandList(context: Context) = listOf(
     CustomCommand(
         CustomCommand.NEW_PLAYER_NOTIFICATION_COMMAND_CLOSE_PLAYBACK,

@@ -62,7 +62,7 @@ import androidx.compose.ui.unit.sp
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
-import net.newpipe.newplayer.model.NewPlayerUIState
+import net.newpipe.newplayer.uiModel.NewPlayerUIState
 import net.newpipe.newplayer.ui.videoplayer.CONTROLLER_UI_BACKGROUND_COLOR
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.ui.common.ReorderHapticFeedback
@@ -75,6 +75,8 @@ import sh.calvin.reorderable.ReorderableCollectionItemScope
 @androidx.annotation.OptIn(UnstableApi::class)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+
+/** @hide */
 internal fun StreamItem(
     modifier: Modifier = Modifier,
     playlistItem: MediaItem,

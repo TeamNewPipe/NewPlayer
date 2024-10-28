@@ -1,3 +1,7 @@
+import org.jetbrains.dokka.base.DokkaBase
+import org.jetbrains.dokka.base.DokkaBaseConfiguration
+import org.jetbrains.dokka.gradle.DokkaTask
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -5,6 +9,7 @@ plugins {
     alias(libs.plugins.androidHilt)
     alias(libs.plugins.kotlinParcelize)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.dokka.base)
 }
 
 android {
@@ -79,4 +84,13 @@ dependencies {
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+}
+
+
+tasks.withType<DokkaTask>().configureEach {
+    pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
+        customAssets = listOf(file("assets/logo-icon.png"))
+        customStyleSheets = listOf(file("assets/logo-styles.css"))
+        footerMessage = "(c) 2024 NewPipe e.V."
+    }
 }

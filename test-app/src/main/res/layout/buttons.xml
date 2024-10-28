@@ -87,4 +87,12 @@
         android:backgroundTint="@color/material_dynamic_primary50"
         android:text="Add Yt Test Video" />
 
+    <Button
+        android:id="@+id/add_faulty_stream"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:backgroundTint="@color/material_dynamic_primary50"
+        android:text="Add Faulty Stream" />
+
 </LinearLayout>

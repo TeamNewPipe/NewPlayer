@@ -25,12 +25,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalView
 
+
+/** @hide */
 internal enum class ReorderHapticFeedbackType {
     START,
     MOVE,
     END,
 }
 
+
+/** @hide */
 internal open class ReorderHapticFeedback {
     open fun performHapticFeedback(type: ReorderHapticFeedbackType) {
         // no-op
@@ -38,6 +42,8 @@ internal open class ReorderHapticFeedback {
 }
 
 @Composable
+
+/** @hide */
 internal fun rememberReorderHapticFeedback(): ReorderHapticFeedback {
     val view = LocalView.current
 

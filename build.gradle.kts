@@ -1,3 +1,7 @@
+import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.dokka.base.DokkaBase
+import org.jetbrains.dokka.base.DokkaBaseConfiguration
+
 /* NewPlayer
  *
  * @author Christian Schabesberger
@@ -26,6 +30,7 @@ plugins {
     alias(libs.plugins.kotlinParcelize) apply false
     alias(libs.plugins.composeCompiler) apply false
     alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.dokka.base) apply false
     `maven-publish`
 }
 
@@ -38,6 +43,14 @@ afterEvaluate {
                 version = "0.1-DEVEL"
             }
         }
+    }
+}
+
+
+buildscript {
+    dependencies {
+        classpath(libs.dokka.base)
+        classpath(libs.dokka.android)
     }
 }
 

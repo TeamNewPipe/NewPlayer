@@ -47,12 +47,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.graphics.toRect
 import androidx.lifecycle.Lifecycle
 import androidx.media3.common.util.UnstableApi
-import net.newpipe.newplayer.model.NewPlayerUIState
-import net.newpipe.newplayer.model.InternalNewPlayerViewModel
+import net.newpipe.newplayer.uiModel.NewPlayerUIState
+import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
 import net.newpipe.newplayer.ui.selection_ui.StreamSelectUI
 import androidx.lifecycle.LifecycleEventObserver
-import net.newpipe.newplayer.NewPlayerException
-import net.newpipe.newplayer.model.EmbeddedUiConfig
+import net.newpipe.newplayer.data.NewPlayerException
+import net.newpipe.newplayer.uiModel.EmbeddedUiConfig
 import net.newpipe.newplayer.ui.selection_ui.ChapterSelectUI
 import net.newpipe.newplayer.ui.videoplayer.pip.getPipParams
 import net.newpipe.newplayer.ui.videoplayer.pip.supportsPip
@@ -60,6 +60,8 @@ import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
 
 @OptIn(UnstableApi::class)
 @Composable
+
+/** @hide */
 internal fun VideoPlayerUi(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState) {
     val embeddedUiConfig = if (LocalContext.current is Activity)
         getEmbeddedUiConfig(activity = LocalContext.current as Activity)
@@ -98,6 +100,10 @@ internal fun VideoPlayerUi(viewModel: InternalNewPlayerViewModel, uiState: NewPl
     }
 
     LaunchedEffect(uiState.enteringPip) {
+        // TODO what if supportsPip returns false? Shouldn't the enteringPip flag be cleared?
+        //  Probably the supportsPip check can be done in Application and then be available
+        //  throughout the app execution, so that the check can be done in the view model and
+        //  PIP state changes can be ignored.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && supportsPip(activity))
             if (uiState.enteringPip) {
                 val pipParams = getPipParams(uiState.contentRatio, videoViewBounds)
