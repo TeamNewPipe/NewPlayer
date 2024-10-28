@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>PlayMode</title>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
+</head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+                    <a class="library-name--link" href="../../../index.html">
+                            new-player
+                    </a>
+            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":new-player:dokkaHtml/release">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageIds="new-player::net.newpipe.newplayer.data/PlayMode///PointingToDeclaration//-1850485088">
+  <div class="breadcrumbs"><a href="../../../index.html">new-player</a><span class="delimiter">/</span><a href="../index.html">net.newpipe.newplayer.data</a><span class="delimiter">/</span><span class="current">PlayMode</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Play</span><wbr></wbr><span><span>Mode</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">enum </span><a href="index.html">PlayMode</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="index.html">PlayMode</a><span class="token operator">&gt; </span></div><p class="paragraph">Depicts the playback mode that NewPlayer is currently in. Or in other words this tells how NewPlayer is displaying media.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button><button class="section-tab" data-togglable="ENTRY">Entries</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="ENTRY">
+        <h2 class="">Entries</h2>
+        <div class="table"><a data-name="1169499672%2FClasslikes%2F-1850485088" anchor-label="IDLE" id="1169499672%2FClasslikes%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-d-l-e/index.html">IDLE</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1169499672%2FClasslikes%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><div class="block"><a href="-i-d-l-e/index.html">IDLE</a></div></div><div class="brief "><p class="paragraph">NewPlayer is currently idling and is not displaying anything. If NewPlayer is in this mode <a href="../../net.newpipe.newplayer.ui/-new-player-u-i.html">NewPlayerUI</a> will show a loading circle on a black background. If this should not be visible please hide ore remove <a href="../../net.newpipe.newplayer.ui/-new-player-u-i.html">NewPlayerUI</a> when NewPlayer switches to IDLE mode.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="973793578%2FClasslikes%2F-1850485088" anchor-label="EMBEDDED_VIDEO" id="973793578%2FClasslikes%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-e-m-b-e-d-d-e-d_-v-i-d-e-o/index.html">EMBEDDED_VIDEO</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="973793578%2FClasslikes%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><div class="block"><a href="-e-m-b-e-d-d-e-d_-v-i-d-e-o/index.html">EMBEDDED_VIDEO</a></div></div><div class="brief "><p class="paragraph">Video is played in an embedded view. <a href="https://github.com/TeamNewPipe/NewPlayer/blob/master/misc/screenshots/373686583-1164cf7c-66eb-48be-aeda-55e6e6294cf1.png">See Screenshot</a></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2125297189%2FClasslikes%2F-1850485088" anchor-label="FULLSCREEN_VIDEO" id="-2125297189%2FClasslikes%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-f-u-l-l-s-c-r-e-e-n_-v-i-d-e-o/index.html">FULLSCREEN_VIDEO</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2125297189%2FClasslikes%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><div class="block"><a href="-f-u-l-l-s-c-r-e-e-n_-v-i-d-e-o/index.html">FULLSCREEN_VIDEO</a></div></div><div class="brief "><p class="paragraph">Video is played in fullscreen mode. <a href="https://github.com/TeamNewPipe/NewPlayer/blob/master/misc/screenshots/373685724-42609e51-6bf7-4008-b084-a59ce111f3c1.png">See Screenshot</a></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-327420133%2FClasslikes%2F-1850485088" anchor-label="PIP" id="-327420133%2FClasslikes%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-i-p/index.html">PIP</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-327420133%2FClasslikes%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><div class="block"><a href="-p-i-p/index.html">PIP</a></div></div><div class="brief "><p class="paragraph">Video is displayed in Picture in Picture mode <a href="https://github.com/TeamNewPipe/NewPlayer/blob/master/misc/screenshots/373691456-4aaff87d-dbf8-4877-866b-60e6fc05ea6a.png">see Screenshot</a></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-664190514%2FClasslikes%2F-1850485088" anchor-label="BACKGROUND_VIDEO" id="-664190514%2FClasslikes%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-b-a-c-k-g-r-o-u-n-d_-v-i-d-e-o/index.html">BACKGROUND_VIDEO</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-664190514%2FClasslikes%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><div class="block"><a href="-b-a-c-k-g-r-o-u-n-d_-v-i-d-e-o/index.html">BACKGROUND_VIDEO</a></div></div><div class="brief "><p class="paragraph">TODO: Obsolete and does not work. Remove this!!!</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-651545623%2FClasslikes%2F-1850485088" anchor-label="BACKGROUND_AUDIO" id="-651545623%2FClasslikes%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-b-a-c-k-g-r-o-u-n-d_-a-u-d-i-o/index.html">BACKGROUND_AUDIO</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-651545623%2FClasslikes%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><div class="block"><a href="-b-a-c-k-g-r-o-u-n-d_-a-u-d-i-o/index.html">BACKGROUND_AUDIO</a></div></div><div class="brief "><p class="paragraph">TODO: Obsolete and does not work. Remove this!!!</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2112652298%2FClasslikes%2F-1850485088" anchor-label="FULLSCREEN_AUDIO" id="-2112652298%2FClasslikes%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-f-u-l-l-s-c-r-e-e-n_-a-u-d-i-o/index.html">FULLSCREEN_AUDIO</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2112652298%2FClasslikes%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><div class="block"><a href="-f-u-l-l-s-c-r-e-e-n_-a-u-d-i-o/index.html">FULLSCREEN_AUDIO</a></div></div><div class="brief "><p class="paragraph">Plays a Video/Audio stream while showing the audio player ui. <a href="https://github.com/TeamNewPipe/NewPlayer/blob/master/misc/screenshots/373688583-9011749c-3aec-4bf7-a368-40000c84f8e3.png">See Screenshot</a> <a href="https://github.com/TeamNewPipe/NewPlayer/blob/master/misc/screenshots/373689058-9fc27dfd-7f89-48de-b0ff-cd6e9bd4fdbd.png">See Screenshot in landscape</a></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="986438469%2FClasslikes%2F-1850485088" anchor-label="EMBEDDED_AUDIO" id="986438469%2FClasslikes%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-e-m-b-e-d-d-e-d_-a-u-d-i-o/index.html">EMBEDDED_AUDIO</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="986438469%2FClasslikes%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><div class="block"><a href="-e-m-b-e-d-d-e-d_-a-u-d-i-o/index.html">EMBEDDED_AUDIO</a></div></div><div class="brief "><p class="paragraph">Shows the embedded UI for Audio playback of a Video/Audio stream.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="-1050996002%2FProperties%2F-1850485088" anchor-label="entries" id="-1050996002%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="entries.html"><span><span>entries</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1050996002%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="entries.html">entries</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.enums/-enum-entries/index.html">EnumEntries</a><span class="token operator">&lt;</span><a href="index.html">PlayMode</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Returns a representation of an immutable list of all enum entries, in the order they're declared.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-372974862%2FProperties%2F-1850485088" anchor-label="name" id="-372974862%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../net.newpipe.newplayer.uiModel/-u-i-mode-state/-a-u-d-i-o_-s-t-r-e-a-m_-s-e-l-e-c-t/index.html#-372974862%2FProperties%2F-1850485088"><span><span>name</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-372974862%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="../../net.newpipe.newplayer.uiModel/-u-i-mode-state/-a-u-d-i-o_-s-t-r-e-a-m_-s-e-l-e-c-t/index.html#-372974862%2FProperties%2F-1850485088">name</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-739389684%2FProperties%2F-1850485088" anchor-label="ordinal" id="-739389684%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../net.newpipe.newplayer.uiModel/-u-i-mode-state/-a-u-d-i-o_-s-t-r-e-a-m_-s-e-l-e-c-t/index.html#-739389684%2FProperties%2F-1850485088"><span><span>ordinal</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-739389684%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="../../net.newpipe.newplayer.uiModel/-u-i-mode-state/-a-u-d-i-o_-s-t-r-e-a-m_-s-e-l-e-c-t/index.html#-739389684%2FProperties%2F-1850485088">ordinal</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-19733634%2FFunctions%2F-1850485088" anchor-label="valueOf" id="-19733634%2FFunctions%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="value-of.html"><span>value</span><wbr></wbr><span><span>Of</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-19733634%2FFunctions%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="value-of.html"><span class="token function">valueOf</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">PlayMode</a></div><div class="brief "><p class="paragraph">Returns the enum constant of this type with the specified name. The string must match exactly an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1910930166%2FFunctions%2F-1850485088" anchor-label="values" id="-1910930166%2FFunctions%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="values.html"><span><span>values</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1910930166%2FFunctions%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="values.html"><span class="token function">values</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><a href="index.html">PlayMode</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Returns an array containing the constants of this enum type, in the order they're declared.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

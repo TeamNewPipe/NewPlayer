@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>NewPlayerUIState</title>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
+</head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+                    <a class="library-name--link" href="../../../index.html">
+                            new-player
+                    </a>
+            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":new-player:dokkaHtml/release">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageIds="new-player::net.newpipe.newplayer.uiModel/NewPlayerUIState///PointingToDeclaration//-1850485088">
+  <div class="breadcrumbs"><a href="../../../index.html">new-player</a><span class="delimiter">/</span><a href="../index.html">net.newpipe.newplayer.uiModel</a><span class="delimiter">/</span><span class="current">NewPlayerUIState</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>New</span><wbr></wbr><span>Player</span><wbr></wbr><span><span>UIState</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/common/util/UnstableApi.html"><span class="token annotation builtin">UnstableApi</span></a></div></div><span class="token keyword">data </span><span class="token keyword">class </span><a href="index.html">NewPlayerUIState</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>uiMode<span class="token operator">: </span><a href="../-u-i-mode-state/index.html">UIModeState</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>playing<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>contentRatio<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>embeddedUiRatio<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>contentFitMode<span class="token operator">: </span><a href="../../net.newpipe.newplayer.ui/-content-scale/index.html">ContentScale</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>seekerPosition<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>bufferedPercentage<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>isLoading<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>durationInMs<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>playbackPositionInMs<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>playbackPositionInPlaylistMs<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>fastSeekSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>soundVolume<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>brightness<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>embeddedUiConfig<span class="token operator">: </span><a href="../-embedded-ui-config/index.html">EmbeddedUiConfig</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>playList<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/common/MediaItem.html">MediaItem</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>chapters<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../net.newpipe.newplayer.data/-chapter/index.html">Chapter</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>shuffleEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>repeatMode<span class="token operator">: </span><a href="../../net.newpipe.newplayer.data/-repeat-mode/index.html">RepeatMode</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>playListDurationInS<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>currentlyPlaying<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/media3/common/MediaItem.html">MediaItem</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>currentPlaylistItemIndex<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>currentlyAvailableTracks<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../net.newpipe.newplayer.data/-stream-track/index.html">StreamTrack</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>currentlyPlayingTracks<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../net.newpipe.newplayer.data/-stream-track/index.html">StreamTrack</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>enteringPip<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>currentSeekPreviewThumbnail<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/ImageBitmap.html">ImageBitmap</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>seekPreviewVisible<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span></div><p class="paragraph">Shows the state the UI is rendering. In the manner of MVVM, <a href="../-new-player-view-model/index.html">NewPlayerViewModel</a> sends this state over to <a href="../../net.newpipe.newplayer.ui/-new-player-u-i.html">NewPlayerUI</a>, to tell it what should be rendered.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="-1922714544%2FConstructors%2F-1850485088" anchor-label="NewPlayerUIState" id="-1922714544%2FConstructors%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-new-player-u-i-state.html"><span>New</span><wbr></wbr><span>Player</span><wbr></wbr><span><span>UIState</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1922714544%2FConstructors%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">uiMode<span class="token operator">: </span><a href="../-u-i-mode-state/index.html">UIModeState</a><span class="token punctuation">, </span></span><span class="parameter ">playing<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">contentRatio<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">, </span></span><span class="parameter ">embeddedUiRatio<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">, </span></span><span class="parameter ">contentFitMode<span class="token operator">: </span><a href="../../net.newpipe.newplayer.ui/-content-scale/index.html">ContentScale</a><span class="token punctuation">, </span></span><span class="parameter ">seekerPosition<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">, </span></span><span class="parameter ">bufferedPercentage<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">, </span></span><span class="parameter ">isLoading<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">durationInMs<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">, </span></span><span class="parameter ">playbackPositionInMs<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">, </span></span><span class="parameter ">playbackPositionInPlaylistMs<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">, </span></span><span class="parameter ">fastSeekSeconds<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">soundVolume<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">, </span></span><span class="parameter ">brightness<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">embeddedUiConfig<span class="token operator">: </span><a href="../-embedded-ui-config/index.html">EmbeddedUiConfig</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">playList<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/common/MediaItem.html">MediaItem</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">chapters<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../net.newpipe.newplayer.data/-chapter/index.html">Chapter</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">shuffleEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">repeatMode<span class="token operator">: </span><a href="../../net.newpipe.newplayer.data/-repeat-mode/index.html">RepeatMode</a><span class="token punctuation">, </span></span><span class="parameter ">playListDurationInS<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">currentlyPlaying<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/media3/common/MediaItem.html">MediaItem</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">currentPlaylistItemIndex<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">currentlyAvailableTracks<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../net.newpipe.newplayer.data/-stream-track/index.html">StreamTrack</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">currentlyPlayingTracks<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../net.newpipe.newplayer.data/-stream-track/index.html">StreamTrack</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">enteringPip<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">currentSeekPreviewThumbnail<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/ImageBitmap.html">ImageBitmap</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">seekPreviewVisible<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="1710364671%2FClasslikes%2F-1850485088" anchor-label="Companion" id="1710364671%2FClasslikes%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-companion/index.html"><span><span>Companion</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1710364671%2FClasslikes%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">object </span><a href="-companion/index.html">Companion</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="2107179249%2FProperties%2F-1850485088" anchor-label="brightness" id="2107179249%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="brightness.html"><span><span>brightness</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2107179249%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="brightness.html">brightness</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The brightness volume. Might be null if the system is in control of the brightness.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1772286871%2FProperties%2F-1850485088" anchor-label="bufferedPercentage" id="-1772286871%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="buffered-percentage.html"><span>buffered</span><wbr></wbr><span><span>Percentage</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1772286871%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="buffered-percentage.html">bufferedPercentage</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a></div><div class="brief "><p class="paragraph">The amount of buffered video/audio material, Whereas bufferedPercentage ∈ 0; 1.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1879567780%2FProperties%2F-1850485088" anchor-label="chapters" id="-1879567780%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="chapters.html"><span><span>chapters</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1879567780%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="chapters.html">chapters</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../net.newpipe.newplayer.data/-chapter/index.html">Chapter</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">The chapters provided by the currently playing item. Might be empty if the item does not have chapters or when the chapter didn't load up yet.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1130735769%2FProperties%2F-1850485088" anchor-label="contentFitMode" id="-1130735769%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="content-fit-mode.html"><span>content</span><wbr></wbr><span>Fit</span><wbr></wbr><span><span>Mode</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1130735769%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="content-fit-mode.html">contentFitMode</a><span class="token operator">: </span><a href="../../net.newpipe.newplayer.ui/-content-scale/index.html">ContentScale</a></div><div class="brief "><p class="paragraph">Depicts weather the video should fit inside, be cropped or stretched.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2061335536%2FProperties%2F-1850485088" anchor-label="contentRatio" id="-2061335536%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="content-ratio.html"><span>content</span><wbr></wbr><span><span>Ratio</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2061335536%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="content-ratio.html">contentRatio</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a></div><div class="brief "><p class="paragraph">The content ratio of the currently playing video.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="446629559%2FProperties%2F-1850485088" anchor-label="currentlyAvailableTracks" id="446629559%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="currently-available-tracks.html"><span>currently</span><wbr></wbr><span>Available</span><wbr></wbr><span><span>Tracks</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="446629559%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="currently-available-tracks.html">currentlyAvailableTracks</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../net.newpipe.newplayer.data/-stream-track/index.html">StreamTrack</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">The tracks that are available for the currently playing item.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1359912154%2FProperties%2F-1850485088" anchor-label="currentlyPlaying" id="1359912154%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="currently-playing.html"><span>currently</span><wbr></wbr><span><span>Playing</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1359912154%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="currently-playing.html">currentlyPlaying</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/media3/common/MediaItem.html">MediaItem</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The media item that is currently playing.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="958954354%2FProperties%2F-1850485088" anchor-label="currentlyPlayingTracks" id="958954354%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="currently-playing-tracks.html"><span>currently</span><wbr></wbr><span>Playing</span><wbr></wbr><span><span>Tracks</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="958954354%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="currently-playing-tracks.html">currentlyPlayingTracks</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../net.newpipe.newplayer.data/-stream-track/index.html">StreamTrack</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">The tracks that are currently playing. in other words these tracks are actively playing back and are getting muxed together by ExoPlayer.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="91828878%2FProperties%2F-1850485088" anchor-label="currentPlaylistItemIndex" id="91828878%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="current-playlist-item-index.html"><span>current</span><wbr></wbr><span>Playlist</span><wbr></wbr><span>Item</span><wbr></wbr><span><span>Index</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="91828878%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="current-playlist-item-index.html">currentPlaylistItemIndex</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">The index into the <a href="play-list.html">playList</a>, that depicts the currently playing item.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-258811933%2FProperties%2F-1850485088" anchor-label="currentSeekPreviewThumbnail" id="-258811933%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="current-seek-preview-thumbnail.html"><span>current</span><wbr></wbr><span>Seek</span><wbr></wbr><span>Preview</span><wbr></wbr><span><span>Thumbnail</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-258811933%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="current-seek-preview-thumbnail.html">currentSeekPreviewThumbnail</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/ImageBitmap.html">ImageBitmap</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The seeker preview thumbnail that should be visible. This updates if the user uses the seeker thumb to seek through a stream. If null no thumbnail is available.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="58366563%2FProperties%2F-1850485088" anchor-label="durationInMs" id="58366563%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="duration-in-ms.html"><span>duration</span><wbr></wbr><span>In</span><wbr></wbr><span><span>Ms</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="58366563%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="duration-in-ms.html">durationInMs</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></div><div class="brief "><p class="paragraph">The duration of the currently playing stream in milliseconds.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="895385794%2FProperties%2F-1850485088" anchor-label="embeddedUiConfig" id="895385794%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="embedded-ui-config.html"><span>embedded</span><wbr></wbr><span>Ui</span><wbr></wbr><span><span>Config</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="895385794%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="embedded-ui-config.html">embeddedUiConfig</a><span class="token operator">: </span><a href="../-embedded-ui-config/index.html">EmbeddedUiConfig</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">This is used to restore several values when switching back from a fullscreen view to an embedded screen view. Such values include the color scheme of the system info bar, the screen brightness and the default screen orientation.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1836087083%2FProperties%2F-1850485088" anchor-label="embeddedUiRatio" id="1836087083%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="embedded-ui-ratio.html"><span>embedded</span><wbr></wbr><span>Ui</span><wbr></wbr><span><span>Ratio</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1836087083%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="embedded-ui-ratio.html">embeddedUiRatio</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a></div><div class="brief "><p class="paragraph">The ratio of the embedded UI. This might differ from the content ratio.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2011042453%2FProperties%2F-1850485088" anchor-label="enteringPip" id="-2011042453%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="entering-pip.html"><span>entering</span><wbr></wbr><span><span>Pip</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2011042453%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="entering-pip.html">enteringPip</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Is the Ui currently transitioning to PiP mode.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1125962221%2FProperties%2F-1850485088" anchor-label="fastSeekSeconds" id="1125962221%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="fast-seek-seconds.html"><span>fast</span><wbr></wbr><span>Seek</span><wbr></wbr><span><span>Seconds</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1125962221%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="fast-seek-seconds.html">fastSeekSeconds</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Amount of seconds on step of fast seek can take.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2142508474%2FProperties%2F-1850485088" anchor-label="isLoading" id="-2142508474%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-loading.html"><span>is</span><wbr></wbr><span><span>Loading</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2142508474%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="is-loading.html">isLoading</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">The same as ExoPlayers isLoading. See <a href="https://developer.android.com/reference/kotlin/androidx/media3/common/Player.html#isloading">Player.isLoading</a></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1220091027%2FProperties%2F-1850485088" anchor-label="playbackPositionInMs" id="1220091027%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="playback-position-in-ms.html"><span>playback</span><wbr></wbr><span>Position</span><wbr></wbr><span>In</span><wbr></wbr><span><span>Ms</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1220091027%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="playback-position-in-ms.html">playbackPositionInMs</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></div><div class="brief "><p class="paragraph">The playback position of the currently playing stream in milliseconds. This only updates if the progress updater job runs within <a href="../-new-player-view-model/index.html">NewPlayerViewModel</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1272083297%2FProperties%2F-1850485088" anchor-label="playbackPositionInPlaylistMs" id="1272083297%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="playback-position-in-playlist-ms.html"><span>playback</span><wbr></wbr><span>Position</span><wbr></wbr><span>In</span><wbr></wbr><span>Playlist</span><wbr></wbr><span><span>Ms</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1272083297%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="playback-position-in-playlist-ms.html">playbackPositionInPlaylistMs</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></div><div class="brief "><p class="paragraph">The playback position within the whole currently playing playlist.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1251350262%2FProperties%2F-1850485088" anchor-label="playing" id="-1251350262%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="playing.html"><span><span>playing</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1251350262%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="playing.html">playing</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Is the stream currently playing or not.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1531808848%2FProperties%2F-1850485088" anchor-label="playList" id="-1531808848%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="play-list.html"><span>play</span><wbr></wbr><span><span>List</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1531808848%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="play-list.html">playList</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/common/MediaItem.html">MediaItem</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">The currently playing playlist as provided by ExoPlayer. However, it might sometimes drift from the playlist provided by exoplayer. This can happen when the user reorders items. The playlist will then immediately reflect the new state of the list, even though that state was not yet confirmed by exoplayer. If this list could not drift you would expect the UI to be jittery upon item reordering.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1471968848%2FProperties%2F-1850485088" anchor-label="playListDurationInS" id="-1471968848%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="play-list-duration-in-s.html"><span>play</span><wbr></wbr><span>List</span><wbr></wbr><span>Duration</span><wbr></wbr><span>In</span><wbr></wbr><span><span>S</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1471968848%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="play-list-duration-in-s.html">playListDurationInS</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Duration of the whole currently playing playlist</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1038843908%2FProperties%2F-1850485088" anchor-label="repeatMode" id="1038843908%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="repeat-mode.html"><span>repeat</span><wbr></wbr><span><span>Mode</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1038843908%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="repeat-mode.html">repeatMode</a><span class="token operator">: </span><a href="../../net.newpipe.newplayer.data/-repeat-mode/index.html">RepeatMode</a></div><div class="brief "><p class="paragraph">Same as <a href="../../net.newpipe.newplayer/-new-player/repeat-mode.html">NewPlayer.repeatMode</a></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1052452876%2FProperties%2F-1850485088" anchor-label="seekerPosition" id="-1052452876%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="seeker-position.html"><span>seeker</span><wbr></wbr><span><span>Position</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1052452876%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="seeker-position.html">seekerPosition</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a></div><div class="brief "><p class="paragraph">The position of the seeker thumb. Whereas seekerPosition ∈ 0; 1.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1704819008%2FProperties%2F-1850485088" anchor-label="seekPreviewVisible" id="1704819008%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="seek-preview-visible.html"><span>seek</span><wbr></wbr><span>Preview</span><wbr></wbr><span><span>Visible</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1704819008%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="seek-preview-visible.html">seekPreviewVisible</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Depicts weather the seeker preview thumbnail should be visible or not.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-90456934%2FProperties%2F-1850485088" anchor-label="shuffleEnabled" id="-90456934%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="shuffle-enabled.html"><span>shuffle</span><wbr></wbr><span><span>Enabled</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-90456934%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="shuffle-enabled.html">shuffleEnabled</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Same as <a href="../../net.newpipe.newplayer/-new-player/shuffle.html">NewPlayer.shuffle</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1654303503%2FProperties%2F-1850485088" anchor-label="soundVolume" id="1654303503%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="sound-volume.html"><span>sound</span><wbr></wbr><span><span>Volume</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1654303503%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="sound-volume.html">soundVolume</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a></div><div class="brief "><p class="paragraph">The current sound volume.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1726384171%2FProperties%2F-1850485088" anchor-label="uiMode" id="1726384171%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="ui-mode.html"><span>ui</span><wbr></wbr><span><span>Mode</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1726384171%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="ui-mode.html">uiMode</a><span class="token operator">: </span><a href="../-u-i-mode-state/index.html">UIModeState</a></div><div class="brief "><p class="paragraph">Depicts which screen of NewPlayer's UI should be visible.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

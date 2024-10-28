@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>NewPlayerViewModel</title>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
+</head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+                    <a class="library-name--link" href="../../../index.html">
+                            new-player
+                    </a>
+            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":new-player:dokkaHtml/release">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageIds="new-player::net.newpipe.newplayer.uiModel/NewPlayerViewModel///PointingToDeclaration//-1850485088">
+  <div class="breadcrumbs"><a href="../../../index.html">new-player</a><span class="delimiter">/</span><a href="../index.html">net.newpipe.newplayer.uiModel</a><span class="delimiter">/</span><span class="current">NewPlayerViewModel</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>New</span><wbr></wbr><span>Player</span><wbr></wbr><span>View</span><wbr></wbr><span><span>Model</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">NewPlayerViewModel</a></div><p class="paragraph">The NewPlayerViewModel must live and be owned by an Activity context.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="595100590%2FProperties%2F-1850485088" anchor-label="contentFitMode" id="595100590%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="content-fit-mode.html"><span>content</span><wbr></wbr><span>Fit</span><wbr></wbr><span><span>Mode</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="595100590%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="content-fit-mode.html">contentFitMode</a><span class="token operator">: </span><a href="../../net.newpipe.newplayer.ui/-content-scale/index.html">ContentScale</a></div><div class="brief "><p class="paragraph">Depicts weather the picture of the video should be stretched, fit inside or be cropped. You can set it yourself, but <a href="../../net.newpipe.newplayer.ui/-new-player-u-i.html">NewPlayerUI</a> can also change it.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="563018897%2FProperties%2F-1850485088" anchor-label="embeddedPlayerDraggedDownBy" id="563018897%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="embedded-player-dragged-down-by.html"><span>embedded</span><wbr></wbr><span>Player</span><wbr></wbr><span>Dragged</span><wbr></wbr><span>Down</span><wbr></wbr><span><span>By</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="563018897%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="embedded-player-dragged-down-by.html">embeddedPlayerDraggedDownBy</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/SharedFlow///PointingToDeclaration/">SharedFlow</span><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">If the user dragged down the embedded video or audio player. This callback will tell you how far the user dragged down. Keep in mind that the user can also decide to drag the <a href="../../net.newpipe.newplayer.ui/-new-player-u-i.html">NewPlayerUI</a> up again. If the <a href="../../net.newpipe.newplayer.ui/-new-player-u-i.html">NewPlayerUI</a> is not dragged up to its original position you should take over control and maybe make the <a href="../../net.newpipe.newplayer.ui/-new-player-u-i.html">NewPlayerUI</a> snap to the bottom of the screen to make space for your UI.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-344123248%2FProperties%2F-1850485088" anchor-label="newPlayer" id="-344123248%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="new-player.html"><span>new</span><wbr></wbr><span><span>Player</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-344123248%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="new-player.html">newPlayer</a><span class="token operator">: </span><a href="../../net.newpipe.newplayer/-new-player/index.html">NewPlayer</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The current instance of <a href="../../net.newpipe.newplayer/-new-player/index.html">NewPlayer</a>. If set to null the <a href="../../net.newpipe.newplayer.ui/-new-player-u-i.html">NewPlayerUI</a> instance which the viewModel talks too will display the same as if <a href="../../net.newpipe.newplayer/-new-player/index.html">NewPlayer</a> was in <a href="../../net.newpipe.newplayer.data/-play-mode/-i-d-l-e/index.html">IDLE</a> mode.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-485209675%2FProperties%2F-1850485088" anchor-label="onBackPressed" id="-485209675%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-back-pressed.html"><span>on</span><wbr></wbr><span>Back</span><wbr></wbr><span><span>Pressed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-485209675%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="on-back-pressed.html">onBackPressed</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/SharedFlow///PointingToDeclaration/">SharedFlow</span><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph"><a href="../../net.newpipe.newplayer.ui/-new-player-u-i.html">NewPlayerUI</a> will use some back press events for its own navigation purposes. If the viewModel decides that a back press event should not be handled by itself. It will forward the event to you through this callback.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-853442732%2FProperties%2F-1850485088" anchor-label="uiState" id="-853442732%2FProperties%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="ui-state.html"><span>ui</span><wbr></wbr><span><span>State</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-853442732%2FProperties%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="ui-state.html">uiState</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/StateFlow///PointingToDeclaration/">StateFlow</span><span class="token operator">&lt;</span><a href="../-new-player-u-i-state/index.html">NewPlayerUIState</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">This represents the state the UI is in. <a href="../../net.newpipe.newplayer.ui/-new-player-u-i.html">NewPlayerUI</a> will basically render out that state. You can make your UI also listen to changes to this state. This is especially helpful for switching to or from fullscreen or to or from PiP mode.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="1061190463%2FFunctions%2F-1850485088" anchor-label="onPictureInPictureModeChanged" id="1061190463%2FFunctions%2F-1850485088" data-filterable-set=":new-player:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":new-player:dokkaHtml/release" data-filterable-set=":new-player:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-picture-in-picture-mode-changed.html"><span>on</span><wbr></wbr><span>Picture</span><wbr></wbr><span>In</span><wbr></wbr><span>Picture</span><wbr></wbr><span>Mode</span><wbr></wbr><span><span>Changed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1061190463%2FFunctions%2F-1850485088"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":new-player:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-picture-in-picture-mode-changed.html"><span class="token function">onPictureInPictureModeChanged</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isPictureInPictureMode<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">This is something you have to call in the Activity that should host the <a href="../../net.newpipe.newplayer.ui/-new-player-u-i.html">NewPlayerUI</a>. See the <a href="https://github.com/TeamNewPipe/NewPlayer/blob/master/test-app/src/main/java/net/newpipe/newplayer/testapp/MainActivity.kt">example app's</a> main activity to find out how to use this.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
