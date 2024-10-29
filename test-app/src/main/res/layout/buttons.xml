@@ -60,7 +60,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:backgroundTint="@color/material_dynamic_primary50"
         android:text="Append 6502 Stream" />
 
     <Button
@@ -68,7 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:backgroundTint="@color/material_dynamic_primary50"
+        android:backgroundTint="#FF5722"
         android:text="Append IMU Stream" />
 
     <Button
@@ -76,7 +75,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:backgroundTint="@color/material_dynamic_primary50"
+        android:backgroundTint="#FF5722"
         android:text="Append Portrait Stream" />
 
     <Button
@@ -84,7 +83,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:backgroundTint="@color/material_dynamic_primary50"
+        android:backgroundTint="#FF5722"
         android:text="Add Yt Test Video" />
 
     <Button
@@ -92,7 +91,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:backgroundTint="@color/material_dynamic_primary50"
+        android:backgroundTint="#FF5722"
         android:text="Add Faulty Stream" />
 
 </LinearLayout>
