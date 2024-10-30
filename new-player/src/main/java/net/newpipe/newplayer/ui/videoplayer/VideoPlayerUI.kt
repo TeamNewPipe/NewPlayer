@@ -153,7 +153,9 @@ internal fun VideoPlayerUi(viewModel: InternalNewPlayerViewModel, uiState: NewPl
             viewModel, uiState = uiState
         )
 
-        AnimatedVisibility(visible = uiState.uiMode.isStreamSelect) {
+        // Disable this animation as it induces ghost tabs
+        //AnimatedVisibility(visible = uiState.uiMode.isStreamSelect) {
+        if(uiState.uiMode.isStreamSelect) {
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = STREAMSELECT_UI_BACKGROUND_COLOR
@@ -165,7 +167,10 @@ internal fun VideoPlayerUi(viewModel: InternalNewPlayerViewModel, uiState: NewPl
                 )
             }
         }
-        AnimatedVisibility(visible = uiState.uiMode.isChapterSelect) {
+
+        // Disable this animation as it induces ghost tabs
+        //AnimatedVisibility(visible = uiState.uiMode.isChapterSelect) {
+        if(uiState.uiMode.isChapterSelect) {
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = STREAMSELECT_UI_BACKGROUND_COLOR
