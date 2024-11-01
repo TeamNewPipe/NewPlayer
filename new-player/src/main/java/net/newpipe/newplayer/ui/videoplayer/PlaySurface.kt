@@ -75,33 +75,39 @@ internal fun PlaySurface(
 
     // actual calculation of the aspect ratio
 
-    if (uiState.uiMode.fullscreen && fitMode == ContentScale.STRETCHED)
-        ActualView(modifier.fillMaxSize(), player)
-    else {
-        val modifier = modifier.aspectRatio(contentRatio)
-        if (fitMode == ContentScale.FIT_INSIDE) {
+    if(!uiState.uiMode.fullscreen) {
+        ActualView(modifier.fillMaxHeight().aspectRatio(contentRatio), player)
+    } else {
+        if (fitMode == ContentScale.STRETCHED) {
             ActualView(modifier.fillMaxSize(), player)
-        } else { /* if(fitMode == ContentScale.CROP) */
-            if (uiRatio <= contentRatio) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .wrapContentWidth(unbounded = true, align = Alignment.CenterHorizontally)
-                ) {
-                    ActualView(modifier.fillMaxHeight(), player)
-                }
-            } else {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .wrapContentHeight(unbounded = true, align = Alignment.CenterVertically)
-                ) {
-                    ActualView(modifier.fillMaxWidth(), player)
+        } else {
+            val modifier = modifier.aspectRatio(contentRatio)
+            if (fitMode == ContentScale.FIT_INSIDE) {
+                ActualView(modifier.fillMaxSize(), player)
+            } else { /* if(fitMode == ContentScale.CROP) */
+                if (uiRatio <= contentRatio) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .wrapContentWidth(
+                                unbounded = true,
+                                align = Alignment.CenterHorizontally
+                            )
+                    ) {
+                        ActualView(modifier.fillMaxHeight(), player)
+                    }
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .wrapContentHeight(unbounded = true, align = Alignment.CenterVertically)
+                    ) {
+                        ActualView(modifier.fillMaxWidth(), player)
+                    }
                 }
             }
         }
     }
-
 }
 
 @Composable
