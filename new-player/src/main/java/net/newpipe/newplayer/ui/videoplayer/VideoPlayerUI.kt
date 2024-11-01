@@ -57,6 +57,7 @@ import net.newpipe.newplayer.ui.selection_ui.ChapterSelectUI
 import net.newpipe.newplayer.ui.videoplayer.pip.getPipParams
 import net.newpipe.newplayer.ui.videoplayer.pip.supportsPip
 import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
+import net.newpipe.newplayer.uiModel.UIModeState
 
 @OptIn(UnstableApi::class)
 @Composable
@@ -91,6 +92,19 @@ internal fun VideoPlayerUi(viewModel: InternalNewPlayerViewModel, uiState: NewPl
                 }
                 viewModel.doneEnteringPip()
             }
+    }
+
+    // this is there to update the aspect ratio of the pip window the aspect ratio of the
+    // content changes.
+    LaunchedEffect(uiState.contentRatio) {
+        if (uiState.uiMode == UIModeState.PIP
+            && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+            && supportsPip(activity)
+        ) {
+            val pipParams = getPipParams(uiState.contentRatio, videoViewBounds)
+            if(pipParams != null)
+                activity.setPictureInPictureParams(pipParams)
+        }
     }
 
     Surface(
@@ -128,7 +142,7 @@ internal fun VideoPlayerUi(viewModel: InternalNewPlayerViewModel, uiState: NewPl
 
         // Disable this animation as it induces ghost tabs
         //AnimatedVisibility(visible = uiState.uiMode.isStreamSelect) {
-        if(uiState.uiMode.isStreamSelect) {
+        if (uiState.uiMode.isStreamSelect) {
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = STREAMSELECT_UI_BACKGROUND_COLOR
@@ -143,7 +157,7 @@ internal fun VideoPlayerUi(viewModel: InternalNewPlayerViewModel, uiState: NewPl
 
         // Disable this animation as it induces ghost tabs
         //AnimatedVisibility(visible = uiState.uiMode.isChapterSelect) {
-        if(uiState.uiMode.isChapterSelect) {
+        if (uiState.uiMode.isChapterSelect) {
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = STREAMSELECT_UI_BACKGROUND_COLOR
