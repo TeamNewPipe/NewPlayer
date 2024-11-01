@@ -20,6 +20,7 @@
 
 package net.newpipe.newplayer.repository
 
+import androidx.media3.datasource.HttpDataSource
 import net.newpipe.newplayer.data.NewPlayerException
 
 /**
@@ -48,16 +49,20 @@ class MultiRepository(val actualRepositories: List<MultiRepoEntry>) : MediaRepos
         repos
     }
 
-    private suspend fun <T> pickAndExecuteRepo(
+    private data class RepoSelection (
+        val repo: MediaRepository,
+        val item: String
+    )
+
+    private fun getActualRepoAndItem(
         item: String,
-        exec: suspend (MediaRepository, String) -> T
-    ): T {
+    ): RepoSelection {
         val decomposedItem = item.split(":")
         val repoId = decomposedItem[0]
         val repo = repos[repoId] ?: throw NewPlayerException(
             "Could find a MediaRepository matching the item $item. Its repo key was apparently: $repoId"
         )
-        return exec(repo, decomposedItem[1])
+        return RepoSelection(repo, decomposedItem[1])
     }
 
     override fun getRepoInfo(): MediaRepository.RepoMetaInfo {
@@ -76,36 +81,40 @@ class MultiRepository(val actualRepositories: List<MultiRepoEntry>) : MediaRepos
         )
     }
 
-    override suspend fun getMetaInfo(item: String) = pickAndExecuteRepo(item) { repo, item ->
-        repo.getMetaInfo(item)
+    override fun getHttpDataSourceFactory(item: String) = getActualRepoAndItem(item).let {
+        it.repo.getHttpDataSourceFactory(it.item)
     }
 
-    override suspend fun getStreams(item: String) = pickAndExecuteRepo(item) { repo, item ->
-        repo.getStreams(item)
+    override suspend fun getMetaInfo(item: String) = getActualRepoAndItem(item).let {
+        it.repo.getMetaInfo(it.item)
     }
 
-    override suspend fun getSubtitles(item: String) = pickAndExecuteRepo(item) { repo, item ->
-        repo.getSubtitles(item)
+    override suspend fun getStreams(item: String) = getActualRepoAndItem(item).let {
+        it.repo.getStreams(it.item)
+    }
+
+    override suspend fun getSubtitles(item: String) = getActualRepoAndItem(item).let {
+        it.repo.getSubtitles(it.item)
     }
 
 
     override suspend fun getPreviewThumbnail(item: String, timestampInMs: Long) =
-        pickAndExecuteRepo(item) { repo, item ->
-            repo.getPreviewThumbnail(item, timestampInMs)
+        getActualRepoAndItem(item).let {
+            it.repo.getPreviewThumbnail(it.item, timestampInMs)
         }
 
     override suspend fun getPreviewThumbnailsInfo(item: String) =
-        pickAndExecuteRepo(item) { repo, item ->
-            repo.getPreviewThumbnailsInfo(item)
+        getActualRepoAndItem(item).let {
+            it.repo.getPreviewThumbnailsInfo(it.item)
         }
 
     override suspend fun getChapters(item: String) =
-        pickAndExecuteRepo(item) { repo, item ->
-            repo.getChapters(item)
+        getActualRepoAndItem(item).let {
+            it.repo.getChapters(it.item)
         }
 
     override suspend fun getTimestampLink(item: String, timestampInSeconds: Long) =
-        pickAndExecuteRepo(item) { repo, item ->
-            repo.getTimestampLink(item, timestampInSeconds)
+        getActualRepoAndItem(item).let {
+            it.repo.getTimestampLink(it.item, timestampInSeconds)
         }
 }

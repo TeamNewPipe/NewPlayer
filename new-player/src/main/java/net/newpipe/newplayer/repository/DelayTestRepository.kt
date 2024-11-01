@@ -22,6 +22,7 @@ package net.newpipe.newplayer.repository
 
 import android.graphics.Bitmap
 import androidx.media3.common.MediaMetadata
+import androidx.media3.datasource.HttpDataSource
 import kotlinx.coroutines.delay
 import net.newpipe.newplayer.data.Chapter
 import net.newpipe.newplayer.data.Stream
@@ -71,5 +72,9 @@ class DelayTestRepository(val actualRepo: MediaRepository, var delayInMS: Long) 
     override suspend fun getTimestampLink(item: String, timestampInSeconds: Long): String {
         delay(delayInMS)
         return actualRepo.getTimestampLink(item, timestampInSeconds)
+    }
+
+    override fun getHttpDataSourceFactory(item: String): HttpDataSource.Factory {
+        return actualRepo.getHttpDataSourceFactory(item)
     }
 }

@@ -22,6 +22,7 @@ package net.newpipe.newplayer.repository
 
 import android.graphics.Bitmap
 import androidx.media3.common.MediaMetadata
+import androidx.media3.datasource.HttpDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -133,6 +134,10 @@ class CachingRepository(
         timestampLinkCache.get(TimestampedItem(item, timestampInSeconds)) {
             actualRepository.getTimestampLink(item, timestampInSeconds)
         }
+
+    override fun getHttpDataSourceFactory(item: String): HttpDataSource.Factory {
+        return actualRepository.getHttpDataSourceFactory(item)
+    }
 
     /**
      * Will flush the caches.

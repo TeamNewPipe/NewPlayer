@@ -20,6 +20,7 @@
 
 package net.newpipe.newplayer.repository
 
+import androidx.media3.datasource.HttpDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -109,6 +110,9 @@ class PrefetchingRepository(
 
     override suspend fun getTimestampLink(item: String, timestampInSeconds: Long) =
         cachingRepository.getTimestampLink(item, timestampInSeconds)
+
+    override fun getHttpDataSourceFactory(item: String) =
+        cachingRepository.getHttpDataSourceFactory(item)
 
     /**
      * Resets the information weather something was seen before or not.
