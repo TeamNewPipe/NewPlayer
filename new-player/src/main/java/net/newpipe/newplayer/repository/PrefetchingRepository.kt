@@ -44,11 +44,11 @@ import kotlinx.coroutines.launch
 class PrefetchingRepository(
     val cachingRepository: MediaRepository,
     var disableEagerCaching: Boolean = false,
-    val requestDispatcher: CoroutineDispatcher = Dispatchers.Main
+    private val requestDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : MediaRepository {
-    var hasBeenSeenBefore = HashSet<String>()
+    private var hasBeenSeenBefore = HashSet<String>()
 
-    val requestScope = CoroutineScope(requestDispatcher + Job())
+    private val requestScope = CoroutineScope(requestDispatcher + Job())
 
     private suspend fun requestAll(item: String): Unit = coroutineScope {
         requestScope.launch { cachingRepository.getMetaInfo(item) }
@@ -113,6 +113,13 @@ class PrefetchingRepository(
 
     override fun getHttpDataSourceFactory(item: String) =
         cachingRepository.getHttpDataSourceFactory(item)
+
+    /**
+     * Manually trigger a prefetch of [item] without performing an actual request.
+     */
+    suspend fun prefetch(item:String) {
+        requestAll(item)
+    }
 
     /**
      * Resets the information weather something was seen before or not.
