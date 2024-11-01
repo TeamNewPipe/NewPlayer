@@ -79,13 +79,15 @@ internal fun PlaySurface(
         ActualView(modifier.fillMaxSize(), player)
     else {
         val modifier = modifier.aspectRatio(contentRatio)
-        if (uiRatio <= contentRatio) {
-            ActualView(modifier.fillMaxWidth(), player)
-        } else {
-            ActualView(modifier.fillMaxHeight(), player)
+        if (fitMode == ContentScale.FIT_INSIDE) {
+            ActualView(modifier.fillMaxSize(), player)
+        } else { /* if(fitMode == ContentScale.CROP) */
+            if (uiRatio <= contentRatio) {
+                ActualView(modifier.fillMaxHeight(), player)
+            } else {
+                ActualView(modifier.fillMaxWidth(), player)
+            }
         }
-
-
     }
 
 }

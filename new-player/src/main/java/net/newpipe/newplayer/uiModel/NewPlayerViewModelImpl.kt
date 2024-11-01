@@ -82,6 +82,8 @@ class NewPlayerViewModelImpl @Inject constructor(
 
     private var playbackPositionWhenFastSeekStarted = 0L
 
+    private var dialogIsVisible = false
+
     private val audioManager =
         getSystemService(application.applicationContext, AudioManager::class.java)!!
 
@@ -398,9 +400,12 @@ class NewPlayerViewModelImpl @Inject constructor(
 
     override fun resetHideDelayTimer() {
         hideUiDelayedJob?.cancel()
-        hideUiDelayedJob = viewModelScope.launch {
-            delay(2000)
-            changeUiMode(uiState.value.uiMode.getUiHiddenState(), null)
+        if(!dialogIsVisible) {
+            hideUiDelayedJob = viewModelScope.launch {
+                delay(2000)
+                if(!dialogIsVisible)
+                    changeUiMode(uiState.value.uiMode.getUiHiddenState(), null)
+            }
         }
     }
 
@@ -673,6 +678,7 @@ class NewPlayerViewModelImpl @Inject constructor(
     }
 
     override fun dialogVisible(visible: Boolean) {
+        dialogIsVisible = visible
         if (visible) {
             hideUiDelayedJob?.cancel()
             if (!uiState.value.uiMode.videoControllerUiVisible) {
