@@ -35,9 +35,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.media3.common.Player
 import net.newpipe.newplayer.ui.ContentScale
 
-@Composable
-
 /** @hide */
+@Composable
 internal fun PlaySurface(
     modifier: Modifier,
     player: Player?,
@@ -46,60 +45,29 @@ internal fun PlaySurface(
     uiRatio: Float,
     contentRatio: Float
 ) {
+    val internalModifier = modifier.aspectRatio(contentRatio)
 
-    var 
-/** @hide */
-internalModifier = modifier.aspectRatio(contentRatio)
-
-    if(uiRatio <= contentRatio) {
-        
-/** @hide */
-internalModifier.fillMaxWidth()
+    if (uiRatio <= contentRatio) {
+        internalModifier.fillMaxWidth()
     } else {
-        
-/** @hide */
-internalModifier.fillMaxHeight()
+
+        internalModifier.fillMaxHeight()
     }
 
-    /*
-    when (fitMode) {
-        ContentScale.FILL -> Modifier.fillMaxSize()
-        ContentScale.FIT_INSIDE -> Modifier
-            .aspectRatio(contentRatio)
-            .then(
-                if (contentRatio < uiRatio) Modifier
-                    .fillMaxWidth() else Modifier.fillMaxHeight()
-            )
-
-        ContentScale.CROP -> Modifier
-            .aspectRatio(contentRatio)
-            .wrapContentWidth(unbounded = true)
-            .fillMaxSize()
-    }
-     */
-
-
-
-    Box(
-        modifier = 
-/** @hide */
-internalModifier.background(color = Color.Green)
-    ) {
-        AndroidView(
-            modifier = Modifier.fillMaxSize(),
-            factory = { context ->
-                SurfaceView(context).also { view ->
+    AndroidView(
+        modifier = internalModifier,
+        factory = { context ->
+            SurfaceView(context).also { view ->
+                player?.setVideoSurfaceView(view)
+            }
+        }, update = { view ->
+            when (lifecycle) {
+                Lifecycle.Event.ON_RESUME -> {
                     player?.setVideoSurfaceView(view)
                 }
-            }, update = { view ->
-                when (lifecycle) {
-                    Lifecycle.Event.ON_RESUME -> {
-                        player?.setVideoSurfaceView(view)
-                    }
 
-                    else -> Unit
-                }
-            })
-
-    }
+                else -> Unit
+            }
+        })
 }
+
