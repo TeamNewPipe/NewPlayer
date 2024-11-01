@@ -49,6 +49,7 @@ internal interface InternalNewPlayerViewModel : NewPlayerViewModel {
     fun chapterSelected(chapterId: Int)
     fun streamSelected(streamId: Int)
     fun cycleRepeatMode()
+    fun cycleContentFitMode()
     fun toggleShuffle()
     fun onStorePlaylist()
     fun movePlaylistItem(from: Int, to: Int)

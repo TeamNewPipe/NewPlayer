@@ -75,6 +75,10 @@ open class NewPlayerViewModelDummy : InternalNewPlayerViewModel {
         println("dummy impl")
     }
 
+    override fun cycleContentFitMode() {
+        println("dummy impl")
+    }
+
     override fun toggleShuffle() {
         println("dummy impl")
     }

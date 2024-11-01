@@ -622,6 +622,18 @@ class NewPlayerViewModelImpl @Inject constructor(
         }
     }
 
+    override fun cycleContentFitMode() {
+        mutableUiState.update {
+            it.copy(
+                contentFitMode = when(it.contentFitMode) {
+                    ContentScale.STRETCHED -> ContentScale.FIT_INSIDE
+                    ContentScale.FIT_INSIDE -> ContentScale.CROP
+                    ContentScale.CROP -> ContentScale.STRETCHED
+                }
+            )
+        }
+    }
+
     override fun toggleShuffle() {
         newPlayer?.let {
             it.shuffle = !it.shuffle

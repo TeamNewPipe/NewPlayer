@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Crop
 import androidx.compose.material.icons.filled.FitScreen
 import androidx.compose.material.icons.filled.Headset
 import androidx.compose.material.icons.filled.Language
@@ -34,6 +35,7 @@ import androidx.compose.material.icons.filled.PictureInPicture
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Subtitles
 import androidx.compose.material.icons.filled.Translate
+import androidx.compose.material.icons.filled.ZoomOutMap
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -46,6 +48,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -56,6 +59,7 @@ import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.logic.TrackUtils
+import net.newpipe.newplayer.ui.ContentScale
 import net.newpipe.newplayer.ui.common.LanguageMenu
 import net.newpipe.newplayer.ui.common.LanguageMenuItem
 import net.newpipe.newplayer.uiModel.EmbeddedUiConfig
@@ -120,77 +124,58 @@ internal fun VideoPlayerMenu(
 
             val context = LocalContext.current
 
-            DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_open_in_browser)) },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Language,
-                        contentDescription = stringResource(R.string.menu_item_open_in_browser)
-                    )
-                },
-                onClick = { /*TODO*/
-                    showNotYetImplementedToast(context)
-                    showMainMenu = false
-                })
-            DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_share_timestamp)) },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Share,
-                        contentDescription = stringResource(R.string.menu_item_share_timestamp)
-                    )
-                },
-                onClick = { /*TODO*/
-                    showNotYetImplementedToast(context)
-                    showMainMenu = false
-                })
-            DropdownMenuItem(text = { Text(stringResource(R.string.audio_mode)) }, leadingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.Headset,
-                    contentDescription = stringResource(R.string.audio_mode)
-                )
-            }, onClick = {
+            CustomMenuItem(Icons.Filled.Language, R.string.menu_item_open_in_browser) {
+                /*TODO*/
+                showNotYetImplementedToast(context)
+                showMainMenu = false
+            }
+            CustomMenuItem(Icons.Filled.Share, R.string.menu_item_share_timestamp) {
+                /*TODO*/
+                showNotYetImplementedToast(context)
+                showMainMenu = false
+            }
+            CustomMenuItem(Icons.Filled.Headset, R.string.audio_mode) {
                 viewModel.changeUiMode(UIModeState.FULLSCREEN_AUDIO, embeddedUiConfig)
                 showMainMenu = false
-            })
+            }
             if (supportsPip(LocalContext.current)) {
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.pip_button_description)) },
-                    onClick = {
-                        viewModel.changeUiMode(UIModeState.PIP, embeddedUiConfig)
-                        showMainMenu = false
-                    },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Filled.PictureInPicture,
-                            contentDescription = stringResource(
-                                id = R.string.pip_button_description
-                            )
-                        )
-                    })
+                CustomMenuItem(Icons.Filled.PictureInPicture, R.string.pip_button_description) {
+                    viewModel.changeUiMode(UIModeState.PIP, embeddedUiConfig)
+                    showMainMenu = false
+                }
             }
             if (uiState.uiMode.fullscreen) {
-                DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_fit_screen)) },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Filled.FitScreen,
-                            contentDescription = stringResource(R.string.menu_item_fit_screen)
-                        )
-                    },
-                    onClick = { /*TODO*/
+                when (uiState.contentFitMode) {
+                    ContentScale.STRETCHED -> CustomMenuItem(
+                        Icons.Filled.ZoomOutMap,
+                        R.string.menu_item_stretch_video
+                    ) {
+                        viewModel.cycleContentFitMode()
                         showNotYetImplementedToast(context)
-                        showMainMenu = false
-                    })
+                    }
+
+                    ContentScale.FIT_INSIDE -> CustomMenuItem(
+                        Icons.Filled.FitScreen,
+                        R.string.menu_item_fit_screen
+                    ) {
+                        viewModel.cycleContentFitMode()
+                        showNotYetImplementedToast(context)
+                    }
+
+                    ContentScale.CROP -> CustomMenuItem(
+                        Icons.Filled.Crop,
+                        R.string.menu_item_crop_video
+                    ) {
+                        viewModel.cycleContentFitMode()
+                        showNotYetImplementedToast(context)
+                    }
+                }
+
             }
-            DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_sub_titles)) },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Subtitles,
-                        contentDescription = stringResource(R.string.menu_item_sub_titles)
-                    )
-                },
-                onClick = { /*TODO*/
-                    showNotYetImplementedToast(context)
-                    showMainMenu = false
-                })
+            CustomMenuItem(Icons.Filled.Subtitles, R.string.menu_item_sub_titles) {
+                showNotYetImplementedToast(context)
+                showMainMenu = false
+            }
 
             LanguageMenuItem(uiState = uiState, onClick = {
                 showLanguageMenu = true
@@ -208,6 +193,21 @@ internal fun VideoPlayerMenu(
     }
 }
 
+
+@Composable
+private fun CustomMenuItem(icon: ImageVector, text: Int, onClick: () -> Unit) {
+    DropdownMenuItem(
+        text = { Text(stringResource(text)) },
+        leadingIcon = {
+            Icon(
+                imageVector = icon,
+                contentDescription = stringResource(text)
+            )
+        },
+        onClick = onClick
+    )
+}
+
 ///////////////////////////////////////////////////////////////////
 // Preview
 ///////////////////////////////////////////////////////////////////
@@ -218,7 +218,12 @@ internal fun VideoPlayerMenu(
 private fun VideoPlayerControllerDropDownPreview() {
     VideoPlayerTheme {
         Box(Modifier.fillMaxSize()) {
-            VideoPlayerMenu(viewModel = NewPlayerViewModelDummy(), uiState = NewPlayerUIState.DUMMY)
+            VideoPlayerMenu(
+                viewModel = NewPlayerViewModelDummy(),
+                uiState = NewPlayerUIState.DUMMY.copy(
+                    uiMode = UIModeState.FULLSCREEN_VIDEO_CONTROLLER_UI
+                )
+            )
         }
     }
 }
