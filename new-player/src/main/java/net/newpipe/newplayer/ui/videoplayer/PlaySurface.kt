@@ -75,20 +75,18 @@ internal fun PlaySurface(
 
     // actual calculation of the aspect ratio
 
-    if (uiState.uiMode.fullscreen && uiState.contentFitMode == ContentScale.STRETCHED)
+    if (uiState.uiMode.fullscreen && fitMode == ContentScale.STRETCHED)
         ActualView(modifier.fillMaxSize(), player)
-    else
-        ActualView(modifier.aspectRatio(contentRatio), player)
+    else {
+        val modifier = modifier.aspectRatio(contentRatio)
+        if (uiRatio <= contentRatio) {
+            ActualView(modifier.fillMaxWidth(), player)
+        } else {
+            ActualView(modifier.fillMaxHeight(), player)
+        }
 
 
-    /*
-    if (uiRatio <= contentRatio) {
-        internalModifier.fillMaxWidth()
-    } else {
-        internalModifier.fillMaxHeight()
     }
-
-     */
 
 }
 

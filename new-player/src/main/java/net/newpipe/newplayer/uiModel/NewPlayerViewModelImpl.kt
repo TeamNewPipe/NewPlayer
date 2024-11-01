@@ -77,7 +77,7 @@ class NewPlayerViewModelImpl @Inject constructor(
     private var playlistProgressUpdaterJob: Job? = null
     private var updatePreviewThumbnailJob: Job? = null
 
-    // this is necesary to restore the embedded view UI configuration when returning from fullscreen
+    // this is necessary to restore the embedded view UI configuration when returning from fullscreen
     private var embeddedUiConfig: EmbeddedUiConfig? = null
 
     private var playbackPositionWhenFastSeekStarted = 0L
@@ -116,7 +116,7 @@ class NewPlayerViewModelImpl @Inject constructor(
         }
 
 
-    override var maxContentRatio: Float = 16F / 9F
+    override var maxContentRatio: Float = 3F / 1F
         set(value) {
             if (value <= 0 || value < minContentRatio) Log.e(
                 TAG,
