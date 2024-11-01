@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -55,6 +56,44 @@ internal fun PlaySurface(
     uiState: NewPlayerUIState
 ) {
 
+    // Take care of content ratio
+
+    // Preparation
+
+    val activity = LocalContext.current as Activity
+
+    val displayMetrics = activity.resources.displayMetrics
+
+    val screenRatio =
+        displayMetrics.widthPixels.toFloat() / displayMetrics.heightPixels.toFloat()
+
+    val fitMode = uiState.contentFitMode
+    val uiRatio = if (uiState.uiMode.fullscreen) screenRatio
+    else uiState.embeddedUiRatio
+    val contentRatio = uiState.contentRatio
+
+
+    // actual calculation of the aspect ratio
+
+    if (uiState.uiMode.fullscreen && uiState.contentFitMode == ContentScale.STRETCHED)
+        ActualView(modifier.fillMaxSize(), player)
+    else
+        ActualView(modifier.aspectRatio(contentRatio), player)
+
+
+    /*
+    if (uiRatio <= contentRatio) {
+        internalModifier.fillMaxWidth()
+    } else {
+        internalModifier.fillMaxHeight()
+    }
+
+     */
+
+}
+
+@Composable
+private fun ActualView(modifier: Modifier, player: Player?) {
     // init lifecycle foo for android view
 
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
@@ -76,31 +115,9 @@ internal fun PlaySurface(
     }
 
 
-    // Take care of content ratio
-
-    val activity = LocalContext.current as Activity
-
-    val displayMetrics = activity.resources.displayMetrics
-
-    val screenRatio =
-        displayMetrics.widthPixels.toFloat() / displayMetrics.heightPixels.toFloat()
-
-    val fitMode = uiState.contentFitMode
-    val uiRatio = if (uiState.uiMode.fullscreen) screenRatio
-    else uiState.embeddedUiRatio
-    val contentRatio = uiState.contentRatio
-
-    val internalModifier = modifier.aspectRatio(contentRatio)
-
-    if (uiRatio <= contentRatio) {
-        internalModifier.fillMaxWidth()
-    } else {
-
-        internalModifier.fillMaxHeight()
-    }
 
     AndroidView(
-        modifier = internalModifier,
+        modifier = modifier,
         factory = { context ->
             SurfaceView(context).also { view ->
                 player?.setVideoSurfaceView(view)
