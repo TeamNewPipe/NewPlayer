@@ -76,11 +76,6 @@ internal fun VideoPlayerUi(viewModel: InternalNewPlayerViewModel, uiState: NewPl
 
     val activity = LocalContext.current as Activity
 
-    val displayMetrics = activity.resources.displayMetrics
-
-    val screenRatio =
-        displayMetrics.widthPixels.toFloat() / displayMetrics.heightPixels.toFloat()
-
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
 
     var videoViewBounds by remember {
@@ -137,10 +132,7 @@ internal fun VideoPlayerUi(viewModel: InternalNewPlayerViewModel, uiState: NewPl
                     },
                     player = exoPlayer,
                     lifecycle = lifecycle,
-                    fitMode = uiState.contentFitMode,
-                    uiRatio = if (uiState.uiMode.fullscreen) screenRatio
-                    else uiState.embeddedUiRatio,
-                    contentRatio = uiState.contentRatio,
+                    uiState = uiState
                 )
             }
         }

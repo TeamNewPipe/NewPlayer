@@ -20,7 +20,9 @@
 
 package net.newpipe.newplayer.ui.videoplayer
 
+import android.app.Activity
 import android.view.SurfaceView
+import androidx.annotation.OptIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -30,21 +32,36 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.ui.ContentScale
+import net.newpipe.newplayer.uiModel.NewPlayerUIState
 
 /** @hide */
+@OptIn(UnstableApi::class)
 @Composable
 internal fun PlaySurface(
     modifier: Modifier,
     player: Player?,
     lifecycle: Lifecycle.Event,
-    fitMode: ContentScale,
-    uiRatio: Float,
-    contentRatio: Float
+    uiState: NewPlayerUIState
 ) {
+
+    val activity = LocalContext.current as Activity
+
+    val displayMetrics = activity.resources.displayMetrics
+
+    val screenRatio =
+        displayMetrics.widthPixels.toFloat() / displayMetrics.heightPixels.toFloat()
+
+    val fitMode = uiState.contentFitMode
+    val uiRatio = if (uiState.uiMode.fullscreen) screenRatio
+        else uiState.embeddedUiRatio
+    val contentRatio = uiState.contentRatio
+
     val internalModifier = modifier.aspectRatio(contentRatio)
 
     if (uiRatio <= contentRatio) {
