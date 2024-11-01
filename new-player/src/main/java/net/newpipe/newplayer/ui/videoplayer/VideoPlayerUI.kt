@@ -70,28 +70,10 @@ internal fun VideoPlayerUi(viewModel: InternalNewPlayerViewModel, uiState: NewPl
 
     val exoPlayer by viewModel.newPlayer?.exoPlayer!!.collectAsState()
 
-    var lifecycle by remember {
-        mutableStateOf(Lifecycle.Event.ON_CREATE)
-    }
-
     val activity = LocalContext.current as Activity
-
-    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
 
     var videoViewBounds by remember {
         mutableStateOf(android.graphics.Rect())
-    }
-
-    // Prepare stuff for the SurfaceView to which the video will be rendered
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            lifecycle = event
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
-
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
-        }
     }
 
     LaunchedEffect(uiState.enteringPip) {
@@ -131,7 +113,6 @@ internal fun VideoPlayerUi(viewModel: InternalNewPlayerViewModel, uiState: NewPl
                             .toRect()
                     },
                     player = exoPlayer,
-                    lifecycle = lifecycle,
                     uiState = uiState
                 )
             }

@@ -30,11 +30,17 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.ui.ContentScale
@@ -46,9 +52,31 @@ import net.newpipe.newplayer.uiModel.NewPlayerUIState
 internal fun PlaySurface(
     modifier: Modifier,
     player: Player?,
-    lifecycle: Lifecycle.Event,
     uiState: NewPlayerUIState
 ) {
+
+    // init lifecycle foo for android view
+
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+
+    var lifecycle by remember {
+        mutableStateOf(Lifecycle.Event.ON_CREATE)
+    }
+
+    // Prepare stuff for the SurfaceView to which the video will be rendered
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            lifecycle = event
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+
+    // Take care of content ratio
 
     val activity = LocalContext.current as Activity
 
@@ -59,7 +87,7 @@ internal fun PlaySurface(
 
     val fitMode = uiState.contentFitMode
     val uiRatio = if (uiState.uiMode.fullscreen) screenRatio
-        else uiState.embeddedUiRatio
+    else uiState.embeddedUiRatio
     val contentRatio = uiState.contentRatio
 
     val internalModifier = modifier.aspectRatio(contentRatio)
