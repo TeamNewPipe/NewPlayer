@@ -151,7 +151,6 @@ internal fun VideoPlayerMenu(
                         R.string.menu_item_stretch_video
                     ) {
                         viewModel.cycleContentFitMode()
-                        showNotYetImplementedToast(context)
                     }
 
                     ContentScale.FIT_INSIDE -> CustomMenuItem(
@@ -159,7 +158,6 @@ internal fun VideoPlayerMenu(
                         R.string.menu_item_fit_screen
                     ) {
                         viewModel.cycleContentFitMode()
-                        showNotYetImplementedToast(context)
                     }
 
                     ContentScale.CROP -> CustomMenuItem(
@@ -167,7 +165,6 @@ internal fun VideoPlayerMenu(
                         R.string.menu_item_crop_video
                     ) {
                         viewModel.cycleContentFitMode()
-                        showNotYetImplementedToast(context)
                     }
                 }
 
