@@ -28,12 +28,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.coroutineScope
+import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.util.UnstableApi
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import net.newpipe.newplayer.ActivityBrainSlug
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.data.PlayMode
 import net.newpipe.newplayer.uiModel.NewPlayerViewModel
@@ -41,6 +44,7 @@ import net.newpipe.newplayer.uiModel.NewPlayerViewModelImpl
 import net.newpipe.newplayer.uiModel.UIModeState
 import net.newpipe.newplayer.testapp.databinding.ActivityMainBinding
 import net.newpipe.newplayer.ui.ContentScale
+import net.newpipe.newplayer.uiModel.NewPlayerUIState
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -53,8 +57,6 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var newPlayer: NewPlayer
-
-    var activityBrainSlug: ActivityBrainSlug? = null
 
     lateinit var binding: ActivityMainBinding
 
@@ -121,13 +123,28 @@ class MainActivity : AppCompatActivity() {
         newPlayerViewModel.newPlayer = newPlayer
         newPlayerViewModel.contentFitMode = ContentScale.FIT_INSIDE
 
-        activityBrainSlug = ActivityBrainSlug(newPlayerViewModel)
-        activityBrainSlug?.let {
-            it.embeddedPlayerView = binding.embeddedPlayer
-            it.addViewToHideOnFullscreen(binding.buttonsLayout as View)
-            it.addViewToHideOnFullscreen(binding.embeddedPlayerLayout as View)
-            it.fullscreenPlayerView = binding.fullscreenPlayer
-            it.rootView = binding.root
+        lifecycleScope.launch {
+            var oldState: NewPlayerUIState? = null
+            newPlayerViewModel.uiState.collect { newState ->
+                if (oldState?.uiMode?.fullscreen != newState.uiMode.fullscreen) {
+                    if (newState.uiMode.fullscreen) {
+                        removeSystemInsets()
+                        binding.embeddedPlayer.viewModel = null
+                        binding.fullscreenPlayer.viewModel = newPlayerViewModel
+                        binding.buttonsLayout?.visibility = View.GONE
+                        binding.embeddedPlayerLayout.visibility = View.GONE
+                        binding.fullscreenPlayer.visibility = View.VISIBLE
+                    } else {
+                        addSystemInsets()
+                        binding.fullscreenPlayer.viewModel = null
+                        binding.embeddedPlayer.viewModel = newPlayerViewModel
+                        binding.buttonsLayout?.visibility = View.VISIBLE
+                        binding.embeddedPlayerLayout.visibility = View.VISIBLE
+                        binding.fullscreenPlayer.visibility = View.GONE
+                    }
+                }
+                oldState = newState
+            }
         }
 
         ////////////////////////////////////////////////////////////////////////////////////
@@ -139,7 +156,6 @@ class MainActivity : AppCompatActivity() {
             println("gurken pip mode change isInPipMode: ${mode.isInPictureInPictureMode}")
             newPlayerViewModel.onPictureInPictureModeChanged(mode.isInPictureInPictureMode)
         }
-
 
 
         /**
@@ -200,4 +216,29 @@ class MainActivity : AppCompatActivity() {
             reconfigurationPending = false
         }
     }
+
+
+    private fun addSystemInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(
+                systemBars.left,
+                systemBars.top,
+                systemBars.right,
+                systemBars.bottom
+            )
+            insets
+        }
+    }
+
+    private fun removeSystemInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            v.setPadding(
+                0, 0, 0, 0
+            )
+            insets
+        }
+
+    }
 }
+

@@ -106,11 +106,12 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.coil.compose)
+    implementation(libs.okhttp.android)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+
 
     // development impl
     implementation(project(":new-player"))
-    implementation(libs.okhttp.android)
-
     //jitpack test
     //implementation(libs.newplayer)
 
