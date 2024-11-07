@@ -67,7 +67,11 @@ import net.newpipe.newplayer.ui.common.showNotYetImplementedToast
 @Composable
 
 /** @hide */
-internal fun AudioBottomUI(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState) {
+internal fun AudioBottomUI(
+    viewModel: InternalNewPlayerViewModel,
+    uiState: NewPlayerUIState,
+    showPlaybackSpeedDialog: () -> Unit
+) {
 
     val embeddedUiConfig = getEmbeddedUiConfig()
 
@@ -130,13 +134,17 @@ internal fun AudioBottomUI(viewModel: InternalNewPlayerViewModel, uiState: NewPl
                 )
             }
         }
-        Menu(viewModel, uiState)
+        Menu(viewModel, uiState, showPlaybackSpeedDialog)
     }
 }
 
 @OptIn(UnstableApi::class)
 @Composable
-private fun Menu(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState) {
+private fun Menu(
+    viewModel: InternalNewPlayerViewModel,
+    uiState: NewPlayerUIState,
+    showPlaybackSpeedDialog: () -> Unit
+) {
     var showMenu: Boolean by remember { mutableStateOf(false) }
     var showLanguageMenu: Boolean by remember { mutableStateOf(false) }
 
@@ -162,8 +170,8 @@ private fun Menu(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIStat
                         contentDescription = stringResource(R.string.menu_item_playback_speed)
                     )
                 },
-                onClick = { /*TODO*/
-                    showNotYetImplementedToast(context)
+                onClick = {
+                    showPlaybackSpeedDialog()
                     showMenu = false
                 })
             LanguageMenuItem(uiState = uiState, onClick = {
@@ -229,8 +237,8 @@ private fun AudioBottomUIPreview() {
         Box(modifier = Modifier.fillMaxWidth()) {
             AudioBottomUI(
                 viewModel = NewPlayerViewModelDummy(),
-                uiState = NewPlayerUIState.DUMMY.copy(showPlaylistInAudioPlayer = true)
-            )
+                uiState = NewPlayerUIState.DUMMY,
+                showPlaybackSpeedDialog = {})
         }
     }
 }

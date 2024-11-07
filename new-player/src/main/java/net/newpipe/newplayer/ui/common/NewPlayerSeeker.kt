@@ -38,10 +38,9 @@ import net.newpipe.newplayer.ui.seeker.SeekerColors
 
 private const val TAG = "NewPlayerSeeker"
 
+/** @hide */
 @OptIn(UnstableApi::class)
 @Composable
-
-/** @hide */
 internal fun NewPlayerSeeker(
     modifier: Modifier = Modifier,
     viewModel: InternalNewPlayerViewModel,

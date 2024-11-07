@@ -49,7 +49,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
-import kotlinx.coroutines.delay
+import net.newpipe.newplayer.ui.common.PlaybackSpeedDialog
 import net.newpipe.newplayer.uiModel.NewPlayerUIState
 import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
 import net.newpipe.newplayer.uiModel.NewPlayerViewModelDummy
@@ -79,6 +79,10 @@ internal fun VideoPlayerControllerUI(
         mutableStateOf(false)
     }
 
+    var playbackSpeedDialogVisible by remember {
+        mutableStateOf(false)
+    }
+
     val insets = getInsets()
 
     AnimateVideoControlVisibility(uiState.uiMode.videoControllerUiVisible) {
@@ -104,11 +108,9 @@ internal fun VideoPlayerControllerUI(
         }
     }
 
-
     AnimateVideoControlVisibility(
         uiState.uiMode.videoControllerUiVisible,
     ) {
-
         AnimatedVisibility(visible = !uiState.isLoading && !volumeIndicatorVissible) {
             Box(modifier = Modifier.fillMaxSize()) {
                 CenterUI(
@@ -129,7 +131,10 @@ internal fun VideoPlayerControllerUI(
                     .defaultMinSize(minHeight = 45.dp)
                     .padding(top = 4.dp, start = 16.dp, end = 16.dp),
                 viewModel = viewModel,
-                uiState = uiState
+                uiState = uiState,
+                showPlaybackSpeedDialog = {
+                    playbackSpeedDialogVisible = true
+                }
             )
 
             BottomUI(
@@ -142,6 +147,13 @@ internal fun VideoPlayerControllerUI(
                 uiState = uiState
             )
         }
+    }
+
+    AnimatedVisibility(playbackSpeedDialogVisible) {
+        PlaybackSpeedDialog(
+            uiState = uiState,
+            viewModel = viewModel,
+            onDismiss = { playbackSpeedDialogVisible = false })
     }
 }
 

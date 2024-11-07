@@ -54,6 +54,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -64,14 +68,13 @@ import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.ui.common.NewPlayerSeeker
 import net.newpipe.newplayer.ui.common.thumb_preview.ThumbPreview
+import net.newpipe.newplayer.ui.common.PlaybackSpeedDialog
 import net.newpipe.newplayer.ui.common.Thumbnail
 import net.newpipe.newplayer.ui.common.getInsets
 import net.newpipe.newplayer.ui.common.getLocale
 import net.newpipe.newplayer.ui.common.getTimeStringFromMs
 import net.newpipe.newplayer.ui.seeker.SeekerDefaults
 import net.newpipe.newplayer.ui.selection_ui.ChapterSelectUI
-import net.newpipe.newplayer.ui.selection_ui.ReorderableStreamItemsList
-import net.newpipe.newplayer.ui.selection_ui.StreamSelectTopBar
 import net.newpipe.newplayer.ui.selection_ui.StreamSelectUI
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
@@ -166,6 +169,261 @@ internal fun AudioPlayerUI(
                     )
                 }
             }
+        }
+    }
+}
+
+@OptIn(UnstableApi::class)
+@Composable
+private fun LandscapeLayout(
+    modifier: Modifier = Modifier,
+    viewModel: InternalNewPlayerViewModel,
+    uiState: NewPlayerUIState,
+    innerPadding: PaddingValues
+) {
+    var playbackSpeedDialogVisible by remember {
+        mutableStateOf(false)
+    }
+
+    Row(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(20.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(1f)
+        ) {
+            CoverArt(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(0.9f), uiState = uiState
+            )
+
+            TitleView(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(0.1f), uiState = uiState
+            )
+        }
+
+        Box(modifier = Modifier.width(20.dp))
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(1f)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f)
+                )
+                AudioPlaybackController(
+                    viewModel = viewModel,
+                    uiState = uiState
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f)
+                )
+                ProgressUI(
+                    viewModel = viewModel,
+                    uiState = uiState
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f)
+                )
+            }
+            AudioBottomUI(viewModel, uiState, showPlaybackSpeedDialog = {
+                playbackSpeedDialogVisible = true
+            })
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(0.025f)
+            )
+        }
+    }
+
+    AnimatedVisibility(playbackSpeedDialogVisible) {
+        PlaybackSpeedDialog(
+            viewModel = viewModel,
+            uiState = uiState,
+            onDismiss = { playbackSpeedDialogVisible = false })
+    }
+}
+
+@OptIn(UnstableApi::class)
+@Composable
+private fun PortraitLayout(
+    modifier: Modifier = Modifier,
+    viewModel: InternalNewPlayerViewModel,
+    uiState: NewPlayerUIState,
+    innerPadding: PaddingValues
+) {
+    var playbackSpeedDialogVisible by remember {
+        mutableStateOf(false)
+    }
+
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(20.dp)
+                    .weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(0.5f)
+                )
+                CoverArt(uiState = uiState)
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(0.3f)
+                )
+
+                TitleView(uiState = uiState)
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(0.45f)
+                )
+                AudioPlaybackController(viewModel = viewModel, uiState = uiState)
+
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(0.2f)
+                )
+                ProgressUI(viewModel = viewModel, uiState = uiState)
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(0.2f)
+                )
+            }
+            AudioBottomUI(viewModel, uiState, showPlaybackSpeedDialog = {
+                playbackSpeedDialogVisible = true
+            })
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(0.025f)
+            )
+        }
+    }
+
+    AnimatedVisibility(playbackSpeedDialogVisible) {
+        PlaybackSpeedDialog(
+            viewModel = viewModel,
+            uiState = uiState,
+            onDismiss = { playbackSpeedDialogVisible = false })
+    }
+}
+
+@OptIn(UnstableApi::class)
+@Composable
+private fun ProgressUI(
+    modifier: Modifier = Modifier,
+    viewModel: InternalNewPlayerViewModel,
+    uiState: NewPlayerUIState
+) {
+    val locale = getLocale()!!
+
+    Column(modifier = modifier) {
+        Box(
+            modifier = Modifier
+                .height(0.dp)
+                .fillMaxWidth()
+                .wrapContentHeight(unbounded = true, align = Alignment.Bottom)
+        ) {
+            ThumbPreview(
+                modifier = Modifier.offset(y = (-20).dp) /* We have this offset to make space for your thumb */,
+                uiState = uiState,
+                thumbSize = SeekerDefaults.ThumbRadius * 2,
+                previewHeight = 120.dp
+            )
+        }
+
+        NewPlayerSeeker(viewModel = viewModel, uiState = uiState)
+        Row {
+            Text(
+                getTimeStringFromMs(
+                    uiState.playbackPositionInMs,
+                    getLocale() ?: locale
+                )
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            )
+            Text(
+                getTimeStringFromMs(
+                    uiState.durationInMs,
+                    getLocale() ?: locale
+                )
+            )
+        }
+    }
+}
+
+@OptIn(UnstableApi::class)
+@Composable
+private fun TitleView(modifier: Modifier = Modifier, uiState: NewPlayerUIState) {
+    Column(modifier = modifier) {
+        Text(
+            text = uiState.currentlyPlaying?.mediaMetadata?.title.toString(),
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1,
+            fontSize = 6.em
+        )
+        Text(
+            text = uiState.currentlyPlaying?.mediaMetadata?.artist.toString(),
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1,
+            fontSize = 4.em
+        )
+    }
+}
+
+@OptIn(UnstableApi::class)
+@Composable
+private fun CoverArt(modifier: Modifier = Modifier, uiState: NewPlayerUIState) {
+    Box {
+        Card(
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        ) {
+            Thumbnail(
+                modifier = Modifier.fillMaxWidth(),
+                thumbnail = uiState.currentlyPlaying?.mediaMetadata?.artworkUri,
+                contentDescription = stringResource(
+                    id = R.string.stream_thumbnail
+                ),
+            )
         }
     }
 }
