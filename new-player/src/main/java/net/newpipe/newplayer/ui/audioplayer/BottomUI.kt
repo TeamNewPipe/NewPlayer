@@ -70,7 +70,11 @@ import net.newpipe.newplayer.ui.common.showNotYetImplementedToast
 @Composable
 
 /** @hide */
-internal fun AudioBottomUI(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState) {
+internal fun AudioBottomUI(
+    viewModel: InternalNewPlayerViewModel,
+    uiState: NewPlayerUIState,
+    showPlaybackSpeedDialog: () -> Unit
+) {
 
     val embeddedUiConfig = if (LocalContext.current is Activity)
         getEmbeddedUiConfig(activity = LocalContext.current as Activity)
@@ -132,13 +136,17 @@ internal fun AudioBottomUI(viewModel: InternalNewPlayerViewModel, uiState: NewPl
                 }
             }
         }
-        Menu(viewModel, uiState)
+        Menu(viewModel, uiState, showPlaybackSpeedDialog)
     }
 }
 
 @OptIn(UnstableApi::class)
 @Composable
-private fun Menu(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState) {
+private fun Menu(
+    viewModel: InternalNewPlayerViewModel,
+    uiState: NewPlayerUIState,
+    showPlaybackSpeedDialog: () -> Unit
+) {
     var showMenu: Boolean by remember { mutableStateOf(false) }
     var showLanguageMenu: Boolean by remember { mutableStateOf(false) }
 
@@ -166,9 +174,10 @@ private fun Menu(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIStat
                         contentDescription = stringResource(R.string.menu_item_playback_speed)
                     )
                 },
-                onClick = { /*TODO*/
-                    showNotYetImplementedToast(context)
-                    showMenu = false })
+                onClick = {
+                    showPlaybackSpeedDialog()
+                    showMenu = false
+                })
             LanguageMenuItem(uiState = uiState, onClick = {
                 showLanguageMenu = true
                 showMenu = false
@@ -182,7 +191,8 @@ private fun Menu(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIStat
                 },
                 onClick = { /*TODO*/
                     showNotYetImplementedToast(context)
-                    showMenu = false })
+                    showMenu = false
+                })
             DropdownMenuItem(text = { Text(stringResource(R.string.menu_item_open_in_browser)) },
                 leadingIcon = {
                     Icon(
@@ -192,7 +202,8 @@ private fun Menu(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIStat
                 },
                 onClick = { /*TODO*/
                     showNotYetImplementedToast(context)
-                    showMenu = false })
+                    showMenu = false
+                })
 
             if (supportsPip(LocalContext.current)) {
                 DropdownMenuItem(
@@ -226,7 +237,10 @@ private fun Menu(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIStat
 private fun AudioBottomUIPreview() {
     VideoPlayerTheme {
         Box(modifier = Modifier.fillMaxWidth()) {
-            AudioBottomUI(viewModel = NewPlayerViewModelDummy(), uiState = NewPlayerUIState.DUMMY)
+            AudioBottomUI(
+                viewModel = NewPlayerViewModelDummy(),
+                uiState = NewPlayerUIState.DUMMY,
+                showPlaybackSpeedDialog = {})
         }
     }
 }
