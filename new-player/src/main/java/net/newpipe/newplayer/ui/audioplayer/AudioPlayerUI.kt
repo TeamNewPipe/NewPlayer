@@ -47,6 +47,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -61,6 +65,7 @@ import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
 import net.newpipe.newplayer.uiModel.NewPlayerViewModelDummy
 import net.newpipe.newplayer.uiModel.UIModeState
 import net.newpipe.newplayer.ui.common.NewPlayerSeeker
+import net.newpipe.newplayer.ui.common.PlaybackSpeedDialog
 import net.newpipe.newplayer.ui.common.ThumbPreview
 import net.newpipe.newplayer.ui.selection_ui.ChapterSelectUI
 import net.newpipe.newplayer.ui.selection_ui.StreamSelectUI
@@ -88,7 +93,11 @@ internal fun lightAudioControlButtonColorScheme() = ButtonDefaults.buttonColors(
 @Composable
 
 /** @hide */
-internal fun AudioPlayerUI(viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState, isLandScape: Boolean) {
+internal fun AudioPlayerUI(
+    viewModel: InternalNewPlayerViewModel,
+    uiState: NewPlayerUIState,
+    isLandScape: Boolean
+) {
     val insets = getInsets()
 
     Box(
@@ -157,6 +166,10 @@ private fun LandscapeLayout(
     uiState: NewPlayerUIState,
     innerPadding: PaddingValues
 ) {
+    var playbackSpeedDialogVisible by remember {
+        mutableStateOf(false)
+    }
+
     Row(
         modifier = modifier
             .fillMaxSize()
@@ -216,13 +229,22 @@ private fun LandscapeLayout(
                         .weight(1f)
                 )
             }
-            AudioBottomUI(viewModel, uiState)
+            AudioBottomUI(viewModel, uiState, showPlaybackSpeedDialog = {
+                playbackSpeedDialogVisible = true
+            })
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(0.025f)
             )
         }
+    }
+
+    AnimatedVisibility(playbackSpeedDialogVisible) {
+        PlaybackSpeedDialog(
+            viewModel = viewModel,
+            uiState = uiState,
+            onDismiss = { playbackSpeedDialogVisible = false })
     }
 }
 
@@ -234,6 +256,10 @@ private fun PortraitLayout(
     uiState: NewPlayerUIState,
     innerPadding: PaddingValues
 ) {
+    var playbackSpeedDialogVisible by remember {
+        mutableStateOf(false)
+    }
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -284,13 +310,22 @@ private fun PortraitLayout(
                         .weight(0.2f)
                 )
             }
-            AudioBottomUI(viewModel, uiState)
+            AudioBottomUI(viewModel, uiState, showPlaybackSpeedDialog = {
+                playbackSpeedDialogVisible = true
+            })
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(0.025f)
             )
         }
+    }
+
+    AnimatedVisibility(playbackSpeedDialogVisible) {
+        PlaybackSpeedDialog(
+            viewModel = viewModel,
+            uiState = uiState,
+            onDismiss = { playbackSpeedDialogVisible = false })
     }
 }
 

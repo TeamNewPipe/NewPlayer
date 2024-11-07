@@ -21,17 +21,20 @@
 package net.newpipe.newplayer.ui.common
 
 import androidx.annotation.OptIn
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -48,7 +51,7 @@ import net.newpipe.newplayer.uiModel.NewPlayerViewModelDummy
 @OptIn(UnstableApi::class)
 @Composable
 internal fun PlaybackSpeedDialog(
-    uiMode: NewPlayerUIState,
+    uiState: NewPlayerUIState,
     viewModel: NewPlayerViewModel,
     onDismiss: () -> Unit
 ) {
@@ -64,7 +67,7 @@ internal fun PlaybackSpeedDialog(
                 .fillMaxWidth(0.95f),
             elevation = CardDefaults.elevatedCardElevation(5.dp),
         ) {
-
+            Surface(modifier = Modifier.fillMaxSize()) {}
         }
     }
 }

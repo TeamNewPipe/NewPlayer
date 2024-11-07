@@ -78,13 +78,14 @@ import net.newpipe.newplayer.ui.common.showNotYetImplementedToast
 
 /** @hide */
 internal fun TopUI(
-    modifier: Modifier, viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState
+    modifier: Modifier,
+    viewModel: InternalNewPlayerViewModel,
+    uiState: NewPlayerUIState,
+    showPlaybackSpeedDialog: () -> Unit
 ) {
     val embeddedUiConfig =
-        if (LocalContext.current is Activity)
-            getEmbeddedUiConfig(activity = LocalContext.current as Activity)
-        else
-            EmbeddedUiConfig.DUMMY
+        if (LocalContext.current is Activity) getEmbeddedUiConfig(activity = LocalContext.current as Activity)
+        else EmbeddedUiConfig.DUMMY
 
     Row(
         // the default height for an app bar is 64.dp according to this source:
@@ -120,12 +121,10 @@ internal fun TopUI(
         }
         TrackSelectionMenu(viewModel, uiState)
 
-        val context = LocalContext.current
         IconButton(
             modifier = Modifier.fillMaxHeight(),
-            onClick = { /*TODO*/
-                showNotYetImplementedToast(context)
-                viewModel.resetHideDelayTimer()
+            onClick = {
+                showPlaybackSpeedDialog()
             },
         ) {
             Text(
@@ -133,15 +132,11 @@ internal fun TopUI(
             )
         }
         AnimatedVisibility(visible = uiState.chapters.isNotEmpty()) {
-            IconButton(
-                modifier = Modifier.fillMaxHeight(),
-                onClick = {
-                    viewModel.changeUiMode(
-                        uiState.uiMode.getChapterSelectUiState(),
-                        embeddedUiConfig
-                    )
-                }
-            ) {
+            IconButton(modifier = Modifier.fillMaxHeight(), onClick = {
+                viewModel.changeUiMode(
+                    uiState.uiMode.getChapterSelectUiState(), embeddedUiConfig
+                )
+            }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.MenuBook,
                     contentDescription = stringResource(R.string.widget_description_chapter_selection)
@@ -153,8 +148,7 @@ internal fun TopUI(
                 modifier = Modifier.fillMaxHeight(),
                 onClick = {
                     viewModel.changeUiMode(
-                        uiState.uiMode.getStreamSelectUiState(),
-                        embeddedUiConfig
+                        uiState.uiMode.getStreamSelectUiState(), embeddedUiConfig
                     )
                 },
             ) {
@@ -165,9 +159,7 @@ internal fun TopUI(
             }
         }
         VideoPlayerMenu(
-            modifier = Modifier.fillMaxHeight(),
-            viewModel = viewModel,
-            uiState = uiState
+            modifier = Modifier.fillMaxHeight(), viewModel = viewModel, uiState = uiState
         )
     }
 }
@@ -182,8 +174,7 @@ private fun TrackSelectionMenu(viewModel: InternalNewPlayerViewModel, uiState: N
     val context = LocalContext.current
 
 
-    val availableVideoTracks =
-        uiState.currentlyAvailableTracks.filterIsInstance<VideoStreamTrack>()
+    val availableVideoTracks = uiState.currentlyAvailableTracks.filterIsInstance<VideoStreamTrack>()
 
     Box {
         val noOtherTracksText = stringResource(
@@ -196,13 +187,10 @@ private fun TrackSelectionMenu(viewModel: InternalNewPlayerViewModel, uiState: N
                 if (1 < availableVideoTracks.size) {
                     viewModel.dialogVisible(true)
                     menuVisible = true
-                } else
-                    Toast.makeText(
-                        context,
-                        noOtherTracksText,
-                        Toast.LENGTH_SHORT
+                } else Toast.makeText(
+                    context, noOtherTracksText, Toast.LENGTH_SHORT
 
-                    ).show()
+                ).show()
                 viewModel.resetHideDelayTimer()
             },
             contentPadding = PaddingValues(0.dp),
@@ -212,24 +200,20 @@ private fun TrackSelectionMenu(viewModel: InternalNewPlayerViewModel, uiState: N
         ) {
             Text(
                 try {
-                    uiState.currentlyPlayingTracks.filterIsInstance<VideoStreamTrack>()[0]
-                        .toShortIdentifierString()
+                    uiState.currentlyPlayingTracks.filterIsInstance<VideoStreamTrack>()[0].toShortIdentifierString()
                 } catch (_: IndexOutOfBoundsException) {
                     stringResource(R.string.loading)
-                },
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(0.dp)
+                }, fontWeight = FontWeight.Bold, modifier = Modifier.padding(0.dp)
             )
         }
         DropdownMenu(expanded = menuVisible, onDismissRequest = { menuVisible = false }) {
             for (track in availableVideoTracks.reversed()) {
-                DropdownMenuItem(text = { Text(track.toLongIdentifierString()) },
-                    onClick = {
-                        /* TODO */
-                        showNotYetImplementedToast(context)
-                        viewModel.dialogVisible(false)
-                        menuVisible = false
-                    })
+                DropdownMenuItem(text = { Text(track.toLongIdentifierString()) }, onClick = {
+                    /* TODO */
+                    showNotYetImplementedToast(context)
+                    viewModel.dialogVisible(false)
+                    menuVisible = false
+                })
             }
         }
     }
@@ -248,7 +232,8 @@ private fun VideoPlayerControllerTopUIPreview() {
             TopUI(
                 modifier = Modifier, NewPlayerViewModelDummy(), NewPlayerUIState.DUMMY.copy(
                     uiMode = UIModeState.FULLSCREEN_VIDEO
-                )
+                ),
+                {}
             )
         }
     }
