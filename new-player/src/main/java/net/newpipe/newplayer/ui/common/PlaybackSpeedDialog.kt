@@ -20,14 +20,29 @@
 
 package net.newpipe.newplayer.ui.common
 
+
 import androidx.annotation.OptIn
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
+import androidx.compose.material3.Icon
+
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,12 +50,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.media3.common.util.UnstableApi
-import net.newpipe.newplayer.ui.NewPlayerUI
+import net.newpipe.newplayer.R
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.uiModel.NewPlayerUIState
 import net.newpipe.newplayer.uiModel.NewPlayerViewModel
@@ -67,7 +83,45 @@ internal fun PlaybackSpeedDialog(
                 .fillMaxWidth(0.95f),
             elevation = CardDefaults.elevatedCardElevation(5.dp),
         ) {
-            Surface(modifier = Modifier.fillMaxSize()) {}
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.Gray)
+            ) {
+                Text(stringResource(R.string.playback_speed))
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    IconButton(onClick = {}) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                            contentDescription = stringResource(R.string.decrease_playback_speed)
+                        )
+                    }
+                    Slider(modifier = Modifier.weight(1f), value = 0.4f, onValueChange = {})
+                    IconButton(onClick = {}) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = stringResource(R.string.increase_playback_speed)
+                        )
+                    }
+                }
+                Text(stringResource(R.string.playback_pitch))
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    IconButton(onClick = {}) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                            contentDescription = stringResource(R.string.decrease_playback_speed)
+                        )
+                    }
+                    Slider(modifier = Modifier.weight(1f), value = 0.4f, onValueChange = {})
+                    IconButton(onClick = {}) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = stringResource(R.string.increase_playback_speed)
+                        )
+                    }
+                }
+            }
+
         }
     }
 }
@@ -81,10 +135,10 @@ private fun PlaybackSpeedDialogPreview() {
     }
 
     VideoPlayerTheme {
-        if(dialogVisible) {
+        if (dialogVisible) {
             PlaybackSpeedDialog(
                 viewModel = NewPlayerViewModelDummy(),
-                uiMode = NewPlayerUIState.DUMMY,
+                uiState = NewPlayerUIState.DUMMY,
                 onDismiss = {
                     dialogVisible = false
                 })

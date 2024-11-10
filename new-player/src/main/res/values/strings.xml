@@ -67,4 +67,15 @@
     <string name="no_other_tracks_available_toast">No other stream tracks available.</string>
     <string name="loading">Loading</string>
     <string name="function_not_yet_implemented_toast">Function is not yet implemented.</string>
+    <string name="increase_playback_speed">Increse playback speed.</string>
+    <string name="decrease_playback_speed">Decrese playback speed.</string>
+    <string name="higher_pitch">Higher pitch</string>
+    <string name="lower_pitch">Lower pitch</string>
+    <string name="playback_speed">Speed</string>
+    <string name="playback_pitch">Pitch</string>
+    <string name="detach_pitch_with_description">Detach pitch (can lead to distortion)</string>
+    <string name="reset">Reset</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="fast_forward_on_silence">fast forward on silence</string>
 </resources>
