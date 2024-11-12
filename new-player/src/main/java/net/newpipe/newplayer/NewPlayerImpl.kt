@@ -501,7 +501,7 @@ internalPlayStream(mediaSource: MediaSource, playMode: PlayMode) {
         val builder = MediaSourceBuilder(
             repository = repository,
             mutableErrorFlow = mutableErrorFlow,
-            DataSourceFactory = repository.getDataSourceFactory(item, app),
+            dataSourceFactory = repository.getDataSourceFactory(item, app),
         )
 
         val uniqueId = Random.nextLong()

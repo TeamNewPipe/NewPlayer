@@ -47,7 +47,7 @@ internal class MediaSourceBuilder
     (
     private val repository: MediaRepository,
     private val mutableErrorFlow: MutableSharedFlow<Exception>,
-    private val DataSourceFactory: DataSource.Factory,
+    private val dataSourceFactory: DataSource.Factory,
 ) {
     @OptIn(UnstableApi::class)
     
@@ -105,10 +105,10 @@ internal suspend fun buildMediaSource(
     @OptIn(UnstableApi::class)
     private fun toMediaSource(mediaItem: MediaItem, stream: Stream): MediaSource =
         if (stream.isDashOrHls)
-            DashMediaSource.Factory(DataSourceFactory)
+            DashMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(mediaItem)
         else
-            ProgressiveMediaSource.Factory(DataSourceFactory)
+            ProgressiveMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(mediaItem)
 
 
