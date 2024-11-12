@@ -26,12 +26,10 @@ import android.graphics.Bitmap
 import androidx.media3.common.MediaMetadata
 import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.datasource.DataSource
-import androidx.media3.datasource.HttpDataSource
 import net.newpipe.newplayer.data.Chapter
 import net.newpipe.newplayer.data.Stream
 import net.newpipe.newplayer.data.Subtitle
 import net.newpipe.newplayer.data.StreamTrack
-import java.util.concurrent.Executors
 
 /**
  * You, dear Developer who uses NewPlayer, will want to implement MediaRepository.
@@ -118,7 +116,7 @@ interface MediaRepository {
     /**
      * Supply a custom [HttpDataSource.Factory]. This is important for Youtube.
      */
-    fun getHttpDataSourceFactory(item: String, context: Context): DataSource.Factory {
+    fun getDataSourceFactory(item: String, context: Context): DataSource.Factory {
         return DefaultHttpDataSource.Factory()
     }
 

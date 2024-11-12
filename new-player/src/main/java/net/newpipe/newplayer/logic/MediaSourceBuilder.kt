@@ -23,7 +23,6 @@ package net.newpipe.newplayer.logic
 import androidx.annotation.OptIn
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.datasource.HttpDataSource
 import androidx.media3.datasource.DataSource
 import androidx.media3.exoplayer.dash.DashMediaSource
 import androidx.media3.exoplayer.source.MediaSource
@@ -48,7 +47,7 @@ internal class MediaSourceBuilder
     (
     private val repository: MediaRepository,
     private val mutableErrorFlow: MutableSharedFlow<Exception>,
-    private val httpDataSourceFactory: DataSource.Factory,
+    private val DataSourceFactory: DataSource.Factory,
 ) {
     @OptIn(UnstableApi::class)
     
@@ -106,10 +105,10 @@ internal suspend fun buildMediaSource(
     @OptIn(UnstableApi::class)
     private fun toMediaSource(mediaItem: MediaItem, stream: Stream): MediaSource =
         if (stream.isDashOrHls)
-            DashMediaSource.Factory(httpDataSourceFactory)
+            DashMediaSource.Factory(DataSourceFactory)
                 .createMediaSource(mediaItem)
         else
-            ProgressiveMediaSource.Factory(httpDataSourceFactory)
+            ProgressiveMediaSource.Factory(DataSourceFactory)
                 .createMediaSource(mediaItem)
 
 
