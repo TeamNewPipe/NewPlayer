@@ -105,7 +105,7 @@ class TestMediaRepository(private val context: Context) : MediaRepository {
             "faulty" -> listOf(
                 Stream(
                     item = "faulty",
-                    streamUri = Uri.parse("https://kernel.org"),
+                    streamUri = Uri.parse("https://newpipe.net"),
                     mimeType = null,
                     streamTracks = listOf(
                         AudioStreamTrack(
