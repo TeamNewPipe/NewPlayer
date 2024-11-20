@@ -158,6 +158,7 @@ class PrefetchingRepositoryTest {
     @Test
     fun prefetch_prefetchInformationOfNewItem() = runTest {
         repository.prefetch("item")
+        //TODO: understand why without this call the spy is not updated and the test fails
         repository.getTimestampLink("item", 1000)
 
         coVerify (exactly = 1) { mockMediaRepository.getMetaInfo("item") }
@@ -188,6 +189,8 @@ class PrefetchingRepositoryTest {
         repository.reset()
         repository.getMetaInfo("item")
         repository.reset()
+        //TODO: understand why without this call the spy is not updated and the test fails
+        repository.getTimestampLink("item", 1000)
 
         coVerify (exactly = 6) { cachingRepository.getMetaInfo("item") }
         coVerify (exactly = 3) { cachingRepository.getStreams("item") }
