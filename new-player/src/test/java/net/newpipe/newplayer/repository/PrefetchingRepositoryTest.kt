@@ -38,6 +38,7 @@ class PrefetchingRepositoryTest {
     @Before
     fun clean() {
         clearMocks(mockMediaRepository)
+        clearMocks(cachingRepository)
         repository.reset()
     }
 
@@ -155,25 +156,28 @@ class PrefetchingRepositoryTest {
     }
 
     @Test
-    fun prefetch() = runTest {
+    fun prefetch_prefetchInformationOfNewItem() = runTest {
         repository.prefetch("item")
+        repository.getTimestampLink("item", 1000)
 
         coVerify (exactly = 1) { mockMediaRepository.getMetaInfo("item") }
         coVerify (exactly = 1) { mockMediaRepository.getStreams("item") }
         coVerify (exactly = 1) { mockMediaRepository.getSubtitles("item") }
         coVerify (exactly = 1) { mockMediaRepository.getPreviewThumbnailsInfo("item") }
         coVerify (exactly = 1) { mockMediaRepository.getChapters("item") }
+    }
 
-        //This request should not call the prefetch since data are already prefetched
+    @Test
+    fun prefetch_notPrefetchInformationOfAlreadySeenItem() = runTest {
         repository.getMetaInfo("item")
+        clearMocks(cachingRepository)
+        repository.prefetch("item")
 
-        //Check that the repository was called only one time for each type of data since prefetch was already done
-        // except for getMetaInfo which is used here to trigger the automatic prefetch
-        coVerify (exactly = 2) { mockMediaRepository.getMetaInfo("item") }
-        coVerify (exactly = 1) { mockMediaRepository.getStreams("item") }
-        coVerify (exactly = 1) { mockMediaRepository.getSubtitles("item") }
-        coVerify (exactly = 1) { mockMediaRepository.getPreviewThumbnailsInfo("item") }
-        coVerify (exactly = 1) { mockMediaRepository.getChapters("item") }
+        coVerify (exactly = 0) { cachingRepository.getMetaInfo("item") }
+        coVerify (exactly = 0) { cachingRepository.getStreams("item") }
+        coVerify (exactly = 0) { cachingRepository.getSubtitles("item") }
+        coVerify (exactly = 0) { cachingRepository.getPreviewThumbnailsInfo("item") }
+        coVerify (exactly = 0) { cachingRepository.getChapters("item") }
     }
 
     @Test

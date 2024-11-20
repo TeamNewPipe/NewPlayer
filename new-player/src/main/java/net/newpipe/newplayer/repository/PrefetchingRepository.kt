@@ -118,7 +118,10 @@ class PrefetchingRepository(
      * Manually trigger a prefetch of [item] without performing an actual request.
      */
     suspend fun prefetch(item:String) {
-        requestAll(item)
+        if(!hasBeenSeenBefore.contains(item)) {
+            hasBeenSeenBefore.add(item)
+            requestAll(item)
+        }
     }
 
     /**
