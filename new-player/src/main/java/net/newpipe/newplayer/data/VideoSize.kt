@@ -46,17 +46,6 @@ internal data class VideoSize(
 
     override fun compareTo(other: VideoSize) = width * height - other.width * other.height
 
-    override fun equals(other: Any?) =
-        when (other) {
-            is VideoSize ->
-                other.width == this.width && other.height == this.height && pixelWidthHeightRatio == other.pixelWidthHeightRatio
-
-            else -> false
-        }
-
-    override fun hashCode() =
-        width + height * 999999 + (pixelWidthHeightRatio*10000).toInt()
-
     fun getRatio() =
         (width * pixelWidthHeightRatio) / height
 
