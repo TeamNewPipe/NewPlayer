@@ -45,18 +45,6 @@ data class VideoStreamTrack(
 
     override fun toLongIdentifierString() = "$fileFormat ${toShortIdentifierString()}"
 
-    override fun equals(other: Any?) =
-        other is VideoStreamTrack
-                && other.hashCode() == this.hashCode()
-
-    override fun hashCode(): Int {
-        var result = width
-        result = 31 * result + height
-        result = 31 * result + frameRate
-        result = 31 * result + fileFormat.hashCode()
-        return result
-    }
-
     override fun compareTo(other: StreamTrack) =
         if (other is VideoStreamTrack) {
             val diff = width * height - other.width * other.height
@@ -100,17 +88,6 @@ data class AudioStreamTrack(
         } else {
             -1
         }
-
-    override fun equals(other: Any?) =
-        other is AudioStreamTrack
-                && other.hashCode() == this.hashCode()
-
-    override fun hashCode(): Int {
-        var result = bitrate
-        result = 31 * result + language.hashCode()
-        result = 31 * result + fileFormat.hashCode()
-        return result
-    }
 
     override fun toString() = """
         AudioStreamTrack {
