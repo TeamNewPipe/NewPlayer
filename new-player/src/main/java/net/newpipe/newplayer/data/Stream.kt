@@ -68,14 +68,4 @@ data class Stream(
     val audioStreamTrack: List<AudioStreamTrack>
         get() = streamTracks.filterIsInstance<AudioStreamTrack>()
 
-    override fun equals(other: Any?) = other is Stream && other.hashCode() == this.hashCode()
-
-    override fun hashCode(): Int {
-        var result = item.hashCode()
-        result = 31 * result + streamUri.hashCode()
-        result = 31 * result + streamTracks.hashCode()
-        result = 31 * result + (mimeType?.hashCode() ?: 0)
-        return result
-    }
-
 }
