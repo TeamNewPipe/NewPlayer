@@ -19,7 +19,6 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkConstructor
 import io.mockk.mockkStatic
-import io.mockk.spyk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,18 +30,6 @@ import net.newpipe.newplayer.repository.MockMediaRepository
 import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
-
-//TODO
-//  * onPlayBackError
-//  * play
-//  * pause
-//  * addToPlaylist
-//  * movePlaylistItem
-//  * removePlaylistItem
-//  * playStream
-//  * selectChapter
-//  * release
-//  * getItemFromMediaItem
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class NewPlayerImpltest {
@@ -108,6 +95,13 @@ class NewPlayerImpltest {
     }
 
     @Test
+    fun onPlayBackError_pauseExoPlayer() {
+        player.prepare()
+        player.onPlayBackError(Exception("test"))
+        verify (exactly = 1) { mockExoPlayer.pause() }
+    }
+
+    @Test
     fun prepare_setupNewExoplayer() {
         player.prepare()
         verify (exactly = 1) { anyConstructed<ExoPlayer.Builder>().build() }
@@ -149,4 +143,27 @@ class NewPlayerImpltest {
         verify (exactly = 1) { anyConstructed<MediaController.Builder>().buildAsync() }
     }
 
+    @Test
+    fun play_playIfCurrentMediaItemIsNotNull() {
+        player.prepare()
+        player.play()
+        verify (exactly = 1) { mockExoPlayer.play() }
+    }
+
+    @Test
+    fun play_notPlayIfCurrentMediaItemIsNull() {
+        player.prepare()
+        every { mockExoPlayer.currentMediaItem } returns null
+        player.play()
+        verify (exactly = 0) { mockExoPlayer.play() }
+    }
+
+    @Test
+    fun pause() {
+        player.prepare()
+        player.pause()
+        verify (exactly = 1) { mockExoPlayer.pause() }
+    }
+
+    
 }
