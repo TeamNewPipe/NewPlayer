@@ -10,6 +10,7 @@ import android.content.pm.ServiceInfo
 import android.os.Looper
 import android.text.TextUtils
 import android.util.Log
+import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
@@ -22,18 +23,20 @@ import io.mockk.mockkStatic
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import net.newpipe.newplayer.repository.DelayTestRepository
 import net.newpipe.newplayer.repository.MockMediaRepository
 import org.junit.Before
 import org.junit.BeforeClass
+import org.junit.Ignore
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class NewPlayerImpltest {
     val mockExoPlayer = mockk<ExoPlayer>(relaxed = true)
+    val mockMediaController = mockk<MediaController>(relaxed = true)
     val mockApp = mockk<Application>(relaxed = true)
     val playerActivityClass = Activity::class.java
     val repository = DelayTestRepository(MockMediaRepository(), 100)
@@ -53,7 +56,6 @@ class NewPlayerImpltest {
         mockkConstructor(MediaController.Builder::class)
 
         val mockLooper = mockk<Looper>(relaxed = true)
-        val mockMediaController = mockk<MediaController>(relaxed = true)
         val mockPackageManager = mockk<PackageManager>(relaxed = true)
         val mockResolveInfo = mockk<ResolveInfo>(relaxed = true)
         val mockServiceInfo = mockk<ServiceInfo>(relaxed = true)
@@ -78,7 +80,7 @@ class NewPlayerImpltest {
         @JvmStatic
         @BeforeClass
         fun init() {
-            Dispatchers.setMain(StandardTestDispatcher())
+            Dispatchers.setMain(UnconfinedTestDispatcher())
         }
 
         @JvmStatic
@@ -165,5 +167,74 @@ class NewPlayerImpltest {
         verify (exactly = 1) { mockExoPlayer.pause() }
     }
 
-    
+    @Test
+    fun addToPlaylist_prepareExoPlayerIfNotPrepared() {
+        player.addToPlaylist("item")
+        verify (exactly = 1) { mockExoPlayer.prepare() }
+    }
+
+    @Test
+    fun addToPlaylist_notPrepareExoPlayerIfAlreadyPrepared() {
+        player.prepare()
+        clearMocks(mockExoPlayer)
+        player.addToPlaylist("item")
+        verify (exactly = 0) { mockExoPlayer.prepare() }
+    }
+
+    @Ignore("Find a way to test code inside launchJobAndCollectError")
+    @Test
+    fun addToPlaylist_addMediaSource() {
+        player.addToPlaylist("item")
+//        try {
+//            Dispatchers.Main.job.join()
+//        } catch (e : Exception) { }
+//        coVerify (exactly = 2) { mockExoPlayer.addMediaSource(any()) }
+    }
+
+    @Test
+    fun movePlaylistItem() {
+        player.prepare()
+        player.movePlaylistItem(0, 1)
+        verify (exactly = 1){ mockExoPlayer.moveMediaItem(0, 1) }
+    }
+
+    @Test
+    fun removePlaylistItem_removeItem() {
+        player.prepare()
+        val mediaItem = MediaItem.Builder().setMediaId("123").build()
+        every { mockExoPlayer.mediaItemCount } returns 1
+        every { mockExoPlayer.getMediaItemAt(any()) } returns mediaItem
+        player.removePlaylistItem(123)
+        verify (exactly = 1) { mockExoPlayer.removeMediaItem(0) }
+    }
+
+    @Test
+    fun removePlaylistItem_notRemoveItem() {
+        player.prepare()
+        val mediaItem = MediaItem.Builder().setMediaId("123").build()
+        every { mockExoPlayer.mediaItemCount } returns 1
+        every { mockExoPlayer.getMediaItemAt(any()) } returns mediaItem
+        player.removePlaylistItem(124)
+        verify (exactly = 0) { mockExoPlayer.removeMediaItem(0) }
+    }
+
+    @Ignore("Mock currentChapters.value and test the selection of a chapter")
+    @Test
+    fun selectChapter() {
+        player.selectChapter(0)
+    }
+
+    @Test(expected = IndexOutOfBoundsException::class)
+    fun selectChapter_throwsException() {
+        player.selectChapter(3)
+    }
+
+    @Test
+    fun release() {
+        player.prepare()
+        player.release()
+        verify (exactly = 1) { mockMediaController.release() }
+        verify (exactly = 1) { mockExoPlayer.release() }
+    }
+
 }

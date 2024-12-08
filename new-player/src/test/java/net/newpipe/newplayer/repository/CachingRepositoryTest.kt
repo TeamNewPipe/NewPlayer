@@ -13,6 +13,7 @@ import org.junit.Test
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.BeforeClass
+import org.junit.Ignore
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CachingRepositoryTest {
@@ -157,33 +158,33 @@ class CachingRepositoryTest {
         assertNotNull(repository.getHttpDataSourceFactory("item"))
     }
 
-    // TODO
-//    @Test
-//    fun flush_flushTheCaches() = runTest {
-//        repository.getMetaInfo("item")
-//        repository.getStreams("item")
-//        repository.getSubtitles("item")
-//        repository.getPreviewThumbnail("item", 1000)
-//        repository.getPreviewThumbnailsInfo("item")
-//        repository.getChapters("item")
-//        repository.getTimestampLink("item", 0)
-//
-//        repository.flush()
-//
-//        repository.getMetaInfo("item")
-//        repository.getStreams("item")
-//        repository.getSubtitles("item")
-//        repository.getPreviewThumbnail("item", 1000)
-//        repository.getPreviewThumbnailsInfo("item")
-//        repository.getChapters("item")
-//        repository.getTimestampLink("item", 0)
-//
-//        coVerify (exactly = 2) { mockMediaRepository.getMetaInfo("item") }
-//        coVerify (exactly = 2) { mockMediaRepository.getStreams("item") }
-//        coVerify (exactly = 2) { mockMediaRepository.getSubtitles("item") }
-//        coVerify (exactly = 2) { mockMediaRepository.getPreviewThumbnail("item", 1000) }
-//        coVerify (exactly = 2) { mockMediaRepository.getPreviewThumbnailsInfo("item") }
-//        coVerify (exactly = 2) { mockMediaRepository.getChapters("item") }
-//        coVerify (exactly = 2) { mockMediaRepository.getTimestampLink("item", 0) }
-//    }
+    @Ignore("Test flush if the job is cancelled using cacheRepoScope and the test is interrupted")
+    @Test
+    fun flush_flushTheCaches() = runTest {
+        repository.getMetaInfo("item")
+        repository.getStreams("item")
+        repository.getSubtitles("item")
+        repository.getPreviewThumbnail("item", 1000)
+        repository.getPreviewThumbnailsInfo("item")
+        repository.getChapters("item")
+        repository.getTimestampLink("item", 0)
+
+        repository.flush()
+
+        repository.getMetaInfo("item")
+        repository.getStreams("item")
+        repository.getSubtitles("item")
+        repository.getPreviewThumbnail("item", 1000)
+        repository.getPreviewThumbnailsInfo("item")
+        repository.getChapters("item")
+        repository.getTimestampLink("item", 0)
+
+        coVerify (exactly = 2) { mockMediaRepository.getMetaInfo("item") }
+        coVerify (exactly = 2) { mockMediaRepository.getStreams("item") }
+        coVerify (exactly = 2) { mockMediaRepository.getSubtitles("item") }
+        coVerify (exactly = 2) { mockMediaRepository.getPreviewThumbnail("item", 1000) }
+        coVerify (exactly = 2) { mockMediaRepository.getPreviewThumbnailsInfo("item") }
+        coVerify (exactly = 2) { mockMediaRepository.getChapters("item") }
+        coVerify (exactly = 2) { mockMediaRepository.getTimestampLink("item", 0) }
+    }
 }
