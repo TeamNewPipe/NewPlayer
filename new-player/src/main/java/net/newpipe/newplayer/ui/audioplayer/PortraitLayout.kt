@@ -57,7 +57,7 @@ internal fun PortraitLayout(
             )
             AudioPlaybackControllerUI(viewModel = viewModel, uiState = uiState)
             ProgressUI(viewModel = viewModel, uiState = uiState)
-            AudioBottomUI(viewModel, uiState)
+            AudioBottomUI(viewModel, uiState, {})
         }
     }
 }

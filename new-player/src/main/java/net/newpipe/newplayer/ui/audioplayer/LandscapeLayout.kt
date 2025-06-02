@@ -68,7 +68,7 @@ internal fun LandscapeLayout(
 
                 AudioPlaybackControllerUI(viewModel = viewModel, uiState = uiState)
                 ProgressUI(viewModel = viewModel, uiState = uiState)
-                AudioBottomUI(viewModel = viewModel, uiState = uiState)
+                AudioBottomUI(viewModel = viewModel, uiState = uiState, {})
             }
         }
     }
