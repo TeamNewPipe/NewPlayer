@@ -65,12 +65,11 @@ import net.newpipe.newplayer.ui.common.getInsets
 internal val CONTROLLER_UI_BACKGROUND_COLOR = Color(0x75000000)
 
 /** @hide */
-internal val STREAMSELECT_UI_BACKGROUND_COLOR = Color(0xba000000)
+internal val STREAM_SELECT_UI_BACKGROUND_COLOR = Color(0xba000000)
 
+/** hide */
 @OptIn(UnstableApi::class)
 @Composable
-
-/** @hide */
 internal fun VideoPlayerControllerUI(
     viewModel: InternalNewPlayerViewModel, uiState: NewPlayerUIState
 ) {

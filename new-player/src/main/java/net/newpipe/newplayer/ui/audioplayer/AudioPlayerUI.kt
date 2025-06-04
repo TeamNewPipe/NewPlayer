@@ -36,11 +36,16 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.ui.common.getInsets
+import net.newpipe.newplayer.ui.common.speed_and_pitch.PlaybackSpeedDialog
 import net.newpipe.newplayer.ui.selection_ui.ChapterSelectUI
 import net.newpipe.newplayer.ui.selection_ui.StreamSelectUI
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
@@ -78,6 +83,10 @@ internal fun AudioPlayerUI(
     isLandScape: Boolean
 ) {
     val insets = getInsets()
+
+    var playbackSpeedDialogVisible by remember {
+        mutableStateOf(false)
+    }
 
     Box(
         modifier = Modifier
@@ -125,6 +134,9 @@ internal fun AudioPlayerUI(
                         modifier = Modifier
                             .padding(innerPadding)
                             .padding(16.dp),
+                        showPlaybackSpeedDialog = {
+                            playbackSpeedDialogVisible = true
+                        }
                     )
                 } else {
                     PortraitLayout(
@@ -133,10 +145,19 @@ internal fun AudioPlayerUI(
                         modifier = Modifier
                             .padding(innerPadding)
                             .padding(16.dp),
+                        showPlaybackSpeedDialog = {
+                            playbackSpeedDialogVisible = true
+                        }
                     )
                 }
             }
         }
+    }
+
+    AnimatedVisibility(playbackSpeedDialogVisible) {
+        PlaybackSpeedDialog(uiState = uiState, viewModel = viewModel, onDismiss = {
+            playbackSpeedDialogVisible = false
+        })
     }
 }
 

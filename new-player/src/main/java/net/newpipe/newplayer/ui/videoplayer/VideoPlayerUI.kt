@@ -134,7 +134,7 @@ internal fun VideoPlayerUi(viewModel: InternalNewPlayerViewModel, uiState: NewPl
         AnimatedVisibility(visible = uiState.uiMode.isStreamSelect) {
             Surface(
                 modifier = Modifier.fillMaxSize(),
-                color = STREAMSELECT_UI_BACKGROUND_COLOR
+                color = STREAM_SELECT_UI_BACKGROUND_COLOR
             ) {
                 StreamSelectUI(
                     viewModel = viewModel,
@@ -147,7 +147,7 @@ internal fun VideoPlayerUi(viewModel: InternalNewPlayerViewModel, uiState: NewPl
         AnimatedVisibility(visible = uiState.uiMode.isChapterSelect) {
             Surface(
                 modifier = Modifier.fillMaxSize(),
-                color = STREAMSELECT_UI_BACKGROUND_COLOR
+                color = STREAM_SELECT_UI_BACKGROUND_COLOR
             ) {
                 ChapterSelectUI(
                     viewModel = viewModel,

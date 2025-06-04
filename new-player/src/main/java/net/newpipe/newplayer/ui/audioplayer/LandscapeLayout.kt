@@ -38,9 +38,9 @@ internal fun LandscapeLayout(
     viewModel: InternalNewPlayerViewModel,
     uiState: NewPlayerUIState,
     modifier: Modifier = Modifier,
+    showPlaybackSpeedDialog: () -> Unit
 ) {
     Column(modifier = modifier) {
-
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(32.dp),
@@ -68,7 +68,7 @@ internal fun LandscapeLayout(
 
                 AudioPlaybackControllerUI(viewModel = viewModel, uiState = uiState)
                 ProgressUI(viewModel = viewModel, uiState = uiState)
-                AudioBottomUI(viewModel = viewModel, uiState = uiState, {})
+                AudioBottomUI(viewModel = viewModel, uiState = uiState, showPlaybackSpeedDialog)
             }
         }
     }

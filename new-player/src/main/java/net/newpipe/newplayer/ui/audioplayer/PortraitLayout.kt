@@ -35,6 +35,7 @@ internal fun PortraitLayout(
     viewModel: InternalNewPlayerViewModel,
     uiState: NewPlayerUIState,
     modifier: Modifier = Modifier,
+    showPlaybackSpeedDialog: () -> Unit
 ) {
     Column(
         modifier = Modifier,
@@ -57,7 +58,7 @@ internal fun PortraitLayout(
             )
             AudioPlaybackControllerUI(viewModel = viewModel, uiState = uiState)
             ProgressUI(viewModel = viewModel, uiState = uiState)
-            AudioBottomUI(viewModel, uiState, {})
+            AudioBottomUI(viewModel, uiState, showPlaybackSpeedDialog)
         }
     }
 }
@@ -107,7 +108,8 @@ private fun AudioPlayerUIPortraitPreview() {
                 viewModel = NewPlayerViewModelDummy(),
                 uiState = NewPlayerUIState.DUMMY.copy(
                     uiMode = UIModeState.FULLSCREEN_AUDIO
-                )
+                ),
+                showPlaybackSpeedDialog = {}
             )
         }
     }
@@ -127,8 +129,9 @@ private fun AudioPlayerUIPortraitPreviewWithPlaylist() {
                 viewModel = NewPlayerViewModelDummy(),
                 uiState = NewPlayerUIState.DUMMY.copy(
                     uiMode = UIModeState.FULLSCREEN_AUDIO,
-                    showPlaylistInAudioPlayer = true
-                )
+                    showPlaylistInAudioPlayer = true,
+                    ),
+                showPlaybackSpeedDialog = {}
             )
         }
     }

@@ -168,7 +168,6 @@ private fun TrackSelectionMenu(viewModel: InternalNewPlayerViewModel, uiState: N
 
     val context = LocalContext.current
 
-
     val availableVideoTracks = uiState.currentlyAvailableTracks.filterIsInstance<VideoStreamTrack>()
 
     Box {

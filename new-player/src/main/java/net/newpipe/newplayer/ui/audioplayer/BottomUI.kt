@@ -54,14 +54,14 @@ import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.ui.common.LanguageMenu
 import net.newpipe.newplayer.ui.common.LanguageMenuItem
-import net.newpipe.newplayer.uiModel.NewPlayerUIState
-import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
-import net.newpipe.newplayer.uiModel.NewPlayerViewModelDummy
-import net.newpipe.newplayer.uiModel.UIModeState
-import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
-import net.newpipe.newplayer.ui.videoplayer.pip.supportsPip
 import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
 import net.newpipe.newplayer.ui.common.showNotYetImplementedToast
+import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
+import net.newpipe.newplayer.ui.videoplayer.pip.supportsPip
+import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
+import net.newpipe.newplayer.uiModel.NewPlayerUIState
+import net.newpipe.newplayer.uiModel.NewPlayerViewModelDummy
+import net.newpipe.newplayer.uiModel.UIModeState
 
 @OptIn(UnstableApi::class)
 @Composable
@@ -237,8 +237,7 @@ private fun AudioBottomUIPreview() {
         Box(modifier = Modifier.fillMaxWidth()) {
             AudioBottomUI(
                 viewModel = NewPlayerViewModelDummy(),
-                uiState = NewPlayerUIState.DUMMY,
-                showPlaybackSpeedDialog = {})
+                uiState = NewPlayerUIState.DUMMY, {})
         }
     }
 }
