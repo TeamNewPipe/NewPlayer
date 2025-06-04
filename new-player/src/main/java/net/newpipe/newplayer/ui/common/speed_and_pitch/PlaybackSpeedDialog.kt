@@ -30,9 +30,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
@@ -89,6 +92,7 @@ internal fun PlaybackSpeedDialog(
         Card(
             shape = RoundedCornerShape(15.dp),
             modifier = Modifier
+                .widthIn(0.dp, 450.dp)
                 .fillMaxWidth(0.95f),
             elevation = CardDefaults.elevatedCardElevation(5.dp),
         ) {
@@ -96,6 +100,7 @@ internal fun PlaybackSpeedDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color.Gray)
+                    .verticalScroll(rememberScrollState())
             ) {
                 Box(modifier = Modifier.height(10.dp))
 
