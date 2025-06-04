@@ -18,7 +18,7 @@
  * along with NewPlayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.newpipe.newplayer.ui.common
+package net.newpipe.newplayer.ui.common.speed_and_pitch
 
 
 import androidx.annotation.OptIn
@@ -59,11 +59,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.constraintlayout.compose.ChainStyle.Companion.SpreadInside
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
+import net.newpipe.newplayer.ui.common.showNotYetImplementedToast
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 import net.newpipe.newplayer.uiModel.NewPlayerUIState
 import net.newpipe.newplayer.uiModel.NewPlayerViewModel
@@ -127,170 +127,6 @@ internal fun PlaybackSpeedDialog(
                     Box(modifier = Modifier.width(17.dp))
                 }
             }
-        }
-    }
-}
-
-
-@OptIn(UnstableApi::class)
-@Composable
-private fun SpeedSelector() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(fontWeight = FontWeight.Bold, text = stringResource(R.string.playback_speed))
-        }
-
-        ConstraintLayout(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-            val (startButton, endButton, slider, legendBox) = createRefs()
-
-
-            Row(
-                modifier = Modifier
-                    .wrapContentHeight()
-                    .constrainAs(legendBox) {
-                        start.linkTo(slider.start)
-                        end.linkTo(slider.end)
-                        top.linkTo(parent.top)
-                        bottom.linkTo(slider.top)
-                        width = Dimension.fillToConstraints
-                    },
-                horizontalArrangement = Arrangement.SpaceBetween
-            )
-            {
-                Text("asdf")
-
-                Text("bsdf")
-
-                Text("csdf")
-            }
-
-
-
-            IconButton(
-                modifier = Modifier
-                    .constrainAs(startButton) {
-                        start.linkTo(parent.start)
-                        bottom.linkTo(parent.bottom)
-                    }
-                    .wrapContentWidth(), onClick = {}) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                    contentDescription = stringResource(R.string.decrease_playback_speed)
-                )
-            }
-
-            Slider(modifier = Modifier.constrainAs(slider) {
-                start.linkTo(startButton.end)
-                end.linkTo(endButton.start)
-                centerVerticallyTo(endButton)
-                width = Dimension.fillToConstraints
-            }, value = 0.5f, onValueChange = {})
-
-
-            IconButton(
-                modifier = Modifier
-                    .constrainAs(endButton) {
-                        end.linkTo(parent.end)
-                        bottom.linkTo(parent.bottom)
-                    }
-                    .wrapContentWidth(),
-                onClick = {}) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = stringResource(R.string.increase_playback_speed)
-                )
-            }
-
-
-        }
-    }
-}
-
-
-@OptIn(UnstableApi::class)
-@Composable
-private fun PitchSelector() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(fontWeight = FontWeight.Bold, text = stringResource(R.string.playback_pitch))
-        }
-
-        ConstraintLayout(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-            val (startButton, endButton, slider, legendBox) = createRefs()
-
-
-            Row(
-                modifier = Modifier
-                    .wrapContentHeight()
-                    .constrainAs(legendBox) {
-                        start.linkTo(slider.start)
-                        end.linkTo(slider.end)
-                        top.linkTo(parent.top)
-                        bottom.linkTo(slider.top)
-                        width = Dimension.fillToConstraints
-                    },
-                horizontalArrangement = Arrangement.SpaceBetween
-            )
-            {
-                Text("asdf")
-
-                Text("bsdf")
-
-                Text("csdf")
-            }
-
-
-
-            IconButton(
-                modifier = Modifier
-                    .constrainAs(startButton) {
-                        start.linkTo(parent.start)
-                        bottom.linkTo(parent.bottom)
-                    }
-                    .wrapContentWidth(), onClick = {}) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                    contentDescription = stringResource(R.string.decrease_playback_speed)
-                )
-            }
-
-            Slider(modifier = Modifier.constrainAs(slider) {
-                start.linkTo(startButton.end)
-                end.linkTo(endButton.start)
-                centerVerticallyTo(endButton)
-                width = Dimension.fillToConstraints
-            }, value = 0.5f, onValueChange = {})
-
-
-            IconButton(
-                modifier = Modifier
-                    .constrainAs(endButton) {
-                        end.linkTo(parent.end)
-                        bottom.linkTo(parent.bottom)
-                    }
-                    .wrapContentWidth(),
-                onClick = {}) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = stringResource(R.string.increase_playback_speed)
-                )
-            }
-
-
         }
     }
 }
