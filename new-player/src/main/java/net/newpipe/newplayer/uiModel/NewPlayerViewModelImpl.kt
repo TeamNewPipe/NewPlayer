@@ -32,6 +32,7 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.os.BundleCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -203,6 +204,13 @@ class NewPlayerViewModelImpl @Inject constructor(
                             super.onShuffleModeEnabledChanged(shuffleModeEnabled)
                             mutableUiState.update {
                                 it.copy(shuffleEnabled = newPlayer.shuffle)
+                            }
+                        }
+
+                        override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters) {
+                            super.onPlaybackParametersChanged(playbackParameters)
+                            mutableUiState.update {
+                                it.copy(playbackParameters = player.playbackParameters)
                             }
                         }
                     })

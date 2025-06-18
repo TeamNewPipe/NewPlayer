@@ -23,6 +23,7 @@ package net.newpipe.newplayer.uiModel
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
+import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.NewPlayer
@@ -196,7 +197,12 @@ data class NewPlayerUIState(
     val seekPreviewVisible: Boolean,
 
     /** Depicts weather to show the playlist or the current stream thumbnail in the audio player.**/
-    var showPlaylistInAudioPlayer: Boolean,
+    val showPlaylistInAudioPlayer: Boolean,
+
+    /**
+     * Depicts the current speed and pitch of the played media.
+     */
+    val playbackParameters: PlaybackParameters
 ) {
     companion object {
 
@@ -232,7 +238,8 @@ data class NewPlayerUIState(
             currentSeekPreviewThumbnail = null,
             currentSeekPreviewText = null,
             seekPreviewVisible = false,
-            showPlaylistInAudioPlayer = false
+            showPlaylistInAudioPlayer = false,
+            playbackParameters = PlaybackParameters(1f)
         )
 
         /**
@@ -322,7 +329,8 @@ data class NewPlayerUIState(
                         .setDurationMs(2201000L)
                         .build())
                     .build(),
-            )
+            ),
+            playbackParameters = PlaybackParameters(1.2f, 1.5f)
         )
     }
 }
