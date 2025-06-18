@@ -121,6 +121,7 @@ internal fun setScreenBrightness(value: Float, activity: Activity) {
 }
 
 
+
 /** @hide */
 @Composable
 @ReadOnlyComposable
@@ -282,3 +283,9 @@ internal fun HiddenMeasure(
         }
     }
 }
+
+internal fun floatToStringWithoutTrailingZerosTwoDigitsAccuracy(value: Float) =
+    "%.2f".format(value)
+        .trimEnd { it == '0' }
+        .trimEnd { it == '.' }
+        .trimEnd { it == ',' }

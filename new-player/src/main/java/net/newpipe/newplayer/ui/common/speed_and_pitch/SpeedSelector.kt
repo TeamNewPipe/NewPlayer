@@ -1,6 +1,7 @@
 package net.newpipe.newplayer.ui.common.speed_and_pitch
 
 import androidx.annotation.OptIn
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,15 +19,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
+import net.newpipe.newplayer.ui.common.floatToStringWithoutTrailingZerosTwoDigitsAccuracy
+import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
 
 /** hide */
 @OptIn(UnstableApi::class)
 @Composable
-internal fun SpeedSelector() {
+internal fun SpeedSelector(
+    @StringRes titleText: Int,
+    minValue: Float,
+    maxValue: Float,
+    currentValue: Float
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -36,34 +45,41 @@ internal fun SpeedSelector() {
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(fontWeight = FontWeight.Bold, text = stringResource(R.string.playback_speed))
+            Text(fontWeight = FontWeight.Bold, text = stringResource(titleText))
         }
 
-        ConstraintLayout(modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()) {
-            val (startButton, endButton, slider, legendBox) = createRefs()
+        ConstraintLayout(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+        ) {
+            val (startButton, endButton, slider, startText, valueText, endText) = createRefs()
 
 
-            Row(
-                modifier = Modifier
-                    .wrapContentHeight()
-                    .constrainAs(legendBox) {
-                        start.linkTo(slider.start)
-                        end.linkTo(slider.end)
-                        top.linkTo(parent.top)
-                        bottom.linkTo(slider.top)
-                        width = Dimension.fillToConstraints
-                    },
-                horizontalArrangement = Arrangement.SpaceBetween
+            Text(
+                modifier = Modifier.constrainAs(startText) {
+                    start.linkTo(startButton.end)
+                    top.linkTo(parent.top)
+                    bottom.linkTo(slider.top)
+                },
+                text = "x" + floatToStringWithoutTrailingZerosTwoDigitsAccuracy(minValue)
             )
-            {
-                Text("asdf")
+            Text(
+                modifier = Modifier.constrainAs(valueText) {
+                    centerHorizontallyTo(parent)
+                    top.linkTo(parent.top)
+                },
+                text = "x" + floatToStringWithoutTrailingZerosTwoDigitsAccuracy(currentValue),
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                modifier = Modifier.constrainAs(endText) {
+                    top.linkTo(parent.top)
+                    end.linkTo(endButton.start)
+                },
+                text = "x" + floatToStringWithoutTrailingZerosTwoDigitsAccuracy(maxValue)
+            )
 
-                Text("bsdf")
-
-                Text("csdf")
-            }
 
 
 
@@ -104,4 +120,21 @@ internal fun SpeedSelector() {
         }
     }
 }
+
+
+@OptIn(UnstableApi::class)
+@Preview(device = "spec:width=1080px,height=1080px,dpi=440,orientation=landscape")
+@Composable
+private fun SpeedSelectorPreview() {
+
+    VideoPlayerTheme {
+        SpeedSelector(
+            titleText = R.string.playback_speed,
+            minValue = 0.1f,
+            maxValue = 5.0f,
+            currentValue = 0.90f
+        )
+    }
+}
+
 

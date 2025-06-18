@@ -92,7 +92,7 @@ internal fun PlaybackSpeedDialog(
         Card(
             shape = RoundedCornerShape(15.dp),
             modifier = Modifier
-                .widthIn(0.dp, 450.dp)
+                .widthIn(0.dp, 500.dp)
                 .fillMaxWidth(0.95f),
             elevation = CardDefaults.elevatedCardElevation(5.dp),
         ) {
@@ -104,9 +104,9 @@ internal fun PlaybackSpeedDialog(
             ) {
                 Box(modifier = Modifier.height(10.dp))
 
-                SpeedSelector()
+                SpeedSelector(titleText = R.string.playback_speed, -0.5f, -5f, -0.5f)
 
-                PitchSelector()
+                SpeedSelector(titleText = R.string.playback_pitch, -0.5f, -5f, -0.5f)
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(true, onCheckedChange = { showNotYetImplementedToast(context) })
