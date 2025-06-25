@@ -72,6 +72,12 @@ import net.newpipe.newplayer.uiModel.NewPlayerUIState
 import net.newpipe.newplayer.uiModel.NewPlayerViewModel
 import net.newpipe.newplayer.uiModel.NewPlayerViewModelDummy
 
+val MIN_SPEEDUP_VALUE = 0.1f;
+val MAX_SPEEDUP_VALUE = 5.0f;
+
+val MIN_PITCH_VALUE = 0.1f;
+val MAX_PITCH_VALUE = 5.0f;
+
 
 /** @hide **/
 @OptIn(UnstableApi::class)
@@ -99,7 +105,6 @@ internal fun PlaybackSpeedDialog(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.Gray)
                     .verticalScroll(rememberScrollState())
             ) {
                 Box(modifier = Modifier.height(10.dp))
