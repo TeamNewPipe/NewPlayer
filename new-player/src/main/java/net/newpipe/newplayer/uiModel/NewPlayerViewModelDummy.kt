@@ -117,6 +117,10 @@ open class NewPlayerViewModelDummy : InternalNewPlayerViewModel {
         println("dummy impl")
     }
 
+    override fun onSpeedPitchChanged(speed: Float, pitch: Float) {
+        println("dummy impl: speed: $speed, pitch: $pitch")
+    }
+
     override fun onPictureInPictureModeChanged(isPictureInPictureMode: Boolean) {
         println("dummy impl isInPictureInPictureMode: $isPictureInPictureMode")
     }

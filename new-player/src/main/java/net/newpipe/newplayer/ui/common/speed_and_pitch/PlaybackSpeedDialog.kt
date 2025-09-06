@@ -68,6 +68,7 @@ import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.R
 import net.newpipe.newplayer.ui.common.showNotYetImplementedToast
 import net.newpipe.newplayer.ui.theme.VideoPlayerTheme
+import net.newpipe.newplayer.uiModel.InternalNewPlayerViewModel
 import net.newpipe.newplayer.uiModel.NewPlayerUIState
 import net.newpipe.newplayer.uiModel.NewPlayerViewModel
 import net.newpipe.newplayer.uiModel.NewPlayerViewModelDummy
@@ -84,7 +85,7 @@ val MAX_PITCH_VALUE = 5.0f;
 @Composable
 internal fun PlaybackSpeedDialog(
     uiState: NewPlayerUIState,
-    viewModel: NewPlayerViewModel,
+    viewModel: InternalNewPlayerViewModel,
     onDismiss: () -> Unit
 ) {
     val context = LocalContext.current
@@ -109,9 +110,29 @@ internal fun PlaybackSpeedDialog(
             ) {
                 Box(modifier = Modifier.height(10.dp))
 
-                SpeedSelector(titleText = R.string.playback_speed, -0.5f, -5f, -0.5f)
+                SpeedSelector(
+                    titleText = R.string.playback_speed,
+                    0.2f,
+                    5f,
+                    1f,
+                    onValueChange = {
+                        viewModel.onSpeedPitchChanged(
+                            speed = it,
+                            pitch = uiState.playbackParameters.pitch
+                        )
+                    })
 
-                SpeedSelector(titleText = R.string.playback_pitch, -0.5f, -5f, -0.5f)
+                SpeedSelector(
+                    titleText = R.string.playback_pitch,
+                    0.2f,
+                    5f,
+                    1f,
+                    onValueChange = {
+                        viewModel.onSpeedPitchChanged(
+                            speed = uiState.playbackParameters.speed,
+                            pitch = it
+                        )
+                    })
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(true, onCheckedChange = { showNotYetImplementedToast(context) })

@@ -34,7 +34,8 @@ internal fun SpeedSelector(
     @StringRes titleText: Int,
     minValue: Float,
     maxValue: Float,
-    currentValue: Float
+    currentValue: Float,
+    onValueChange: (Float) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -101,7 +102,7 @@ internal fun SpeedSelector(
                 end.linkTo(endButton.start)
                 centerVerticallyTo(endButton)
                 width = Dimension.fillToConstraints
-            }, value = 0.5f, onValueChange = {})
+            }, value = 0.5f, onValueChange = onValueChange)
 
 
             IconButton(
@@ -132,7 +133,8 @@ private fun SpeedSelectorPreview() {
             titleText = R.string.playback_speed,
             minValue = 0.1f,
             maxValue = 5.0f,
-            currentValue = 0.90f
+            currentValue = 0.90f,
+            onValueChange = {}
         )
     }
 }

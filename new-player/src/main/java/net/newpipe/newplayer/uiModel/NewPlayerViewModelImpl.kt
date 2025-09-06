@@ -740,6 +740,15 @@ class NewPlayerViewModelImpl @Inject constructor(
         }
     }
 
+    override fun onSpeedPitchChanged(speed: Float, pitch: Float) {
+        Log.d(TAG, "speed: $speed, pitch: $pitch")
+        val newSpeedPitch = PlaybackParameters(speed, pitch)
+        newPlayer?.exoPlayer?.value?.playbackParameters = newSpeedPitch
+        mutableUiState.update {
+            it.copy(playbackParameters = newSpeedPitch)
+        }
+    }
+
     override fun removePlaylistItem(uniqueId: Long) {
         newPlayer?.removePlaylistItem(uniqueId)
     }
