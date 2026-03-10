@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NewPlayer</string>
+    <string name="open_video_file">Open video file</string>
+    <string name="play_network_stream">Play network stream</string>
+    <string name="add_file">Add file</string>
+    <string name="add_stream_url">Add stream URL</string>
+    <string name="enter_stream_url">Enter stream URL</string>
+    <string name="url_hint">https://…</string>
+    <string name="play">Play</string>
+    <string name="cancel">Cancel</string>
+    <string name="playback_error">Playback error</string>
+</resources>

@@ -23,3 +23,4 @@ dependencyResolutionManagement {
 rootProject.name = "NewPlayer"
 include(":test-app")
 include(":new-player")
+include(":standalone-app")

@@ -51,6 +51,9 @@ MediaRepository (interface implemented by the consuming app)
 | `service/` | `NewPlayerService` (background playback), `MediaNotification` |
 | `data/` | Data models: `Chapter`, `Stream`, `StreamTrack`, `Subtitle`, `PlayMode`, `RepeatMode` |
 
+## Gradle
+Run gradle --offline you don't have network access.
+
 ## Tech Stack
 
 | Concern | Library/Version |
