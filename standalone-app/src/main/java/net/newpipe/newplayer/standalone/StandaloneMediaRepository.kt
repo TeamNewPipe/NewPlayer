@@ -34,6 +34,7 @@ import net.newpipe.newplayer.data.VideoStreamTrack
 import net.newpipe.newplayer.repository.MediaRepository
 import net.newpipe.newplayer.repository.MediaRepository.PreviewThumbnailsInfo
 import net.newpipe.newplayer.repository.MediaRepository.RepoMetaInfo
+import androidx.core.net.toUri
 
 /**
  * MediaRepository implementation for the standalone app.
@@ -50,7 +51,7 @@ class StandaloneMediaRepository(private val context: Context) : MediaRepository 
     )
 
     override suspend fun getMetaInfo(item: String): MediaMetadata {
-        val uri = Uri.parse(item)
+        val uri = item.toUri()
         val title = when (uri.scheme) {
             "content" -> queryDisplayName(uri) ?: uri.lastPathSegment ?: item
             else -> uri.lastPathSegment ?: item
@@ -59,7 +60,7 @@ class StandaloneMediaRepository(private val context: Context) : MediaRepository 
     }
 
     override suspend fun getStreams(item: String): List<Stream> {
-        val uri = Uri.parse(item)
+        val uri = item.toUri()
         val mimeType = when (uri.scheme) {
             "content" -> context.contentResolver.getType(uri)
             else -> null
