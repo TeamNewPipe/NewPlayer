@@ -34,6 +34,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.data.PlayMode
 import net.newpipe.newplayer.standalone.ui.StandaloneAppUI
+import net.newpipe.newplayer.standalone.ui.theme.StandaloneTheme
 import net.newpipe.newplayer.ui.ContentScale
 import net.newpipe.newplayer.uiModel.NewPlayerViewModelImpl
 import javax.inject.Inject
@@ -56,7 +57,9 @@ class MainActivity : ComponentActivity() {
         viewModel.contentFitMode = ContentScale.FIT_INSIDE
 
         setContent {
-            StandaloneAppUI(viewModel = viewModel, newPlayer = newPlayer)
+            StandaloneTheme {
+                StandaloneAppUI(viewModel = viewModel, newPlayer = newPlayer)
+            }
         }
 
         ////////////////////////////////////////////////////////////////////////////////////

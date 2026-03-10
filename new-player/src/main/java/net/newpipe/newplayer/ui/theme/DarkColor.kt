@@ -24,10 +24,10 @@ val video_player_onError_dark = Color(0xFF690005)
 val video_player_onErrorContainer_dark = Color(0xFFFFDAD6)
 
 // background color
-val video_player_background_dark = Color(0xFF1F1B16)
+val video_player_background_dark = Color(0xFF1A1212)
 
 // Font color on background
-val video_player_onBackground_dark = Color(0xFFEAE1D9)
+val video_player_onBackground_dark = Color(0xFFEAD9D9)
 
 val video_player_surface_dark = Color(0xFF000000)
 

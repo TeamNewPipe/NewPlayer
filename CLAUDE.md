@@ -54,6 +54,9 @@ MediaRepository (interface implemented by the consuming app)
 ## Gradle
 Run gradle --offline you don't have network access.
 
+## Offlimits
+Consider the new-player repo read only. Don't touch it.
+
 ## Tech Stack
 
 | Concern | Library/Version |
