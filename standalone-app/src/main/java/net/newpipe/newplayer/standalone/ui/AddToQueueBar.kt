@@ -20,11 +20,13 @@
 
 package net.newpipe.newplayer.standalone.ui
 
+import android.R.attr.onClick
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -52,6 +54,7 @@ import net.newpipe.newplayer.standalone.ui.theme.StandaloneTheme
 @Composable
 fun AddToQueueBar(
     modifier: Modifier = Modifier,
+    vertical: Boolean = false,
     onAddFile: (Uri) -> Unit,
     onAddUrl: (String) -> Unit,
 ) {
@@ -65,35 +68,36 @@ fun AddToQueueBar(
                 uri,
                 Intent.FLAG_GRANT_READ_URI_PERMISSION,
             )
-        } catch (_: SecurityException) { }
+        } catch (_: SecurityException) {
+        }
         onAddFile(uri)
     }
 
     var showUrlDialog by remember { mutableStateOf(false) }
 
     Surface(
-        modifier = modifier.fillMaxWidth(),
+        modifier = if (vertical) modifier else modifier.fillMaxWidth(),
         tonalElevation = 3.dp,
     ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            OutlinedButton(
-                modifier = Modifier.weight(1f),
-                onClick = { filePicker.launch(arrayOf("video/*")) },
+        if (vertical) {
+            Column(
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Icon(Icons.Default.Add, contentDescription = null)
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(stringResource(R.string.add_file))
+                AddFileButton(
+                    modifier = Modifier,
+                    onClick = { filePicker.launch(arrayOf("video/*")) })
+                AddStreamButton(modifier = Modifier, onClick = { showUrlDialog = true })
             }
-            OutlinedButton(
-                modifier = Modifier.weight(1f),
-                onClick = { showUrlDialog = true },
+        } else {
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Icon(Icons.Default.Add, contentDescription = null)
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(stringResource(R.string.add_stream_url))
+                AddFileButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = { filePicker.launch(arrayOf("video/*")) })
+                AddStreamButton(modifier = Modifier.weight(1f), onClick = { showUrlDialog = true })
             }
         }
     }
@@ -109,6 +113,27 @@ fun AddToQueueBar(
     }
 }
 
+@Composable
+fun AddFileButton(modifier: Modifier, onClick: () -> Unit) {
+    OutlinedButton(onClick = onClick, modifier = modifier) {
+        Icon(Icons.Default.Add, contentDescription = null)
+        Spacer(modifier = Modifier.width(4.dp))
+        Text(stringResource(R.string.add_file))
+    }
+}
+
+@Composable
+fun AddStreamButton(modifier: Modifier, onClick: () -> Unit) {
+    OutlinedButton(
+        modifier = modifier,
+        onClick = onClick,
+    ) {
+        Icon(Icons.Default.Add, contentDescription = null)
+        Spacer(modifier = Modifier.width(4.dp))
+        Text(stringResource(R.string.add_stream_url))
+    }
+}
+
 @Preview(name = "AddToQueueBar – portrait", widthDp = 400, heightDp = 800, showBackground = true)
 @Composable
 private fun AddToQueueBarPortraitPreview() {
@@ -121,6 +146,6 @@ private fun AddToQueueBarPortraitPreview() {
 @Composable
 private fun AddToQueueBarLandscapePreview() {
     StandaloneTheme {
-        AddToQueueBar(onAddFile = {}, onAddUrl = {})
+        AddToQueueBar(onAddFile = {}, onAddUrl = {}, vertical = true)
     }
 }

@@ -20,14 +20,18 @@
 
 package net.newpipe.newplayer.standalone.ui
 
+import android.content.res.Configuration
 import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,12 +47,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.data.PlayMode
 import net.newpipe.newplayer.standalone.ui.theme.StandaloneTheme
 import net.newpipe.newplayer.ui.NewPlayerUI
+import net.newpipe.newplayer.uiModel.NewPlayerViewModelDummy
 import net.newpipe.newplayer.uiModel.NewPlayerViewModelImpl
 import net.newpipe.newplayer.uiModel.UIModeState
 
@@ -102,29 +109,57 @@ fun AppUI(
                 }
 
                 else -> {
-                    // Embedded: player at top (16:9) + add-to-queue bar below
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        ) {
-                            NewPlayerUI(viewModel = viewModel)
+                    val isLandscape = LocalConfiguration.current.orientation ==
+                            Configuration.ORIENTATION_LANDSCAPE
+                    if (isLandscape) {
+                        // Landscape: player and bar side by side, each centered in their half
+                        Row(modifier = Modifier.fillMaxSize()) {
+                            Box(
+                                modifier = Modifier.weight(1f),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                NewPlayerUI(viewModel = viewModel)
+                            }
+                            AnimatedVisibility(
+                                visible = !uiState.uiMode.fullscreen,
+                                enter = expandHorizontally(),
+                                exit = shrinkHorizontally(),
+                            ) {
+                                Box(contentAlignment = Alignment.Center) {
+                                    AddToQueueBar(
+                                        vertical = true,
+                                        onAddFile = { uri ->
+                                            newPlayer.addToPlaylist(uri.toString())
+                                        },
+                                        onAddUrl = { url ->
+                                            newPlayer.addToPlaylist(url)
+                                        },
+                                    )
+                                }
+                            }
                         }
-                        AnimatedVisibility(
-                            visible = !uiState.uiMode.fullscreen,
-                            enter = expandVertically(),
-                            exit = shrinkVertically(),
-                        ) {
-                            AddToQueueBar(
-                                onAddFile = { uri ->
-                                    newPlayer.addToPlaylist(uri.toString())
-                                },
-                                onAddUrl = { url ->
-                                    newPlayer.addToPlaylist(url)
-                                },
-                            )
+                    } else {
+                        // Portrait: player at top, bar below
+                        Column(modifier = Modifier.fillMaxSize()) {
+                            Box(modifier = Modifier.fillMaxWidth()) {
+                                NewPlayerUI(viewModel = viewModel)
+                            }
+                            AnimatedVisibility(
+                                visible = !uiState.uiMode.fullscreen,
+                                enter = expandVertically(),
+                                exit = shrinkVertically(),
+                            ) {
+                                AddToQueueBar(
+                                    onAddFile = { uri ->
+                                        newPlayer.addToPlaylist(uri.toString())
+                                    },
+                                    onAddUrl = { url ->
+                                        newPlayer.addToPlaylist(url)
+                                    },
+                                )
+                            }
+                            Spacer(modifier = Modifier.weight(1f))
                         }
-                        Spacer(modifier = Modifier.weight(1f))
                     }
                 }
             }
@@ -173,16 +208,7 @@ private fun AppUIPlaceholderLandscapePreview() {
 @Composable
 private fun AppUIEmbeddedPortraitPreview() {
     StandaloneTheme {
-        Column(modifier = Modifier.fillMaxSize()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(16f / 9f)
-                    .background(MaterialTheme.colorScheme.surfaceVariant),
-            )
-            AddToQueueBar(onAddFile = {}, onAddUrl = {})
-            Spacer(modifier = Modifier.weight(1f))
-        }
+
     }
 }
 
@@ -195,15 +221,5 @@ private fun AppUIEmbeddedPortraitPreview() {
 @Composable
 private fun AppUIEmbeddedLandscapePreview() {
     StandaloneTheme {
-        Column(modifier = Modifier.fillMaxSize()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(16f / 9f)
-                    .background(MaterialTheme.colorScheme.surfaceVariant),
-            )
-            AddToQueueBar(onAddFile = {}, onAddUrl = {})
-            Spacer(modifier = Modifier.weight(1f))
-        }
     }
 }
