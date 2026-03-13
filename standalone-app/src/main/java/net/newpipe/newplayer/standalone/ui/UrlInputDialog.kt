@@ -34,7 +34,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import net.newpipe.newplayer.standalone.R
+import net.newpipe.newplayer.standalone.ui.theme.StandaloneTheme
 
 @Composable
 fun UrlInputDialog(
@@ -75,4 +77,20 @@ fun UrlInputDialog(
             }
         },
     )
+}
+
+@Preview(name = "UrlInputDialog – portrait", widthDp = 400, heightDp = 800, showBackground = true)
+@Composable
+private fun UrlInputDialogPortraitPreview() {
+    StandaloneTheme {
+        UrlInputDialog(onDismiss = {}, onConfirm = {})
+    }
+}
+
+@Preview(name = "UrlInputDialog – landscape", widthDp = 800, heightDp = 400, showBackground = true)
+@Composable
+private fun UrlInputDialogLandscapePreview() {
+    StandaloneTheme {
+        UrlInputDialog(onDismiss = {}, onConfirm = {})
+    }
 }

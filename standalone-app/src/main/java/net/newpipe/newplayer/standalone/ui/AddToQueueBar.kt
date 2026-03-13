@@ -44,8 +44,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import net.newpipe.newplayer.standalone.R
+import net.newpipe.newplayer.standalone.ui.theme.StandaloneTheme
 
 @Composable
 fun AddToQueueBar(
@@ -104,5 +106,21 @@ fun AddToQueueBar(
                 onAddUrl(url)
             },
         )
+    }
+}
+
+@Preview(name = "AddToQueueBar – portrait", widthDp = 400, heightDp = 800, showBackground = true)
+@Composable
+private fun AddToQueueBarPortraitPreview() {
+    StandaloneTheme {
+        AddToQueueBar(onAddFile = {}, onAddUrl = {})
+    }
+}
+
+@Preview(name = "AddToQueueBar – landscape", widthDp = 800, heightDp = 400, showBackground = true)
+@Composable
+private fun AddToQueueBarLandscapePreview() {
+    StandaloneTheme {
+        AddToQueueBar(onAddFile = {}, onAddUrl = {})
     }
 }

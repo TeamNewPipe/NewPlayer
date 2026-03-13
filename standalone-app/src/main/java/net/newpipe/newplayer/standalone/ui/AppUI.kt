@@ -24,6 +24,7 @@ import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.background
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,6 +33,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -41,9 +43,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.util.UnstableApi
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.data.PlayMode
+import net.newpipe.newplayer.standalone.ui.theme.StandaloneTheme
 import net.newpipe.newplayer.ui.NewPlayerUI
 import net.newpipe.newplayer.uiModel.NewPlayerViewModelImpl
 import net.newpipe.newplayer.uiModel.UIModeState
@@ -125,6 +129,82 @@ fun AppUI(
                     }
                 }
             }
+        }
+    }
+}
+
+// AppUI requires a live NewPlayerViewModelImpl/NewPlayer, so previews render
+// each visual state independently.
+
+@Preview(
+    name = "AppUI – placeholder – portrait",
+    widthDp = 400,
+    heightDp = 800,
+    showBackground = true
+)
+@Composable
+private fun AppUIPlaceholderPortraitPreview() {
+    StandaloneTheme {
+        StartScreen(
+            modifier = Modifier.fillMaxSize(),
+            onPlayFile = {},
+            onPlayUrl = {},
+        )
+    }
+}
+
+@Preview(
+    name = "AppUI – placeholder – landscape",
+    widthDp = 800,
+    heightDp = 400,
+    showBackground = true
+)
+@Composable
+private fun AppUIPlaceholderLandscapePreview() {
+    StandaloneTheme {
+        StartScreen(
+            modifier = Modifier.fillMaxSize(),
+            onPlayFile = {},
+            onPlayUrl = {},
+        )
+    }
+}
+
+@Preview(name = "AppUI – embedded – portrait", widthDp = 400, heightDp = 800, showBackground = true)
+@Composable
+private fun AppUIEmbeddedPortraitPreview() {
+    StandaloneTheme {
+        Column(modifier = Modifier.fillMaxSize()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(16f / 9f)
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
+            )
+            AddToQueueBar(onAddFile = {}, onAddUrl = {})
+            Spacer(modifier = Modifier.weight(1f))
+        }
+    }
+}
+
+@Preview(
+    name = "AppUI – embedded – landscape",
+    widthDp = 800,
+    heightDp = 400,
+    showBackground = true
+)
+@Composable
+private fun AppUIEmbeddedLandscapePreview() {
+    StandaloneTheme {
+        Column(modifier = Modifier.fillMaxSize()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(16f / 9f)
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
+            )
+            AddToQueueBar(onAddFile = {}, onAddUrl = {})
+            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }
