@@ -48,11 +48,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.util.UnstableApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import net.newpipe.newplayer.NewPlayerDummy
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.data.PlayMode
 import net.newpipe.newplayer.standalone.ui.theme.StandaloneTheme
 import net.newpipe.newplayer.ui.NewPlayerUI
+import net.newpipe.newplayer.uiModel.NewPlayerUIState
 import net.newpipe.newplayer.uiModel.NewPlayerViewModel
 import net.newpipe.newplayer.uiModel.NewPlayerViewModelDummy
 import net.newpipe.newplayer.uiModel.NewPlayerViewModelImpl
@@ -208,7 +210,9 @@ private fun AppUIPlaceholderLandscapePreview() {
 @Composable
 private fun AppUIEmbeddedPortraitPreview() {
     StandaloneTheme {
-        AppUI(viewModel = NewPlayerViewModelDummy(), newPlayer = NewPlayerDummy())
+        AppUI(viewModel = object : NewPlayerViewModelDummy() {
+            override var uiState = MutableStateFlow(NewPlayerUIState.DUMMY)
+        }, newPlayer = NewPlayerDummy())
     }
 }
 
@@ -222,6 +226,8 @@ private fun AppUIEmbeddedPortraitPreview() {
 @Composable
 private fun AppUIEmbeddedLandscapePreview() {
     StandaloneTheme {
-        AppUI(viewModel = NewPlayerViewModelDummy(), newPlayer = NewPlayerDummy())
+        AppUI(viewModel = object : NewPlayerViewModelDummy() {
+            override var uiState = MutableStateFlow(NewPlayerUIState.DUMMY)
+        }, newPlayer = NewPlayerDummy())
     }
 }
