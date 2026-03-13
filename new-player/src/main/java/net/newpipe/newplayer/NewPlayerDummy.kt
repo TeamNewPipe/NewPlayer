@@ -17,7 +17,7 @@ import net.newpipe.newplayer.logic.StreamExceptionResponse
 import net.newpipe.newplayer.repository.MediaRepository
 import net.newpipe.newplayer.repository.PlaceHolderRepository
 
-class DummyNewPlayer : NewPlayer {
+open class NewPlayerDummy : NewPlayer {
     override var preferredStreamLanguages: List<String> = emptyList()
 
     override val notificationIcon: IconCompat

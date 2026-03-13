@@ -39,6 +39,7 @@ import net.newpipe.newplayer.ui.ContentScale
 import net.newpipe.newplayer.uiModel.NewPlayerViewModelImpl
 import javax.inject.Inject
 
+@UnstableApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 

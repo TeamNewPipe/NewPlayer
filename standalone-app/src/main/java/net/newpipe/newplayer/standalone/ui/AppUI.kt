@@ -27,17 +27,14 @@ import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.background
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -51,17 +48,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.util.UnstableApi
+import net.newpipe.newplayer.NewPlayerDummy
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.data.PlayMode
 import net.newpipe.newplayer.standalone.ui.theme.StandaloneTheme
 import net.newpipe.newplayer.ui.NewPlayerUI
+import net.newpipe.newplayer.uiModel.NewPlayerViewModel
+import net.newpipe.newplayer.uiModel.NewPlayerViewModelDummy
 import net.newpipe.newplayer.uiModel.NewPlayerViewModelImpl
 import net.newpipe.newplayer.uiModel.UIModeState
 
 @OptIn(UnstableApi::class)
 @Composable
 fun AppUI(
-    viewModel: NewPlayerViewModelImpl,
+    viewModel: NewPlayerViewModel,
     newPlayer: NewPlayer,
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -203,14 +203,16 @@ private fun AppUIPlaceholderLandscapePreview() {
     }
 }
 
+@OptIn(UnstableApi::class)
 @Preview(name = "AppUI – embedded – portrait", widthDp = 400, heightDp = 800, showBackground = true)
 @Composable
 private fun AppUIEmbeddedPortraitPreview() {
     StandaloneTheme {
-
+        AppUI(viewModel = NewPlayerViewModelDummy(), newPlayer = NewPlayerDummy())
     }
 }
 
+@OptIn(UnstableApi::class)
 @Preview(
     name = "AppUI – embedded – landscape",
     widthDp = 800,
@@ -220,5 +222,6 @@ private fun AppUIEmbeddedPortraitPreview() {
 @Composable
 private fun AppUIEmbeddedLandscapePreview() {
     StandaloneTheme {
+        AppUI(viewModel = NewPlayerViewModelDummy(), newPlayer = NewPlayerDummy())
     }
 }
