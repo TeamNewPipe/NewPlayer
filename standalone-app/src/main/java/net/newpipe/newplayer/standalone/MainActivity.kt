@@ -33,7 +33,7 @@ import androidx.media3.common.util.UnstableApi
 import dagger.hilt.android.AndroidEntryPoint
 import net.newpipe.newplayer.NewPlayer
 import net.newpipe.newplayer.data.PlayMode
-import net.newpipe.newplayer.standalone.ui.StandaloneAppUI
+import net.newpipe.newplayer.standalone.ui.AppUI
 import net.newpipe.newplayer.standalone.ui.theme.StandaloneTheme
 import net.newpipe.newplayer.ui.ContentScale
 import net.newpipe.newplayer.uiModel.NewPlayerViewModelImpl
@@ -58,7 +58,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             StandaloneTheme {
-                StandaloneAppUI(viewModel = viewModel, newPlayer = newPlayer)
+                AppUI(viewModel = viewModel, newPlayer = newPlayer)
             }
         }
 
