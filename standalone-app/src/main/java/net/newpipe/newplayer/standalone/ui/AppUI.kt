@@ -20,20 +20,9 @@
 
 package net.newpipe.newplayer.standalone.ui
 
-import android.content.res.Configuration
 import androidx.annotation.OptIn
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandHorizontally
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkHorizontally
-import androidx.compose.animation.shrinkVertically
-import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
@@ -44,20 +33,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.util.UnstableApi
 import kotlinx.coroutines.flow.MutableStateFlow
-import net.newpipe.newplayer.NewPlayerDummy
 import net.newpipe.newplayer.NewPlayer
+import net.newpipe.newplayer.NewPlayerDummy
 import net.newpipe.newplayer.data.PlayMode
 import net.newpipe.newplayer.standalone.ui.theme.StandaloneTheme
-import net.newpipe.newplayer.ui.NewPlayerUI
 import net.newpipe.newplayer.uiModel.NewPlayerUIState
 import net.newpipe.newplayer.uiModel.NewPlayerViewModel
 import net.newpipe.newplayer.uiModel.NewPlayerViewModelDummy
-import net.newpipe.newplayer.uiModel.NewPlayerViewModelImpl
 import net.newpipe.newplayer.uiModel.UIModeState
 
 @OptIn(UnstableApi::class)
@@ -86,90 +72,24 @@ fun AppUI(
                 .fillMaxSize()
                 .padding(padding),
         ) {
-            when {
-                uiState.uiMode == UIModeState.PLACEHOLDER -> {
-                    StartScreen(
-                        modifier = Modifier.fillMaxSize(),
-                        onPlayFile = { uri ->
-                            newPlayer.playWhenReady = true
-                            newPlayer.playStream(uri.toString(), PlayMode.EMBEDDED_VIDEO)
-                        },
-                        onPlayUrl = { url ->
-                            newPlayer.playWhenReady = true
-                            newPlayer.playStream(url, PlayMode.EMBEDDED_VIDEO)
-                        },
-                    )
-                }
-
-                uiState.uiMode.fullscreen -> {
-                    // Fullscreen: NewPlayerUI takes the full screen; system bars are
-                    // managed by NewPlayerUI itself via WindowCompat APIs.
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        NewPlayerUI(viewModel = viewModel)
-                    }
-                }
-
-                else -> {
-                    val isLandscape = LocalConfiguration.current.orientation ==
-                            Configuration.ORIENTATION_LANDSCAPE
-                    if (isLandscape) {
-                        // Landscape: player and bar side by side, each centered in their half
-                        Row(modifier = Modifier.fillMaxSize()) {
-                            Box(
-                                modifier = Modifier.weight(1f),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                NewPlayerUI(viewModel = viewModel)
-                            }
-                            AnimatedVisibility(
-                                visible = !uiState.uiMode.fullscreen,
-                                enter = expandHorizontally(),
-                                exit = shrinkHorizontally(),
-                            ) {
-                                Box(contentAlignment = Alignment.Center) {
-                                    AddToQueueBar(
-                                        vertical = true,
-                                        onAddFile = { uri ->
-                                            newPlayer.addToPlaylist(uri.toString())
-                                        },
-                                        onAddUrl = { url ->
-                                            newPlayer.addToPlaylist(url)
-                                        },
-                                    )
-                                }
-                            }
-                        }
-                    } else {
-                        // Portrait: player at top, bar below
-                        Column(modifier = Modifier.fillMaxSize()) {
-                            Box(modifier = Modifier.fillMaxWidth()) {
-                                NewPlayerUI(viewModel = viewModel)
-                            }
-                            AnimatedVisibility(
-                                visible = !uiState.uiMode.fullscreen,
-                                enter = expandVertically(),
-                                exit = shrinkVertically(),
-                            ) {
-                                AddToQueueBar(
-                                    onAddFile = { uri ->
-                                        newPlayer.addToPlaylist(uri.toString())
-                                    },
-                                    onAddUrl = { url ->
-                                        newPlayer.addToPlaylist(url)
-                                    },
-                                )
-                            }
-                            Spacer(modifier = Modifier.weight(1f))
-                        }
-                    }
-                }
+            if (uiState.uiMode == UIModeState.PLACEHOLDER) {
+                StartScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    onPlayFile = { uri ->
+                        newPlayer.playWhenReady = true
+                        newPlayer.playStream(uri.toString(), PlayMode.EMBEDDED_VIDEO)
+                    },
+                    onPlayUrl = { url ->
+                        newPlayer.playWhenReady = true
+                        newPlayer.playStream(url, PlayMode.EMBEDDED_VIDEO)
+                    },
+                )
+            } else {
+                PlayerScreen(viewModel = viewModel, newPlayer = newPlayer)
             }
         }
     }
 }
-
-// AppUI requires a live NewPlayerViewModelImpl/NewPlayer, so previews render
-// each visual state independently.
 
 @Preview(
     name = "AppUI – placeholder – portrait",
