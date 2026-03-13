@@ -107,7 +107,6 @@ fun AppUI(
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .aspectRatio(16f / 9f),
                         ) {
                             NewPlayerUI(viewModel = viewModel)
                         }
