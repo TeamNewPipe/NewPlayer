@@ -95,7 +95,7 @@ fun AppUI(
     name = "AppUI – placeholder – portrait",
     widthDp = 400,
     heightDp = 800,
-    showBackground = true
+    showBackground = true,
 )
 @Composable
 private fun AppUIPlaceholderPortraitPreview() {
@@ -112,7 +112,7 @@ private fun AppUIPlaceholderPortraitPreview() {
     name = "AppUI – placeholder – landscape",
     widthDp = 800,
     heightDp = 400,
-    showBackground = true
+    showBackground = true,
 )
 @Composable
 private fun AppUIPlaceholderLandscapePreview() {
@@ -126,7 +126,7 @@ private fun AppUIPlaceholderLandscapePreview() {
 }
 
 @OptIn(UnstableApi::class)
-@Preview(name = "AppUI – embedded – portrait", widthDp = 400, heightDp = 800, showBackground = true)
+@Preview(name = "AppUI – embedded – portrait", widthDp = 400, heightDp = 800, showBackground = true, showSystemUi = true)
 @Composable
 private fun AppUIEmbeddedPortraitPreview() {
     StandaloneTheme {
@@ -141,7 +141,8 @@ private fun AppUIEmbeddedPortraitPreview() {
     name = "AppUI – embedded – landscape",
     widthDp = 800,
     heightDp = 400,
-    showBackground = true
+    showBackground = true,
+    showSystemUi = true,
 )
 @Composable
 private fun AppUIEmbeddedLandscapePreview() {
@@ -149,5 +150,24 @@ private fun AppUIEmbeddedLandscapePreview() {
         AppUI(viewModel = object : NewPlayerViewModelDummy() {
             override var uiState = MutableStateFlow(NewPlayerUIState.DUMMY)
         }, newPlayer = NewPlayerDummy())
+    }
+}
+
+
+@OptIn(UnstableApi::class)
+@Preview(name = "PlayerScreen – fullscreen", widthDp = 800, heightDp = 400, showBackground = true)
+@Composable
+private fun PlayerScreenFullscreenPreview() {
+    StandaloneTheme {
+        AppUI(
+            viewModel = object : NewPlayerViewModelDummy() {
+                override var uiState = MutableStateFlow(
+                    NewPlayerUIState.DUMMY.copy(
+                        uiMode = net.newpipe.newplayer.uiModel.UIModeState.FULLSCREEN_VIDEO
+                    )
+                )
+            },
+            newPlayer = NewPlayerDummy(),
+        )
     }
 }
