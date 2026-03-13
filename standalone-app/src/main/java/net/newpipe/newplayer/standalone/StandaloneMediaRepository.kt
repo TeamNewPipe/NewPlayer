@@ -25,6 +25,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.OpenableColumns
 import androidx.media3.common.MediaMetadata
+import androidx.core.net.toUri
 import net.newpipe.newplayer.data.AudioStreamTrack
 import net.newpipe.newplayer.data.Chapter
 import net.newpipe.newplayer.data.Stream
@@ -34,7 +35,6 @@ import net.newpipe.newplayer.data.VideoStreamTrack
 import net.newpipe.newplayer.repository.MediaRepository
 import net.newpipe.newplayer.repository.MediaRepository.PreviewThumbnailsInfo
 import net.newpipe.newplayer.repository.MediaRepository.RepoMetaInfo
-import androidx.core.net.toUri
 
 /**
  * MediaRepository implementation for the standalone app.

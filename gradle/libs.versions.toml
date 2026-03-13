@@ -37,6 +37,7 @@ material3 = "1.3.2"
 uiTooling = "1.9.0"
 materialIconsExtendedAndroid = "1.7.8"
 media3 = "1.8.0"
+media3Inspector = "1.9.2"
 hiltAndroid = "2.57.1"
 hiltCompiler = "1.2.0"
 hiltNavigationCompose = "1.2.0"
@@ -91,6 +92,7 @@ coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coi
 reorderable = { group = "sh.calvin.reorderable", name = "reorderable", version.ref = "reorderable" }
 androidx-media3-session = { group = "androidx.media3", name = "media3-session", version.ref = "media3" }
 androidx-media3-exoplayer-dash = { group = "androidx.media3", name = "media3-exoplayer-dash", version.ref = "media3" }
+androidx-media3-inspector = { group = "androidx.media3", name = "media3-inspector", version.ref = "media3Inspector" }
 androidx-adaptive-android = { group = "androidx.compose.material3.adaptive", name = "adaptive-android", version.ref = "adaptiveAndroid" }
 dokka-base = { module = "org.jetbrains.dokka:dokka-base", version.ref = "dokkaVersion" }
 dokka-android = {module = "org.jetbrains.dokka:android-documentation-plugin", version.ref = "dokkaVersion" }
