@@ -24,8 +24,12 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.OpenableColumns
+import androidx.annotation.OptIn
 import androidx.media3.common.MediaMetadata
 import androidx.core.net.toUri
+import androidx.media3.common.MediaItem
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.inspector.MetadataRetriever
 import net.newpipe.newplayer.data.AudioStreamTrack
 import net.newpipe.newplayer.data.Chapter
 import net.newpipe.newplayer.data.Stream
@@ -50,13 +54,27 @@ class StandaloneMediaRepository(private val context: Context) : MediaRepository 
         pullsDataFromNetwork = true,
     )
 
+    @OptIn(UnstableApi::class)
     override suspend fun getMetaInfo(item: String): MediaMetadata {
         val uri = item.toUri()
+
+        //
+        val item = MediaItem.fromUri(uri);
+        val bla = item.mediaMetadata
+        //todo check if item.mediaMetadata already contains the video title
+        MetadataRetriever.Builder(context, MediaItem.fromUri(uri)).build().use { retriever ->
+
+        }
+
         val title = when (uri.scheme) {
             "content" -> queryDisplayName(uri) ?: uri.lastPathSegment ?: item
             else -> uri.lastPathSegment ?: item
         }
-        return MediaMetadata.Builder().setTitle(title).build()
+
+        val mediaMetaBuilder = MediaMetadata.Builder()
+        mediaMetaBuilder.setTitle(title)
+
+        return mediaMetaBuilder.build()
     }
 
     override suspend fun getStreams(item: String): List<Stream> {
