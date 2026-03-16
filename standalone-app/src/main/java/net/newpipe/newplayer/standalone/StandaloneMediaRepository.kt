@@ -59,8 +59,8 @@ class StandaloneMediaRepository(private val context: Context) : MediaRepository 
         val uri = item.toUri()
 
         //
-        val item = MediaItem.fromUri(uri);
-        val bla = item.mediaMetadata
+        val mediaItem = MediaItem.fromUri(uri);
+        val bla = mediaItem.mediaMetadata
         //todo check if item.mediaMetadata already contains the video title
         MetadataRetriever.Builder(context, MediaItem.fromUri(uri)).build().use { retriever ->
 
