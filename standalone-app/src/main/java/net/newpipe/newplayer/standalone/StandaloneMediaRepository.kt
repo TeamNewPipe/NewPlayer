@@ -28,8 +28,11 @@ import androidx.annotation.OptIn
 import androidx.media3.common.MediaMetadata
 import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Timeline
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.inspector.MetadataRetriever
+import com.google.common.util.concurrent.ListenableFuture
+import kotlinx.coroutines.suspendCancellableCoroutine
 import net.newpipe.newplayer.data.AudioStreamTrack
 import net.newpipe.newplayer.data.Chapter
 import net.newpipe.newplayer.data.Stream
@@ -39,6 +42,8 @@ import net.newpipe.newplayer.data.VideoStreamTrack
 import net.newpipe.newplayer.repository.MediaRepository
 import net.newpipe.newplayer.repository.MediaRepository.PreviewThumbnailsInfo
 import net.newpipe.newplayer.repository.MediaRepository.RepoMetaInfo
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 /**
  * MediaRepository implementation for the standalone app.
@@ -58,12 +63,16 @@ class StandaloneMediaRepository(private val context: Context) : MediaRepository 
     override suspend fun getMetaInfo(item: String): MediaMetadata {
         val uri = item.toUri()
 
-        //
         val mediaItem = MediaItem.fromUri(uri);
-        val bla = mediaItem.mediaMetadata
-        //todo check if item.mediaMetadata already contains the video title
-        MetadataRetriever.Builder(context, MediaItem.fromUri(uri)).build().use { retriever ->
+        val metadataBuilder = MediaMetadata.Builder()
 
+        MetadataRetriever.Builder(context, mediaItem).build().use { retriever ->
+            val timeline = retriever.retrieveTimeline().await()
+            if (!timeline.isEmpty) {
+                val window = Timeline.Window()
+                timeline.getWindow(0, window)
+                metadataBuilder.populate(window.mediaItem.mediaMetadata)
+            }
         }
 
         val title = when (uri.scheme) {
@@ -71,10 +80,11 @@ class StandaloneMediaRepository(private val context: Context) : MediaRepository 
             else -> uri.lastPathSegment ?: item
         }
 
-        val mediaMetaBuilder = MediaMetadata.Builder()
-        mediaMetaBuilder.setTitle(title)
+        if (metadataBuilder.build().title == null) {
+            metadataBuilder.setTitle(title)
+        }
 
-        return mediaMetaBuilder.build()
+        return metadataBuilder.build()
     }
 
     override suspend fun getStreams(item: String): List<Stream> {
@@ -117,4 +127,20 @@ class StandaloneMediaRepository(private val context: Context) : MediaRepository 
         )?.use { cursor ->
             if (cursor.moveToFirst()) cursor.getString(0) else null
         }
+}
+
+private suspend fun <T> ListenableFuture<T>.await(): T {
+    return suspendCancellableCoroutine { continuation ->
+        addListener({
+            try {
+                continuation.resume(get())
+            } catch (e: Exception) {
+                continuation.resumeWithException(e)
+            }
+        }, { it.run() })
+
+        continuation.invokeOnCancellation {
+            cancel(true)
+        }
+    }
 }
