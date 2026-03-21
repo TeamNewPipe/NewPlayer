@@ -28,7 +28,6 @@ import androidx.annotation.OptIn
 import androidx.media3.common.MediaMetadata
 import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
-import androidx.media3.common.Timeline
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.inspector.MetadataRetriever
 import com.google.common.util.concurrent.ListenableFuture
@@ -67,20 +66,23 @@ class StandaloneMediaRepository(private val context: Context) : MediaRepository 
         val metadataBuilder = MediaMetadata.Builder()
 
         MetadataRetriever.Builder(context, mediaItem).build().use { retriever ->
-            val timeline = retriever.retrieveTimeline().await()
-            if (!timeline.isEmpty) {
-                val window = Timeline.Window()
-                timeline.getWindow(0, window)
-                metadataBuilder.populate(window.mediaItem.mediaMetadata)
+            val trackGroups = retriever.retrieveTrackGroups().await()
+            for (groupId in 0 until trackGroups.length) {
+                val trackGroup = trackGroups.get(groupId)
+                for (j in 0 until trackGroup.length) {
+                    trackGroup.getFormat(j).metadata?.let { metadata ->
+                        metadataBuilder.populateFromMetadata(metadata)
+                    }
+                }
             }
         }
 
-        val title = when (uri.scheme) {
-            "content" -> queryDisplayName(uri) ?: uri.lastPathSegment ?: item
-            else -> uri.lastPathSegment ?: item
-        }
-
         if (metadataBuilder.build().title == null) {
+            val title = when (uri.scheme) {
+                "content" -> queryDisplayName(uri) ?: uri.lastPathSegment ?: item
+                else -> uri.lastPathSegment ?: item
+            }
+
             metadataBuilder.setTitle(title)
         }
 
