@@ -52,6 +52,7 @@ dokkaVersion = "2.0.0"
 androidComposeBom = "2025.08.01"
 
 newplayer = "master-SNAPSHOT"
+kotlinxCoroutinesGuava = "1.10.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -97,6 +98,7 @@ androidx-adaptive-android = { group = "androidx.compose.material3.adaptive", nam
 dokka-base = { module = "org.jetbrains.dokka:dokka-base", version.ref = "dokkaVersion" }
 dokka-android = {module = "org.jetbrains.dokka:android-documentation-plugin", version.ref = "dokkaVersion" }
 newplayer = { group = "com.github.theScrabi.NewPlayer", name = "new-player", version.ref = "newplayer" }
+kotlinx-coroutines-guava = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-guava", version.ref = "kotlinxCoroutinesGuava" }
 
 
 

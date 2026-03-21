@@ -30,8 +30,6 @@ import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.inspector.MetadataRetriever
-import com.google.common.util.concurrent.ListenableFuture
-import kotlinx.coroutines.suspendCancellableCoroutine
 import net.newpipe.newplayer.data.AudioStreamTrack
 import net.newpipe.newplayer.data.Chapter
 import net.newpipe.newplayer.data.Stream
@@ -41,8 +39,7 @@ import net.newpipe.newplayer.data.VideoStreamTrack
 import net.newpipe.newplayer.repository.MediaRepository
 import net.newpipe.newplayer.repository.MediaRepository.PreviewThumbnailsInfo
 import net.newpipe.newplayer.repository.MediaRepository.RepoMetaInfo
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
+import kotlinx.coroutines.guava.await
 
 /**
  * MediaRepository implementation for the standalone app.
@@ -129,20 +126,4 @@ class StandaloneMediaRepository(private val context: Context) : MediaRepository 
         )?.use { cursor ->
             if (cursor.moveToFirst()) cursor.getString(0) else null
         }
-}
-
-private suspend fun <T> ListenableFuture<T>.await(): T {
-    return suspendCancellableCoroutine { continuation ->
-        addListener({
-            try {
-                continuation.resume(get())
-            } catch (e: Exception) {
-                continuation.resumeWithException(e)
-            }
-        }, { it.run() })
-
-        continuation.invokeOnCancellation {
-            cancel(true)
-        }
-    }
 }

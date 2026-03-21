@@ -97,6 +97,7 @@ dependencies {
     implementation(libs.androidx.media3.inspector)
 
     implementation(project(":new-player"))
+    implementation(libs.kotlinx.coroutines.guava)
 
     ksp(libs.hilt.android.compiler)
     ksp(libs.androidx.hilt.compiler)
