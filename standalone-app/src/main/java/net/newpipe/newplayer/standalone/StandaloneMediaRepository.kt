@@ -63,7 +63,12 @@ class StandaloneMediaRepository(private val context: Context) : MediaRepository 
         val metadataBuilder = MediaMetadata.Builder()
 
         MetadataRetriever.Builder(context, mediaItem).build().use { retriever ->
-            val trackGroups = retriever.retrieveTrackGroups().await()
+            val trackGroupsFuture = retriever.retrieveTrackGroups()
+            val durationInUsFuture = retriever.retrieveDurationUs()
+
+            metadataBuilder.setDurationMs(durationInUsFuture.await() / 1000)
+
+            val trackGroups = trackGroupsFuture.await()
             for (groupId in 0 until trackGroups.length) {
                 val trackGroup = trackGroups.get(groupId)
                 for (j in 0 until trackGroup.length) {
