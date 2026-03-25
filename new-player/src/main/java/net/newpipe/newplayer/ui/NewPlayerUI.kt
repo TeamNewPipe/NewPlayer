@@ -114,7 +114,7 @@ fun NewPlayerUI(
                         false
                 } else {
                     uiState.embeddedUiConfig?.let {
-                        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = isInDarkTheme
+                        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !isInDarkTheme
                     }
                 }
             }
