@@ -22,9 +22,11 @@ package net.newpipe.newplayer.standalone.ui
 
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -66,6 +68,7 @@ fun AppUI(
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
+        contentWindowInsets = if (uiState.uiMode.fullscreen) WindowInsets(0) else ScaffoldDefaults.contentWindowInsets,
     ) { padding ->
         Box(
             modifier = Modifier
