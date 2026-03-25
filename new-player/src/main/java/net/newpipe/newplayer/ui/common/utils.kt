@@ -209,24 +209,44 @@ internal fun Thumbnail(
     contentDescription: String,
     shape: androidx.compose.ui.graphics.Shape? = null
 ) {
-    val modifier = if (shape == null) {
+    ThumbnailImpl(modifier = modifier, model = thumbnail, contentDescription = contentDescription, shape = shape)
+}
+
+/** @hide */
+@Composable
+internal fun Thumbnail(
+    modifier: Modifier = Modifier,
+    thumbnail: ByteArray?,
+    contentDescription: String,
+    shape: androidx.compose.ui.graphics.Shape? = null
+) {
+    ThumbnailImpl(modifier = modifier, model = thumbnail, contentDescription = contentDescription, shape = shape)
+}
+
+@Composable
+private fun ThumbnailImpl(
+    modifier: Modifier,
+    model: Any?,
+    contentDescription: String,
+    shape: androidx.compose.ui.graphics.Shape?
+) {
+    val clippedModifier = if (shape == null) {
         modifier
     } else {
-        modifier
-            .clip(shape)
+        modifier.clip(shape)
     }
 
-    if (thumbnail != null) {
+    if (model != null) {
         AsyncImage(
-            modifier = modifier,
-            model = thumbnail,
+            modifier = clippedModifier,
+            model = model,
             contentDescription = contentDescription,
             placeholder = painterResource(id = R.drawable.tiny_placeholder),
             error = painterResource(id = R.drawable.tiny_placeholder)
         )
     } else {
         Image(
-            modifier = modifier,
+            modifier = clippedModifier,
             painter = painterResource(R.drawable.tiny_placeholder),
             contentDescription = contentDescription
         )

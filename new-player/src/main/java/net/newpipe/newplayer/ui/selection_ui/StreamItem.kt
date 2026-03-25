@@ -154,12 +154,22 @@ internal fun StreamItem(
                         .fillMaxSize()
                 ) {
                     val contentDescription = stringResource(R.string.stream_item_thumbnail)
-                    Thumbnail(
-                        modifier = Modifier.fillMaxHeight(),
-                        thumbnail = playlistItem.mediaMetadata.artworkUri,
-                        contentDescription = contentDescription,
-                        shape = ITEM_CORNER_SHAPE
-                    )
+                    val metadata = playlistItem.mediaMetadata
+                    if (metadata.artworkData != null) {
+                        Thumbnail(
+                            modifier = Modifier.fillMaxHeight(),
+                            thumbnail = metadata.artworkData,
+                            contentDescription = contentDescription,
+                            shape = ITEM_CORNER_SHAPE
+                        )
+                    } else {
+                        Thumbnail(
+                            modifier = Modifier.fillMaxHeight(),
+                            thumbnail = metadata.artworkUri,
+                            contentDescription = contentDescription,
+                            shape = ITEM_CORNER_SHAPE
+                        )
+                    }
                     Surface(
                         color = CONTROLLER_UI_BACKGROUND_COLOR,
                         shape = ITEM_CORNER_SHAPE,

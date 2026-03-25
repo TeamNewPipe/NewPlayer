@@ -22,13 +22,21 @@ internal fun CoverArtUI(modifier: Modifier = Modifier, uiState: NewPlayerUIState
         Card(
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
         ) {
-            Thumbnail(
-                modifier = Modifier.fillMaxWidth(),
-                thumbnail = uiState.currentlyPlaying?.mediaMetadata?.artworkUri,
-                contentDescription = stringResource(
-                    id = R.string.stream_thumbnail
-                ),
-            )
+            val metadata = uiState.currentlyPlaying?.mediaMetadata
+            val contentDescription = stringResource(id = R.string.stream_thumbnail)
+            if (metadata?.artworkData != null) {
+                Thumbnail(
+                    modifier = Modifier.fillMaxWidth(),
+                    thumbnail = metadata.artworkData,
+                    contentDescription = contentDescription,
+                )
+            } else {
+                Thumbnail(
+                    modifier = Modifier.fillMaxWidth(),
+                    thumbnail = metadata?.artworkUri,
+                    contentDescription = contentDescription,
+                )
+            }
         }
     }
 }

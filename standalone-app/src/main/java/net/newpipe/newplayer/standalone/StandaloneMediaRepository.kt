@@ -29,6 +29,7 @@ import androidx.media3.common.MediaMetadata
 import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.inspector.FrameExtractor
 import androidx.media3.inspector.MetadataRetriever
 import net.newpipe.newplayer.data.AudioStreamTrack
 import net.newpipe.newplayer.data.Chapter
@@ -40,6 +41,7 @@ import net.newpipe.newplayer.repository.MediaRepository
 import net.newpipe.newplayer.repository.MediaRepository.PreviewThumbnailsInfo
 import net.newpipe.newplayer.repository.MediaRepository.RepoMetaInfo
 import kotlinx.coroutines.guava.await
+import java.io.ByteArrayOutputStream
 
 /**
  * MediaRepository implementation for the standalone app.
@@ -48,6 +50,8 @@ import kotlinx.coroutines.guava.await
  * - Local files: a content:// URI string obtained via SAF
  * - Network streams: an http/https URL string
  */
+private const val THUMBNAIL_POSITION_MS = 10_000L
+
 class StandaloneMediaRepository(private val context: Context) : MediaRepository {
 
     override fun getRepoInfo() = RepoMetaInfo(
@@ -60,23 +64,15 @@ class StandaloneMediaRepository(private val context: Context) : MediaRepository 
         val uri = item.toUri()
 
         val mediaItem = MediaItem.fromUri(uri);
-        val metadataBuilder = MediaMetadata.Builder()
 
-        MetadataRetriever.Builder(context, mediaItem).build().use { retriever ->
-            val trackGroupsFuture = retriever.retrieveTrackGroups()
-            val durationInUsFuture = retriever.retrieveDurationUs()
+        val metadataBuilder = retrieveMetadata(mediaItem)
+        val thumbnail = getThumbnailAt(mediaItem, THUMBNAIL_POSITION_MS)
 
-            metadataBuilder.setDurationMs(durationInUsFuture.await() / 1000)
-
-            val trackGroups = trackGroupsFuture.await()
-            for (groupId in 0 until trackGroups.length) {
-                val trackGroup = trackGroups.get(groupId)
-                for (j in 0 until trackGroup.length) {
-                    trackGroup.getFormat(j).metadata?.let { metadata ->
-                        metadataBuilder.populateFromMetadata(metadata)
-                    }
-                }
-            }
+        if (thumbnail != null) {
+            metadataBuilder.setArtworkData(
+                thumbnail.toByteArray(),
+                MediaMetadata.PICTURE_TYPE_FRONT_COVER
+            )
         }
 
         if (metadataBuilder.build().title == null) {
@@ -122,6 +118,48 @@ class StandaloneMediaRepository(private val context: Context) : MediaRepository 
     override suspend fun getChapters(item: String): List<Chapter> = emptyList()
 
     override suspend fun getTimestampLink(item: String, timestampInSeconds: Long) = ""
+
+    @OptIn(UnstableApi::class)
+    private suspend fun retrieveMetadata(
+        mediaItem: MediaItem,
+        metadataBuilder: MediaMetadata.Builder = MediaMetadata.Builder()
+    ) : MediaMetadata.Builder {
+        MetadataRetriever.Builder(context, mediaItem).build().use { retriever ->
+            val trackGroupsFuture = retriever.retrieveTrackGroups()
+            val durationInUsFuture = retriever.retrieveDurationUs()
+
+            metadataBuilder.setDurationMs(durationInUsFuture.await() / 1000)
+
+            val trackGroups = trackGroupsFuture.await()
+            for (groupId in 0 until trackGroups.length) {
+                val trackGroup = trackGroups.get(groupId)
+                for (j in 0 until trackGroup.length) {
+                    trackGroup.getFormat(j).metadata?.let { metadata ->
+                        metadataBuilder.populateFromMetadata(metadata)
+                    }
+                }
+            }
+        }
+        return metadataBuilder;
+    }
+
+    @OptIn(UnstableApi::class)
+    private suspend fun getThumbnailAt(
+        mediaItem: MediaItem,
+        positionInMs: Long
+    ): ByteArrayOutputStream? =
+        try {
+            val frameExtractor = FrameExtractor.Builder(context, mediaItem).build()
+            frameExtractor.use { extractor ->
+                val frame = extractor.getFrame(positionInMs).await()
+                val stream = ByteArrayOutputStream()
+                frame.bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream)
+                stream
+            }
+        } catch (e: Exception) {
+            // Frame extraction may fail for audio-only files or unsupported formats
+            null
+        }
 
     private fun queryDisplayName(uri: Uri): String? =
         context.contentResolver.query(

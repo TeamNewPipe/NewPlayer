@@ -64,13 +64,21 @@ internal fun AudioPlayerEmbeddedUI(viewModel: InternalNewPlayerViewModel, uiStat
     val embeddedUIConfig = getEmbeddedUiConfig()
 
     Box(modifier = Modifier.wrapContentSize()) {
-        Thumbnail(
-            modifier = Modifier.fillMaxWidth(),
-            thumbnail = uiState.currentlyPlaying?.mediaMetadata?.artworkUri,
-            contentDescription = stringResource(
-                id = R.string.stream_thumbnail
+        val metadata = uiState.currentlyPlaying?.mediaMetadata
+        val contentDescription = stringResource(id = R.string.stream_thumbnail)
+        if (metadata?.artworkData != null) {
+            Thumbnail(
+                modifier = Modifier.fillMaxWidth(),
+                thumbnail = metadata.artworkData,
+                contentDescription = contentDescription,
             )
-        )
+        } else {
+            Thumbnail(
+                modifier = Modifier.fillMaxWidth(),
+                thumbnail = metadata?.artworkUri,
+                contentDescription = contentDescription,
+            )
+        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
