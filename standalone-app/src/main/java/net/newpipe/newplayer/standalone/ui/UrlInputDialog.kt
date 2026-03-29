@@ -23,6 +23,7 @@ package net.newpipe.newplayer.standalone.ui
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -38,12 +39,32 @@ import androidx.compose.ui.tooling.preview.Preview
 import net.newpipe.newplayer.standalone.R
 import net.newpipe.newplayer.standalone.ui.theme.StandaloneTheme
 
+fun isValidStreamUrl(url: String): Boolean {
+    val parsed = try {
+        java.net.URL(url.trim())
+    } catch (_: java.net.MalformedURLException) {
+        return false
+    }
+    val scheme = parsed.protocol?.lowercase()
+    return scheme == "http" || scheme == "https"
+}
+
 @Composable
 fun UrlInputDialog(
     onDismiss: () -> Unit,
     onConfirm: (String) -> Unit,
 ) {
     var url by remember { mutableStateOf("") }
+    var showError by remember { mutableStateOf(false) }
+
+    val onSubmit = {
+        if (isValidStreamUrl(url)) {
+            showError = false
+            onConfirm(url)
+        } else {
+            showError = true
+        }
+    }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -51,21 +72,30 @@ fun UrlInputDialog(
         text = {
             OutlinedTextField(
                 value = url,
-                onValueChange = { url = it },
+                onValueChange = {
+                    url = it
+                    showError = false
+                },
                 label = { Text(stringResource(R.string.url_hint)) },
+                isError = showError,
+                supportingText = if (showError) {
+                    { Text(stringResource(R.string.invalid_url_error), color = MaterialTheme.colorScheme.error) }
+                } else {
+                    null
+                },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Uri,
                     imeAction = ImeAction.Done,
                 ),
                 keyboardActions = KeyboardActions(
-                    onDone = { if (url.isNotBlank()) onConfirm(url) },
+                    onDone = { onSubmit() },
                 ),
             )
         },
         confirmButton = {
             TextButton(
-                onClick = { if (url.isNotBlank()) onConfirm(url) },
+                onClick = { onSubmit() },
                 enabled = url.isNotBlank(),
             ) {
                 Text(stringResource(R.string.play))

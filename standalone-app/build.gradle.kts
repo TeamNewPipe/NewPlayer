@@ -99,6 +99,8 @@ dependencies {
     implementation(project(":new-player"))
     implementation(libs.kotlinx.coroutines.guava)
 
+    testImplementation(libs.junit)
+
     ksp(libs.hilt.android.compiler)
     ksp(libs.androidx.hilt.compiler)
 

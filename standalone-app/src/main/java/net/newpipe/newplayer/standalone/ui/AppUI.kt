@@ -27,14 +27,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.media3.common.util.UnstableApi
@@ -55,19 +54,22 @@ fun AppUI(
     newPlayer: NewPlayer,
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val snackbarHostState = remember { SnackbarHostState() }
+    var errorToShow by remember { mutableStateOf<Throwable?>(null) }
 
     LaunchedEffect(newPlayer) {
         newPlayer.errorFlow.collect { error ->
-            snackbarHostState.showSnackbar(
-                message = error.message ?: error.javaClass.simpleName,
-                duration = SnackbarDuration.Short,
-            )
+            errorToShow = error
         }
     }
 
+    errorToShow?.let { error ->
+        ErrorDialog(
+            message = error.message ?: error.javaClass.simpleName,
+            onDismiss = { errorToShow = null },
+        )
+    }
+
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
         contentWindowInsets = if (uiState.uiMode.fullscreen) WindowInsets(0) else ScaffoldDefaults.contentWindowInsets,
     ) { padding ->
         Box(

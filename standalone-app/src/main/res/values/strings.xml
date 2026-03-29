@@ -9,5 +9,7 @@
     <string name="url_hint">https://…</string>
     <string name="play">Play</string>
     <string name="cancel">Cancel</string>
+    <string name="invalid_url_error">Please enter a valid http:// or https:// URL</string>
     <string name="playback_error">Playback error</string>
+    <string name="ok">OK</string>
 </resources>
