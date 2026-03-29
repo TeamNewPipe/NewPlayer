@@ -49,7 +49,7 @@ import net.newpipe.newplayer.uiModel.UIModeState
 import net.newpipe.newplayer.ui.theme.VideoPlayerDarkTheme
 import net.newpipe.newplayer.ui.videoplayer.CONTROLLER_UI_BACKGROUND_COLOR
 import net.newpipe.newplayer.ui.videoplayer.PreviewBackgroundSurface
-import net.newpipe.newplayer.ui.common.Thumbnail
+import net.newpipe.newplayer.ui.common.CoverThumbnail
 import net.newpipe.newplayer.ui.common.getEmbeddedUiConfig
 import net.newpipe.newplayer.ui.common.getLocale
 import net.newpipe.newplayer.ui.common.getTimeStringFromMs
@@ -64,21 +64,11 @@ internal fun AudioPlayerEmbeddedUI(viewModel: InternalNewPlayerViewModel, uiStat
     val embeddedUIConfig = getEmbeddedUiConfig()
 
     Box(modifier = Modifier.wrapContentSize()) {
-        val metadata = uiState.currentlyPlaying?.mediaMetadata
-        val contentDescription = stringResource(id = R.string.stream_thumbnail)
-        if (metadata?.artworkData != null) {
-            Thumbnail(
-                modifier = Modifier.fillMaxWidth(),
-                thumbnail = metadata.artworkData,
-                contentDescription = contentDescription,
-            )
-        } else {
-            Thumbnail(
-                modifier = Modifier.fillMaxWidth(),
-                thumbnail = metadata?.artworkUri,
-                contentDescription = contentDescription,
-            )
-        }
+        CoverThumbnail(
+            modifier = Modifier.fillMaxWidth(),
+            metadata = uiState.currentlyPlaying?.mediaMetadata,
+            contentDescription = stringResource(id = R.string.stream_thumbnail),
+        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()

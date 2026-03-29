@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.DpSize
 import androidx.core.os.ConfigurationCompat
 import androidx.core.view.WindowCompat
+import androidx.media3.common.MediaMetadata
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
 import coil.compose.AsyncImage
@@ -223,6 +224,32 @@ internal fun Thumbnail(
     ThumbnailImpl(modifier = modifier, model = thumbnail, contentDescription = contentDescription, shape = shape)
 }
 
+/** @hide */
+@Composable
+internal fun CoverThumbnail(
+    modifier: Modifier = Modifier,
+    metadata: MediaMetadata?,
+    contentDescription: String,
+    shape: androidx.compose.ui.graphics.Shape? = null
+) {
+    if (metadata?.artworkData != null) {
+        Thumbnail(
+            modifier = modifier,
+            thumbnail = metadata.artworkData,
+            contentDescription = contentDescription,
+            shape = shape,
+        )
+    } else {
+        Thumbnail(
+            modifier = modifier,
+            thumbnail = metadata?.artworkUri,
+            contentDescription = contentDescription,
+            shape = shape,
+        )
+    }
+}
+
+/** @hide */
 @Composable
 private fun ThumbnailImpl(
     modifier: Modifier,

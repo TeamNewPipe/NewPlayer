@@ -67,7 +67,7 @@ import net.newpipe.newplayer.ui.videoplayer.CONTROLLER_UI_BACKGROUND_COLOR
 import net.newpipe.newplayer.ui.theme.VideoPlayerDarkTheme
 import net.newpipe.newplayer.ui.common.ReorderHapticFeedback
 import net.newpipe.newplayer.ui.common.ReorderHapticFeedbackType
-import net.newpipe.newplayer.ui.common.Thumbnail
+import net.newpipe.newplayer.ui.common.CoverThumbnail
 import net.newpipe.newplayer.ui.common.getLocale
 import net.newpipe.newplayer.ui.common.getTimeStringFromMs
 import sh.calvin.reorderable.ReorderableCollectionItemScope
@@ -153,23 +153,12 @@ internal fun StreamItem(
                         .aspectRatio(16f / 9f)
                         .fillMaxSize()
                 ) {
-                    val contentDescription = stringResource(R.string.stream_item_thumbnail)
-                    val metadata = playlistItem.mediaMetadata
-                    if (metadata.artworkData != null) {
-                        Thumbnail(
-                            modifier = Modifier.fillMaxHeight(),
-                            thumbnail = metadata.artworkData,
-                            contentDescription = contentDescription,
-                            shape = ITEM_CORNER_SHAPE
-                        )
-                    } else {
-                        Thumbnail(
-                            modifier = Modifier.fillMaxHeight(),
-                            thumbnail = metadata.artworkUri,
-                            contentDescription = contentDescription,
-                            shape = ITEM_CORNER_SHAPE
-                        )
-                    }
+                    CoverThumbnail(
+                        modifier = Modifier.fillMaxHeight(),
+                        metadata = playlistItem.mediaMetadata,
+                        contentDescription = stringResource(R.string.stream_item_thumbnail),
+                        shape = ITEM_CORNER_SHAPE
+                    )
                     Surface(
                         color = CONTROLLER_UI_BACKGROUND_COLOR,
                         shape = ITEM_CORNER_SHAPE,
