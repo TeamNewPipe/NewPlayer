@@ -50,6 +50,7 @@ import java.io.ByteArrayOutputStream
  * - Local files: a content:// URI string obtained via SAF
  * - Network streams: an http/https URL string
  */
+
 private const val THUMBNAIL_POSITION_MS = 10_000L
 
 class StandaloneMediaRepository(private val context: Context) : MediaRepository {
@@ -66,7 +67,10 @@ class StandaloneMediaRepository(private val context: Context) : MediaRepository 
         val mediaItem = MediaItem.fromUri(uri);
 
         val metadataBuilder = retrieveMetadata(mediaItem)
-        val thumbnail = getThumbnailAt(mediaItem, THUMBNAIL_POSITION_MS)
+        val durationMs = metadataBuilder.build().durationMs ?: 0L
+        val thumbnailPositionMs =
+            if (durationMs < 2 * THUMBNAIL_POSITION_MS) 0L else THUMBNAIL_POSITION_MS
+        val thumbnail = getThumbnailAt(mediaItem, thumbnailPositionMs)
 
         if (thumbnail != null) {
             metadataBuilder.setArtworkData(
