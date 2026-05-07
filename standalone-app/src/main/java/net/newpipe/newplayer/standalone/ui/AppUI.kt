@@ -82,11 +82,11 @@ fun AppUI(
                     modifier = Modifier.fillMaxSize(),
                     onPlayFile = { uri ->
                         newPlayer.playWhenReady = true
-                        newPlayer.playStream(uri.toString(), PlayMode.EMBEDDED_VIDEO)
+                        newPlayer.playStream(uri.toString(), PlayMode.FULLSCREEN_VIDEO)
                     },
                     onPlayUrl = { url ->
                         newPlayer.playWhenReady = true
-                        newPlayer.playStream(url, PlayMode.EMBEDDED_VIDEO)
+                        newPlayer.playStream(url, PlayMode.FULLSCREEN_VIDEO)
                     },
                 )
             } else {

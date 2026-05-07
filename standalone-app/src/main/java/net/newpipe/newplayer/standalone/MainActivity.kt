@@ -115,7 +115,7 @@ class MainActivity : ComponentActivity() {
             newPlayer.addToPlaylist(item)
         } else {
             newPlayer.playWhenReady = true
-            newPlayer.playStream(item, PlayMode.EMBEDDED_VIDEO)
+            newPlayer.playStream(item, PlayMode.FULLSCREEN_VIDEO)
         }
     }
 }
